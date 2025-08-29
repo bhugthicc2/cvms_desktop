@@ -11,7 +11,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  #Required for initializing and connecting the app to Firebase services
+  firebase_core: ^4.0.0
+  #Firebase Authentication - used for handling user sign-in, sign-up,
+  #and secure access control within the application
+  firebase_auth: ^6.0.1
+  #Cloud Firestore - NoSQL cloud database for storing and syncing app data in real time
+  cloud_firestore: ^6.0.0
+  #State management solution using the BLoC (Business Logic Component) pattern
+  flutter_bloc: ^9.1.1
+  #A package for comparing objects based on their properties, simplifying equality checks in BLoC/Cubit states
+  equatable: ^2.0.7
+  #A service locator for dependency injection, used to easily access repository and use case instances across the app
+  get_it: ^8.2.0
+  #A secure, persistent storage solution for sensitive data like user tokens
+  flutter_secure_storage: ^9.2.4
+  ##A lightweight key-value store for simple, local data, often used for caching and user preferences.
+  shared_preferences: ^2.5.3
+  #Icons for iOS-style UI elements
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
