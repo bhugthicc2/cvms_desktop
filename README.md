@@ -1,6 +1,7 @@
 # cvms_desktop
 
-A new Flutter project  - desktop app.
+A Flutter-based desktop application for the Cloud-Based Vehicle Monitoring System using enhanced AES-128 encryption. This application is designed for managing vehicle records, monitoring incoming and outgoing vehicles within JRMSU–Katipunan Campus, and administering user accounts for security personnel and CDRRMSU administrators. The system is developed as part of a thesis project.
+
 
 ## Getting Started
 

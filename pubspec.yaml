@@ -28,6 +28,8 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   ##A lightweight key-value store for simple, local data, often used for caching and user preferences.
   shared_preferences: ^2.5.3
+  #A functional programming library for Dart, providing tools for error handling, pattern matching, and functional programming constructsfl
+  dartz: ^0.10.1
   #Icons for iOS-style UI elements
   cupertino_icons: ^1.0.8
 
