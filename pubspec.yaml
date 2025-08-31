@@ -30,6 +30,10 @@ dependencies:
   shared_preferences: ^2.5.3
   #A functional programming library for Dart, providing tools for error handling, pattern matching, and functional programming constructsfl
   dartz: ^0.10.1
+  #Icons used through-out the app
+  phosphor_flutter: ^2.1.0
+  #font used in the whole app
+  google_fonts: ^6.3.1
   #Icons for iOS-style UI elements
   cupertino_icons: ^1.0.8
 

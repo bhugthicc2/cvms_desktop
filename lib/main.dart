@@ -1,11 +1,14 @@
+import 'package:cvms_desktop/core/theme/app_theme.dart';
+import 'package:cvms_desktop/core/routes/app_routes.dart';
 import 'package:flutter/material.dart';
-import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'firebase_options.dart';
+import 'features/auth/bloc/auth_bloc.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await GetIt.I.allReady();
   runApp(const CVMSApp());
 }
 
@@ -14,12 +17,13 @@ class CVMSApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'CVMS Desktop app',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
+    return BlocProvider(
+      create: (context) => AuthBloc(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: AppRoutes.signIn,
+        theme: AppTheme.lightTheme,
+        routes: AppRoutes.getRoutes(),
       ),
     );
   }

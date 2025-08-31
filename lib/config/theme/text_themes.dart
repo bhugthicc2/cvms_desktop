@@ -1,1 +1,0 @@
-//Centralizes all text styles.
