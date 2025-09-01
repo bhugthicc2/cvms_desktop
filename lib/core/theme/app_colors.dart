@@ -9,6 +9,7 @@ class AppColors {
   static const Color white = Color(0xFFF2F4FA);
   static const Color black = Color(0xFF1E1E1E);
   static const Color grey = Color(0XFF7E818D);
+  static const Color dividerColor = Color(0xFFBEC8ED);
 
   // Feedback colors
   static const Color success = Color(0xFF4CAF50);

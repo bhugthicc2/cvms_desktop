@@ -1,4 +1,5 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -25,7 +26,10 @@ class CustomButton extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: GoogleFonts.sora(fontSize: 14, letterSpacing: 0.8),
+          style: GoogleFonts.sora(
+            fontSize: AppFontSizes.medium,
+            letterSpacing: 0.8,
+          ),
         ),
       ),
     );

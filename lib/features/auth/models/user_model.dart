@@ -1,7 +1,6 @@
 class UserModel {
   final String id;
   final String email;
-  final String name;
   final String fullname;
   final String role;
   final String status;
@@ -10,7 +9,6 @@ class UserModel {
   UserModel({
     required this.id,
     required this.email,
-    required this.name,
     required this.fullname,
     required this.role,
     required this.status,
@@ -21,7 +19,6 @@ class UserModel {
     return UserModel(
       id: json['id'] ?? '',
       email: json['email'] ?? '',
-      name: json['name'] ?? '',
       fullname: json['fullname'] ?? '',
       role: json['role'] ?? '',
       status: json['status'] ?? 'active',
@@ -33,7 +30,6 @@ class UserModel {
   Map<String, dynamic> toJson() => {
     'id': id,
     'email': email,
-    'name': name,
     'fullname': fullname,
     'role': role,
     'status': status,
