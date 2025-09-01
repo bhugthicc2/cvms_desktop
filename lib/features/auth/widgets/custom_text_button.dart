@@ -37,8 +37,9 @@ class CustomTextButton extends StatelessWidget {
             textStyle ??
             TextStyle(
               fontSize: fontSize ?? AppFontSizes.small,
+              fontFamily: 'Sora',
               color: textColor ?? AppColors.primary,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w700,
             ),
       ),
     );

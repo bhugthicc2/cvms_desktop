@@ -21,7 +21,7 @@ class CVMSApp extends StatelessWidget {
       create: (context) => AuthBloc(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: AppRoutes.signUp,
+        initialRoute: AppRoutes.signIn,
         theme: AppTheme.lightTheme,
         routes: AppRoutes.getRoutes(),
       ),

@@ -1,3 +1,5 @@
+//CURRENTLY NOT USED
+
 class UserModel {
   final String id;
   final String email;

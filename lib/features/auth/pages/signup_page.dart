@@ -8,7 +8,9 @@ import 'package:cvms_desktop/core/widgets/custom_button.dart';
 import 'package:cvms_desktop/core/widgets/custom_progress_indicator.dart';
 import 'package:cvms_desktop/core/widgets/custom_text_field.dart';
 import 'package:cvms_desktop/core/widgets/spacing.dart';
+import 'package:cvms_desktop/features/auth/widgets/custom_form_header.dart';
 import 'package:cvms_desktop/features/auth/widgets/custom_text_button.dart';
+import 'package:cvms_desktop/features/auth/widgets/form_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/auth_bloc.dart';
@@ -80,10 +82,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         child: Padding(
                           padding: const EdgeInsets.only(right: 20.0),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 30.0,
-                              vertical: 20,
-                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 20),
                             decoration: BoxDecoration(
                               color: AppColors.white,
                               borderRadius: BorderRadius.circular(10.0),
@@ -101,120 +100,99 @@ class _SignUpPageState extends State<SignUpPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Image.asset(
-                                      'assets/images/jrmsu-logo.png',
-                                      height: 100,
-                                      width: 100,
-                                    ),
-                                    Spacing.vertical(size: AppSpacing.medium),
-                                    Text(
-                                      'JRMSU - KATIPUNAN',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: AppFontSizes.xxxxLarge,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                    Text(
-                                      'CLOUD-BASED VEHICLE MONITORING SYSTEM',
-                                      style: TextStyle(
-                                        color: AppColors.grey,
-                                        fontSize: AppFontSizes.medium,
-                                      ),
-                                    ),
-                                    Spacing.vertical(size: AppSpacing.medium),
+                                    CustomFormHeader(),
+                                    Spacing.vertical(size: AppSpacing.small),
                                     Divider(
                                       color: AppColors.dividerColor,
                                       thickness: 0.8,
                                     ),
-                                    Spacing.vertical(size: AppSpacing.medium),
-                                    Text(
-                                      'ADMIN REGISTRATION',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w800,
-
-                                        fontSize: AppFontSizes.xxxLarge,
-
-                                        color: AppColors.primary,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Please register to get started',
-                                      style: TextStyle(
-                                        color: AppColors.grey,
-                                        fontSize: AppFontSizes.medium,
-                                      ),
+                                    Spacing.vertical(size: AppSpacing.small),
+                                    CustomFormTitle(
+                                      title: 'ADMIN REGISTRATION',
+                                      subtitle: 'Please register to continue',
                                     ),
                                   ],
                                 ),
                                 Spacing.vertical(size: AppSpacing.large),
-                                CustomTextField(
-                                  controller: fullnameController,
-                                  labelText: 'Full Name',
-                                  validator:
-                                      (value) => FormValidator.validateRequired(
-                                        value,
-                                        'Full Name',
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 30),
+                                  child: Column(
+                                    children: [
+                                      CustomTextField(
+                                        controller: fullnameController,
+                                        labelText: 'Full Name',
+                                        validator:
+                                            (value) =>
+                                                FormValidator.validateRequired(
+                                                  value,
+                                                  'Full Name',
+                                                ),
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
                                       ),
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                ),
-                                Spacing.vertical(size: AppSpacing.medium),
-                                CustomTextField(
-                                  controller: emailController,
-                                  labelText: 'Email',
+                                      Spacing.vertical(size: AppSpacing.medium),
+                                      CustomTextField(
+                                        controller: emailController,
+                                        labelText: 'Email',
 
-                                  keyboardType: TextInputType.emailAddress,
-                                  validator: FormValidator.validateEmail,
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                ),
-                                Spacing.vertical(size: AppSpacing.medium),
-                                CustomTextField(
-                                  controller: passwordController,
-                                  labelText: 'Password',
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        validator: FormValidator.validateEmail,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                      ),
+                                      Spacing.vertical(size: AppSpacing.medium),
+                                      CustomTextField(
+                                        controller: passwordController,
+                                        labelText: 'Password',
 
-                                  obscureText: true,
-                                  enableVisibilityToggle: true,
-                                  validator: FormValidator.validatePassword,
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                ),
-                                Spacing.vertical(size: AppSpacing.medium),
-                                CustomTextField(
-                                  controller: confirmPasswordController,
-                                  labelText: 'Confirm Password',
-                                  obscureText: true,
-                                  enableVisibilityToggle: true,
-                                  validator:
-                                      (value) =>
-                                          FormValidator.validateConfirmPassword(
-                                            passwordController.text,
-                                            value,
+                                        obscureText: true,
+                                        enableVisibilityToggle: true,
+                                        validator:
+                                            FormValidator.validatePassword,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                      ),
+                                      Spacing.vertical(size: AppSpacing.medium),
+                                      CustomTextField(
+                                        controller: confirmPasswordController,
+                                        labelText: 'Confirm Password',
+                                        obscureText: true,
+                                        enableVisibilityToggle: true,
+                                        validator:
+                                            (value) =>
+                                                FormValidator.validateConfirmPassword(
+                                                  passwordController.text,
+                                                  value,
+                                                ),
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                      ),
+                                      Spacing.vertical(size: AppSpacing.large),
+                                      state is AuthLoading
+                                          ? const CustomProgressIndicator()
+                                          : CustomButton(
+                                            text: 'Sign Up',
+                                            onPressed: () {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                context.read<AuthBloc>().add(
+                                                  SignUpEvent(
+                                                    emailController.text,
+                                                    passwordController.text,
+                                                    fullnameController.text,
+                                                  ),
+                                                );
+                                              } else {
+                                                Logger.log(
+                                                  'Form validation failed',
+                                                );
+                                              }
+                                            },
                                           ),
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
+                                    ],
+                                  ),
                                 ),
-
-                                Spacing.vertical(size: AppSpacing.large),
-                                state is AuthLoading
-                                    ? const CustomProgressIndicator()
-                                    : CustomButton(
-                                      text: 'Sign Up',
-                                      onPressed: () {
-                                        if (_formKey.currentState!.validate()) {
-                                          context.read<AuthBloc>().add(
-                                            SignUpEvent(
-                                              emailController.text,
-                                              passwordController.text,
-                                              fullnameController.text,
-                                            ),
-                                          );
-                                        } else {
-                                          Logger.log('Form validation failed');
-                                        }
-                                      },
-                                    ),
                                 Spacing.vertical(size: AppSpacing.medium),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -222,6 +200,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     Text(
                                       'Already have an account?',
                                       style: TextStyle(
+                                        fontSize: AppFontSizes.small,
                                         color: AppColors.grey,
                                         fontWeight: FontWeight.w800,
                                       ),

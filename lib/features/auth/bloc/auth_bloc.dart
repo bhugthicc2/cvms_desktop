@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/utils/logger.dart';
-import '../../../services/firebase_service.dart';
+import '../services/firebase_service.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 

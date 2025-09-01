@@ -18,10 +18,16 @@ class AppRoutes {
       forgotPassword:
           (context) =>
           //TODO
-          const Scaffold(body: Center(child: Text('ForgotPassword'))),
+          Scaffold(
+            appBar: AppBar(),
+            body: Center(child: Text('ForgotPassword Soon to be implemented')),
+          ),
       dashboard:
           //TODO
-          (context) => const Scaffold(body: Center(child: Text('Dashboard'))),
+          (context) => Scaffold(
+            appBar: AppBar(),
+            body: Center(child: Text('Dashboard screen soon to implement')),
+          ),
     };
   }
 }

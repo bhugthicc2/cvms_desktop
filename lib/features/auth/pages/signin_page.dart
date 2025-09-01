@@ -1,5 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/features/auth/widgets/custom_form_header.dart';
+import 'package:cvms_desktop/features/auth/widgets/form_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/routes/app_routes.dart';
@@ -20,9 +22,9 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
-    final _formKey = GlobalKey<FormState>();
 
     return Stack(
       children: [
@@ -51,15 +53,12 @@ class SignInPage extends StatelessWidget {
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 440),
                     child: Form(
-                      key: _formKey,
+                      key: formKey,
                       child: SingleChildScrollView(
                         child: Padding(
                           padding: const EdgeInsets.only(right: 20.0),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 30.0,
-                              vertical: 20,
-                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 20),
                             decoration: BoxDecoration(
                               color: AppColors.white,
                               borderRadius: BorderRadius.circular(10.0),
@@ -73,101 +72,76 @@ class SignInPage extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      'assets/images/jrmsu-logo.png',
-                                      height: 100,
-                                      width: 100,
-                                    ),
-                                    Spacing.vertical(size: AppSpacing.medium),
-                                    Text(
-                                      'JRMSU - KATIPUNAN',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: AppFontSizes.xxxxLarge,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                    Text(
-                                      'CLOUD-BASED VEHICLE MONITORING SYSTEM',
-                                      style: TextStyle(
-                                        color: AppColors.grey,
-                                        fontSize: AppFontSizes.medium,
-                                      ),
-                                    ),
-                                    Spacing.vertical(size: AppSpacing.small),
-                                    Divider(
-                                      color: AppColors.dividerColor,
-                                      thickness: 0.8,
-                                    ),
-                                    Spacing.vertical(size: AppSpacing.small),
-                                    Text(
-                                      'ADMIN LOGIN',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w800,
-
-                                        fontSize: AppFontSizes.xxxLarge,
-
-                                        color: AppColors.primary,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Please login to continue',
-                                      style: TextStyle(
-                                        color: AppColors.grey,
-                                        fontSize: AppFontSizes.medium,
-                                      ),
-                                    ),
-                                  ],
+                                CustomFormHeader(),
+                                Divider(
+                                  color: AppColors.dividerColor,
+                                  thickness: 0.8,
+                                ),
+                                Spacing.vertical(size: AppSpacing.small),
+                                CustomFormTitle(
+                                  title: 'ADMIN LOGIN',
+                                  subtitle: 'Please login to continue',
                                 ),
                                 Spacing.vertical(size: AppSpacing.large),
-                                CustomTextField(
-                                  controller: emailController,
-                                  labelText: "Email",
-                                  keyboardType: TextInputType.emailAddress,
-                                  validator: FormValidator.validateEmail,
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                ),
-                                Spacing.vertical(size: AppSpacing.medium),
-                                CustomTextField(
-                                  controller: passwordController,
-                                  labelText: 'Password',
-                                  obscureText: true,
-                                  enableVisibilityToggle: true,
-                                  validator: FormValidator.validatePassword,
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                ),
-                                Spacing.vertical(size: AppSpacing.medium),
-                                CustomAuthLink(
-                                  onKeepLoggedInChanged: (value) {
-                                    //TODO: Add logic to handle keep logged in functionality
-                                  },
-                                  forgotPasswordRoute: AppRoutes.forgotPassword,
-                                ),
-                                Spacing.vertical(size: AppSpacing.large),
-                                state is AuthLoading
-                                    ? const CustomProgressIndicator()
-                                    : CustomButton(
-                                      text: 'Login',
-                                      onPressed: () {
-                                        context.read<AuthBloc>().add(
-                                          SignInEvent(
-                                            emailController.text,
-                                            passwordController.text,
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 30),
+                                  child: Column(
+                                    children: [
+                                      CustomTextField(
+                                        controller: emailController,
+                                        labelText: "Email",
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        validator: FormValidator.validateEmail,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                      ),
+                                      Spacing.vertical(size: AppSpacing.medium),
+                                      CustomTextField(
+                                        controller: passwordController,
+                                        labelText: 'Password',
+                                        obscureText: true,
+                                        enableVisibilityToggle: true,
+                                        validator:
+                                            FormValidator.validatePassword,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                      ),
+                                      Spacing.vertical(size: AppSpacing.medium),
+                                      CustomAuthLink(
+                                        onKeepLoggedInChanged: (value) {},
+                                        forgotPasswordRoute:
+                                            AppRoutes.forgotPassword,
+                                      ),
+                                      Spacing.vertical(size: AppSpacing.large),
+                                      state is AuthLoading
+                                          ? const CustomProgressIndicator()
+                                          : CustomButton(
+                                            text: 'Login',
+                                            onPressed: () {
+                                              context.read<AuthBloc>().add(
+                                                SignInEvent(
+                                                  emailController.text,
+                                                  passwordController.text,
+                                                ),
+                                              );
+                                            },
                                           ),
-                                        );
-                                      },
-                                    ),
+                                    ],
+                                  ),
+                                ),
                                 Spacing.vertical(size: AppSpacing.medium),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text("Don't have an account?"),
+                                    Text(
+                                      "Don't have an account?",
+                                      style: TextStyle(
+                                        fontSize: AppFontSizes.small,
+                                        color: AppColors.grey,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
                                     CustomTextButton(
                                       onPressed: () {
                                         Navigator.pushNamed(
@@ -179,6 +153,7 @@ class SignInPage extends StatelessWidget {
                                     ),
                                   ],
                                 ),
+                                Spacing.vertical(size: AppSpacing.small),
                               ],
                             ),
                           ),

@@ -36,6 +36,7 @@ class _CustomAuthLinkState extends State<CustomAuthLink> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Row(
           children: [
