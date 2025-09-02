@@ -47,7 +47,7 @@ class SignInPage extends StatelessWidget {
                     message: 'Login successful!',
                     type: SnackBarType.success,
                   );
-                  Navigator.pushNamed(context, AppRoutes.dashboard);
+                  Navigator.pushNamed(context, AppRoutes.shell);
                 } else if (state is AuthError) {
                   CustomSnackBar.show(
                     context: context,
