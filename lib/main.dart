@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_theme.dart';
 import 'package:cvms_desktop/core/routes/app_routes.dart';
+import 'package:cvms_desktop/core/widgets/custom_window_titlebar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const CVMSApp());
+  initializeWindowProperties(
+    title: "cvms_desktop",
+    initialSize: const Size(1280, 720),
+    minSize: const Size(400, 300),
+    alignment: Alignment.center,
+  );
 }
 
 class CVMSApp extends StatelessWidget {
@@ -20,9 +27,8 @@ class CVMSApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => AuthBloc(),
       child: MaterialApp(
-        //TODO ADD A CUSTOM WINDOW BUTTON
         debugShowCheckedModeBanner: false,
-        initialRoute: AppRoutes.signIn,
+        initialRoute: AppRoutes.signUp,
         theme: AppTheme.lightTheme,
         routes: AppRoutes.getRoutes(),
       ),

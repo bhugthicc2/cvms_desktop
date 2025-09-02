@@ -43,8 +43,12 @@ class EmailSentPage extends StatelessWidget {
               constraints: BoxConstraints(maxWidth: 440),
               child: Column(
                 children: [
-                  //TODO ADD A PROPER SUBMIT VALIDATION
-                  CustomButton(text: 'Login', onPressed: () {}),
+                  CustomButton(
+                    text: 'Login',
+                    onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.signIn);
+                    },
+                  ),
                   Spacing.vertical(size: AppSpacing.medium),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +63,10 @@ class EmailSentPage extends StatelessWidget {
                       ),
                       CustomTextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, AppRoutes.signIn);
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.forgotPassword,
+                          );
                         },
                         text: 'Resend',
                       ),

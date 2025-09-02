@@ -1,6 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/custom_snackbar.dart';
+import 'package:cvms_desktop/core/widgets/custom_window_titlebar.dart';
 import 'package:cvms_desktop/features/auth/widgets/custom_form_header.dart';
 import 'package:cvms_desktop/features/auth/widgets/form_title.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core//utils/form_validator.dart';
-import '../../../../core//widgets/custom_progress_indicator.dart';
 import '../../../../core//widgets/spacing.dart';
 import '../../../features/auth/widgets/custom_auth_link.dart';
 import '../../../features/auth/widgets/custom_text_button.dart';
@@ -35,6 +35,7 @@ class SignInPage extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           fit: BoxFit.cover,
         ),
+
         Scaffold(
           backgroundColor: Colors.transparent,
           body: Padding(
@@ -183,6 +184,7 @@ class SignInPage extends StatelessWidget {
             ),
           ),
         ),
+        // Positioned(top: 10, right: 10, child: CustomWindowTitleBar()),
       ],
     );
   }

@@ -5,6 +5,7 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/utils/form_validator.dart';
 import 'package:cvms_desktop/core/widgets/custom_appbar.dart';
 import 'package:cvms_desktop/core/widgets/custom_button.dart';
+import 'package:cvms_desktop/core/widgets/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/custom_text_field.dart';
 import 'package:cvms_desktop/core/widgets/spacing.dart';
 import 'package:cvms_desktop/features/auth/bloc/auth_bloc.dart';
@@ -114,10 +115,22 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           ],
                         ),
                         Spacing.vertical(size: AppSpacing.medium),
-                        //TODO ADD A PROPER SUBMIT VALIDATION
                         CustomButton(
                           text: 'Send',
-                          onPressed: isLoading ? null : _sendPasswordResetEmail,
+                          isLoading: state is AuthLoading,
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              context.read<AuthBloc>().add(
+                                ResetPasswordEvent(emailController.text),
+                              );
+                            } else {
+                              CustomSnackBar.show(
+                                context: context,
+                                message: 'Please input your email!',
+                                type: SnackBarType.error,
+                              );
+                            }
+                          },
                         ),
                       ],
                     ),
