@@ -1,6 +1,6 @@
 import 'package:cvms_desktop/features/auth/pages/email_sent_page.dart';
 import 'package:cvms_desktop/features/auth/pages/forgot_password_page.dart';
-import 'package:cvms_desktop/features/dashboard.dart/pages/dashboard_page.dart';
+import 'package:cvms_desktop/features/dashboard/pages/dashboard_page.dart';
 import 'package:cvms_desktop/features/shell/pages/shell_page.dart';
 import 'package:flutter/material.dart';
 import '../../features/auth/pages/signin_page.dart';

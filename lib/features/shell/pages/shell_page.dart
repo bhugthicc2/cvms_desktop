@@ -1,4 +1,4 @@
-import 'package:cvms_desktop/features/dashboard.dart/pages/dashboard_page.dart';
+import 'package:cvms_desktop/features/dashboard/pages/dashboard_page.dart';
 import 'package:cvms_desktop/features/shell/bloc/shell_cubit.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_sidebar.dart';
 import 'package:flutter/material.dart';
