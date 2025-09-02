@@ -3,11 +3,9 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:cvms_desktop/core/utils/form_validator.dart';
 import 'package:cvms_desktop/core/widgets/custom_appbar.dart';
 import 'package:cvms_desktop/core/widgets/custom_button.dart';
 
-import 'package:cvms_desktop/core/widgets/custom_text_field.dart';
 import 'package:cvms_desktop/core/widgets/spacing.dart';
 
 import 'package:cvms_desktop/features/auth/widgets/custom_illustration.dart';
@@ -21,9 +19,8 @@ class EmailSentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
     return Scaffold(
-      appBar: CustomAppBar(backgroundColor: Colors.transparent),
+      appBar: CustomAppBar(backgroundColor: Colors.transparent, title: 'Back'),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

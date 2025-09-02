@@ -8,6 +8,7 @@ class CustomWindowTitleBar extends StatelessWidget {
   final Widget? leading;
   final List<Widget>? actions;
   final double height;
+  final bool adaptiveIconContrast;
 
   const CustomWindowTitleBar({
     super.key,
@@ -16,10 +17,54 @@ class CustomWindowTitleBar extends StatelessWidget {
     this.leading,
     this.actions,
     this.height = 38.0,
+    this.adaptiveIconContrast = true,
   });
 
   @override
   Widget build(BuildContext context) {
+    final Color effectiveBackground =
+        backgroundColor.opacity > 0
+            ? backgroundColor
+            : Theme.of(context).scaffoldBackgroundColor;
+
+    final bool isLightBg =
+        ThemeData.estimateBrightnessForColor(effectiveBackground) ==
+        Brightness.light;
+    final Color adaptiveIconColor =
+        isLightBg ? AppColors.black : AppColors.white;
+    final Color effectiveIconColor =
+        adaptiveIconContrast ? adaptiveIconColor : textColor;
+
+    final Color hoverOverlay =
+        isLightBg
+            ? AppColors.black.withValues(alpha: 0.06)
+            : AppColors.white.withValues(alpha: 0.08);
+    final Color pressOverlay =
+        isLightBg
+            ? AppColors.black.withValues(alpha: 0.12)
+            : AppColors.white.withValues(alpha: 0.16);
+
+    final windowButtonColors = WindowButtonColors(
+      iconNormal: effectiveIconColor,
+      iconMouseOver: adaptiveIconColor,
+      iconMouseDown: adaptiveIconColor,
+      normal: Colors.transparent,
+      mouseOver: hoverOverlay,
+      mouseDown: pressOverlay,
+    );
+
+    final closeButtonColors = WindowButtonColors(
+      iconNormal: effectiveIconColor,
+      iconMouseOver: AppColors.white,
+      iconMouseDown: AppColors.white,
+      normal: Colors.transparent,
+      mouseOver:
+          isLightBg
+              ? Colors.red.withValues(alpha: 0.85)
+              : Colors.red.withValues(alpha: 0.70),
+      mouseDown: Colors.red,
+    );
+
     return WindowTitleBarBox(
       child: Container(
         height: height,
@@ -35,9 +80,9 @@ class CustomWindowTitleBar extends StatelessWidget {
               ),
             ),
             if (actions != null) ...actions!,
-            MinimizeWindowButton(),
-            MaximizeWindowButton(),
-            CloseWindowButton(),
+            MinimizeWindowButton(colors: windowButtonColors),
+            MaximizeWindowButton(colors: windowButtonColors),
+            CloseWindowButton(colors: closeButtonColors),
           ],
         ),
       ),
@@ -46,15 +91,13 @@ class CustomWindowTitleBar extends StatelessWidget {
 }
 
 void initializeWindowProperties({
-  required String title,
-  Size initialSize = const Size(800, 600),
+  Size initialSize = const Size(1020, 800),
   Size? minSize,
   Size? maxSize,
   Alignment alignment = Alignment.center,
 }) {
   doWhenWindowReady(() {
     final win = appWindow;
-    win.title = title;
     win.size = initialSize;
     if (minSize != null) win.minSize = minSize;
     if (maxSize != null) win.maxSize = maxSize;

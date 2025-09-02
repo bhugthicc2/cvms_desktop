@@ -1,4 +1,5 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_icon_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -34,6 +35,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         onPressed: onBackPressed ?? () => Navigator.pop(context),
       ),
       title: title != null ? Text(title!) : null,
+      titleTextStyle: TextStyle(
+        fontSize: AppFontSizes.xxLarge,
+        color: AppColors.black,
+      ),
       actions: actions,
       elevation: 0,
     );

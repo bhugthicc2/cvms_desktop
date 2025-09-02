@@ -12,9 +12,8 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const CVMSApp());
   initializeWindowProperties(
-    title: "cvms_desktop",
     initialSize: const Size(1280, 720),
-    minSize: const Size(400, 300),
+    minSize: const Size(1280, 720),
     alignment: Alignment.center,
   );
 }
@@ -28,8 +27,24 @@ class CVMSApp extends StatelessWidget {
       create: (context) => AuthBloc(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: AppRoutes.signUp,
+        initialRoute: AppRoutes.signIn,
         theme: AppTheme.lightTheme,
+        builder: (context, child) {
+          //positions the custom window buttons at the very top of the app
+          return Stack(
+            children: [
+              if (child != null) child,
+              const Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: CustomWindowTitleBar(
+                  backgroundColor: Colors.transparent,
+                ),
+              ),
+            ],
+          );
+        },
         routes: AppRoutes.getRoutes(),
       ),
     );

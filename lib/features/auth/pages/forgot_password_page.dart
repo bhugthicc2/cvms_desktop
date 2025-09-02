@@ -35,18 +35,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     super.dispose();
   }
 
-  void _sendPasswordResetEmail() {
-    if (_formKey.currentState!.validate()) {
-      context.read<AuthBloc>().add(
-        ResetPasswordEvent(emailController.text.trim()),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(backgroundColor: Colors.transparent),
+      appBar: CustomAppBar(
+        backgroundColor: Colors.transparent,
+        title: 'Back to login',
+      ),
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is ResetPasswordSuccess) {
