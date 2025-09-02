@@ -43,6 +43,7 @@ class EmailSentPage extends StatelessWidget {
               constraints: BoxConstraints(maxWidth: 440),
               child: Column(
                 children: [
+                  //TODO ADD A PROPER SUBMIT VALIDATION
                   CustomButton(text: 'Login', onPressed: () {}),
                   Spacing.vertical(size: AppSpacing.medium),
                   Row(

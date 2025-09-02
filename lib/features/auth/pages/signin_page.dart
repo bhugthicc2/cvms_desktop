@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/core/widgets/custom_snackbar.dart';
 import 'package:cvms_desktop/features/auth/widgets/custom_form_header.dart';
 import 'package:cvms_desktop/features/auth/widgets/form_title.dart';
 import 'package:flutter/material.dart';
@@ -41,11 +42,18 @@ class SignInPage extends StatelessWidget {
             child: BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
                 if (state is AuthSuccess) {
+                  CustomSnackBar.show(
+                    context: context,
+                    message: 'Login successful!',
+                    type: SnackBarType.success,
+                  );
                   Navigator.pushNamed(context, AppRoutes.dashboard);
                 } else if (state is AuthError) {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(state.message)));
+                  CustomSnackBar.show(
+                    context: context,
+                    message: state.message,
+                    type: SnackBarType.error,
+                  );
                 }
               },
               builder: (context, state) {
@@ -114,19 +122,28 @@ class SignInPage extends StatelessWidget {
                                             AppRoutes.forgotPassword,
                                       ),
                                       Spacing.vertical(size: AppSpacing.large),
-                                      state is AuthLoading
-                                          ? const CustomProgressIndicator()
-                                          : CustomButton(
-                                            text: 'Login',
-                                            onPressed: () {
-                                              context.read<AuthBloc>().add(
-                                                SignInEvent(
-                                                  emailController.text,
-                                                  passwordController.text,
-                                                ),
-                                              );
-                                            },
-                                          ),
+                                      CustomButton(
+                                        text: 'Login',
+                                        isLoading: state is AuthLoading,
+                                        onPressed: () {
+                                          if (formKey.currentState!
+                                              .validate()) {
+                                            context.read<AuthBloc>().add(
+                                              SignInEvent(
+                                                emailController.text,
+                                                passwordController.text,
+                                              ),
+                                            );
+                                          } else {
+                                            CustomSnackBar.show(
+                                              context: context,
+                                              message:
+                                                  'Please input the fields!',
+                                              type: SnackBarType.error,
+                                            );
+                                          }
+                                        },
+                                      ),
                                     ],
                                   ),
                                 ),

@@ -114,6 +114,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           ],
                         ),
                         Spacing.vertical(size: AppSpacing.medium),
+                        //TODO ADD A PROPER SUBMIT VALIDATION
                         CustomButton(
                           text: 'Send',
                           onPressed: isLoading ? null : _sendPasswordResetEmail,

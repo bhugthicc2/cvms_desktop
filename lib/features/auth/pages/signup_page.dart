@@ -6,6 +6,7 @@ import 'package:cvms_desktop/core/utils/form_validator.dart';
 import 'package:cvms_desktop/core/utils/logger.dart';
 import 'package:cvms_desktop/core/widgets/custom_button.dart';
 import 'package:cvms_desktop/core/widgets/custom_progress_indicator.dart';
+import 'package:cvms_desktop/core/widgets/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/custom_text_field.dart';
 import 'package:cvms_desktop/core/widgets/spacing.dart';
 import 'package:cvms_desktop/features/auth/widgets/custom_form_header.dart';
@@ -61,15 +62,17 @@ class _SignUpPageState extends State<SignUpPage> {
             child: BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
                 if (state is AuthSuccess) {
-                  Logger.log(
-                    'Signup successful, navigating to ${AppRoutes.dashboard}',
+                  CustomSnackBar.show(
+                    context: context,
+                    message: 'Signup successful!',
+                    type: SnackBarType.success,
                   );
-                  Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
                 } else if (state is AuthError) {
-                  Logger.log('Signup error: ${state.message}');
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(state.message)));
+                  CustomSnackBar.show(
+                    context: context,
+                    message: state.message,
+                    type: SnackBarType.error,
+                  );
                 }
               },
               builder: (context, state) {
@@ -169,27 +172,30 @@ class _SignUpPageState extends State<SignUpPage> {
                                             AutovalidateMode.onUserInteraction,
                                       ),
                                       Spacing.vertical(size: AppSpacing.large),
-                                      state is AuthLoading
-                                          ? const CustomProgressIndicator()
-                                          : CustomButton(
-                                            text: 'Sign Up',
-                                            onPressed: () {
-                                              if (_formKey.currentState!
-                                                  .validate()) {
-                                                context.read<AuthBloc>().add(
-                                                  SignUpEvent(
-                                                    emailController.text,
-                                                    passwordController.text,
-                                                    fullnameController.text,
-                                                  ),
-                                                );
-                                              } else {
-                                                Logger.log(
-                                                  'Form validation failed',
-                                                );
-                                              }
-                                            },
-                                          ),
+
+                                      CustomButton(
+                                        text: 'Sign Up',
+                                        isLoading: state is AuthLoading,
+                                        onPressed: () {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            context.read<AuthBloc>().add(
+                                              SignUpEvent(
+                                                emailController.text,
+                                                passwordController.text,
+                                                fullnameController.text,
+                                              ),
+                                            );
+                                          } else {
+                                            CustomSnackBar.show(
+                                              context: context,
+                                              message:
+                                                  'Please input the fields!',
+                                              type: SnackBarType.error,
+                                            );
+                                          }
+                                        },
+                                      ),
                                     ],
                                   ),
                                 ),

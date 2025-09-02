@@ -20,6 +20,7 @@ class CVMSApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => AuthBloc(),
       child: MaterialApp(
+        //TODO ADD A CUSTOM WINDOW BUTTON
         debugShowCheckedModeBanner: false,
         initialRoute: AppRoutes.signIn,
         theme: AppTheme.lightTheme,
