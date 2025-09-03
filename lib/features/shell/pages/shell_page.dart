@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/features/dashboard/pages/dashboard_page.dart';
 import 'package:cvms_desktop/features/shell/bloc/shell_cubit.dart';
+import 'package:cvms_desktop/features/shell/widgets/custom_header.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +31,18 @@ class _ShellPageState extends State<ShellPage> {
                       (index) => context.read<ShellCubit>().selectPage(index),
                   onToggle: () => context.read<ShellCubit>().toggleSidebar(),
                 ),
-                Expanded(child: _pages[state.selectedIndex]),
+                Expanded(
+                  child: Column(
+                    children: [
+                      CustomHeader(
+                        title: "Dashboard",
+                        onMenuPressed:
+                            () => context.read<ShellCubit>().toggleSidebar(),
+                      ),
+                      Expanded(child: _pages[state.selectedIndex]),
+                    ],
+                  ),
+                ),
               ],
             ),
           );

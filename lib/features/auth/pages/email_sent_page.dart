@@ -16,62 +16,69 @@ class EmailSentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(backgroundColor: Colors.transparent, title: 'Back'),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextHeading(text: 'Email has been sent'),
-            Spacing.vertical(size: AppSpacing.medium),
-            TextSubHeading(
-              text:
-                  'Please check your inbox and click in the received link to reset your pasword',
-            ),
-            Spacing.vertical(size: AppSpacing.large),
-            CustomIllustration(
-              path: 'assets/images/email_sent_illustration.svg',
-            ),
-            Spacing.vertical(size: AppSpacing.large),
-            ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 440),
-              child: Column(
-                children: [
-                  CustomButton(
-                    text: 'Login',
-                    onPressed: () {
-                      Navigator.pushNamed(context, AppRoutes.signIn);
-                    },
-                  ),
-                  Spacing.vertical(size: AppSpacing.medium),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: CustomAppBar(
+            backgroundColor: Colors.transparent,
+            title: 'Back',
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextHeading(text: 'Email has been sent'),
+                Spacing.vertical(size: AppSpacing.medium),
+                TextSubHeading(
+                  text:
+                      'Please check your inbox and click in the received link to reset your pasword',
+                ),
+                Spacing.vertical(size: AppSpacing.large),
+                CustomIllustration(
+                  path: 'assets/images/email_sent_illustration.svg',
+                ),
+                Spacing.vertical(size: AppSpacing.large),
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 440),
+                  child: Column(
                     children: [
-                      Text(
-                        "Didn't receive link?",
-                        style: TextStyle(
-                          fontSize: AppFontSizes.small,
-                          color: AppColors.grey,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      CustomTextButton(
+                      CustomButton(
+                        text: 'Login',
                         onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppRoutes.forgotPassword,
-                          );
+                          Navigator.pushNamed(context, AppRoutes.signIn);
                         },
-                        text: 'Resend',
+                      ),
+                      Spacing.vertical(size: AppSpacing.medium),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Didn't receive link?",
+                            style: TextStyle(
+                              fontSize: AppFontSizes.small,
+                              color: AppColors.grey,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          CustomTextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.forgotPassword,
+                              );
+                            },
+                            text: 'Resend',
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

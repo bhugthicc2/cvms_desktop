@@ -6,7 +6,9 @@ import 'package:cvms_desktop/core/utils/form_validator.dart';
 import 'package:cvms_desktop/core/widgets/custom_button.dart';
 import 'package:cvms_desktop/core/widgets/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/custom_text_field.dart';
+import 'package:cvms_desktop/core/utils/custom_window_titlebar.dart';
 import 'package:cvms_desktop/core/widgets/spacing.dart';
+import 'package:cvms_desktop/features/auth/widgets/auth_window_titlebar.dart';
 import 'package:cvms_desktop/features/auth/widgets/custom_form_header.dart';
 import 'package:cvms_desktop/features/auth/widgets/custom_text_button.dart';
 import 'package:cvms_desktop/features/auth/widgets/form_title.dart';
@@ -232,6 +234,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           ),
         ),
+        AuthWindowTitlebar(),
       ],
     );
   }

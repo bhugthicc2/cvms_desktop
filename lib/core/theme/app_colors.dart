@@ -10,6 +10,7 @@ class AppColors {
   static const Color black = Color(0xFF1E1E1E);
   static const Color grey = Color(0XFF7E818D);
   static const Color dividerColor = Color(0xFFBEC8ED);
+  static const Color yellow = Color(0xFFF7D22F);
 
   // Feedback colors
   static const Color success = Color(0xFF4CAF50);
@@ -17,5 +18,7 @@ class AppColors {
   static const Color warning = Color(0xFFFFC107);
 
   //Others
-  static const Color darkBlue = Color(0xFF003D87);
+  static const Color darkBlue = Color(0xFF050132);
+  static const Color sidebarheaderSub = Color(0xFFD9D9D9);
+  static const Color lineColor = Color(0xFFB5B5B5);
 }

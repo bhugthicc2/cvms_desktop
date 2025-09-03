@@ -1,6 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/custom_snackbar.dart';
+import 'package:cvms_desktop/features/auth/widgets/auth_window_titlebar.dart';
 import 'package:cvms_desktop/features/auth/widgets/custom_form_header.dart';
 import 'package:cvms_desktop/features/auth/widgets/form_title.dart';
 import 'package:flutter/material.dart';
@@ -183,6 +184,7 @@ class SignInPage extends StatelessWidget {
             ),
           ),
         ),
+        AuthWindowTitlebar(),
       ],
     );
   }
