@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:cvms_desktop/main.dart';
+// import 'package:cvms_desktop/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const CVMSApp());
+    //await tester.pumpWidget(const CVMSApp(repo: repo));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

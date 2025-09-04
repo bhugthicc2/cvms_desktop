@@ -21,17 +21,23 @@ dependencies:
   #State management solution using the BLoC (Business Logic Component) pattern
   flutter_bloc: ^9.1.1
   #A package for comparing objects based on their properties, simplifying equality checks in BLoC/Cubit states
-  equatable: ^2.0.7
-  #A service locator for dependency injection, used to easily access repository and use case instances across the app
-  get_it: ^8.2.0
-  #A secure, persistent storage solution for sensitive data like user tokens
-  flutter_secure_storage: ^9.2.4
-  ##A lightweight key-value store for simple, local data, often used for caching and user preferences.
   shared_preferences: ^2.5.3
   #A functional programming library for Dart, providing tools for error handling, pattern matching, and functional programming constructsfl
   dartz: ^0.10.1
+  #Icons used through-out the app
+  phosphor_flutter: ^2.1.0
+  #font used in the whole app
+  google_fonts: ^6.3.1
+  #package for supporting svg files
+  flutter_svg: ^2.2.0
+  #package for managing windows
+  bitsdojo_window: ^0.1.6
+  #for advanced data table
+  syncfusion_flutter_datagrid: ^30.2.7
   #Icons for iOS-style UI elements
   cupertino_icons: ^1.0.8
+  #syncfusion main package
+  syncfusion_flutter_core: ^30.2.7
 
 dev_dependencies:
   flutter_test:
@@ -46,3 +52,19 @@ flutter:
     - assets/images/
     - assets/fonts/
     - assets/icons/
+
+  fonts:
+    - family: Sora
+      fonts:
+        - asset: assets/fonts/Sora-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Sora-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Sora-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Sora-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Sora-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Sora-ExtraBold.ttf
+          weight: 800
