@@ -3,9 +3,16 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import '../../../core/theme/app_colors.dart';
+import '../theme/app_colors.dart';
 
-enum EmptyStateType { noData, noSearchResults, error, loading, noVehicles }
+enum EmptyStateType {
+  noData,
+  noSearchResults,
+  error,
+  loading,
+  noVehicles,
+  pageNotFound,
+}
 
 class EmptyState extends StatelessWidget {
   final EmptyStateType type;
@@ -131,6 +138,12 @@ class EmptyState extends StatelessWidget {
           customIllustration: 'assets/images/no_vehicle.svg',
           title: 'No Vehicles',
           subtitle: 'No vehicles have been recorded yet.',
+        );
+      case EmptyStateType.pageNotFound:
+        return _EmptyStateConfig(
+          customIllustration: 'assets/images/page_not_found.svg',
+          title: 'Sorry Page Not Found',
+          subtitle: 'The page you are looking for does not exist.',
         );
     }
   }

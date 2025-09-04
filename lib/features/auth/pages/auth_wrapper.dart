@@ -1,4 +1,5 @@
 import 'package:cvms_desktop/core/widgets/custom_progress_indicator.dart';
+import 'package:cvms_desktop/core/widgets/empty_state.dart';
 import 'package:cvms_desktop/features/auth/services/auth_session_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cvms_desktop/core/routes/app_routes.dart';
@@ -46,10 +47,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
         }
 
         return MaterialPageRoute(
-          builder:
-              (context) =>
-              //TODO IMPLEMENT A PROPER ROUTE NOT FOUND PAGE
-              const Scaffold(body: Center(child: Text('Route not found'))),
+          builder: (context) => EmptyState(type: EmptyStateType.pageNotFound),
         );
       },
     );

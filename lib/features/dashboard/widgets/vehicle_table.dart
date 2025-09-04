@@ -2,7 +2,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_dimensions.dart';
 import 'package:cvms_desktop/features/dashboard/data/vehicle_data_source.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/custom_data_pager.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/empty_state.dart';
+import 'package:cvms_desktop/core/widgets/empty_state.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/vehicle_table_columns.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/vehicle_table_header.dart';
 import 'package:flutter/material.dart';
