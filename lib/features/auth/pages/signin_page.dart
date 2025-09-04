@@ -11,7 +11,6 @@ import '../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core//utils/form_validator.dart';
 import '../../../../core//widgets/spacing.dart';
-import '../../../core/utils/logger.dart';
 import '../../../features/auth/widgets/custom_auth_link.dart';
 import '../../../features/auth/widgets/custom_text_button.dart';
 import '../bloc/auth_bloc.dart';
@@ -20,16 +19,34 @@ import '../bloc/auth_state.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_text_field.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    bool keepLoggedIn = false;
+  State<SignInPage> createState() => _SignInPageState();
+}
 
+class _SignInPageState extends State<SignInPage> {
+  final formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  bool keepLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadKeepLoggedInState();
+  }
+
+  Future<void> _loadKeepLoggedInState() async {
+    final savedKeepLoggedIn = await AuthPersistence.getKeepLoggedIn();
+    setState(() {
+      keepLoggedIn = savedKeepLoggedIn;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return AuthScaffold(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -106,8 +123,11 @@ class SignInPage extends StatelessWidget {
                                   ),
                                   Spacing.vertical(size: AppSpacing.medium),
                                   CustomAuthLink(
+                                    initialKeepLoggedIn: keepLoggedIn,
                                     onKeepLoggedInChanged: (value) {
-                                      keepLoggedIn = value;
+                                      setState(() {
+                                        keepLoggedIn = value;
+                                      });
                                     },
                                     forgotPasswordRoute:
                                         AppRoutes.forgotPassword,
@@ -116,11 +136,13 @@ class SignInPage extends StatelessWidget {
                                   CustomButton(
                                     text: 'Login',
                                     isLoading: state is AuthLoading,
-                                    onPressed: () {
+                                    onPressed: () async {
                                       if (formKey.currentState!.validate()) {
-                                        AuthPersistence.setKeepLoggedIn(
+                                        await AuthPersistence.setKeepLoggedIn(
                                           keepLoggedIn,
                                         );
+
+                                        // ignore: use_build_context_synchronously
                                         context.read<AuthBloc>().add(
                                           SignInEvent(
                                             emailController.text,

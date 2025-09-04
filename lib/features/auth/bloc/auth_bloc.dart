@@ -15,6 +15,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         final user = await _firebaseService.signIn(event.email, event.password);
         if (user != null) {
+          final keepLoggedIn = await AuthPersistence.getKeepLoggedIn();
+          if (keepLoggedIn) {
+            await AuthPersistence.saveUserSession(user);
+          }
           emit(AuthSuccess(user.uid, 'Login successful'));
         } else {
           emit(AuthError('Login failed'));
@@ -90,7 +94,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _firebaseService.signOut();
       await AuthPersistence.clear();
       emit(SignOutSuccess());
-      Logger.log('User signed out successfully');
+      Logger.log('User signed out successfully - all data cleared');
     });
   }
 }

@@ -1,3 +1,7 @@
+import 'package:flutter/material.dart';
+
 class Logger {
-  static void log(String message) => log('AuthFeature');
+  static void log(String message) {
+    debugPrint('AuthFeature: $message');
+  }
 }
