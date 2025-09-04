@@ -32,8 +32,12 @@ dependencies:
   flutter_svg: ^2.2.0
   #package for managing windows
   bitsdojo_window: ^0.1.6
+  #for advanced data table
+  syncfusion_flutter_datagrid: ^30.2.7
   #Icons for iOS-style UI elements
   cupertino_icons: ^1.0.8
+  #syncfusion main package
+  syncfusion_flutter_core: ^30.2.7
 
 dev_dependencies:
   flutter_test:

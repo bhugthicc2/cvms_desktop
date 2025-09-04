@@ -56,4 +56,20 @@ class FirebaseService {
       rethrow;
     }
   }
+
+  Future<void> signOut() async {
+    try {
+      // Update user status to inactive in Firestore before signing out
+      final currentUser = _auth.currentUser;
+      if (currentUser != null) {
+        await _firestore.collection('users').doc(currentUser.uid).update({
+          'status': 'inactive',
+        });
+      }
+      // Sign out from Firebase Auth
+      await _auth.signOut();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

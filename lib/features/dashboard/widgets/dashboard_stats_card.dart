@@ -1,0 +1,76 @@
+import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/spacing.dart';
+import 'package:flutter/material.dart';
+
+class DashboardStatsCard extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final int value;
+  final Color color;
+  final Gradient? gradient;
+  final Color? iconColor;
+
+  const DashboardStatsCard({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.color,
+    this.gradient,
+    required this.iconColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient:
+            gradient ??
+            LinearGradient(colors: [color.withValues(alpha: 0.9), color]),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              icon,
+              size: 24,
+              color: iconColor ?? AppColors.white,
+              weight: 5,
+            ),
+          ),
+          Spacing.horizontal(size: AppSpacing.xmedium),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "$value",
+                style: TextStyle(
+                  fontSize: AppFontSizes.elarge,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.white,
+                ),
+              ),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: AppFontSizes.medium,
+                  color: AppColors.white.withValues(alpha: 0.8),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

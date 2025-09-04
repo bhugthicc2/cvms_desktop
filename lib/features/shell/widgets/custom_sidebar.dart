@@ -1,5 +1,4 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
-import 'package:cvms_desktop/core/widgets/custom_snackbar.dart';
 import 'package:cvms_desktop/features/shell/models/nav_item.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_sidebar_header.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_sidebar_tile.dart';
@@ -11,6 +10,7 @@ class CustomSidebar extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onItemSelected;
   final VoidCallback onToggle;
+  final VoidCallback onLogout;
 
   CustomSidebar({
     super.key,
@@ -18,6 +18,7 @@ class CustomSidebar extends StatelessWidget {
     required this.selectedIndex,
     required this.onItemSelected,
     required this.onToggle,
+    required this.onLogout,
   });
 
   final List<NavItem> items = [
@@ -41,7 +42,7 @@ class CustomSidebar extends StatelessWidget {
       width: isExpanded ? 250 : 70,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/images/sidebar_bg.png"),
+          image: const AssetImage("assets/images/sidebar_bg.png"),
           fit: BoxFit.cover,
         ),
         gradient: LinearGradient(
@@ -61,6 +62,7 @@ class CustomSidebar extends StatelessWidget {
               itemCount: items.length,
               itemBuilder: (context, index) {
                 return CustomSidebarTile(
+                  hover: () {},
                   item: items[index],
                   isExpanded: isExpanded,
                   isSelected: index == selectedIndex,
@@ -69,18 +71,15 @@ class CustomSidebar extends StatelessWidget {
               },
             ),
           ),
+          //LOGOUT TILE DAWG
           CustomSidebarTile(
+            hover: () {},
             item: NavItem(icon: PhosphorIconsRegular.signOut, label: "Logout"),
             iconColor: AppColors.error,
             labelColor: AppColors.error,
             isExpanded: isExpanded,
             isSelected: false,
-            onTap:
-                () => CustomSnackBar.show(
-                  context: context,
-                  message: 'Tile pressed',
-                  type: SnackBarType.success,
-                ),
+            onTap: onLogout,
           ),
         ],
       ),

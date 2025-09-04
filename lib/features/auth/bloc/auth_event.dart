@@ -17,3 +17,5 @@ class ResetPasswordEvent extends AuthEvent {
   final String email;
   ResetPasswordEvent(this.email);
 }
+
+class SignOutEvent extends AuthEvent {}

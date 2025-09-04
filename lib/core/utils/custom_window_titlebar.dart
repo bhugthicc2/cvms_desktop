@@ -3,7 +3,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 
 class CustomWindowTitleBar {}
 
-void initializeWindowProperties({
+initializeWindowProperties({
   Size initialSize = const Size(1020, 800),
   Size? minSize,
   Size? maxSize,

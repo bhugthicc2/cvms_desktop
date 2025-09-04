@@ -1,3 +1,4 @@
+import 'package:cvms_desktop/features/auth/services/auth_persistence.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/utils/logger.dart';
@@ -14,13 +15,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         final user = await _firebaseService.signIn(event.email, event.password);
         if (user != null) {
-          emit(AuthSuccess(user.uid));
+          emit(AuthSuccess(user.uid, 'Login successful'));
         } else {
           emit(AuthError('Login failed'));
         }
+      } on FirebaseAuthException catch (e) {
+        String errorMessage;
+        switch (e.code) {
+          case 'user-not-found':
+            errorMessage = 'No account found with this email.';
+            break;
+          case 'wrong-password':
+            errorMessage = 'Incorrect password.';
+            break;
+          case 'invalid-email':
+            errorMessage = 'The email address is not valid.';
+            break;
+          default:
+            errorMessage = 'Authentication failed. Please try again.';
+        }
+        emit(AuthError(errorMessage));
       } catch (e) {
-        emit(AuthError(e.toString()));
-        Logger.log('Auth error: $e');
+        emit(AuthError('Unexpected error: ${e.toString()}'));
       }
     });
 
@@ -33,9 +49,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           event.fullname,
         );
         if (user != null) {
-          emit(AuthSuccess(user.uid));
+          emit(AuthSuccess(user.uid, 'Sign up successful'));
         } else {
           Logger.log('Sign up failed');
+          emit(AuthError('Sign up failed'));
         }
       } catch (e) {
         emit(AuthError(e.toString()));
@@ -66,6 +83,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthError('An unexpected error occurred.'));
         Logger.log('Password reset error: $e');
       }
+    });
+
+    on<SignOutEvent>((event, emit) async {
+      emit(AuthLoading());
+      await _firebaseService.signOut();
+      await AuthPersistence.clear();
+      emit(SignOutSuccess());
+      Logger.log('User signed out successfully');
     });
   }
 }
