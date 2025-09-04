@@ -1,6 +1,6 @@
 ## lib/
 
-- **main.dart**
+- **main.dart** (contains AuthWrapper for session management)
 - **firebase_options.dart**
 - **core/**
   - **error/**
@@ -32,7 +32,7 @@
 - **features/**
   - **auth/**
     - **bloc/**
-      - auth_bloc.dart
+      - auth_bloc.dart (enhanced with session persistence)
       - auth_event.dart
       - auth_state.dart
     - **models/**
@@ -40,15 +40,16 @@
     - **pages/**
       - email_sent_page.dart
       - forgot_password_page.dart
-      - signin_page.dart
+      - signin_page.dart (enhanced with stateful widget for checkbox management)
       - signup_page.dart
     - **services/**
+      - auth_persistence.dart (custom session persistence)
       - firebase_service.dart
     - **widgets/**
       - auth_scaffold.dart
       - auth_window_titlebar.dart
       - custom_alert_dialog.dart
-      - custom_auth_link.dart
+      - custom_auth_link.dart (enhanced with checkbox state management)
       - custom_form_header.dart
       - custom_illustration.dart
       - custom_text_button.dart
@@ -107,3 +108,29 @@
   - **violation_management/**
     - **pages/**
       - violation_management_page.dart
+
+## Keep Me Logged In Functionality Structure
+
+The "Keep Me Logged In" functionality spans across multiple components:
+
+### Core Components:
+
+- **main.dart** - Contains `AuthWrapper` class for session management and initial routing
+- **auth_persistence.dart** - Custom session persistence service using SharedPreferences
+- **auth_bloc.dart** - Enhanced with session saving/clearing logic
+- **signin_page.dart** - Stateful widget with checkbox state management
+
+### Data Flow:
+
+1. **Session Storage**: `AuthPersistence` manages user session data in SharedPreferences
+2. **State Management**: `AuthBloc` handles authentication events and session persistence
+3. **UI Management**: `SignInPage` manages checkbox state and user interaction
+4. **App Initialization**: `AuthWrapper` determines initial route based on session validity
+
+### Key Features:
+
+- Custom session persistence for desktop platforms
+- SharedPreferences-based data storage
+- Firebase Auth integration with fallback session management
+- Stateful checkbox management
+- Automatic routing based on authentication state

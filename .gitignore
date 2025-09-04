@@ -84,6 +84,10 @@ unlinked_spec.ds
 lib/firebase_options.dart
 firebase.json
 
+#structure related
+keep_me_logged_docs.md
+app_structure.md
+
 # Android related
 **/android/**/gradle-wrapper.jar
 .gradle/

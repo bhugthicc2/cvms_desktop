@@ -1,4 +1,5 @@
-import 'package:cvms_desktop/features/auth/pages/auth_session_service.dart';
+import 'package:cvms_desktop/core/widgets/custom_progress_indicator.dart';
+import 'package:cvms_desktop/features/auth/services/auth_session_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cvms_desktop/core/routes/app_routes.dart';
 
@@ -31,7 +32,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(body: Center(child: CustomProgressIndicator()));
     }
 
     return Navigator(
@@ -47,7 +48,8 @@ class _AuthWrapperState extends State<AuthWrapper> {
         return MaterialPageRoute(
           builder:
               (context) =>
-                  const Scaffold(body: Center(child: Text('Route not found'))),
+              //TODO IMPLEMENT A PROPER ROUTE NOT FOUND PAGE
+              const Scaffold(body: Center(child: Text('Route not found'))),
         );
       },
     );

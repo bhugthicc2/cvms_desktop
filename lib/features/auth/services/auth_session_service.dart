@@ -5,10 +5,8 @@ import 'package:cvms_desktop/core/routes/app_routes.dart';
 class AuthSessionService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  /// Determines which route the app should start with
   Future<String> getInitialRoute() async {
     try {
-      // Ensure Firebase emits at least once
       await _firebaseAuth.authStateChanges().first;
 
       final keepLoggedIn = await AuthPersistence.getKeepLoggedIn();
@@ -23,7 +21,6 @@ class AuthSessionService {
 
       return hasValidSession ? AppRoutes.shell : AppRoutes.signIn;
     } catch (e) {
-      // fallback route
       return AppRoutes.signIn;
     }
   }
