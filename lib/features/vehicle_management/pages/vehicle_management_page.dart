@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/vehicle_table.dart';
+import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/vehicle_cubit.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +71,36 @@ class _VehicleManagementPageState extends State<VehicleManagementPage> {
         child: BlocBuilder<VehicleCubit, VehicleState>(
           builder: (context, state) {
             return VehicleTable(
+              onCellTap: (details) async {
+                //todo
+                final dataIndex = details.rowColumnIndex.rowIndex - 1;
+                if (dataIndex < 0 ||
+                    dataIndex >= state.filteredEntries.length) {
+                  return;
+                }
+                final entry = state.filteredEntries[dataIndex];
+                final controller = await DesktopMultiWindow.createWindow(
+                  jsonEncode({
+                    'type': 'viewEntry',
+                    'data': {
+                      'name': entry.name,
+                      'vehicle': entry.vehicle,
+                      'schoolID': entry.schoolID,
+                      'plateNumber': entry.plateNumber,
+                      'vehicleModel': entry.vehicleModel,
+                      'vehicleType': entry.vehicleType,
+                      'vehicleColor': entry.vehicleColor,
+                      'status': entry.status,
+                      'violationStatus': entry.violationStatus,
+                    },
+                  }),
+                );
+                controller
+                  ..setFrame(const Offset(200, 200) & const Size(800, 500))
+                  ..center()
+                  ..setTitle('View Entry')
+                  ..show();
+              },
               title: "Vehicle Management",
               entries: state.filteredEntries,
               searchController: vehicleController,

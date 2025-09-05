@@ -93,17 +93,33 @@ class _DashboardPageState extends State<DashboardPage> {
                           hasSearchQuery:
                               enteredSearchController.text.isNotEmpty,
                           onCellTap: (details) async {
+                            final dataIndex =
+                                details.rowColumnIndex.rowIndex - 1;
+                            if (dataIndex < 0 ||
+                                dataIndex >= state.enteredFiltered.length) {
+                              return;
+                            }
+                            final entry = state.enteredFiltered[dataIndex];
                             final controller =
                                 await DesktopMultiWindow.createWindow(
                                   jsonEncode({
                                     'type': 'viewEntry',
-                                    //'data': details.rowData,
+                                    'data': {
+                                      'status': entry.status,
+                                      'name': entry.name,
+                                      'vehicle': entry.vehicle,
+                                      'plateNumber': entry.plateNumber,
+                                      'durationMinutes':
+                                          entry.duration.inMinutes,
+                                      'durationFormatted':
+                                          entry.formattedDuration,
+                                    },
                                   }),
                                 );
 
                             controller
                               ..setFrame(
-                                const Offset(200, 200) & const Size(600, 400),
+                                const Offset(200, 200) & const Size(800, 500),
                               )
                               ..center()
                               ..setTitle('View Entry')
@@ -124,13 +140,35 @@ class _DashboardPageState extends State<DashboardPage> {
                           hasSearchQuery:
                               exitedSearchController.text.isNotEmpty,
                           onCellTap: (details) async {
+                            final dataIndex =
+                                details.rowColumnIndex.rowIndex - 1;
+                            if (dataIndex < 0 ||
+                                dataIndex >= state.exitedFiltered.length)
+                              return;
+                            final entry = state.exitedFiltered[dataIndex];
                             final controller =
                                 await DesktopMultiWindow.createWindow(
                                   jsonEncode({
                                     'type': 'viewEntry',
-                                    //'data': details.rowData,
+                                    'data': {
+                                      'status': entry.status,
+                                      'name': entry.name,
+                                      'vehicle': entry.vehicle,
+                                      'plateNumber': entry.plateNumber,
+                                      'durationMinutes':
+                                          entry.duration.inMinutes,
+                                      'durationFormatted':
+                                          entry.formattedDuration,
+                                    },
                                   }),
                                 );
+                            controller
+                              ..setFrame(
+                                const Offset(200, 200) & const Size(800, 500),
+                              )
+                              ..center()
+                              ..setTitle('View Entry')
+                              ..show();
                           },
                         );
                       },

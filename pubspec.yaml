@@ -11,6 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  #window manager for managing window properties
+  window_manager: ^0.5.1
   #plugin that create and manager multi window in desktop.
   desktop_multi_window: ^0.2.1
   #Required for initializing and connecting the app to Firebase services
