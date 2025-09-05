@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../core/widgets/app/search_field.dart';
@@ -131,9 +134,20 @@ class TableHeader extends StatelessWidget {
                 Spacing.horizontal(size: AppSpacing.medium),
                 Expanded(
                   child: GestureDetector(
-                    onTap: () {
-                      debugPrint('Add Vehicle Tapped');
+                    onTap: () async {
+                      final controller = await DesktopMultiWindow.createWindow(
+                        jsonEncode({'type': 'addVehicle', 'data': {}}),
+                      );
+
+                      controller
+                        ..setFrame(
+                          const Offset(200, 200) & const Size(600, 400),
+                        )
+                        ..center()
+                        ..setTitle('Add Vehicle')
+                        ..show();
                     },
+
                     child: Container(
                       //TODO ADD VEHICLE BUTTON
                       decoration: BoxDecoration(

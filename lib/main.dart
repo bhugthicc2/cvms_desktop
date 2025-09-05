@@ -1,17 +1,43 @@
-import 'package:cvms_desktop/core/app/cvms_app.dart';
+import 'dart:convert';
+import 'package:collection/collection.dart';
 import 'package:cvms_desktop/core/utils/custom_window_titlebar.dart';
+import 'package:cvms_desktop/features/vehicle_management/windows/add_vehicle_form.dart';
+import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'core/app/cvms_app.dart';
 
-void main() async {
+Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(const CVMSApp());
-  initializeWindowProperties(
-    initialSize: const Size(1280, 720),
-    minSize: const Size(1280, 720),
-    alignment: Alignment.center,
-  );
+  // only initialize firebase in main window
+  if (args.isEmpty || args.first != 'multi_window') {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
+
+  if (args.firstOrNull == 'multi_window') {
+    final windowId = int.parse(args[1]);
+    final argsMap =
+        args[2].isEmpty ? {} : jsonDecode(args[2]) as Map<String, dynamic>;
+
+    runApp(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: AddVehicleFormPage(
+          windowController: WindowController.fromWindowId(windowId),
+          args: argsMap,
+        ),
+      ),
+    );
+  } else {
+    runApp(const CVMSApp());
+    initializeWindowProperties(
+      initialSize: const Size(1280, 720),
+      minSize: const Size(1280, 720),
+      alignment: Alignment.center,
+    );
+  }
 }

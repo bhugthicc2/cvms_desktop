@@ -1,16 +1,19 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/table_header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:cvms_desktop/core/widgets/table/custom_table.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../data/vehicle_data_source.dart';
 import 'vehicle_table_columns.dart';
 import '../models/vehicle_entry.dart';
 
-class VehicleTable extends StatelessWidget {
+class VehicleTable extends StatefulWidget {
   final String title;
   final List<VehicleEntry> entries;
   final TextEditingController searchController;
   final bool hasSearchQuery;
+  final DataGridCellTapCallback? onCellTap;
 
   const VehicleTable({
     super.key,
@@ -18,7 +21,29 @@ class VehicleTable extends StatelessWidget {
     required this.entries,
     required this.searchController,
     this.hasSearchQuery = false,
+    this.onCellTap,
   });
+  @override
+  State<VehicleTable> createState() => _VehicleTableState();
+}
+
+class _VehicleTableState extends State<VehicleTable> {
+  late VehicleEntryDataSource _dataSource;
+  final DataGridController _controller = DataGridController();
+
+  @override
+  void initState() {
+    super.initState();
+    _dataSource = VehicleEntryDataSource(vehicleEntries: widget.entries);
+  }
+
+  @override
+  void didUpdateWidget(covariant VehicleTable oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!listEquals(oldWidget.entries, widget.entries)) {
+      _dataSource = VehicleEntryDataSource(vehicleEntries: widget.entries);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +54,20 @@ class VehicleTable extends StatelessWidget {
       ),
       child: Column(
         children: [
-          TableHeader(title: title, searchController: searchController),
+          TableHeader(
+            title: widget.title,
+            searchController: widget.searchController,
+          ),
           Expanded(
             child: CustomTable(
-              dataSource: VehicleEntryDataSource(vehicleEntries: entries),
+              gridKey: ValueKey('vehicleGrid-${widget.title}'),
+              controller: _controller,
+              onCellTap: widget.onCellTap,
+              dataSource: _dataSource,
               columns: VehicleTableColumns.columns,
-              hasSearchQuery: hasSearchQuery,
+              hasSearchQuery: widget.hasSearchQuery,
               onSearchCleared: () {
-                searchController.clear();
+                widget.searchController.clear();
               },
             ),
           ),
