@@ -28,7 +28,7 @@ class CustomLoadingScreen extends StatelessWidget {
             Text(
               title,
               style: const TextStyle(
-                fontSize: 22,
+                fontSize: AppFontSizes.elarge,
                 fontWeight: FontWeight.bold,
                 color: AppColors.black,
               ),
@@ -43,7 +43,7 @@ class CustomLoadingScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
-            const CircularProgressIndicator(color: Colors.white),
+            const CircularProgressIndicator(color: AppColors.white),
           ],
         ),
       ),

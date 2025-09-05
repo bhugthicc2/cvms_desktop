@@ -1,4 +1,5 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -78,7 +79,10 @@ class VehicleDataSource extends DataGridSource {
               child: Text(
                 e.value.toString(),
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12, fontFamily: 'Sora'),
+                style: const TextStyle(
+                  fontSize: AppFontSizes.small,
+                  fontFamily: 'Sora',
+                ),
               ),
             );
           }).toList(),
