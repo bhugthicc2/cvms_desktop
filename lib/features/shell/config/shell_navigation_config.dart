@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/features/report_and_analytics/pages/report_and_analytics_page.dart';
 import 'package:cvms_desktop/features/settings/pages/settings_page.dart';
+import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_management/pages/vehicle_management_page.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +18,11 @@ class ShellNavigationConfig {
       child: const DashboardPage(),
     ),
     VehicleMonitoringPage(),
-    VehicleManagementPage(),
+    BlocProvider(
+      create: (context) => VehicleCubit(),
+
+      child: VehicleManagementPage(),
+    ),
     UserManagementPage(),
     ViolationManagementPage(),
     ReportAndAnalyticsPage(),

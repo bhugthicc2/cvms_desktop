@@ -88,6 +88,8 @@ class _DashboardPageState extends State<DashboardPage> {
                           title: "Vehicles Entered",
                           entries: state.enteredFiltered,
                           searchController: enteredSearchController,
+                          hasSearchQuery:
+                              enteredSearchController.text.isNotEmpty,
                         );
                       },
                     ),
@@ -100,6 +102,8 @@ class _DashboardPageState extends State<DashboardPage> {
                           title: "Vehicles Exited",
                           entries: state.exitedFiltered,
                           searchController: exitedSearchController,
+                          hasSearchQuery:
+                              exitedSearchController.text.isNotEmpty,
                         );
                       },
                     ),

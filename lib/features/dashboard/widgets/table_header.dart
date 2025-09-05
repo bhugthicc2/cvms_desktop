@@ -3,7 +3,7 @@ import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
-import '../app/search_field.dart';
+import '../../../core/widgets/app/search_field.dart';
 
 class TableHeader extends StatelessWidget {
   final String title;
@@ -13,8 +13,9 @@ class TableHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

@@ -8,22 +8,19 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import 'custom_data_pager.dart';
 import 'paginated_data_source.dart';
-import 'table_header.dart';
 
 class CustomTable extends StatefulWidget {
-  final String title;
   final List<GridColumn> columns;
   final DataGridSource dataSource;
-  final TextEditingController? searchController;
   final VoidCallback? onSearchCleared;
+  final bool hasSearchQuery;
 
   const CustomTable({
     super.key,
-    required this.title,
     required this.columns,
     required this.dataSource,
-    this.searchController,
     this.onSearchCleared,
+    this.hasSearchQuery = false,
   });
 
   @override
@@ -49,17 +46,11 @@ class _CustomTableState extends State<CustomTable> {
       },
     );
 
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
+    return SizedBox(
+      width: double.infinity,
+
       child: Column(
         children: [
-          TableHeader(
-            title: widget.title,
-            searchController: widget.searchController,
-          ),
           Expanded(
             child:
                 hasData
@@ -84,12 +75,17 @@ class _CustomTableState extends State<CustomTable> {
                       ),
                     )
                     : EmptyState(
-                      type: EmptyStateType.noData,
+                      type:
+                          widget.hasSearchQuery
+                              ? EmptyStateType.noSearchResults
+                              : EmptyStateType.noData,
                       actionText:
-                          widget.onSearchCleared != null
+                          widget.hasSearchQuery &&
+                                  widget.onSearchCleared != null
                               ? 'Clear Search'
                               : null,
-                      onActionPressed: widget.onSearchCleared,
+                      onActionPressed:
+                          widget.hasSearchQuery ? widget.onSearchCleared : null,
                     ),
           ),
           if (hasData)

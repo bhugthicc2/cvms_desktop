@@ -40,47 +40,56 @@ class _CustomDataPagerState extends State<CustomDataPager> {
       widget.totalRows,
     );
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-          child: Text(
-            widget.totalRows > 0
-                ? "Showing $startIndex to $endIndex of ${widget.totalRows} entries"
-                : "Showing 0 of 0 entries",
-            style: const TextStyle(
-              fontSize: AppFontSizes.xMedium,
-              color: AppColors.grey,
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(10),
+          bottomRight: Radius.circular(10),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            child: Text(
+              widget.totalRows > 0
+                  ? "Showing $startIndex to $endIndex of ${widget.totalRows} entries"
+                  : "Showing 0 of 0 entries",
+              style: const TextStyle(
+                fontSize: AppFontSizes.xMedium,
+                color: AppColors.grey,
+              ),
             ),
           ),
-        ),
-        const Spacer(),
-        SfDataPagerTheme(
-          data: SfDataPagerThemeData(
-            backgroundColor: Colors.white,
-            itemBorderRadius: BorderRadius.circular(6),
-            selectedItemColor: AppColors.primary,
-            itemColor: Colors.grey.shade200,
-          ),
-          child: SizedBox(
-            width: 220,
-            child: SfDataPager(
-              delegate: widget.delegate,
-              pageCount: pageCount,
-              onRowsPerPageChanged: widget.onRowsPerPageChanged,
-              onPageNavigationStart: (pageIndex) {
-                setState(() => _currentPage = pageIndex + 1);
-                widget.onPageChanged?.call(_currentPage);
-              },
-              itemWidth: 40,
-              itemHeight: 36,
-              firstPageItemVisible: false,
-              lastPageItemVisible: false,
+          const Spacer(),
+          SfDataPagerTheme(
+            data: SfDataPagerThemeData(
+              backgroundColor: Colors.white,
+              itemBorderRadius: BorderRadius.circular(6),
+              selectedItemColor: AppColors.primary,
+              itemColor: Colors.grey.shade200,
+            ),
+            child: SizedBox(
+              width: 220,
+              child: SfDataPager(
+                delegate: widget.delegate,
+                pageCount: pageCount,
+                onRowsPerPageChanged: widget.onRowsPerPageChanged,
+                onPageNavigationStart: (pageIndex) {
+                  setState(() => _currentPage = pageIndex + 1);
+                  widget.onPageChanged?.call(_currentPage);
+                },
+                itemWidth: 40,
+                itemHeight: 36,
+                firstPageItemVisible: false,
+                lastPageItemVisible: false,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

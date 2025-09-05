@@ -18,12 +18,14 @@ class TableColumnFactory {
         padding: const EdgeInsets.all(8),
         color: AppColors.tableHeaderColor,
         child: Text(
+          maxLines: 1,
           label,
           style: const TextStyle(
             fontFamily: 'Sora',
             fontWeight: FontWeight.w600,
             fontSize: AppFontSizes.small,
             color: AppColors.white,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ),
