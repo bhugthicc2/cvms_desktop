@@ -1,7 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
-import 'package:cvms_desktop/core/widgets/custom_checkbox.dart';
-import 'package:cvms_desktop/core/widgets/spacing.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_checkbox.dart';
+import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/auth/widgets/custom_text_button.dart';
 import 'package:flutter/material.dart';
 

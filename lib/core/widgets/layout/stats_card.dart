@@ -1,10 +1,10 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:cvms_desktop/core/widgets/spacing.dart';
+import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
 
-class DashboardStatsCard extends StatelessWidget {
+class StatsCard extends StatelessWidget {
   final IconData icon;
   final String label;
   final int value;
@@ -12,7 +12,7 @@ class DashboardStatsCard extends StatelessWidget {
   final Gradient? gradient;
   final Color? iconColor;
 
-  const DashboardStatsCard({
+  const StatsCard({
     super.key,
     required this.icon,
     required this.label,

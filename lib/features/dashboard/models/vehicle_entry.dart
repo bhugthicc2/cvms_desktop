@@ -3,8 +3,10 @@ class VehicleEntry {
   final String vehicle;
   final String plateNumber;
   final Duration duration;
+  final String status;
 
-  VehicleEntry({
+  VehicleEntry(
+    this.status, {
     required this.name,
     required this.vehicle,
     required this.plateNumber,

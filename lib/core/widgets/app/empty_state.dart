@@ -1,9 +1,9 @@
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:cvms_desktop/core/widgets/spacing.dart';
+import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import '../theme/app_colors.dart';
+import '../../theme/app_colors.dart';
 
 enum EmptyStateType {
   noData,

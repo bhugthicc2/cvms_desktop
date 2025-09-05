@@ -1,6 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
-import 'package:cvms_desktop/core/widgets/custom_window_icon_button.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_window_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 

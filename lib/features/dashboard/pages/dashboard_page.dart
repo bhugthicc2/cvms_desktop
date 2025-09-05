@@ -1,56 +1,43 @@
+import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+import 'package:cvms_desktop/features/dashboard/bloc/dashboard_cubit.dart';
 import 'package:cvms_desktop/features/dashboard/models/vehicle_entry.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/dashboard_overview.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/vehicle_table.dart';
-import 'package:flutter/material.dart';
-import 'dart:math';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // sample data brooooo
-    final firstNames = [
-      "John",
-      "Jessa",
-      "Vincent Jay",
-      "Maria",
-      "Paolo",
-      "Venus",
-      "Angela",
-      "Carlo",
-      "Ellah Mhay",
-      "Marjorie",
-      "Jesie",
-    ];
-    final lastNames = [
-      "Abadilla",
-      "Reyes",
-      "Cruz",
-      "Dela Cruz",
-      "Belono-ac",
-      "Patangan",
-      "Salasayo",
-      "Belonghilot",
-      "Medija",
-      "Gapol",
-      "Lumacad",
-    ];
+  State<DashboardPage> createState() => _DashboardPageState();
+}
 
+class _DashboardPageState extends State<DashboardPage> {
+  final TextEditingController enteredSearchController = TextEditingController();
+  final TextEditingController exitedSearchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Mock data dawg
     final random = Random();
+    final firstNames = ["John", "Maria", "Paolo", "Angela"];
+    final lastNames = ["Reyes", "Cruz", "Patangan", "Medija"];
 
-    String randomName() {
-      final first = firstNames[random.nextInt(firstNames.length)];
-      final last = lastNames[random.nextInt(lastNames.length)];
-      return "$first $last";
-    }
+    String randomName() =>
+        "${firstNames[random.nextInt(firstNames.length)]} ${lastNames[random.nextInt(lastNames.length)]}";
 
-    final entries = List.generate(
+    final allEntries = List.generate(
       100,
       (i) => VehicleEntry(
+        i.isEven ? "inside" : "outside",
         name: randomName(),
-        vehicle: "Honda Beat",
+        vehicle: i.isEven ? "Honda Beat" : "Yamaha Mio",
         plateNumber: "ABC-${100 + i}",
         duration: Duration(
           hours: 1 + random.nextInt(5),
@@ -58,9 +45,31 @@ class DashboardPage extends StatelessWidget {
         ),
       ),
     );
+    // Mock data dawg
 
-    // end code sample data brooooo
+    // Load entries into cubit
+    context.read<DashboardCubit>().loadEntries(allEntries);
 
+    // Listen to search controllers
+    enteredSearchController.addListener(() {
+      context.read<DashboardCubit>().filterEntered(
+        enteredSearchController.text,
+      );
+    });
+    exitedSearchController.addListener(() {
+      context.read<DashboardCubit>().filterExited(exitedSearchController.text);
+    });
+  }
+
+  @override
+  void dispose() {
+    enteredSearchController.dispose();
+    exitedSearchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.greySurface,
       body: Padding(
@@ -68,21 +77,31 @@ class DashboardPage extends StatelessWidget {
         child: Column(
           children: [
             const DashboardOverview(),
-            const SizedBox(height: 16),
+            Spacing.vertical(size: AppSpacing.medium),
             Expanded(
               child: Row(
                 children: [
                   Expanded(
-                    child: VehicleTable(
-                      title: 'Vehicles Entered',
-                      entries: entries,
+                    child: BlocBuilder<DashboardCubit, DashboardState>(
+                      builder: (context, state) {
+                        return VehicleTable(
+                          title: "Vehicles Entered",
+                          entries: state.enteredFiltered,
+                          searchController: enteredSearchController,
+                        );
+                      },
                     ),
                   ),
-                  SizedBox(width: 16),
+                  Spacing.horizontal(size: AppSpacing.medium),
                   Expanded(
-                    child: VehicleTable(
-                      title: 'Vehicles Exited',
-                      entries: entries,
+                    child: BlocBuilder<DashboardCubit, DashboardState>(
+                      builder: (context, state) {
+                        return VehicleTable(
+                          title: "Vehicles Exited",
+                          entries: state.exitedFiltered,
+                          searchController: exitedSearchController,
+                        );
+                      },
                     ),
                   ),
                 ],

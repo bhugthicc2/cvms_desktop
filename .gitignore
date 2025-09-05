@@ -12,6 +12,7 @@
 .buildlog/
 .history
 .svn/
+.vscode
 
 # As packages are no longer pinned, we use a lockfile for testing locally.
 # When unpinning packages, Using lockfiles ensures that failures in PRs are
@@ -87,6 +88,8 @@ firebase.json
 #structure related
 keep_me_logged_docs.md
 app_structure.md
+lib/features/dashboard/feature-dashboard.md
+files_related_to_table_implementation.md
 
 # Android related
 **/android/**/gradle-wrapper.jar

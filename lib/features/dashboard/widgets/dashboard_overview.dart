@@ -1,7 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:cvms_desktop/core/widgets/spacing.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/dashboard_stats_card.dart';
+import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+import 'package:cvms_desktop/core/widgets/layout/stats_card.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -13,7 +13,7 @@ class DashboardOverview extends StatelessWidget {
     return Row(
       children: const [
         Expanded(
-          child: DashboardStatsCard(
+          child: StatsCard(
             color: AppColors.white,
             icon: PhosphorIconsBold.signIn,
             label: "Entered Vehicles",
@@ -24,7 +24,7 @@ class DashboardOverview extends StatelessWidget {
         ),
         Spacing.horizontal(size: AppSpacing.xmedium),
         Expanded(
-          child: DashboardStatsCard(
+          child: StatsCard(
             color: AppColors.white,
             icon: PhosphorIconsBold.signOut,
             label: "Exited Vehicles",
@@ -35,7 +35,7 @@ class DashboardOverview extends StatelessWidget {
         ),
         Spacing.horizontal(size: AppSpacing.xmedium),
         Expanded(
-          child: DashboardStatsCard(
+          child: StatsCard(
             color: AppColors.white,
             icon: PhosphorIconsBold.warning,
             label: "Total Violations",
@@ -46,7 +46,7 @@ class DashboardOverview extends StatelessWidget {
         ),
         Spacing.horizontal(size: AppSpacing.xmedium),
         Expanded(
-          child: DashboardStatsCard(
+          child: StatsCard(
             color: AppColors.white,
             icon: PhosphorIconsBold.motorcycle,
             label: "Total Vehicles",

@@ -2,7 +2,7 @@ import 'package:cvms_desktop/features/shell/widgets/logout_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/routes/app_routes.dart';
-import 'package:cvms_desktop/core/widgets/custom_snackbar.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/features/auth/bloc/auth_bloc.dart';
 import 'package:cvms_desktop/features/auth/bloc/auth_event.dart';
 import 'package:cvms_desktop/features/auth/bloc/auth_state.dart';

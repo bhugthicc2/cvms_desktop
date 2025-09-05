@@ -3,16 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class SearchField extends StatelessWidget {
-  final TextEditingController searchController;
+  final TextEditingController controller;
+  final ValueChanged<String>? onChanged;
 
-  const SearchField({super.key, required this.searchController});
+  const SearchField({
+    super.key,
+    required this.controller,
+    this.onChanged,
+    TextEditingController? searchController,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: searchController,
+      controller: controller,
+      onChanged: onChanged,
       decoration: InputDecoration(
-        hintText: "Search here...",
+        hintText: "Search...",
         hintStyle: TextStyle(fontSize: AppFontSizes.medium),
         suffixIcon: Icon(PhosphorIconsRegular.magnifyingGlass),
       ),

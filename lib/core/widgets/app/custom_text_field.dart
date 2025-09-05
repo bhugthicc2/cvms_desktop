@@ -124,7 +124,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
-    // Determine border color based on state
     final borderColor =
         _hasError
             ? (widget.errorBorderColor ?? AppColors.error)

@@ -1,6 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
-import 'package:cvms_desktop/core/widgets/custom_snackbar.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/features/auth/services/auth_persistence.dart';
 import 'package:cvms_desktop/features/auth/widgets/auth_scaffold.dart';
 import 'package:cvms_desktop/features/auth/widgets/custom_form_header.dart';
@@ -10,14 +10,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core//utils/form_validator.dart';
-import '../../../../core//widgets/spacing.dart';
+import '../../../core/widgets/layout/spacing.dart';
 import '../../../features/auth/widgets/custom_auth_link.dart';
 import '../../../features/auth/widgets/custom_text_button.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
-import '../../../core/widgets/custom_button.dart';
-import '../../../core/widgets/custom_text_field.dart';
+import '../../../core/widgets/app/custom_button.dart';
+import '../../../core/widgets/app/custom_text_field.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
