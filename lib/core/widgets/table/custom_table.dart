@@ -41,56 +41,71 @@ class _CustomTableState extends State<CustomTable> {
   @override
   void initState() {
     super.initState();
-    _rebuildPaginatedSource();
+    _createOrRefreshSource(forceRecreate: true);
   }
 
   @override
   void didUpdateWidget(covariant CustomTable oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.dataSource != widget.dataSource ||
-        oldWidget.columns != widget.columns ||
-        _paginatedSource == null) {
-      _rebuildPaginatedSource();
+        oldWidget.columns != widget.columns) {
+      _createOrRefreshSource(forceRecreate: true);
     }
   }
 
-  void _rebuildPaginatedSource() {
-    final oldSource = _paginatedSource;
+  void _createOrRefreshSource({bool forceRecreate = false}) {
     final totalRows = widget.dataSource.rows.length;
-    _paginatedSource = PaginatedDataSource(
-      originalSource: widget.dataSource,
-      totalRows: totalRows,
-      rowsPerPage: _rowsPerPage,
-      currentPage: _currentPage,
-      onPageChanged: (page) {
-        setState(() => _currentPage = page);
-      },
-    );
-    if (oldSource != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        oldSource.dispose();
-      });
+
+    if (_paginatedSource == null || forceRecreate) {
+      _paginatedSource?.removeListener(_onSourceChanged);
+      _paginatedSource?.dispose();
+
+      _paginatedSource = PaginatedDataSource(
+        originalSource: widget.dataSource,
+        totalRows: totalRows,
+        rowsPerPage: _rowsPerPage,
+        currentPage: _currentPage,
+      );
+
+      _paginatedSource!.addListener(_onSourceChanged);
+    } else {
+      _paginatedSource!
+        ..totalRows = totalRows
+        ..rowsPerPage = _rowsPerPage
+        ..currentPage = _currentPage
+        ..notifyListeners();
     }
+  }
+
+  void _onSourceChanged() {
+    if (!mounted) return;
+    setState(() {
+      _currentPage = _paginatedSource?.currentPage ?? 1;
+    });
   }
 
   @override
   void dispose() {
+    _paginatedSource?.removeListener(_onSourceChanged);
     _paginatedSource?.dispose();
     super.dispose();
+  }
+
+  void _handleRowsPerPageChanged(int? rows) {
+    setState(() {
+      _rowsPerPage = rows ?? 20;
+      _currentPage = 1;
+    });
+    _createOrRefreshSource();
   }
 
   @override
   Widget build(BuildContext context) {
     final totalRows = widget.dataSource.rows.length;
     final hasData = totalRows > 0;
-    // ensure data pager reflects latest totals
-    if (_paginatedSource == null) {
-      _rebuildPaginatedSource();
-    }
 
     return SizedBox(
       width: double.infinity,
-
       child: Column(
         children: [
           Expanded(
@@ -138,19 +153,8 @@ class _CustomTableState extends State<CustomTable> {
               delegate: _paginatedSource!,
               rowsPerPage: _rowsPerPage,
               totalRows: totalRows,
-              onRowsPerPageChanged: (rows) {
-                setState(() {
-                  _rowsPerPage = rows ?? 20;
-                  _currentPage = 1;
-                  _rebuildPaginatedSource();
-                });
-              },
-              onPageChanged: (page) {
-                setState(() {
-                  _currentPage = page ?? 1;
-                  _rebuildPaginatedSource();
-                });
-              },
+              currentPage: _currentPage,
+              onRowsPerPageChanged: _handleRowsPerPageChanged,
             ),
         ],
       ),

@@ -1,6 +1,5 @@
-import 'dart:convert';
 import 'dart:math';
-import 'package:desktop_multi_window/desktop_multi_window.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/custom_form_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
@@ -92,22 +91,17 @@ class _DashboardPageState extends State<DashboardPage> {
                           searchController: enteredSearchController,
                           hasSearchQuery:
                               enteredSearchController.text.isNotEmpty,
-                          onCellTap: (details) async {
-                            final controller =
-                                await DesktopMultiWindow.createWindow(
-                                  jsonEncode({
-                                    'type': 'viewEntry',
-                                    //'data': details.rowData,
-                                  }),
-                                );
-
-                            controller
-                              ..setFrame(
-                                const Offset(200, 200) & const Size(600, 400),
-                              )
-                              ..center()
-                              ..setTitle('View Entry')
-                              ..show();
+                          onCellTap: (details) {
+                            //exclude the header for showing the dialog
+                            if (details.rowColumnIndex.rowIndex > 0) {
+                              showDialog(
+                                context: context,
+                                builder:
+                                    (_) => CustomFormDialog(
+                                      title: 'Vehicle Information',
+                                    ),
+                              );
+                            }
                           },
                         );
                       },
@@ -123,14 +117,17 @@ class _DashboardPageState extends State<DashboardPage> {
                           searchController: exitedSearchController,
                           hasSearchQuery:
                               exitedSearchController.text.isNotEmpty,
-                          onCellTap: (details) async {
-                            final controller =
-                                await DesktopMultiWindow.createWindow(
-                                  jsonEncode({
-                                    'type': 'viewEntry',
-                                    //'data': details.rowData,
-                                  }),
-                                );
+                          onCellTap: (details) {
+                            //exclude the header for showing the dialog
+                            if (details.rowColumnIndex.rowIndex > 0) {
+                              showDialog(
+                                context: context,
+                                builder:
+                                    (_) => CustomFormDialog(
+                                      title: 'Vehicle Information',
+                                    ),
+                              );
+                            }
                           },
                         );
                       },

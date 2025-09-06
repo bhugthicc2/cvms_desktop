@@ -4,46 +4,35 @@ import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../../core/theme/app_colors.dart';
 
-class CustomDataPager extends StatefulWidget {
+class CustomDataPager extends StatelessWidget {
   final DataPagerDelegate delegate;
   final int rowsPerPage;
   final int totalRows;
+  final int currentPage;
   final ValueChanged<int?>? onRowsPerPageChanged;
-  final ValueChanged<int?>? onPageChanged;
 
   const CustomDataPager({
     super.key,
     required this.delegate,
     required this.rowsPerPage,
     required this.totalRows,
+    required this.currentPage,
     this.onRowsPerPageChanged,
-    this.onPageChanged,
   });
-
-  @override
-  State<CustomDataPager> createState() => _CustomDataPagerState();
-}
-
-class _CustomDataPagerState extends State<CustomDataPager> {
-  int _currentPage = 1;
 
   @override
   Widget build(BuildContext context) {
     final pageCount =
-        widget.totalRows > 0
-            ? (widget.totalRows / widget.rowsPerPage).ceilToDouble()
-            : 1.0;
+        totalRows > 0 ? (totalRows / rowsPerPage).ceilToDouble() : 1.0;
 
-    final startIndex = (_currentPage - 1) * widget.rowsPerPage + 1;
-    final endIndex = (_currentPage * widget.rowsPerPage).clamp(
-      0,
-      widget.totalRows,
-    );
+    final startIndex = totalRows == 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
+    final endIndex =
+        totalRows == 0 ? 0 : (currentPage * rowsPerPage).clamp(0, totalRows);
 
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(10),
           bottomRight: Radius.circular(10),
         ),
@@ -54,8 +43,8 @@ class _CustomDataPagerState extends State<CustomDataPager> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
             child: Text(
-              widget.totalRows > 0
-                  ? "Showing $startIndex to $endIndex of ${widget.totalRows} entries"
+              totalRows > 0
+                  ? "Showing $startIndex to $endIndex of $totalRows entries"
                   : "Showing 0 of 0 entries",
               style: const TextStyle(
                 fontSize: AppFontSizes.xMedium,
@@ -66,7 +55,7 @@ class _CustomDataPagerState extends State<CustomDataPager> {
           const Spacer(),
           SfDataPagerTheme(
             data: SfDataPagerThemeData(
-              backgroundColor: Colors.white,
+              backgroundColor: AppColors.white,
               itemBorderRadius: BorderRadius.circular(6),
               selectedItemColor: AppColors.primary,
               itemColor: Colors.grey.shade200,
@@ -74,13 +63,9 @@ class _CustomDataPagerState extends State<CustomDataPager> {
             child: SizedBox(
               width: 220,
               child: SfDataPager(
-                delegate: widget.delegate,
+                delegate: delegate,
                 pageCount: pageCount,
-                onRowsPerPageChanged: widget.onRowsPerPageChanged,
-                onPageNavigationStart: (pageIndex) {
-                  setState(() => _currentPage = pageIndex + 1);
-                  widget.onPageChanged?.call(_currentPage);
-                },
+                onRowsPerPageChanged: onRowsPerPageChanged,
                 itemWidth: 40,
                 itemHeight: 36,
                 firstPageItemVisible: false,

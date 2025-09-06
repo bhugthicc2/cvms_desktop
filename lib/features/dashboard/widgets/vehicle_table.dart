@@ -14,6 +14,7 @@ class VehicleTable extends StatefulWidget {
   final TextEditingController searchController;
   final bool hasSearchQuery;
   final DataGridCellTapCallback? onCellTap;
+  final Function(VehicleEntry, int)? onActionTap;
 
   const VehicleTable({
     super.key,
@@ -22,6 +23,7 @@ class VehicleTable extends StatefulWidget {
     required this.searchController,
     this.hasSearchQuery = false,
     this.onCellTap,
+    this.onActionTap,
   });
   @override
   State<VehicleTable> createState() => _VehicleTableState();
@@ -34,14 +36,23 @@ class _VehicleTableState extends State<VehicleTable> {
   @override
   void initState() {
     super.initState();
-    _dataSource = VehicleEntryDataSource(vehicleEntries: widget.entries);
+    _dataSource = VehicleEntryDataSource(
+      vehicleEntries: widget.entries,
+      onActionTap: widget.onActionTap,
+      context: context,
+    );
   }
 
   @override
   void didUpdateWidget(covariant VehicleTable oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (!listEquals(oldWidget.entries, widget.entries)) {
-      _dataSource = VehicleEntryDataSource(vehicleEntries: widget.entries);
+    if (!listEquals(oldWidget.entries, widget.entries) ||
+        oldWidget.onActionTap != widget.onActionTap) {
+      _dataSource = VehicleEntryDataSource(
+        vehicleEntries: widget.entries,
+        onActionTap: widget.onActionTap,
+        context: context,
+      );
     }
   }
 

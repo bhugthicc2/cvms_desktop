@@ -141,7 +141,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               widget.contentPadding ??
               const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(5),
             border: Border.all(color: borderColor, width: 1),
             color: widget.fillColor ?? AppColors.white,
           ),
