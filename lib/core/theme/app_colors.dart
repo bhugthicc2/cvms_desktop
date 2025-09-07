@@ -25,6 +25,12 @@ class AppColors {
   static const Color lineColor = Color(0xFFB5B5B5);
   static const Color tableHeaderColor = Color(0xFF0D046D);
 
+  //chart colors
+  static const Color chartOrange = Color(0xFFFB923C);
+  static const Color chartGreen = Color(0xFF22C55E);
+  static const Color donutBlue = Color(0xFF2563EB);
+  static const Color donutPurple = Color(0xFFC084FC);
+
   //gradients
   static const LinearGradient blueViolet = LinearGradient(
     colors: [Color(0xFF7F00FF), Color(0xFFE100FF)],

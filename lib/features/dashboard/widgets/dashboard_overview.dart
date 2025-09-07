@@ -22,7 +22,7 @@ class DashboardOverview extends StatelessWidget {
             iconColor: AppColors.primary,
           ),
         ),
-        Spacing.horizontal(size: AppSpacing.xmedium),
+        Spacing.horizontal(size: AppSpacing.medium),
         Expanded(
           child: StatsCard(
             color: AppColors.white,
@@ -33,7 +33,7 @@ class DashboardOverview extends StatelessWidget {
             iconColor: AppColors.primary,
           ),
         ),
-        Spacing.horizontal(size: AppSpacing.xmedium),
+        Spacing.horizontal(size: AppSpacing.medium),
         Expanded(
           child: StatsCard(
             color: AppColors.white,
@@ -44,7 +44,7 @@ class DashboardOverview extends StatelessWidget {
             iconColor: AppColors.orange,
           ),
         ),
-        Spacing.horizontal(size: AppSpacing.xmedium),
+        Spacing.horizontal(size: AppSpacing.medium),
         Expanded(
           child: StatsCard(
             color: AppColors.white,

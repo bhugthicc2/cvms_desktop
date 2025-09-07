@@ -34,7 +34,7 @@ class CustomTable extends StatefulWidget {
 }
 
 class _CustomTableState extends State<CustomTable> {
-  int _rowsPerPage = 20;
+  int _rowsPerPage = 50;
   int _currentPage = 1;
   PaginatedDataSource? _paginatedSource;
 
@@ -93,7 +93,7 @@ class _CustomTableState extends State<CustomTable> {
 
   void _handleRowsPerPageChanged(int? rows) {
     setState(() {
-      _rowsPerPage = rows ?? 20;
+      _rowsPerPage = rows ?? 50;
       _currentPage = 1;
     });
     _createOrRefreshSource();
@@ -126,7 +126,7 @@ class _CustomTableState extends State<CustomTable> {
                         controller: widget.controller,
                         onCellTap: widget.onCellTap,
                         gridLinesVisibility: GridLinesVisibility.horizontal,
-                        rowHeight: 36,
+                        rowHeight: 34,
                         allowSorting: true,
                         headerRowHeight: AppDimensions.tableHeaderHeight,
                         source: _paginatedSource!,

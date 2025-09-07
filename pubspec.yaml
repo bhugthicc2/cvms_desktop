@@ -11,6 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  #qrcode package
+  pretty_qr_code: ^3.5.0
   #Required for initializing and connecting the app to Firebase services
   firebase_core: ^4.0.0
   #Firebase Authentication - used for handling user sign-in, sign-up,
@@ -33,12 +35,15 @@ dependencies:
   #package for managing windows
   bitsdojo_window: ^0.1.6
   #for advanced data table
-  syncfusion_flutter_datagrid: ^30.2.7
   #Icons for iOS-style UI elements
   cupertino_icons: ^1.0.8
   #syncfusion main package
-  syncfusion_flutter_core: ^30.2.7
   collection: ^1.19.1
+  #charting library
+  syncfusion_flutter_charts: 30.2.7
+  syncfusion_flutter_core: 30.2.7
+  syncfusion_flutter_datagrid: 30.2.7
+  equatable: ^2.0.7
 
 dev_dependencies:
   flutter_test:

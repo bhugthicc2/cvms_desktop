@@ -34,7 +34,7 @@ class _DashboardPageState extends State<DashboardPage> {
         "${firstNames[random.nextInt(firstNames.length)]} ${lastNames[random.nextInt(lastNames.length)]}";
 
     final allEntries = List.generate(
-      100,
+      300,
       (i) => VehicleEntry(
         i.isEven ? "inside" : "outside",
         name: randomName(),
@@ -73,8 +73,9 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.greySurface,
+
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(AppSpacing.medium),
         child: Column(
           children: [
             const DashboardOverview(),
@@ -92,7 +93,6 @@ class _DashboardPageState extends State<DashboardPage> {
                           hasSearchQuery:
                               enteredSearchController.text.isNotEmpty,
                           onCellTap: (details) {
-                            //exclude the header for showing the dialog
                             if (details.rowColumnIndex.rowIndex > 0) {
                               showDialog(
                                 context: context,
@@ -118,7 +118,6 @@ class _DashboardPageState extends State<DashboardPage> {
                           hasSearchQuery:
                               exitedSearchController.text.isNotEmpty,
                           onCellTap: (details) {
-                            //exclude the header for showing the dialog
                             if (details.rowColumnIndex.rowIndex > 0) {
                               showDialog(
                                 context: context,

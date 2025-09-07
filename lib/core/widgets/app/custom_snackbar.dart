@@ -36,6 +36,7 @@ class CustomSnackBar {
     }
 
     final snackBar = SnackBar(
+      dismissDirection: DismissDirection.startToEnd,
       content: Row(
         children: [
           Icon(icon, color: textColor, size: 20),

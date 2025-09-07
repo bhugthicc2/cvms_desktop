@@ -147,7 +147,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
           child: TextFormField(
             controller: widget.controller,
-            obscureText: _isObscured,
             keyboardType: widget.keyboardType,
             validator: widget.validator,
             onChanged: (value) {

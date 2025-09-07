@@ -25,12 +25,19 @@ class StatsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.medium),
       decoration: BoxDecoration(
         gradient:
             gradient ??
             LinearGradient(colors: [color.withValues(alpha: 0.9), color]),
         borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.grey.withValues(alpha: 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -48,7 +55,7 @@ class StatsCard extends StatelessWidget {
               weight: 5,
             ),
           ),
-          Spacing.horizontal(size: AppSpacing.xmedium),
+          Spacing.horizontal(size: AppSpacing.medium),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

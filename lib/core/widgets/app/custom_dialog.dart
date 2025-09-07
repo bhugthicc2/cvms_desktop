@@ -8,10 +8,15 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 class CustomDialog extends StatelessWidget {
   final String title;
   final Widget child;
+  final IconData icon;
   final VoidCallback onSave;
   final String btnTxt;
   final double width;
   final double height;
+  final bool? isExpanded;
+  final double? mainContentPadding;
+  final bool? isAlert;
+  final Color? headerColor;
 
   const CustomDialog({
     super.key,
@@ -21,6 +26,11 @@ class CustomDialog extends StatelessWidget {
     this.height = 800,
     required this.onSave,
     required this.btnTxt,
+    this.icon = PhosphorIconsBold.info,
+    this.isExpanded = false,
+    this.mainContentPadding,
+    this.headerColor,
+    this.isAlert,
   });
 
   @override
@@ -35,9 +45,9 @@ class CustomDialog extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: AppColors.primary,
+                color: headerColor ?? AppColors.primary,
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(6),
                 ),
@@ -45,7 +55,7 @@ class CustomDialog extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(PhosphorIconsBold.info, color: AppColors.white),
+                  Icon(icon, color: AppColors.white),
                   Spacing.horizontal(size: AppSpacing.small),
                   Text(
                     title,
@@ -64,13 +74,24 @@ class CustomDialog extends StatelessWidget {
               ),
             ),
 
-            //main content
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: child,
-              ),
-            ), //main content
+            // Conditional content rendering
+            if (isAlert == true)
+              Expanded(
+                child: SizedBox(
+                  child: Padding(
+                    padding: EdgeInsets.all(AppSpacing.small),
+                    child: child,
+                  ),
+                ),
+              )
+            else
+              //main content
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(mainContentPadding ?? 16),
+                  child: child,
+                ),
+              ), //main content
 
             Container(
               alignment: Alignment.centerRight,
@@ -78,37 +99,81 @@ class CustomDialog extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.grey.withValues(alpha: 0.2),
-                      foregroundColor: AppColors.grey,
-                      padding: EdgeInsets.all(20),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                  // Cancel button with conditional expansion
+                  isExpanded == true
+                      ? Expanded(
+                        child: TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.grey.withValues(
+                              alpha: 0.2,
+                            ),
+                            foregroundColor: AppColors.grey,
+                            padding: EdgeInsets.all(20),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          child: const Text('Cancel'),
+                        ),
+                      )
+                      : TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.grey.withValues(
+                            alpha: 0.2,
+                          ),
+                          foregroundColor: AppColors.grey,
+                          padding: EdgeInsets.all(20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        child: const Text('Cancel'),
                       ),
-                    ),
-                    child: const Text('Cancel'),
-                  ),
+
                   Spacing.horizontal(size: AppSpacing.medium),
-                  ElevatedButton(
-                    onPressed: onSave,
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.all(20),
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: AppColors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+
+                  // Save button with conditional expansion
+                  isExpanded == true
+                      ? Expanded(
+                        child: ElevatedButton(
+                          onPressed: onSave,
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.all(20),
+                            backgroundColor: headerColor ?? AppColors.primary,
+                            foregroundColor: AppColors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          child: Text(
+                            btnTxt,
+                            style: TextStyle(
+                              fontFamily: 'Sora',
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      )
+                      : ElevatedButton(
+                        onPressed: onSave,
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.all(20),
+                          backgroundColor: headerColor ?? AppColors.primary,
+                          foregroundColor: AppColors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        child: Text(
+                          btnTxt,
+                          style: TextStyle(
+                            fontFamily: 'Sora',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      btnTxt,
-                      style: TextStyle(
-                        fontFamily: 'Sora',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),

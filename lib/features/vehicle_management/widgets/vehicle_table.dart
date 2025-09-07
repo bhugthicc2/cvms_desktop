@@ -1,11 +1,14 @@
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/table_header.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/toggle_actions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/widgets/table/custom_table.dart';
 import '../data/vehicle_data_source.dart';
 import 'vehicle_table_columns.dart';
 import '../models/vehicle_entry.dart';
+import '../bloc/vehicle_cubit.dart';
 
 class VehicleTable extends StatelessWidget {
   final String title;
@@ -21,20 +24,63 @@ class VehicleTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TableHeader(searchController: searchController),
-        Spacing.vertical(size: AppFontSizes.medium),
-        Expanded(
-          child: CustomTable(
-            dataSource: VehicleDataSource(vehicleEntries: entries),
-            columns: VehicleTableColumns.columns,
-            onSearchCleared: () {
-              searchController.clear();
-            },
-          ),
-        ),
-      ],
+    return BlocBuilder<VehicleCubit, VehicleState>(
+      builder: (context, state) {
+        return Column(
+          children: [
+            TableHeader(searchController: searchController),
+            if (state.isBulkModeEnabled) ...[
+              Spacing.vertical(size: AppFontSizes.medium),
+              ToggleActions(
+                exportValue: state.selectedEntries.length.toString(),
+                reportValue: state.selectedEntries.length.toString(),
+                deleteValue: state.selectedEntries.length.toString(),
+                updateValue: state.selectedEntries.length.toString(),
+                onExport: () {
+                  //todo Handle export QR codes
+                  debugPrint(
+                    'Exporting QR codes for ${state.selectedEntries.length} entries',
+                  );
+                },
+                onUpdate: () {
+                  //todo Handle update status
+                  debugPrint(
+                    'Updating status for ${state.selectedEntries.length} entries',
+                  );
+                },
+                onReport: () {
+                  //todo Handle report selected
+                  debugPrint(
+                    'Reporting ${state.selectedEntries.length} entries',
+                  );
+                },
+                onDelete: () {
+                  //todo Handle delete selected
+                  debugPrint(
+                    'Deleting ${state.selectedEntries.length} entries',
+                  );
+                },
+              ),
+            ],
+            Spacing.vertical(size: AppFontSizes.medium),
+            Expanded(
+              child: CustomTable(
+                dataSource: VehicleDataSource(
+                  vehicleEntries: entries,
+                  showCheckbox: state.isBulkModeEnabled,
+                  context: context,
+                ),
+                columns: VehicleTableColumns.getColumns(
+                  showCheckbox: state.isBulkModeEnabled,
+                ),
+                onSearchCleared: () {
+                  searchController.clear();
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

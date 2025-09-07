@@ -30,6 +30,7 @@ class CustomDataPager extends StatelessWidget {
         totalRows == 0 ? 0 : (currentPage * rowsPerPage).clamp(0, totalRows);
 
     return Container(
+      height: 45,
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: const BorderRadius.only(
@@ -56,7 +57,7 @@ class CustomDataPager extends StatelessWidget {
           SfDataPagerTheme(
             data: SfDataPagerThemeData(
               backgroundColor: AppColors.white,
-              itemBorderRadius: BorderRadius.circular(6),
+              itemBorderRadius: BorderRadius.circular(5),
               selectedItemColor: AppColors.primary,
               itemColor: Colors.grey.shade200,
             ),
@@ -69,6 +70,9 @@ class CustomDataPager extends StatelessWidget {
                 itemWidth: 40,
                 itemHeight: 36,
                 firstPageItemVisible: false,
+                navigationItemHeight: 40,
+                navigationItemWidth: 40,
+
                 lastPageItemVisible: false,
               ),
             ),

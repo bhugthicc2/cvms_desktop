@@ -60,6 +60,13 @@ class _VehicleTableState extends State<VehicleTable> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.grey.withValues(alpha: 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
         color: AppColors.white,
         borderRadius: BorderRadius.circular(10),
       ),
