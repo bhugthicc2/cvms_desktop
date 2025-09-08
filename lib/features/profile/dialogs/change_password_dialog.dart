@@ -27,7 +27,7 @@ class ChangePasswordDialog extends StatelessWidget {
       width: 500,
       height: 600,
       btnTxt: 'Update Password',
-      onSave: onSave,
+      onSubmit: onSave,
       child: Column(
         children: [
           CustomTextField(

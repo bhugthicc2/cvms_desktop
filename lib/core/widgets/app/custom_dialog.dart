@@ -9,7 +9,7 @@ class CustomDialog extends StatelessWidget {
   final String title;
   final Widget child;
   final IconData icon;
-  final VoidCallback onSave;
+  final VoidCallback onSubmit;
   final String btnTxt;
   final double width;
   final double height;
@@ -24,7 +24,7 @@ class CustomDialog extends StatelessWidget {
     required this.child,
     this.width = 700,
     this.height = 800,
-    required this.onSave,
+    required this.onSubmit,
     required this.btnTxt,
     this.icon = PhosphorIconsBold.info,
     this.isExpanded = false,
@@ -138,7 +138,7 @@ class CustomDialog extends StatelessWidget {
                   isExpanded == true
                       ? Expanded(
                         child: ElevatedButton(
-                          onPressed: onSave,
+                          onPressed: onSubmit,
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.all(20),
                             backgroundColor: headerColor ?? AppColors.primary,
@@ -157,7 +157,7 @@ class CustomDialog extends StatelessWidget {
                         ),
                       )
                       : ElevatedButton(
-                        onPressed: onSave,
+                        onPressed: onSubmit,
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.all(20),
                           backgroundColor: headerColor ?? AppColors.primary,

@@ -14,7 +14,7 @@ class CustomFormDialog extends StatelessWidget {
 
     return CustomDialog(
       btnTxt: 'Save',
-      onSave: () {},
+      onSubmit: () {},
       title: title,
       height: screenHeight * 0.9,
       child: Padding(

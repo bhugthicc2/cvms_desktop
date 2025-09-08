@@ -27,7 +27,7 @@ class ViewQrCodeDialog extends StatelessWidget {
       icon: PhosphorIconsRegular.qrCode,
       width: 500,
       btnTxt: 'Export',
-      onSave: () {}, // todo add a function to export qr code soooon
+      onSubmit: () {}, // todo add a function to export qr code soooon
       title: title,
       height: screenHeight * 0.9,
       isExpanded: true,

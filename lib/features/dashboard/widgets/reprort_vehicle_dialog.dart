@@ -20,7 +20,7 @@ class ReportVehicleDialog extends StatelessWidget {
       width: 500,
 
       btnTxt: 'Report',
-      onSave: () {},
+      onSubmit: () {},
       title: title,
       height: 280,
       isExpanded: true,

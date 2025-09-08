@@ -44,7 +44,6 @@ class _CustomEditDialogState extends State<CustomEditDialog> {
   void initState() {
     super.initState();
 
-    // PREFILL THE CONTROLLERS WITH INITSTATE
     _controllers["Owner Name"]!.text = widget.vehicle.ownerName;
     _controllers["School ID"]!.text = widget.vehicle.schoolID;
     _controllers["Plate Number"]!.text = widget.vehicle.plateNumber;
@@ -57,7 +56,6 @@ class _CustomEditDialogState extends State<CustomEditDialog> {
     _controllers["Status"]!.text = widget.vehicle.status;
     _controllers["QR Code ID"]!.text = widget.vehicle.qrCodeID;
 
-    // FORMAT DATE
     if (widget.vehicle.createdAt != null) {
       _createdAt = widget.vehicle.createdAt!.toDate().toIso8601String();
     }
@@ -87,7 +85,7 @@ class _CustomEditDialogState extends State<CustomEditDialog> {
     return CustomDialog(
       icon: PhosphorIconsBold.motorcycle,
       btnTxt: 'Update',
-      onSave: () => _handleSave(context),
+      onSubmit: () => _handleSave(context),
       title: widget.title,
       height: screenHeight * 0.8,
       child: Padding(

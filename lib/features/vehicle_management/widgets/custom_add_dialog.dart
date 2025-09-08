@@ -21,23 +21,18 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
   final Map<String, TextEditingController> _controllers = {
     "Owner Name": TextEditingController(),
     "School ID": TextEditingController(),
-
     "Plate Number": TextEditingController(),
     "Vehicle Type": TextEditingController(),
-
     "Vehicle Model": TextEditingController(),
     "Vehicle Color": TextEditingController(),
-
     "License Number": TextEditingController(),
     "OR Number": TextEditingController(),
-
     "CR Number": TextEditingController(),
     "Status": TextEditingController(),
-
     "QR Code ID": TextEditingController(),
   };
 
-  String? _createdAt; // display only, not editable
+  String? _createdAt;
 
   @override
   void dispose() {
@@ -51,20 +46,19 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
 
-    // Group fields into pairs for rows
     final fieldPairs = [
       ["Owner Name", "School ID"],
       ["Plate Number", "Vehicle Type"],
       ["Vehicle Model", "Vehicle Color"],
       ["License Number", "OR Number"],
       ["CR Number", "Status"],
-      ["QR Code ID", ""], // single field row
+      ["QR Code ID", ""],
     ];
 
     return CustomDialog(
       icon: PhosphorIconsBold.motorcycle,
       btnTxt: 'Save',
-      onSave: () => _handleSave(context),
+      onSubmit: () => _handleSave(context),
       title: widget.title,
       height: screenHeight * 0.8,
       child: Padding(
@@ -95,7 +89,6 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
               Spacing.vertical(size: AppIconSizes.medium),
             ],
 
-            //DATE CREATED FIELD BUT READ ONLY
             Row(
               children: [
                 Expanded(
@@ -104,7 +97,7 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
                     controller: TextEditingController(
                       text: _createdAt ?? DateTime.now().toIso8601String(),
                     ),
-                    enabled: false, // read-only
+                    enabled: false,
                   ),
                 ),
               ],
@@ -117,7 +110,7 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
 
   void _handleSave(BuildContext context) {
     final entry = VehicleEntry(
-      vehicleID: '', // Firestore will auto-generate
+      vehicleID: '',
       ownerName: _controllers["Owner Name"]!.text,
       schoolID: _controllers["School ID"]!.text,
       plateNumber: _controllers["Plate Number"]!.text,
@@ -132,8 +125,7 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
               ? _controllers["Status"]!.text
               : "outside",
       qrCodeID: _controllers["QR Code ID"]!.text,
-      createdAt:
-          Timestamp.now(), // Firestore will override with serverTimestamp
+      createdAt: Timestamp.now(),
     );
 
     widget.onSave(entry);

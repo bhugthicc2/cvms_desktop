@@ -18,7 +18,7 @@ class CustomResetDialog extends StatelessWidget {
       isAlert: true,
       headerColor: AppColors.error,
       btnTxt: 'Reset',
-      onSave: () {},
+      onSubmit: () {},
       title: title,
       height: 200,
       width: 500,

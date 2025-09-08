@@ -19,7 +19,7 @@ class CustomUpdateStatusDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomDialog(
-      onSave: onUpdate,
+      onSubmit: onUpdate,
       isAlert: true,
       headerColor: AppColors.primary,
       icon: PhosphorIconsRegular.qrCode,

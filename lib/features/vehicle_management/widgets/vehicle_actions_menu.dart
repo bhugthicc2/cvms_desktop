@@ -110,7 +110,6 @@ class VehicleActionsMenu extends StatelessWidget {
                   updatedEntry.vehicleID,
                   updatedEntry.toMap(),
                 );
-                //SHOW SNACKBAR WHEN SUCCESS
                 CustomSnackBar.show(
                   // ignore: use_build_context_synchronously
                   context: context,
@@ -118,7 +117,6 @@ class VehicleActionsMenu extends StatelessWidget {
                   type: SnackBarType.success,
                 );
               } catch (e) {
-                //SHOW SNACKBAR WHEN FAIL
                 CustomSnackBar.show(
                   // ignore: use_build_context_synchronously
                   context: context,
@@ -136,10 +134,7 @@ class VehicleActionsMenu extends StatelessWidget {
     showDialog(
       context: context,
       builder:
-          (_) => ViewQrCodeDialog(
-            title: "Vehicle QR",
-            vehicle: vehicleEntry, // pass the full model
-          ),
+          (_) => ViewQrCodeDialog(title: "Vehicle QR", vehicle: vehicleEntry),
     );
   }
 
@@ -188,7 +183,31 @@ class VehicleActionsMenu extends StatelessWidget {
     //todo
     showDialog(
       context: context,
-      builder: (_) => const CustomDeleteDialog(title: "Delete Vehicle"),
+      builder:
+          (_) => CustomDeleteDialog(
+            title: "Delete Vehicle",
+            onDelete: () async {
+              try {
+                await context.read<VehicleCubit>().deleteVehicle(
+                  vehicleEntry.vehicleID,
+                );
+                CustomSnackBar.show(
+                  // ignore: use_build_context_synchronously
+                  context: context,
+                  message: "Vehicle deleted successfully!",
+                  type: SnackBarType.success,
+                );
+              } catch (e) {
+                CustomSnackBar.show(
+                  // ignore: use_build_context_synchronously
+                  context: context,
+                  message: "Failed to delete vehicle: $e",
+                  type: SnackBarType.error,
+                );
+              }
+              // ignore: use_build_context_synchronously
+            },
+          ),
     );
   }
 }

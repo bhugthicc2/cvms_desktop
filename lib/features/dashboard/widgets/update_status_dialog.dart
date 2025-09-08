@@ -15,7 +15,7 @@ class UpdateStatusDialog extends StatelessWidget {
       height: 250,
       width: 600,
       title: 'Update Vehicle Status',
-      onSave: () {},
+      onSubmit: () {},
       btnTxt: 'Update',
       child: Padding(
         padding: EdgeInsets.all(20.0),

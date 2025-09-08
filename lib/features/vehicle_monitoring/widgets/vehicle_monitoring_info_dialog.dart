@@ -19,7 +19,7 @@ class VehicleMonitoringInfoDialog extends StatelessWidget {
       btnTxt: 'Close',
       width: 600,
       height: 445,
-      onSave: () => Navigator.of(context).pop(),
+      onSubmit: () => Navigator.of(context).pop(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

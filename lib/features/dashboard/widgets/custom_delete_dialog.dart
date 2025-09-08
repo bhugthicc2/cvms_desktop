@@ -14,7 +14,7 @@ class CustomDeleteDialog extends StatelessWidget {
       icon: PhosphorIconsRegular.qrCode,
       width: 500,
       btnTxt: 'Yes',
-      onSave: () {},
+      onSubmit: () {},
       title: title,
       height: 200,
       isExpanded: true,

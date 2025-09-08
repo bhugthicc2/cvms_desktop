@@ -35,7 +35,7 @@ class _CustomUpdateStatusDialogState extends State<CustomUpdateStatusDialog> {
       width: 600,
       title: 'Update Vehicle Status',
       btnTxt: 'Update',
-      onSave: () {
+      onSubmit: () {
         if (_selectedStatus != null) {
           widget.onSave(_selectedStatus!);
           Navigator.of(context).pop();

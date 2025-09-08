@@ -13,7 +13,7 @@ class CustomFormDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomDialog(
       btnTxt: 'Save',
-      onSave: () {},
+      onSubmit: () {},
       title: title,
       height: 500,
       icon: PhosphorIconsBold.user,

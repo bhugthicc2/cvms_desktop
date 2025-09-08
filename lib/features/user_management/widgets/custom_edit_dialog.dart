@@ -13,7 +13,7 @@ class CustomEditDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomDialog(
       btnTxt: 'Save',
-      onSave: () {},
+      onSubmit: () {},
       title: title,
       height: 360,
       icon: PhosphorIconsBold.user,
