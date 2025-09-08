@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:cvms_desktop/features/dashboard/widgets/custom_form_dialog.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_form_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
@@ -7,8 +7,8 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard_cubit.dart';
 import 'package:cvms_desktop/features/dashboard/models/vehicle_entry.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/dashboard_overview.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/vehicle_table.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/sections/dashboard_overview.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/tables/vehicle_table.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});

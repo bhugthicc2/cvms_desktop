@@ -3,7 +3,7 @@ import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_checkbox.dart';
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
-import 'package:cvms_desktop/features/violation_management/widgets/violation_actions.dart';
+import 'package:cvms_desktop/features/violation_management/widgets/actions/violation_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -43,7 +43,10 @@ class ViolationDataSource extends DataGridSource {
         columnName: 'index',
         value: _originalEntries.indexOf(entry) + 1,
       ),
-      DataGridCell<String>(columnName: 'dateTime', value: entry.dateTime),
+      DataGridCell<String>(
+        columnName: 'dateTime',
+        value: entry.dateTime.toDate().toString(),
+      ),
       DataGridCell<String>(columnName: 'reportedBy', value: entry.reportedBy),
       DataGridCell<String>(columnName: 'plateNumber', value: entry.plateNumber),
       DataGridCell<String>(columnName: 'owner', value: entry.owner),

@@ -1,9 +1,10 @@
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
-import 'package:cvms_desktop/features/violation_management/widgets/violation_table.dart';
+import 'package:cvms_desktop/features/violation_management/widgets/tables/violation_table.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
@@ -32,9 +33,11 @@ class _ViolationManagementPageState extends State<ViolationManagementPage> {
     final allEntries = List.generate(
       200,
       (i) => ViolationEntry(
-        dateTime: '09-23-2025 12:00 PM',
+        violationID: 'violation_$i',
+        dateTime: Timestamp.now(),
         reportedBy: randomName(),
         plateNumber: '2342524',
+        vehicleID: 'vehicle_$i',
         owner: randomName(),
         violation: 'Improper parking',
         status: random.nextBool() ? "pending" : "resolved",

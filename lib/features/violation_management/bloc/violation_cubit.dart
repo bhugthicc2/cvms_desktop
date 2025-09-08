@@ -1,16 +1,64 @@
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
+import 'package:cvms_desktop/features/violation_management/data/violation_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'violation_state.dart';
 
 class ViolationCubit extends Cubit<ViolationState> {
+  final ViolationRepository _repository = ViolationRepository();
+
   ViolationCubit() : super(ViolationState.initial());
 
   void loadEntries(List<ViolationEntry> entries) {
     emit(state.copyWith(allEntries: entries));
-    _applyFilters(); // ensure filteredEntries is set
+    _applyFilters();
+  }
+
+  Future<void> loadViolations() async {
+    try {
+      final violations = await _repository.fetchViolations();
+      emit(state.copyWith(allEntries: violations));
+      _applyFilters();
+    } catch (e) {
+      // Handle error
+      debugPrint('Error loading violations: $e');
+    }
+  }
+
+  void listenViolations() {
+    _repository.watchViolations().listen((violations) {
+      emit(state.copyWith(allEntries: violations));
+      _applyFilters();
+    });
+  }
+
+  Future<void> addViolationReport({
+    required String plateNumber,
+    required String owner,
+    required String violation,
+    required String reportedBy,
+    required String vehicleID,
+    String? reportReason,
+  }) async {
+    try {
+      await _repository.createViolationReport(
+        plateNumber: plateNumber,
+        owner: owner,
+        violation: violation,
+        reportedBy: reportedBy,
+        additionalData: {
+          'vehicleID': vehicleID,
+          if (reportReason != null) 'reportReason': reportReason,
+        },
+      );
+      // Reload violations to get the latest data
+      await loadViolations();
+    } catch (e) {
+      debugPrint('Error adding violation report: $e');
+      rethrow;
+    }
   }
 
   void toggleBulkMode() {
@@ -72,9 +120,11 @@ class ViolationCubit extends Cubit<ViolationState> {
           if (e == entry) {
             // Create a new ViolationEntry with toggled status
             return ViolationEntry(
+              violationID: e.violationID,
               dateTime: e.dateTime,
               reportedBy: e.reportedBy,
               plateNumber: e.plateNumber,
+              vehicleID: e.vehicleID,
               owner: e.owner,
               violation: e.violation,
               status:
@@ -115,7 +165,7 @@ class ViolationCubit extends Cubit<ViolationState> {
       final q = state.searchQuery.toLowerCase();
       filtered =
           filtered.where((e) {
-            return e.dateTime.toLowerCase().contains(q) ||
+            return e.dateTime.toDate().toString().toLowerCase().contains(q) ||
                 e.reportedBy.toLowerCase().contains(q) ||
                 e.plateNumber.toLowerCase().contains(q) ||
                 e.owner.toLowerCase().contains(q) ||

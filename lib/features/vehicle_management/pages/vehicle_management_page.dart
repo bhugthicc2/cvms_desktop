@@ -1,6 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:cvms_desktop/features/vehicle_management/widgets/vehicle_table.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/tables/vehicle_table.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/vehicle_cubit.dart';
 import 'package:flutter/material.dart';

@@ -32,4 +32,18 @@ class VehicleRepository {
       }).toList();
     });
   }
+
+  /// Bulk delete multiple vehicles by their IDs
+  Future<void> bulkDeleteVehicles(List<String> vehicleIds) async {
+    if (vehicleIds.isEmpty) return;
+    
+    final batch = _firestore.batch();
+    
+    for (final id in vehicleIds) {
+      final docRef = _firestore.collection(_collection).doc(id);
+      batch.delete(docRef);
+    }
+    
+    await batch.commit();
+  }
 }

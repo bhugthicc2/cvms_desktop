@@ -1,4 +1,4 @@
-import 'package:cvms_desktop/features/auth/widgets/custom_alert_dialog.dart';
+import 'package:cvms_desktop/features/auth/widgets/text/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 
 class LogoutDialog {

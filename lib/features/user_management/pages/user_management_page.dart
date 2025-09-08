@@ -3,7 +3,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_cubit.dart';
 import 'package:cvms_desktop/features/user_management/models/user_model.dart';
-import 'package:cvms_desktop/features/user_management/widgets/user_table.dart';
+import 'package:cvms_desktop/features/user_management/widgets/tables/user_table.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 

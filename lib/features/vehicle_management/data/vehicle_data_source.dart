@@ -2,7 +2,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_checkbox.dart';
 import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
-import 'package:cvms_desktop/features/vehicle_management/widgets/vehicle_actions_menu.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/actions/vehicle_actions_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';

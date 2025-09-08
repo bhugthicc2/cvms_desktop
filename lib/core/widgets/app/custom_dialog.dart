@@ -9,7 +9,7 @@ class CustomDialog extends StatelessWidget {
   final String title;
   final Widget child;
   final IconData icon;
-  final VoidCallback onSubmit;
+  final VoidCallback? onSubmit;
   final String btnTxt;
   final double width;
   final double height;

@@ -7,8 +7,8 @@ import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import '../bloc/vehicle_monitoring_cubit.dart';
 import '../bloc/vehicle_monitoring_state.dart';
 import '../models/vehicle_monitoring_entry.dart';
-import '../widgets/vehicle_monitoring_table.dart';
-import '../widgets/vehicle_monitoring_info_dialog.dart';
+import '../widgets/tables/vehicle_monitoring_table.dart';
+import '../widgets/dialogs/vehicle_monitoring_info_dialog.dart';
 
 class VehicleMonitoringPage extends StatefulWidget {
   const VehicleMonitoringPage({super.key});

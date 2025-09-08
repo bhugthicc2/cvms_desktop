@@ -1,11 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
+import 'package:cvms_desktop/features/auth/data/user_repository.dart';
+import 'package:cvms_desktop/features/vehicle_management/data/vehicle_violation_repository.dart';
 import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
+import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../data/vehicle_repository.dart';
 part 'vehicle_state.dart';
 
 class VehicleCubit extends Cubit<VehicleState> {
   final VehicleRepository repository;
-  VehicleCubit(this.repository) : super(VehicleState.initial());
+  final AuthRepository authRepository;
+  final UserRepository userRepository;
+  final VehicleViolationRepository violationRepository;
+
+  VehicleCubit(
+    this.repository,
+    this.authRepository,
+    this.userRepository,
+    this.violationRepository,
+  ) : super(VehicleState.initial());
 
   void loadEntries(List<VehicleEntry> entries) {
     emit(state.copyWith(allEntries: entries));
@@ -147,5 +161,50 @@ class VehicleCubit extends Cubit<VehicleState> {
     }
 
     emit(state.copyWith(filteredEntries: filtered));
+  }
+
+  Future<void> reportViolation({
+    required VehicleEntry vehicle,
+    required String violationType,
+    String? reason,
+  }) async {
+    try {
+      final currentUser = authRepository.currentUser;
+      if (currentUser == null) throw Exception("User not authenticated");
+
+      final userProfile = await userRepository.getUserProfile(currentUser.uid);
+      final reporterName = userProfile?['fullname'] ?? "Unknown User";
+
+      final violation = ViolationEntry(
+        violationID: "", // Firestore generates it
+        dateTime: Timestamp.now(),
+        reportedBy: reporterName,
+        plateNumber: vehicle.plateNumber,
+        vehicleID: vehicle.vehicleID,
+        owner: vehicle.ownerName,
+        violation: violationType,
+        status: "pending",
+      );
+
+      await violationRepository.reportViolation(violation);
+    } catch (e) {
+      rethrow; // UI layer can catch and show snackbar
+    }
+  }
+
+  /// Bulk delete selected vehicles
+  Future<void> bulkDeleteVehicles() async {
+    if (state.selectedEntries.isEmpty) return;
+    
+    try {
+      final vehicleIds = state.selectedEntries.map((entry) => entry.vehicleID).toList();
+      await repository.bulkDeleteVehicles(vehicleIds);
+      
+      // Clear selection and refresh data
+      emit(state.copyWith(selectedEntries: []));
+      await loadVehicles();
+    } catch (e) {
+      rethrow; // UI layer can catch and show error message
+    }
   }
 }

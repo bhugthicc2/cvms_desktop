@@ -11,12 +11,12 @@ import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/auth/bloc/auth_bloc.dart';
 import 'package:cvms_desktop/features/auth/bloc/auth_event.dart';
 import 'package:cvms_desktop/features/auth/bloc/auth_state.dart';
-import 'package:cvms_desktop/features/auth/widgets/auth_scaffold.dart';
+import 'package:cvms_desktop/features/auth/widgets/layout/auth_scaffold.dart';
 
-import 'package:cvms_desktop/features/auth/widgets/custom_illustration.dart';
-import 'package:cvms_desktop/features/auth/widgets/custom_text_button.dart';
-import 'package:cvms_desktop/features/auth/widgets/text_heading.dart';
-import 'package:cvms_desktop/features/auth/widgets/text_subheading.dart';
+import 'package:cvms_desktop/features/auth/widgets/visuals/custom_illustration.dart';
+import 'package:cvms_desktop/features/auth/widgets/buttons/custom_text_button.dart';
+import 'package:cvms_desktop/features/auth/widgets/text/text_heading.dart';
+import 'package:cvms_desktop/features/auth/widgets/text/text_subheading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
