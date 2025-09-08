@@ -1,7 +1,8 @@
 import 'package:cvms_desktop/features/report_and_analytics/pages/report_and_analytics_page.dart';
-import 'package:cvms_desktop/features/settings/pages/settings_page.dart';
+import 'package:cvms_desktop/features/settings/pages/setttings_page.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_cubit.dart';
+import 'package:cvms_desktop/features/vehicle_management/data/vehicle_repository.dart';
 import 'package:cvms_desktop/features/vehicle_management/pages/vehicle_management_page.dart';
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
 import 'package:flutter/widgets.dart';
@@ -25,18 +26,18 @@ class ShellNavigationConfig {
       child: const VehicleMonitoringPage(),
     ),
     BlocProvider(
-      create: (context) => VehicleCubit(),
-
-      child: VehicleManagementPage(),
+      create: (context) => VehicleCubit(VehicleRepository()),
+      child: const VehicleManagementPage(),
     ),
+
     BlocProvider(create: (context) => UserCubit(), child: UserManagementPage()),
     BlocProvider(
       create: (context) => ViolationCubit(),
       child: ViolationManagementPage(),
     ),
     ReportAndAnalyticsPage(),
-    SettingsPage(),
     ProfilePage(),
+    SettingsPage(),
   ];
 
   static final titles = <String>[
@@ -46,7 +47,7 @@ class ShellNavigationConfig {
     "User Management",
     "Violation Management",
     "Reports and Analytics",
-    "Settings",
     "Profile",
+    "Settings",
   ];
 }

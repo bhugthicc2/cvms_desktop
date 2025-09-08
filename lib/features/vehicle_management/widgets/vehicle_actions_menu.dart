@@ -1,14 +1,19 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/custom_form_dialog.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
+import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_cubit.dart';
+import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/custom_delete_dialog.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/custom_edit_dialog.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/report_vehicle_dialog.dart';
-import 'package:cvms_desktop/features/vehicle_management/widgets/update_status_dialog.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/custom_update_status_dialog.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/view_qr_code.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../core/widgets/app/pop_up_menu_item.dart';
 
 class VehicleActionsMenu extends StatelessWidget {
+  final VehicleEntry vehicleEntry;
   final int rowIndex;
   final BuildContext context;
 
@@ -16,6 +21,7 @@ class VehicleActionsMenu extends StatelessWidget {
     super.key,
     required this.rowIndex,
     required this.context,
+    required this.vehicleEntry,
   });
 
   @override
@@ -92,10 +98,36 @@ class VehicleActionsMenu extends StatelessWidget {
   }
 
   void _editVehicle(BuildContext context) {
-    //todo
     showDialog(
       context: context,
-      builder: (_) => const CustomFormDialog(title: "Edit Vehicle Information"),
+      builder:
+          (_) => CustomEditDialog(
+            vehicle: vehicleEntry,
+            title: "Edit Vehicle Information",
+            onSave: (updatedEntry) async {
+              try {
+                await context.read<VehicleCubit>().updateVehicle(
+                  updatedEntry.vehicleID,
+                  updatedEntry.toMap(),
+                );
+                //SHOW SNACKBAR WHEN SUCCESS
+                CustomSnackBar.show(
+                  // ignore: use_build_context_synchronously
+                  context: context,
+                  message: "Vehicle updated successfully!",
+                  type: SnackBarType.success,
+                );
+              } catch (e) {
+                //SHOW SNACKBAR WHEN FAIL
+                CustomSnackBar.show(
+                  // ignore: use_build_context_synchronously
+                  context: context,
+                  message: "Failed to update vehicle: $e",
+                  type: SnackBarType.error,
+                );
+              }
+            },
+          ),
     );
   }
 
@@ -104,13 +136,44 @@ class VehicleActionsMenu extends StatelessWidget {
     showDialog(
       context: context,
       builder:
-          (_) => const ViewQrCodeDialog(title: "Vehicle QR Code Information"),
+          (_) => ViewQrCodeDialog(
+            title: "Vehicle QR",
+            vehicle: vehicleEntry, // pass the full model
+          ),
     );
   }
 
   void _updateVehicle(BuildContext context) {
-    //todo
-    showDialog(context: context, builder: (_) => const UpdateStatusDialog());
+    showDialog(
+      context: context,
+      builder:
+          (_) => CustomUpdateStatusDialog(
+            vehicleID: vehicleEntry.vehicleID,
+            currentStatus: vehicleEntry.status,
+            onSave: (newStatus) async {
+              try {
+                await context.read<VehicleCubit>().updateVehicle(
+                  vehicleEntry.vehicleID,
+                  {'status': newStatus},
+                );
+
+                CustomSnackBar.show(
+                  // ignore: use_build_context_synchronously
+                  context: context,
+                  message: "Vehicle status updated to $newStatus",
+                  type: SnackBarType.success,
+                );
+              } catch (e) {
+                CustomSnackBar.show(
+                  // ignore: use_build_context_synchronously
+                  context: context,
+                  message: "Failed to update status: $e",
+                  type: SnackBarType.error,
+                );
+              }
+            },
+          ),
+    );
   }
 
   void _reportVehicle(BuildContext context) {

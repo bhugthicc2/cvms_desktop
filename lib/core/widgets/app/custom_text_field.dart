@@ -160,6 +160,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             },
             autovalidateMode: widget.autovalidateMode,
             obscuringCharacter: '*',
+            obscureText: _isObscured,
             cursorColor: AppColors.primary,
             enabled: widget.enabled,
             maxLines: widget.maxLines,

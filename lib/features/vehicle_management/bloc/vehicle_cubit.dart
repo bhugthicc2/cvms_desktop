@@ -1,14 +1,43 @@
 import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../data/vehicle_repository.dart';
 part 'vehicle_state.dart';
 
 class VehicleCubit extends Cubit<VehicleState> {
-  VehicleCubit() : super(VehicleState.initial());
+  final VehicleRepository repository;
+  VehicleCubit(this.repository) : super(VehicleState.initial());
 
   void loadEntries(List<VehicleEntry> entries) {
     emit(state.copyWith(allEntries: entries));
-    _applyFilters(); // ensure filteredEntries is set
+    _applyFilters();
+  }
+
+  Future<void> loadVehicles() async {
+    final entries = await repository.fetchVehicles();
+    emit(state.copyWith(allEntries: entries));
+    _applyFilters();
+  }
+
+  Future<void> addVehicle(VehicleEntry entry) async {
+    await repository.addVehicle(entry);
+    await loadVehicles();
+  }
+
+  Future<void> updateVehicle(String id, Map<String, dynamic> updates) async {
+    await repository.updateVehicle(id, updates);
+    await loadVehicles();
+  }
+
+  Future<void> deleteVehicle(String id) async {
+    await repository.deleteVehicle(id);
+    await loadVehicles();
+  }
+
+  void listenVehicles() {
+    repository.watchVehicles().listen((entries) {
+      emit(state.copyWith(allEntries: entries));
+      _applyFilters();
+    });
   }
 
   void toggleBulkMode() {
@@ -40,16 +69,13 @@ class VehicleCubit extends Cubit<VehicleState> {
     final allFiltered = state.filteredEntries;
     final currentSelected = List<VehicleEntry>.from(state.selectedEntries);
 
-    // If all are selected, deselect all; otherwise select all
     final allSelected = allFiltered.every(
       (entry) => currentSelected.contains(entry),
     );
 
     if (allSelected) {
-      // Remove all filtered entries from selection
       currentSelected.removeWhere((entry) => allFiltered.contains(entry));
     } else {
-      // Add all filtered entries to selection
       for (final entry in allFiltered) {
         if (!currentSelected.contains(entry)) {
           currentSelected.add(entry);
@@ -82,24 +108,32 @@ class VehicleCubit extends Cubit<VehicleState> {
   void _applyFilters() {
     var filtered = state.allEntries;
 
-    // Apply search filter
     if (state.searchQuery.isNotEmpty) {
       final q = state.searchQuery.toLowerCase();
       filtered =
           filtered.where((e) {
-            return e.name.toLowerCase().contains(q) ||
-                e.vehicle.toLowerCase().contains(q) ||
-                e.schoolID.toLowerCase().contains(q) ||
-                e.plateNumber.toLowerCase().contains(q) ||
-                e.vehicleModel.toLowerCase().contains(q) ||
-                e.vehicleType.toLowerCase().contains(q) ||
-                e.status.toLowerCase().contains(q) ||
-                e.vehicleColor.toLowerCase().contains(q) ||
-                e.violationStatus.toLowerCase().contains(q);
+            final qLower = q.toLowerCase();
+
+            return e.ownerName.toLowerCase().contains(qLower) ||
+                e.schoolID.toLowerCase().contains(qLower) ||
+                e.plateNumber.toLowerCase().contains(qLower) ||
+                e.vehicleType.toLowerCase().contains(qLower) ||
+                e.vehicleModel.toLowerCase().contains(qLower) ||
+                e.vehicleColor.toLowerCase().contains(qLower) ||
+                e.licenseNumber.toLowerCase().contains(qLower) ||
+                e.orNumber.toLowerCase().contains(qLower) ||
+                e.crNumber.toLowerCase().contains(qLower) ||
+                e.status.toLowerCase().contains(qLower) ||
+                e.qrCodeID.toLowerCase().contains(qLower) ||
+                (e.createdAt != null &&
+                    e.createdAt!
+                        .toDate()
+                        .toIso8601String()
+                        .toLowerCase()
+                        .contains(qLower));
           }).toList();
     }
 
-    // Apply status dropdown filter
     if (state.statusFilter != 'All') {
       filtered =
           filtered
@@ -107,7 +141,6 @@ class VehicleCubit extends Cubit<VehicleState> {
               .toList();
     }
 
-    // Apply type dropdown filter
     if (state.typeFilter != 'All') {
       filtered =
           filtered.where((e) => e.vehicleType == state.typeFilter).toList();

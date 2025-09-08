@@ -42,24 +42,23 @@ class VehicleDataSource extends DataGridSource {
         columnName: 'index',
         value: _originalEntries.indexOf(entry) + 1,
       ),
-      DataGridCell<String>(columnName: 'name', value: entry.name),
-      DataGridCell<String>(columnName: 'vehicle', value: entry.vehicle),
+      DataGridCell<String>(columnName: 'ownerName', value: entry.ownerName),
       DataGridCell<String>(columnName: 'schoolID', value: entry.schoolID),
       DataGridCell<String>(columnName: 'plateNumber', value: entry.plateNumber),
+      DataGridCell<String>(columnName: 'vehicleType', value: entry.vehicleType),
       DataGridCell<String>(
         columnName: 'vehicleModel',
         value: entry.vehicleModel,
       ),
-      DataGridCell<String>(columnName: 'vehicleType', value: entry.vehicleType),
       DataGridCell<String>(
         columnName: 'vehicleColor',
         value: entry.vehicleColor,
       ),
-      DataGridCell<String>(columnName: 'status', value: entry.status),
       DataGridCell<String>(
-        columnName: 'violationStatus',
-        value: entry.violationStatus,
+        columnName: 'licenseNumber',
+        value: entry.licenseNumber,
       ),
+      DataGridCell<String>(columnName: 'status', value: entry.status),
       DataGridCell<String>(columnName: 'actions', value: ''),
     ]);
 
@@ -115,6 +114,7 @@ class VehicleDataSource extends DataGridSource {
               return Container(
                 alignment: Alignment.center,
                 child: VehicleActionsMenu(
+                  vehicleEntry: entry,
                   rowIndex: rowIndex,
                   context: _context,
                 ),

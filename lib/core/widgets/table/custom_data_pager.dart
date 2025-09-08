@@ -63,17 +63,20 @@ class CustomDataPager extends StatelessWidget {
             ),
             child: SizedBox(
               width: 220,
-              child: SfDataPager(
-                delegate: delegate,
-                pageCount: pageCount,
-                onRowsPerPageChanged: onRowsPerPageChanged,
-                itemWidth: 40,
-                itemHeight: 36,
-                firstPageItemVisible: false,
-                navigationItemHeight: 40,
-                navigationItemWidth: 40,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: SfDataPager(
+                  delegate: delegate,
+                  pageCount: pageCount,
+                  onRowsPerPageChanged: onRowsPerPageChanged,
+                  itemWidth: 40,
+                  itemHeight: 36,
+                  firstPageItemVisible: false,
+                  navigationItemHeight: 40,
+                  navigationItemWidth: 40,
 
-                lastPageItemVisible: false,
+                  lastPageItemVisible: false,
+                ),
               ),
             ),
           ),

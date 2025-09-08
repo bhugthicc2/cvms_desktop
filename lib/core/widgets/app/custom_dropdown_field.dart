@@ -11,10 +11,12 @@ class CustomDropdownField<T> extends StatefulWidget {
   final IconData? prefixIcon;
   final ValueChanged<T?>? onChanged;
   final bool enabled;
+
   final Color? borderColor;
   final Color? focusedBorderColor;
   final Color? fillColor;
   final TextStyle? textStyle;
+
   final double? width;
   final double? height;
   final EdgeInsets? contentPadding;
@@ -45,6 +47,21 @@ class CustomDropdownField<T> extends StatefulWidget {
 
 class _CustomDropdownFieldState<T> extends State<CustomDropdownField<T>> {
   final FocusNode _focusNode = FocusNode();
+  T? _currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentValue = widget.value;
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomDropdownField<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value) {
+      _currentValue = widget.value;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,13 +80,16 @@ class _CustomDropdownFieldState<T> extends State<CustomDropdownField<T>> {
               widget.contentPadding ??
               const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(6),
             border: Border.all(color: borderColor, width: 1),
-            color: widget.fillColor ?? AppColors.white,
+            color:
+                widget.enabled
+                    ? (widget.fillColor ?? AppColors.white)
+                    : AppColors.grey.withValues(alpha: 0.2),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<T>(
-              value: widget.value,
+              value: _currentValue,
               hint:
                   widget.hintText != null
                       ? Text(
@@ -85,7 +105,7 @@ class _CustomDropdownFieldState<T> extends State<CustomDropdownField<T>> {
               isExpanded: widget.isExpanded,
               isDense: true,
               focusNode: _focusNode,
-              icon: Icon(
+              icon: const Icon(
                 PhosphorIconsFill.caretDown,
                 color: AppColors.grey,
                 size: 20,
@@ -93,7 +113,8 @@ class _CustomDropdownFieldState<T> extends State<CustomDropdownField<T>> {
               style:
                   widget.textStyle ??
                   const TextStyle(
-                    fontWeight: FontWeight.w800,
+                    fontFamily: 'Sora',
+                    fontWeight: FontWeight.w600,
                     color: AppColors.black,
                     fontSize: AppFontSizes.medium,
                   ),
@@ -125,6 +146,7 @@ class _CustomDropdownFieldState<T> extends State<CustomDropdownField<T>> {
               onChanged:
                   widget.enabled
                       ? (T? newValue) {
+                        setState(() => _currentValue = newValue);
                         widget.onChanged?.call(newValue);
                       }
                       : null,

@@ -22,6 +22,7 @@ class MockAnalyticsDataSource implements AnalyticsDataSource {
       ChartDataModel(category: 'No MVP Sticker', value: 25),
       ChartDataModel(category: 'No helmet', value: 15),
       ChartDataModel(category: 'Loud pipe/muffler', value: 20),
+      ChartDataModel(category: 'Bahog tae', value: 23),
     ];
   }
 
