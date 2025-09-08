@@ -2,19 +2,24 @@ import 'package:cvms_desktop/features/auth/services/auth_persistence.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/utils/logger.dart';
-import '../services/firebase_service.dart';
+import '../data/auth_repository.dart';
+import '../data/user_repository.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final FirebaseService _firebaseService = FirebaseService();
+  final AuthRepository _authRepository = AuthRepository();
+  final UserRepository _userRepository = UserRepository();
 
   AuthBloc() : super(AuthInitial()) {
     on<SignInEvent>((event, emit) async {
       emit(AuthLoading());
       try {
-        final user = await _firebaseService.signIn(event.email, event.password);
+        final user = await _authRepository.signIn(event.email, event.password);
         if (user != null) {
+          // Update user status in Firestore
+          await _userRepository.updateLoginStatus(user.uid);
+          
           final keepLoggedIn = await AuthPersistence.getKeepLoggedIn();
           if (keepLoggedIn) {
             await AuthPersistence.saveUserSession(user);
@@ -47,11 +52,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignUpEvent>((event, emit) async {
       emit(AuthLoading());
       try {
-        final user = await _firebaseService.signUp(
-          event.email,
-          event.password,
-          event.fullname,
-        );
+        final user = await _authRepository.signUp(event.email, event.password);
+        if (user != null) {
+          // Create user profile in Firestore
+          await _userRepository.createUserProfile(
+            uid: user.uid,
+            fullname: event.fullname,
+            email: event.email,
+            password: event.password,
+          );
+        }
         if (user != null) {
           emit(AuthSuccess(user.uid, 'Sign up successful'));
         } else {
@@ -67,7 +77,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<ResetPasswordEvent>((event, emit) async {
       emit(AuthLoading());
       try {
-        await _firebaseService.resetPassword(event.email);
+        await _authRepository.resetPassword(event.email);
         emit(ResetPasswordSuccess());
       } on FirebaseAuthException catch (e) {
         String errorMessage;
@@ -91,7 +101,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<SignOutEvent>((event, emit) async {
       emit(AuthLoading());
-      await _firebaseService.signOut();
+      // Update user status to inactive before signing out
+      final currentUser = _authRepository.currentUser;
+      if (currentUser != null) {
+        await _userRepository.updateUserStatus(currentUser.uid, 'inactive');
+      }
+      
+      await _authRepository.signOut();
       await AuthPersistence.clear();
       emit(SignOutSuccess());
       Logger.log('User signed out successfully - all data cleared');

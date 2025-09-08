@@ -91,6 +91,8 @@ app_structure.md
 lib/features/dashboard/feature-dashboard.md
 files_related_to_table_implementation.md
 multi.md
+AUTH_STRUCTURE.md
+VEHICLE_MANAGEMENT_STRUCTURE.md
 
 # Android related
 **/android/**/gradle-wrapper.jar
