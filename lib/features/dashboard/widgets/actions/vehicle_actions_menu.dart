@@ -3,7 +3,7 @@ import 'package:cvms_desktop/features/dashboard/models/vehicle_entry.dart';
 import 'package:cvms_desktop/core/widgets/app/pop_up_menu_item.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_delete_dialog.dart'
     show CustomDeleteDialog;
-import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_form_dialog.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_view_dialog.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/dialogs/reprort_vehicle_dialog.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/dialogs/update_status_dialog.dart';
 
@@ -93,7 +93,7 @@ class VehicleActionsMenu extends StatelessWidget {
     //todo
     showDialog(
       context: context,
-      builder: (_) => const CustomFormDialog(title: "Edit Vehicle Information"),
+      builder: (_) => const CustomViewDialog(title: "Edit Vehicle Information"),
     );
   }
 

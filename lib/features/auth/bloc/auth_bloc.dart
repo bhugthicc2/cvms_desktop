@@ -19,7 +19,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (user != null) {
           // Update user status in Firestore
           await _userRepository.updateLoginStatus(user.uid);
-          
+
           final keepLoggedIn = await AuthPersistence.getKeepLoggedIn();
           if (keepLoggedIn) {
             await AuthPersistence.saveUserSession(user);
@@ -106,11 +106,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (currentUser != null) {
         await _userRepository.updateUserStatus(currentUser.uid, 'inactive');
       }
-      
+
       await _authRepository.signOut();
       await AuthPersistence.clear();
       emit(SignOutSuccess());
       Logger.log('User signed out successfully - all data cleared');
+    });
+
+    on<SilentSignOutEvent>((event, emit) async {
+      emit(AuthLoading());
+
+      await _authRepository.signOut();
+      await AuthPersistence.clear();
+      emit(SilentSignOutSuccess());
+      Logger.log('Silent signout completed');
     });
   }
 }

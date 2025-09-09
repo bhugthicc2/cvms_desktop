@@ -1,7 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_icon_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/utils/date_time_formatter.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dialog.dart';
-import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_text_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
@@ -59,7 +59,9 @@ class _CustomEditDialogState extends State<CustomEditDialog> {
     _controllers["QR Code ID"]!.text = widget.vehicle.qrCodeID;
 
     if (widget.vehicle.createdAt != null) {
-      _createdAt = widget.vehicle.createdAt!.toDate().toIso8601String();
+      _createdAt = DateTimeFormatter.formatFull(
+        widget.vehicle.createdAt!.toDate(),
+      );
     }
 
     for (final entry in _controllers.entries) {

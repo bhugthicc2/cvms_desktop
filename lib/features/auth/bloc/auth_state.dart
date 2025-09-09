@@ -10,6 +10,8 @@ class AuthUnauthenticated extends AuthState {}
 
 class SignOutSuccess extends AuthState {}
 
+class SilentSignOutSuccess extends AuthState {}
+
 class AuthSuccess extends AuthState {
   final String message;
   final String userId;

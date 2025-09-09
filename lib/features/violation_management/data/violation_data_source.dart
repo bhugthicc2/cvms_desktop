@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/core/utils/date_time_formatter.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_checkbox.dart';
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
@@ -45,7 +46,7 @@ class ViolationDataSource extends DataGridSource {
       ),
       DataGridCell<String>(
         columnName: 'dateTime',
-        value: entry.dateTime.toDate().toString(),
+        value: DateTimeFormatter.formatFull(entry.dateTime.toDate()),
       ),
       DataGridCell<String>(columnName: 'reportedBy', value: entry.reportedBy),
       DataGridCell<String>(columnName: 'plateNumber', value: entry.plateNumber),

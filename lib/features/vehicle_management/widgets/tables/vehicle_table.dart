@@ -1,8 +1,11 @@
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/tables/table_header.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/actions/toggle_actions.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/dialogs/custom_delete_dialog.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/dialogs/custom_report_dialog.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/dialogs/custom_update_status_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/widgets/table/custom_table.dart';
@@ -44,57 +47,86 @@ class VehicleTable extends StatelessWidget {
                   );
                 },
                 onUpdate: () {
-                  //todo Handle update status
-                  debugPrint(
-                    'Updating status for ${state.selectedEntries.length} entries',
-                  );
-                },
-                onReport: () {
-                  //todo Handle report selected
-                  debugPrint(
-                    'Reporting ${state.selectedEntries.length} entries',
-                  );
-                },
-                onDelete: () async {
                   if (state.selectedEntries.isEmpty) return;
-                  
+
                   final vehicleCubit = context.read<VehicleCubit>();
                   showDialog(
                     context: context,
-                    builder: (dialogContext) => CustomDeleteDialog(
-                      title: 'Delete Vehicles',
+                    builder: (dialogContext) => CustomUpdateStatusDialog(
                       selectedCount: state.selectedEntries.length,
-                      onDelete: () async {
+                      onSave: (newStatus) async {
                         try {
-                          await vehicleCubit.bulkDeleteVehicles();
+                          await vehicleCubit.bulkUpdateStatus(newStatus);
                           if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Successfully deleted ${state.selectedEntries.length} vehicle(s)',
-                                  style: const TextStyle(fontFamily: 'Sora'),
-                                ),
-                                backgroundColor: Colors.green,
-                                behavior: SnackBarBehavior.floating,
-                              ),
+                            CustomSnackBar.show(
+                              context: context,
+                              message:
+                                  'Successfully updated status for ${state.selectedEntries.length} vehicle(s)',
+                              type: SnackBarType.success,
                             );
                           }
                         } catch (e) {
                           if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Failed to delete vehicles: ${e.toString()}',
-                                  style: const TextStyle(fontFamily: 'Sora'),
-                                ),
-                                backgroundColor: Colors.red,
-                                behavior: SnackBarBehavior.floating,
-                              ),
+                            CustomSnackBar.show(
+                              context: context,
+                              message:
+                                  'Failed to update status: ${e.toString()}',
+                              type: SnackBarType.error,
                             );
                           }
                         }
                       },
                     ),
+                  );
+                },
+                onReport: () {
+                  if (state.selectedEntries.isEmpty) return;
+
+                  final vehicleCubit = context.read<VehicleCubit>();
+                  showDialog(
+                    context: context,
+                    builder: (dialogContext) => BlocProvider.value(
+                      value: vehicleCubit,
+                      child: CustomReportDialog(
+                        title: 'Report Violations',
+                        selectedCount: state.selectedEntries.length,
+                      ),
+                    ),
+                  );
+                },
+                onDelete: () async {
+                  if (state.selectedEntries.isEmpty) return;
+
+                  final vehicleCubit = context.read<VehicleCubit>();
+                  showDialog(
+                    context: context,
+                    builder:
+                        (dialogContext) => CustomDeleteDialog(
+                          title: 'Delete Vehicles',
+                          selectedCount: state.selectedEntries.length,
+                          onDelete: () async {
+                            try {
+                              await vehicleCubit.bulkDeleteVehicles();
+                              if (context.mounted) {
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message:
+                                      'Successfully deleted ${state.selectedEntries.length} vehicle(s)',
+                                  type: SnackBarType.success,
+                                );
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message:
+                                      'Failed to delete vehicles: ${e.toString()}',
+                                  type: SnackBarType.error,
+                                );
+                              }
+                            }
+                          },
+                        ),
                   );
                 },
               ),

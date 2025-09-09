@@ -1,6 +1,8 @@
 part of 'violation_cubit.dart';
 
 class ViolationState {
+  final String? message;
+  final SnackBarType? messageType;
   final List<ViolationEntry> allEntries;
   final List<ViolationEntry> filteredEntries;
   final List<ViolationEntry> selectedEntries;
@@ -10,6 +12,8 @@ class ViolationState {
   final bool isBulkModeEnabled;
 
   ViolationState({
+    this.message,
+    this.messageType,
     required this.allEntries,
     required this.filteredEntries,
     required this.selectedEntries,
@@ -28,6 +32,8 @@ class ViolationState {
   );
 
   ViolationState copyWith({
+    String? message,
+    SnackBarType? messageType,
     List<ViolationEntry>? allEntries,
     List<ViolationEntry>? filteredEntries,
     List<ViolationEntry>? selectedEntries,
@@ -36,6 +42,8 @@ class ViolationState {
     bool? isBulkModeEnabled,
   }) {
     return ViolationState(
+      message: message ?? this.message,
+      messageType: messageType ?? this.messageType,
       allEntries: allEntries ?? this.allEntries,
       filteredEntries: filteredEntries ?? this.filteredEntries,
       selectedEntries: selectedEntries ?? this.selectedEntries,
@@ -44,4 +52,6 @@ class ViolationState {
       isBulkModeEnabled: isBulkModeEnabled ?? this.isBulkModeEnabled,
     );
   }
+
+  //todo might add loading state soon
 }

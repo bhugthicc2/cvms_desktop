@@ -188,23 +188,72 @@ class VehicleCubit extends Cubit<VehicleState> {
 
       await violationRepository.reportViolation(violation);
     } catch (e) {
-      rethrow; // UI layer can catch and show snackbar
+      rethrow;
     }
   }
 
-  /// Bulk delete selected vehicles
   Future<void> bulkDeleteVehicles() async {
     if (state.selectedEntries.isEmpty) return;
-    
+
     try {
-      final vehicleIds = state.selectedEntries.map((entry) => entry.vehicleID).toList();
+      final vehicleIds =
+          state.selectedEntries.map((entry) => entry.vehicleID).toList();
       await repository.bulkDeleteVehicles(vehicleIds);
-      
-      // Clear selection and refresh data
+
       emit(state.copyWith(selectedEntries: []));
       await loadVehicles();
     } catch (e) {
-      rethrow; // UI layer can catch and show error message
+      rethrow;
+    }
+  }
+
+  Future<void> bulkReportViolations({
+    required String violationType,
+    String? reason,
+  }) async {
+    if (state.selectedEntries.isEmpty) return;
+
+    try {
+      final currentUser = authRepository.currentUser;
+      if (currentUser == null) throw Exception("User not authenticated");
+
+      final userProfile = await userRepository.getUserProfile(currentUser.uid);
+      final reporterName = userProfile?['fullname'] ?? "Unknown User";
+
+      final violations =
+          state.selectedEntries.map((vehicle) {
+            return ViolationEntry(
+              violationID: "",
+              dateTime: Timestamp.now(),
+              reportedBy: reporterName,
+              plateNumber: vehicle.plateNumber,
+              vehicleID: vehicle.vehicleID,
+              owner: vehicle.ownerName,
+              violation: violationType,
+              status: "pending",
+            );
+          }).toList();
+
+      await violationRepository.bulkReportViolations(violations);
+
+      emit(state.copyWith(selectedEntries: []));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> bulkUpdateStatus(String status) async {
+    if (state.selectedEntries.isEmpty) return;
+
+    try {
+      final vehicleIds =
+          state.selectedEntries.map((entry) => entry.vehicleID).toList();
+      await repository.bulkUpdateStatus(vehicleIds, status);
+
+      emit(state.copyWith(selectedEntries: []));
+      await loadVehicles();
+    } catch (e) {
+      rethrow;
     }
   }
 }

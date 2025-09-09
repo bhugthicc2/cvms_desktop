@@ -1,5 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_icon_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/utils/date_time_formatter.dart';
+import 'package:cvms_desktop/core/utils/form_validator.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dialog.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_text_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
@@ -35,8 +37,6 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
     "QR Code ID": TextEditingController(),
   };
 
-  String? _createdAt;
-
   @override
   void dispose() {
     for (final controller in _controllers.values) {
@@ -68,10 +68,7 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
     return CustomDialog(
       icon: PhosphorIconsBold.motorcycle,
       btnTxt: 'Save',
-      onSubmit:
-          _isFormValid
-              ? () => _handleSave(context)
-              : null, // Disable if invalid
+      onSubmit: _isFormValid ? () => _handleSave(context) : null,
       title: widget.title,
       height: screenHeight * 0.8,
       child: Padding(
@@ -91,9 +88,7 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
                         controller: _controllers[pair[0]]!,
                         validator:
                             (val) =>
-                                val == null || val.trim().isEmpty
-                                    ? '${pair[0]} is required'
-                                    : null,
+                                FormValidator.validateRequired(val, pair[0]),
                       ),
                     ),
                     if (pair[1].isNotEmpty) ...[
@@ -104,9 +99,7 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
                           controller: _controllers[pair[1]]!,
                           validator:
                               (val) =>
-                                  val == null || val.trim().isEmpty
-                                      ? '${pair[1]} is required'
-                                      : null,
+                                  FormValidator.validateRequired(val, pair[1]),
                         ),
                       ),
                     ],
@@ -121,7 +114,7 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
                     child: CustomTextField(
                       labelText: 'Created At',
                       controller: TextEditingController(
-                        text: _createdAt ?? DateTime.now().toIso8601String(),
+                        text: DateTimeFormatter.formatFull(DateTime.now()),
                       ),
                       enabled: false,
                     ),

@@ -38,7 +38,6 @@ class ViolationActions extends StatelessWidget {
 
               context.read<ViolationCubit>().toggleViolationStatus(
                 violationEntry,
-                context,
               );
             },
           ),

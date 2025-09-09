@@ -52,6 +52,19 @@ class _SignUpPageState extends State<SignUpPage> {
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthSuccess) {
+              context.read<AuthBloc>().add(SilentSignOutEvent());
+              CustomSnackBar.show(
+                context: context,
+                message:
+                    'Account created successfully! Please sign in with your credentials.',
+                type: SnackBarType.success,
+              );
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.signIn,
+                (route) => false,
+              );
+            } else if (state is SilentSignOutSuccess) {
             } else if (state is AuthError) {
               CustomSnackBar.show(
                 context: context,

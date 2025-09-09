@@ -95,7 +95,9 @@ AUTH_STRUCTURE.md
 VEHICLE_MANAGEMENT_STRUCTURE.md
 VIOLATION_MANAGEMENT_STRUCTURE.md
 BULK_DELETE_IMPLEMENTATION.md
-
+docs/
+user_management_with_code.md
+auth_complete_structure_with_code_files.md
 # Android related
 **/android/**/gradle-wrapper.jar
 .gradle/

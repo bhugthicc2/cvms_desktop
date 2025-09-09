@@ -1,8 +1,8 @@
-import 'dart:math';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_cubit.dart';
-import 'package:cvms_desktop/features/user_management/models/user_model.dart';
+import 'package:cvms_desktop/features/user_management/bloc/user_management_bloc.dart';
 import 'package:cvms_desktop/features/user_management/widgets/tables/user_table.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -15,46 +15,22 @@ class UserManagementPage extends StatefulWidget {
 }
 
 class _UserManagementPageState extends State<UserManagementPage> {
-  final TextEditingController vehicleController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
 
-    // Mock data dawg
-    final random = Random();
-    final firstNames = ["John", "Maria", "Paolo", "Angela"];
-    final lastNames = ["Reyes", "Cruz", "Patangan", "Medija"];
+    context.read<UserCubit>().listenUsers();
 
-    String randomName() =>
-        "${firstNames[random.nextInt(firstNames.length)]} ${lastNames[random.nextInt(lastNames.length)]}";
-    String randomPassword() =>
-        "${firstNames[random.nextInt(firstNames.length)]} ${lastNames[random.nextInt(lastNames.length)]}";
-    final allEntries = List.generate(
-      200,
-      (i) => UserEntry(
-        name: randomName(),
-        email: "gapol@ggmail.com",
-        role: random.nextBool() ? "CDRRMSU Admin" : "Security Personnel",
-        status: random.nextBool() ? "Active" : "Inactive",
-        lastLogin: "12/12/34 00:34:00 AM",
-        password: randomPassword(),
-      ),
-    );
-    // Mock data dawg
-
-    // Load entries into cubit
-    context.read<UserCubit>().loadEntries(allEntries);
-
-    // Listen to search controllers
-    vehicleController.addListener(() {
-      context.read<UserCubit>().filterEntries(vehicleController.text);
+    searchController.addListener(() {
+      context.read<UserCubit>().filterEntries(searchController.text);
     });
   }
 
   @override
   void dispose() {
-    vehicleController.dispose();
-
+    searchController.dispose();
     super.dispose();
   }
 
@@ -64,14 +40,52 @@ class _UserManagementPageState extends State<UserManagementPage> {
       backgroundColor: AppColors.greySurface,
       body: Padding(
         padding: const EdgeInsets.all(AppSpacing.medium),
-        child: BlocBuilder<UserCubit, UserState>(
-          builder: (context, state) {
-            return UserTable(
-              title: "User Management",
-              entries: state.filteredEntries,
-              searchController: vehicleController,
-            );
-          },
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<UserCubit, UserState>(
+              listener: (context, state) {
+                if (state.errorMessage != null) {
+                  CustomSnackBar.show(
+                    context: context,
+                    message: state.errorMessage!,
+                    type: SnackBarType.error,
+                  );
+                  context.read<UserCubit>().clearError();
+                }
+              },
+            ),
+            BlocListener<UserManagementBloc, UserManagementState>(
+              listener: (context, state) {
+                if (state is UserManagementSuccess) {
+                  CustomSnackBar.show(
+                    context: context,
+                    message: state.message,
+                    type: SnackBarType.success,
+                  );
+                  context.read<UserCubit>().loadUsers();
+                } else if (state is UserManagementError) {
+                  CustomSnackBar.show(
+                    context: context,
+                    message: state.message,
+                    type: SnackBarType.error,
+                  );
+                }
+              },
+            ),
+          ],
+          child: BlocBuilder<UserCubit, UserState>(
+            builder: (context, state) {
+              if (state.isLoading && state.allEntries.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              return UserTable(
+                title: "User Management",
+                entries: state.filteredEntries,
+                searchController: searchController,
+              );
+            },
+          ),
         ),
       ),
     );

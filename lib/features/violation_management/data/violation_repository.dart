@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/violation_model.dart';
 
-/// Repository for handling violation data operations in Firestore
-/// Follows single responsibility principle - only violation data operations
 class ViolationRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String _collection = 'violations';
 
-  /// Create a new violation report
   Future<void> createViolationReport({
     required String plateNumber,
     required String owner,
@@ -28,7 +25,6 @@ class ViolationRepository {
         'lastUpdated': FieldValue.serverTimestamp(),
       };
 
-      // Add any additional data if provided
       if (additionalData != null) {
         additionalData.forEach((key, value) {
           violationData[key] = value;
@@ -41,7 +37,6 @@ class ViolationRepository {
     }
   }
 
-  /// Get all violations
   Future<List<ViolationEntry>> fetchViolations() async {
     try {
       final snapshot =
@@ -59,7 +54,6 @@ class ViolationRepository {
     }
   }
 
-  /// Get violations for a specific vehicle
   Future<List<ViolationEntry>> fetchViolationsByPlateNumber(
     String plateNumber,
   ) async {
@@ -80,7 +74,6 @@ class ViolationRepository {
     }
   }
 
-  /// Update violation status
   Future<void> updateViolationStatus(String violationId, String status) async {
     try {
       await _firestore.collection(_collection).doc(violationId).update({
@@ -92,7 +85,6 @@ class ViolationRepository {
     }
   }
 
-  /// Stream all violations for real-time updates
   Stream<List<ViolationEntry>> watchViolations() {
     return _firestore
         .collection(_collection)
@@ -106,7 +98,6 @@ class ViolationRepository {
         });
   }
 
-  /// Delete violation
   Future<void> deleteViolation(String violationId) async {
     try {
       await _firestore.collection(_collection).doc(violationId).delete();
@@ -115,10 +106,8 @@ class ViolationRepository {
     }
   }
 
-  /// Get violation types/categories for dropdown
   Future<List<String>> getViolationTypes() async {
     try {
-      // You can either hardcode common violations or fetch from a separate collection
       return [
         'Parking Violation',
         'Speed Violation',

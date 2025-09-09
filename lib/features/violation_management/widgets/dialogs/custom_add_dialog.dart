@@ -5,9 +5,9 @@ import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class CustomFormDialog extends StatelessWidget {
+class CustomAddDialog extends StatelessWidget {
   final String title;
-  const CustomFormDialog({super.key, required this.title});
+  const CustomAddDialog({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {

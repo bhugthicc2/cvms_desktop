@@ -7,23 +7,29 @@ class UserState {
   final String roleFilter;
   final String searchQuery;
   final bool isBulkModeEnabled;
+  final bool isLoading;
+  final String? errorMessage;
 
-  UserState({
+  const UserState({
     required this.allEntries,
     required this.filteredEntries,
     required this.selectedEntries,
     required this.roleFilter,
     required this.searchQuery,
     required this.isBulkModeEnabled,
+    required this.isLoading,
+    this.errorMessage,
   });
 
-  factory UserState.initial() => UserState(
+  factory UserState.initial() => const UserState(
     allEntries: [],
     filteredEntries: [],
     selectedEntries: [],
     roleFilter: 'All',
     searchQuery: '',
     isBulkModeEnabled: false,
+    isLoading: false,
+    errorMessage: null,
   );
 
   UserState copyWith({
@@ -33,6 +39,8 @@ class UserState {
     String? roleFilter,
     String? searchQuery,
     bool? isBulkModeEnabled,
+    bool? isLoading,
+    String? errorMessage,
   }) {
     return UserState(
       allEntries: allEntries ?? this.allEntries,
@@ -41,6 +49,8 @@ class UserState {
       roleFilter: roleFilter ?? this.roleFilter,
       searchQuery: searchQuery ?? this.searchQuery,
       isBulkModeEnabled: isBulkModeEnabled ?? this.isBulkModeEnabled,
+      isLoading: isLoading ?? this.isLoading,
+      errorMessage: errorMessage,
     );
   }
 }

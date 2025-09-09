@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/core/utils/date_time_formatter.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_checkbox.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_cubit.dart';
 import 'package:cvms_desktop/features/user_management/models/user_model.dart';
@@ -43,11 +44,14 @@ class UserDataSource extends DataGridSource {
         columnName: 'index',
         value: _originalEntries.indexOf(entry) + 1,
       ),
-      DataGridCell<String>(columnName: 'name', value: entry.name),
+      DataGridCell<String>(columnName: 'Fullname', value: entry.fullname),
       DataGridCell<String>(columnName: 'email', value: entry.email),
       DataGridCell<String>(columnName: 'role', value: entry.role),
       DataGridCell<String>(columnName: 'status', value: entry.status),
-      DataGridCell<String>(columnName: 'lastLogin', value: entry.lastLogin),
+      DataGridCell<String>(
+        columnName: 'lastLogin',
+        value: DateTimeFormatter.formatFull(entry.lastLogin),
+      ),
       DataGridCell<String>(columnName: 'password', value: entry.password),
       DataGridCell<String>(columnName: 'actions', value: ''),
     ]);
@@ -106,6 +110,8 @@ class UserDataSource extends DataGridSource {
                 rowIndex: rowIndex,
                 context: context,
                 email: entry.email,
+                uid: entry.id,
+                fullname: entry.fullname,
               ),
             );
           },

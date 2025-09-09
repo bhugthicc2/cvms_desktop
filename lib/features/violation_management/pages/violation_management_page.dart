@@ -1,9 +1,7 @@
-import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
-import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
 import 'package:cvms_desktop/features/violation_management/widgets/tables/violation_table.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -18,37 +16,14 @@ class ViolationManagementPage extends StatefulWidget {
 
 class _ViolationManagementPageState extends State<ViolationManagementPage> {
   final TextEditingController violationController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ViolationCubit>().listenViolations();
+    });
 
-    // Mock data dawg
-    final random = Random();
-    final firstNames = ["John", "Maria", "Paolo", "Angela"];
-    final lastNames = ["Reyes", "Cruz", "Patangan", "Medija"];
-
-    String randomName() =>
-        "${firstNames[random.nextInt(firstNames.length)]} ${lastNames[random.nextInt(lastNames.length)]}";
-
-    final allEntries = List.generate(
-      200,
-      (i) => ViolationEntry(
-        violationID: 'violation_$i',
-        dateTime: Timestamp.now(),
-        reportedBy: randomName(),
-        plateNumber: '2342524',
-        vehicleID: 'vehicle_$i',
-        owner: randomName(),
-        violation: 'Improper parking',
-        status: random.nextBool() ? "pending" : "resolved",
-      ),
-    );
-    // Mock data dawg
-
-    // Load entries into cubit
-    context.read<ViolationCubit>().loadEntries(allEntries);
-
-    // Listen to search controllers
     violationController.addListener(() {
       context.read<ViolationCubit>().filterEntries(violationController.text);
     });
@@ -67,9 +42,20 @@ class _ViolationManagementPageState extends State<ViolationManagementPage> {
       backgroundColor: AppColors.greySurface,
       body: Padding(
         padding: const EdgeInsets.all(AppSpacing.medium),
-        child: BlocBuilder<ViolationCubit, ViolationState>(
+        child: BlocConsumer<ViolationCubit, ViolationState>(
+          listener: (context, state) {
+            if (state.message != null) {
+              CustomSnackBar.show(
+                context: context,
+                message: state.message!,
+                type: state.messageType ?? SnackBarType.success,
+              );
+
+              context.read<ViolationCubit>().clearMessage();
+            }
+          },
           builder: (context, state) {
-            //todo
+            //todo add loading indicator
             return ViolationTable(
               title: "Violation Management",
               entries: state.filteredEntries,

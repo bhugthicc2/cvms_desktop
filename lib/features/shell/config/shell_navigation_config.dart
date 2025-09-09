@@ -1,6 +1,8 @@
 import 'package:cvms_desktop/features/report_and_analytics/pages/report_and_analytics_page.dart';
 import 'package:cvms_desktop/features/settings/pages/setttings_page.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_cubit.dart';
+import 'package:cvms_desktop/features/user_management/bloc/user_management_bloc.dart';
+import 'package:cvms_desktop/features/user_management/data/user_repository.dart' as user_mgmt;
 import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_cubit.dart';
 import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
 import 'package:cvms_desktop/features/auth/data/user_repository.dart';
@@ -39,7 +41,20 @@ class ShellNavigationConfig {
       child: const VehicleManagementPage(),
     ),
 
-    BlocProvider(create: (context) => UserCubit(), child: UserManagementPage()),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => UserCubit(repository: user_mgmt.UserRepository()),
+        ),
+        BlocProvider(
+          create: (context) => UserManagementBloc(
+            authRepository: AuthRepository(),
+            userRepository: UserRepository(),
+          ),
+        ),
+      ],
+      child: const UserManagementPage(),
+    ),
     BlocProvider(
       create: (context) => ViolationCubit(),
       child: ViolationManagementPage(),

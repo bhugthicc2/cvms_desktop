@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_form_dialog.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_view_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
@@ -97,7 +97,7 @@ class _DashboardPageState extends State<DashboardPage> {
                               showDialog(
                                 context: context,
                                 builder:
-                                    (_) => CustomFormDialog(
+                                    (_) => CustomViewDialog(
                                       title: 'Vehicle Information',
                                     ),
                               );
@@ -122,7 +122,7 @@ class _DashboardPageState extends State<DashboardPage> {
                               showDialog(
                                 context: context,
                                 builder:
-                                    (_) => CustomFormDialog(
+                                    (_) => CustomViewDialog(
                                       title: 'Vehicle Information',
                                     ),
                               );

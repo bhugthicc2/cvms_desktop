@@ -4,9 +4,9 @@ import 'package:cvms_desktop/core/widgets/app/custom_text_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
 
-class CustomFormDialog extends StatelessWidget {
+class CustomViewDialog extends StatelessWidget {
   final String title;
-  const CustomFormDialog({super.key, required this.title});
+  const CustomViewDialog({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {

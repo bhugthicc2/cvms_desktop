@@ -12,17 +12,19 @@ class UserRepository {
     required String fullname,
     required String email,
     required String password,
-    String role = 'admin',
+    String role = 'cdrrmsu admin', //todo change into cdrrmsu admin soon
     String status = 'inactive',
   }) async {
     try {
       await _firestore.collection(_collection).doc(uid).set({
         'fullname': fullname,
         'email': email,
-        'password': password, // Note: Consider removing password storage for security
+        'password':
+            password, // Note: Consider removing password storage for security
         'role': role,
         'status': status,
         'createdAt': FieldValue.serverTimestamp(),
+        'lastLogin': FieldValue.serverTimestamp(),
       });
     } catch (e) {
       rethrow;
@@ -69,7 +71,10 @@ class UserRepository {
   }
 
   /// Update user profile fields
-  Future<void> updateUserProfile(String uid, Map<String, dynamic> updates) async {
+  Future<void> updateUserProfile(
+    String uid,
+    Map<String, dynamic> updates,
+  ) async {
     try {
       updates['lastUpdated'] = FieldValue.serverTimestamp();
       await _firestore.collection(_collection).doc(uid).update(updates);

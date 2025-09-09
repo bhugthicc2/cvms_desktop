@@ -12,12 +12,14 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CustomReportDialog extends StatefulWidget {
   final String title;
-  final VehicleEntry vehicleEntry;
+  final VehicleEntry? vehicleEntry;
+  final int? selectedCount;
 
   const CustomReportDialog({
     super.key,
     required this.title,
-    required this.vehicleEntry,
+    this.vehicleEntry,
+    this.selectedCount,
   });
 
   @override
@@ -78,23 +80,43 @@ class _CustomReportDialogState extends State<CustomReportDialog> {
               ? _reasonController.text.trim()
               : _selectedViolation!;
 
-      await context.read<VehicleCubit>().reportViolation(
-        vehicle: widget.vehicleEntry,
-        violationType: violationType,
-        reason:
-            _selectedViolation == 'Other'
-                ? _reasonController.text.trim()
-                : null,
-      );
-
-      if (mounted) {
-        CustomSnackBar.show(
-          context: context,
-          message:
-              'Violation report submitted for ${widget.vehicleEntry.plateNumber}',
-          type: SnackBarType.success,
+      if (widget.selectedCount != null && widget.selectedCount! > 1) {
+        await context.read<VehicleCubit>().bulkReportViolations(
+          violationType: violationType,
+          reason:
+              _selectedViolation == 'Other'
+                  ? _reasonController.text.trim()
+                  : null,
         );
-        Navigator.of(context).pop();
+
+        if (mounted) {
+          CustomSnackBar.show(
+            context: context,
+            message:
+                'Violation reports submitted for ${widget.selectedCount} vehicles',
+            type: SnackBarType.success,
+          );
+          Navigator.of(context).pop();
+        }
+      } else {
+        await context.read<VehicleCubit>().reportViolation(
+          vehicle: widget.vehicleEntry!,
+          violationType: violationType,
+          reason:
+              _selectedViolation == 'Other'
+                  ? _reasonController.text.trim()
+                  : null,
+        );
+
+        if (mounted) {
+          CustomSnackBar.show(
+            context: context,
+            message:
+                'Violation report submitted for ${widget.vehicleEntry!.plateNumber}',
+            type: SnackBarType.success,
+          );
+          Navigator.of(context).pop();
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -125,7 +147,9 @@ class _CustomReportDialogState extends State<CustomReportDialog> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'Do you want to report ${widget.vehicleEntry.plateNumber}?',
+            widget.selectedCount != null && widget.selectedCount! > 1
+                ? 'Do you want to report ${widget.selectedCount} selected vehicles?'
+                : 'Do you want to report ${widget.vehicleEntry?.plateNumber ?? 'this vehicle'}?',
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           Spacing.vertical(),

@@ -7,13 +7,13 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 class CustomDeleteDialog extends StatelessWidget {
   final Function() onDelete;
   final String title;
-  final int? selectedCount; // Add optional count for bulk operations
+  final int? selectedCount;
 
   const CustomDeleteDialog({
     super.key,
     required this.title,
     required this.onDelete,
-    this.selectedCount, // Optional parameter for bulk delete
+    this.selectedCount,
   });
 
   @override

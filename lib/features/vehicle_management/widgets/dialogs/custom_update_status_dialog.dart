@@ -3,14 +3,16 @@ import 'package:cvms_desktop/core/widgets/app/custom_dropdown_field.dart';
 import 'package:flutter/material.dart';
 
 class CustomUpdateStatusDialog extends StatefulWidget {
-  final String vehicleID;
-  final String currentStatus;
+  final String? vehicleID;
+  final String? currentStatus;
+  final int? selectedCount;
   final Function(String newStatus) onSave;
 
   const CustomUpdateStatusDialog({
     super.key,
-    required this.vehicleID,
-    required this.currentStatus,
+    this.vehicleID,
+    this.currentStatus,
+    this.selectedCount,
     required this.onSave,
   });
 
@@ -31,13 +33,19 @@ class _CustomUpdateStatusDialogState extends State<CustomUpdateStatusDialog> {
   @override
   Widget build(BuildContext context) {
     final hasChanged = _selectedStatus != widget.currentStatus;
+    final isBulkOperation =
+        widget.selectedCount != null && widget.selectedCount! > 1;
+
     return CustomDialog(
       height: 250,
       width: 600,
-      title: 'Update Vehicle Status',
+      title:
+          isBulkOperation
+              ? 'Update Status (${widget.selectedCount} vehicles)'
+              : 'Update Vehicle Status',
       btnTxt: 'Update',
       onSubmit:
-          hasChanged
+          (isBulkOperation ? _selectedStatus != null : hasChanged)
               ? () {
                 widget.onSave(_selectedStatus!);
                 Navigator.of(context).pop();

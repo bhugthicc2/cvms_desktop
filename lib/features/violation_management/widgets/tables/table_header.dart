@@ -3,7 +3,7 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
-import 'package:cvms_desktop/features/violation_management/widgets/dialogs/custom_form_dialog.dart';
+import 'package:cvms_desktop/features/violation_management/widgets/dialogs/custom_add_dialog.dart';
 import 'package:cvms_desktop/features/violation_management/widgets/buttons/custom_violation_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,7 +71,7 @@ class TableHeader extends StatelessWidget {
                           showDialog(
                             context: context,
                             builder:
-                                (_) => const CustomFormDialog(
+                                (_) => const CustomAddDialog(
                                   title: "Add Violation",
                                 ),
                           );

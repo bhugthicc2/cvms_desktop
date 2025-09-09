@@ -46,4 +46,17 @@ class VehicleRepository {
     
     await batch.commit();
   }
+
+  Future<void> bulkUpdateStatus(List<String> vehicleIds, String status) async {
+    if (vehicleIds.isEmpty) return;
+
+    final batch = _firestore.batch();
+
+    for (final id in vehicleIds) {
+      final docRef = _firestore.collection(_collection).doc(id);
+      batch.update(docRef, {'status': status});
+    }
+
+    await batch.commit();
+  }
 }

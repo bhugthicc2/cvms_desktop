@@ -19,3 +19,5 @@ class ResetPasswordEvent extends AuthEvent {
 }
 
 class SignOutEvent extends AuthEvent {}
+
+class SilentSignOutEvent extends AuthEvent {}

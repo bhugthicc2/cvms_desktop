@@ -3,7 +3,8 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_cubit.dart';
-import 'package:cvms_desktop/features/user_management/widgets/dialogs/custom_form_dialog.dart';
+import 'package:cvms_desktop/features/user_management/bloc/user_management_bloc.dart';
+import 'package:cvms_desktop/features/user_management/widgets/dialogs/custom_add_dialog.dart';
 import 'package:cvms_desktop/features/user_management/widgets/buttons/custom_user_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,10 +67,12 @@ class TableHeader extends StatelessWidget {
                         onPressed: () {
                           showDialog(
                             context: context,
-                            builder:
-                                (_) => const CustomFormDialog(
-                                  title: "Add New User",
-                                ),
+                            builder: (dialogContext) => BlocProvider.value(
+                              value: context.read<UserManagementBloc>(),
+                              child: const CustomAddDialog(
+                                title: "Add New User",
+                              ),
+                            ),
                           );
                         },
                       ),
