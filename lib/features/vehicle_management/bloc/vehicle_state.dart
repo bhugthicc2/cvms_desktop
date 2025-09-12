@@ -9,6 +9,7 @@ class VehicleState {
   final String typeFilter;
   final String searchQuery;
   final bool isBulkModeEnabled;
+  final String? error;
 
   VehicleState({
     required this.allEntries,
@@ -18,6 +19,7 @@ class VehicleState {
     required this.typeFilter,
     required this.searchQuery,
     required this.isBulkModeEnabled,
+    this.error,
   });
 
   factory VehicleState.initial() => VehicleState(
@@ -28,6 +30,7 @@ class VehicleState {
     typeFilter: 'All',
     searchQuery: '',
     isBulkModeEnabled: false,
+    error: null,
   );
 
   VehicleState copyWith({
@@ -38,6 +41,7 @@ class VehicleState {
     String? typeFilter,
     String? searchQuery,
     bool? isBulkModeEnabled,
+    String? error,
   }) {
     return VehicleState(
       allEntries: allEntries ?? this.allEntries,
@@ -47,6 +51,7 @@ class VehicleState {
       typeFilter: typeFilter ?? this.typeFilter,
       searchQuery: searchQuery ?? this.searchQuery,
       isBulkModeEnabled: isBulkModeEnabled ?? this.isBulkModeEnabled,
+      error: error,
     );
   }
 }

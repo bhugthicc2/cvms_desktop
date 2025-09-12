@@ -26,6 +26,7 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
   final Map<String, TextEditingController> _controllers = {
     "Owner Name": TextEditingController(),
     "School ID": TextEditingController(),
+    "Department": TextEditingController(),
     "Plate Number": TextEditingController(),
     "Vehicle Type": TextEditingController(),
     "Vehicle Model": TextEditingController(),
@@ -34,7 +35,6 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
     "OR Number": TextEditingController(),
     "CR Number": TextEditingController(),
     "Status": TextEditingController(),
-    "QR Code ID": TextEditingController(),
   };
 
   @override
@@ -58,11 +58,11 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
 
     final fieldPairs = [
       ["Owner Name", "School ID"],
+      ["Department"],
       ["Plate Number", "Vehicle Type"],
       ["Vehicle Model", "Vehicle Color"],
       ["License Number", "OR Number"],
       ["CR Number", "Status"],
-      ["QR Code ID", ""],
     ];
 
     return CustomDialog(
@@ -70,7 +70,7 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
       btnTxt: 'Save',
       onSubmit: _isFormValid ? () => _handleSave(context) : null,
       title: widget.title,
-      height: screenHeight * 0.8,
+      height: screenHeight * 0.7,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Form(
@@ -91,7 +91,7 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
                                 FormValidator.validateRequired(val, pair[0]),
                       ),
                     ),
-                    if (pair[1].isNotEmpty) ...[
+                    if (pair.length > 1 && pair[1].isNotEmpty) ...[
                       Spacing.horizontal(size: AppIconSizes.medium),
                       Expanded(
                         child: CustomTextField(
@@ -135,6 +135,7 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
       vehicleID: '',
       ownerName: _controllers["Owner Name"]!.text,
       schoolID: _controllers["School ID"]!.text,
+      department: _controllers["Department"]!.text,
       plateNumber: _controllers["Plate Number"]!.text,
       vehicleType: _controllers["Vehicle Type"]!.text,
       vehicleModel: _controllers["Vehicle Model"]!.text,
@@ -146,7 +147,7 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
           _controllers["Status"]!.text.isNotEmpty
               ? _controllers["Status"]!.text
               : "outside",
-      qrCodeID: _controllers["QR Code ID"]!.text,
+
       createdAt: Timestamp.now(),
     );
 

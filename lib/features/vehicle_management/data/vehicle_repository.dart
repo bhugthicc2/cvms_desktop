@@ -1,28 +1,45 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/vehicle_entry.dart';
+import '../../../core/error/firebase_error_handler.dart';
 
 class VehicleRepository {
   final _firestore = FirebaseFirestore.instance;
   final _collection = 'vehicles';
 
   Future<List<VehicleEntry>> fetchVehicles() async {
-    final snapshot = await _firestore.collection(_collection).get();
-    return snapshot.docs.map((doc) {
-      final data = doc.data();
-      return VehicleEntry.fromMap(data, doc.id);
-    }).toList();
+    try {
+      final snapshot = await _firestore.collection(_collection).get();
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return VehicleEntry.fromMap(data, doc.id);
+      }).toList();
+    } catch (e) {
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
+    }
   }
 
   Future<void> addVehicle(VehicleEntry entry) async {
-    await _firestore.collection(_collection).add(entry.toMap());
+    try {
+      await _firestore.collection(_collection).add(entry.toMap());
+    } catch (e) {
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
+    }
   }
 
   Future<void> updateVehicle(String id, Map<String, dynamic> updates) async {
-    await _firestore.collection(_collection).doc(id).update(updates);
+    try {
+      await _firestore.collection(_collection).doc(id).update(updates);
+    } catch (e) {
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
+    }
   }
 
   Future<void> deleteVehicle(String id) async {
-    await _firestore.collection(_collection).doc(id).delete();
+    try {
+      await _firestore.collection(_collection).doc(id).delete();
+    } catch (e) {
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
+    }
   }
 
   Stream<List<VehicleEntry>> watchVehicles() {
@@ -30,6 +47,8 @@ class VehicleRepository {
       return snapshot.docs.map((doc) {
         return VehicleEntry.fromMap(doc.data(), doc.id);
       }).toList();
+    }).handleError((error) {
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(error));
     });
   }
 
@@ -37,26 +56,34 @@ class VehicleRepository {
   Future<void> bulkDeleteVehicles(List<String> vehicleIds) async {
     if (vehicleIds.isEmpty) return;
     
-    final batch = _firestore.batch();
-    
-    for (final id in vehicleIds) {
-      final docRef = _firestore.collection(_collection).doc(id);
-      batch.delete(docRef);
+    try {
+      final batch = _firestore.batch();
+      
+      for (final id in vehicleIds) {
+        final docRef = _firestore.collection(_collection).doc(id);
+        batch.delete(docRef);
+      }
+      
+      await batch.commit();
+    } catch (e) {
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
-    
-    await batch.commit();
   }
 
   Future<void> bulkUpdateStatus(List<String> vehicleIds, String status) async {
     if (vehicleIds.isEmpty) return;
 
-    final batch = _firestore.batch();
+    try {
+      final batch = _firestore.batch();
 
-    for (final id in vehicleIds) {
-      final docRef = _firestore.collection(_collection).doc(id);
-      batch.update(docRef, {'status': status});
+      for (final id in vehicleIds) {
+        final docRef = _firestore.collection(_collection).doc(id);
+        batch.update(docRef, {'status': status});
+      }
+
+      await batch.commit();
+    } catch (e) {
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
-
-    await batch.commit();
   }
 }

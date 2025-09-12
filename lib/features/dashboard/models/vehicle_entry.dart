@@ -1,24 +1,43 @@
-class VehicleEntry {
-  final String name;
-  final String vehicle;
-  final String plateNumber;
-  final Duration duration;
-  final String status;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-  VehicleEntry(
-    this.status, {
-    required this.name,
-    required this.vehicle,
+class VehicleEntry {
+  final String ownerName;
+  final String vehicleModel;
+  final String plateNumber;
+  final DateTime timeIn;
+  final DateTime? timeOut;
+
+  VehicleEntry({
+    required this.ownerName,
+    required this.vehicleModel,
     required this.plateNumber,
-    required this.duration,
+    required this.timeIn,
+    this.timeOut,
   });
 
-  ///NEWWWWWWW
-
-  String get formattedDuration {
-    return "${duration.inHours}h ${duration.inMinutes % 60}m";
-    //TODO: auto calcualtion of time in and current time =  duration
+  Duration get duration {
+    final end = timeOut ?? DateTime.now();
+    return end.difference(timeIn);
   }
 
-  int get durationInMinutes => duration.inMinutes;
+  String get formattedDuration {
+    final d = duration;
+    return "${d.inHours}h ${d.inMinutes % 60}m";
+  }
+
+  String get status => timeOut == null ? "inside" : "outside";
+
+  // Factory for Firestore
+  factory VehicleEntry.fromMap(Map<String, dynamic> data) {
+    return VehicleEntry(
+      ownerName: data['ownerName'] ?? '',
+      vehicleModel: data['vehicleModel'] ?? '',
+      plateNumber: data['plateNumber'] ?? '',
+      timeIn: (data['timeIn'] as Timestamp).toDate(),
+      timeOut:
+          data['timeOut'] != null
+              ? (data['timeOut'] as Timestamp).toDate()
+              : null,
+    );
+  }
 }

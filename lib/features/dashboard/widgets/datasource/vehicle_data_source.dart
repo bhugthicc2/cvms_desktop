@@ -24,8 +24,14 @@ class VehicleEntryDataSource extends DataGridSource {
                     columnName: 'index',
                     value: vehicleEntries.indexOf(e) + 1,
                   ),
-                  DataGridCell<String>(columnName: 'name', value: e.name),
-                  DataGridCell<String>(columnName: 'vehicle', value: e.vehicle),
+                  DataGridCell<String>(
+                    columnName: 'ownerName',
+                    value: e.ownerName,
+                  ),
+                  DataGridCell<String>(
+                    columnName: 'vehicleModel',
+                    value: e.vehicleModel,
+                  ),
                   DataGridCell<String>(
                     columnName: 'plateNumber',
                     value: e.plateNumber,

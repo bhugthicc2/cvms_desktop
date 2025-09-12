@@ -9,7 +9,7 @@ import 'package:cvms_desktop/features/vehicle_management/widgets/dialogs/custom_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/widgets/table/custom_table.dart';
-import '../../data/vehicle_data_source.dart';
+import '../datasource/vehicle_data_source.dart';
 import 'vehicle_table_columns.dart';
 import '../../models/vehicle_entry.dart';
 import '../../bloc/vehicle_cubit.dart';
@@ -52,31 +52,32 @@ class VehicleTable extends StatelessWidget {
                   final vehicleCubit = context.read<VehicleCubit>();
                   showDialog(
                     context: context,
-                    builder: (dialogContext) => CustomUpdateStatusDialog(
-                      selectedCount: state.selectedEntries.length,
-                      onSave: (newStatus) async {
-                        try {
-                          await vehicleCubit.bulkUpdateStatus(newStatus);
-                          if (context.mounted) {
-                            CustomSnackBar.show(
-                              context: context,
-                              message:
-                                  'Successfully updated status for ${state.selectedEntries.length} vehicle(s)',
-                              type: SnackBarType.success,
-                            );
-                          }
-                        } catch (e) {
-                          if (context.mounted) {
-                            CustomSnackBar.show(
-                              context: context,
-                              message:
-                                  'Failed to update status: ${e.toString()}',
-                              type: SnackBarType.error,
-                            );
-                          }
-                        }
-                      },
-                    ),
+                    builder:
+                        (dialogContext) => CustomUpdateStatusDialog(
+                          selectedCount: state.selectedEntries.length,
+                          onSave: (newStatus) async {
+                            try {
+                              await vehicleCubit.bulkUpdateStatus(newStatus);
+                              if (context.mounted) {
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message:
+                                      'Successfully updated status for ${state.selectedEntries.length} vehicle(s)',
+                                  type: SnackBarType.success,
+                                );
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                CustomSnackBar.show(
+                                  context: context,
+                                  message:
+                                      'Failed to update status: ${e.toString()}',
+                                  type: SnackBarType.error,
+                                );
+                              }
+                            }
+                          },
+                        ),
                   );
                 },
                 onReport: () {
@@ -85,13 +86,14 @@ class VehicleTable extends StatelessWidget {
                   final vehicleCubit = context.read<VehicleCubit>();
                   showDialog(
                     context: context,
-                    builder: (dialogContext) => BlocProvider.value(
-                      value: vehicleCubit,
-                      child: CustomReportDialog(
-                        title: 'Report Violations',
-                        selectedCount: state.selectedEntries.length,
-                      ),
-                    ),
+                    builder:
+                        (dialogContext) => BlocProvider.value(
+                          value: vehicleCubit,
+                          child: CustomReportDialog(
+                            title: 'Report Violations',
+                            selectedCount: state.selectedEntries.length,
+                          ),
+                        ),
                   );
                 },
                 onDelete: () async {

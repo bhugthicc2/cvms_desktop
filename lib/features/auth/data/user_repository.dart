@@ -1,10 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../core/error/firebase_error_handler.dart';
 
 /// Repository for handling user data operations in Firestore
 /// Follows single responsibility principle - only user data operations
 class UserRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String _collection = 'users';
+
+  Future<String?> getUserFullname(String uid) async {
+    final doc = await _firestore.collection('users').doc(uid).get();
+    if (!doc.exists) return null;
+    return doc.data()?['fullname'] as String?;
+  }
 
   /// Create user profile in Firestore
   Future<void> createUserProfile({
@@ -27,7 +34,7 @@ class UserRepository {
         'lastLogin': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      rethrow;
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
   }
 
@@ -39,7 +46,7 @@ class UserRepository {
         'status': 'active',
       });
     } catch (e) {
-      rethrow;
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
   }
 
@@ -51,7 +58,7 @@ class UserRepository {
         'lastUpdated': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      rethrow;
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
   }
 
@@ -61,7 +68,7 @@ class UserRepository {
       final doc = await _firestore.collection(_collection).doc(uid).get();
       return doc.exists ? doc.data() : null;
     } catch (e) {
-      rethrow;
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
   }
 
@@ -79,7 +86,7 @@ class UserRepository {
       updates['lastUpdated'] = FieldValue.serverTimestamp();
       await _firestore.collection(_collection).doc(uid).update(updates);
     } catch (e) {
-      rethrow;
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
   }
 
@@ -88,7 +95,7 @@ class UserRepository {
     try {
       await _firestore.collection(_collection).doc(uid).delete();
     } catch (e) {
-      rethrow;
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
   }
 }

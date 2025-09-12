@@ -28,6 +28,7 @@ class _CustomEditDialogState extends State<CustomEditDialog> {
   final Map<String, TextEditingController> _controllers = {
     "Owner Name": TextEditingController(),
     "School ID": TextEditingController(),
+    "Department": TextEditingController(),
     "Plate Number": TextEditingController(),
     "Vehicle Type": TextEditingController(),
     "Vehicle Model": TextEditingController(),
@@ -36,7 +37,6 @@ class _CustomEditDialogState extends State<CustomEditDialog> {
     "OR Number": TextEditingController(),
     "CR Number": TextEditingController(),
     "Status": TextEditingController(),
-    "QR Code ID": TextEditingController(),
   };
 
   String? _createdAt;
@@ -48,6 +48,7 @@ class _CustomEditDialogState extends State<CustomEditDialog> {
 
     _controllers["Owner Name"]!.text = widget.vehicle.ownerName;
     _controllers["School ID"]!.text = widget.vehicle.schoolID;
+    _controllers["Department"]!.text = widget.vehicle.department;
     _controllers["Plate Number"]!.text = widget.vehicle.plateNumber;
     _controllers["Vehicle Type"]!.text = widget.vehicle.vehicleType;
     _controllers["Vehicle Model"]!.text = widget.vehicle.vehicleModel;
@@ -56,7 +57,6 @@ class _CustomEditDialogState extends State<CustomEditDialog> {
     _controllers["OR Number"]!.text = widget.vehicle.orNumber;
     _controllers["CR Number"]!.text = widget.vehicle.crNumber;
     _controllers["Status"]!.text = widget.vehicle.status;
-    _controllers["QR Code ID"]!.text = widget.vehicle.qrCodeID;
 
     if (widget.vehicle.createdAt != null) {
       _createdAt = DateTimeFormatter.formatFull(
@@ -74,6 +74,7 @@ class _CustomEditDialogState extends State<CustomEditDialog> {
     final changed =
         _controllers["Owner Name"]!.text != vehicle.ownerName ||
         _controllers["School ID"]!.text != vehicle.schoolID ||
+        _controllers["Department"]!.text != vehicle.department ||
         _controllers["Plate Number"]!.text != vehicle.plateNumber ||
         _controllers["Vehicle Type"]!.text != vehicle.vehicleType ||
         _controllers["Vehicle Model"]!.text != vehicle.vehicleModel ||
@@ -81,8 +82,7 @@ class _CustomEditDialogState extends State<CustomEditDialog> {
         _controllers["License Number"]!.text != vehicle.licenseNumber ||
         _controllers["OR Number"]!.text != vehicle.orNumber ||
         _controllers["CR Number"]!.text != vehicle.crNumber ||
-        _controllers["Status"]!.text != vehicle.status ||
-        _controllers["QR Code ID"]!.text != vehicle.qrCodeID;
+        _controllers["Status"]!.text != vehicle.status;
 
     if (changed != _hasChanges) {
       setState(() => _hasChanges = changed);
@@ -103,11 +103,11 @@ class _CustomEditDialogState extends State<CustomEditDialog> {
 
     final fieldPairs = [
       ["Owner Name", "School ID"],
+      ["Department"],
       ["Plate Number", "Vehicle Type"],
       ["Vehicle Model", "Vehicle Color"],
       ["License Number", "OR Number"],
       ["CR Number", "Status"],
-      ["QR Code ID", ""],
     ];
 
     return CustomDialog(
@@ -115,7 +115,7 @@ class _CustomEditDialogState extends State<CustomEditDialog> {
       btnTxt: 'Update',
       onSubmit: _hasChanges ? () => _handleSave(context) : null,
       title: widget.title,
-      height: screenHeight * 0.8,
+      height: screenHeight * 0.7,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
@@ -131,7 +131,7 @@ class _CustomEditDialogState extends State<CustomEditDialog> {
                       controller: _controllers[pair[0]]!,
                     ),
                   ),
-                  if (pair[1].isNotEmpty) ...[
+                  if (pair.length > 1 && pair[1].isNotEmpty) ...[
                     Spacing.horizontal(size: AppIconSizes.medium),
                     Expanded(
                       child: CustomTextField(
@@ -167,6 +167,7 @@ class _CustomEditDialogState extends State<CustomEditDialog> {
       vehicleID: widget.vehicle.vehicleID,
       ownerName: _controllers["Owner Name"]!.text,
       schoolID: _controllers["School ID"]!.text,
+      department: _controllers["Department"]!.text,
       plateNumber: _controllers["Plate Number"]!.text,
       vehicleType: _controllers["Vehicle Type"]!.text,
       vehicleModel: _controllers["Vehicle Model"]!.text,
@@ -175,7 +176,7 @@ class _CustomEditDialogState extends State<CustomEditDialog> {
       orNumber: _controllers["OR Number"]!.text,
       crNumber: _controllers["CR Number"]!.text,
       status: _controllers["Status"]!.text,
-      qrCodeID: _controllers["QR Code ID"]!.text,
+
       createdAt: widget.vehicle.createdAt,
     );
 

@@ -1,7 +1,7 @@
 import 'package:cvms_desktop/features/auth/services/auth_persistence.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/utils/logger.dart';
+import '../../../core/error/firebase_error_handler.dart';
 import '../data/auth_repository.dart';
 import '../data/user_repository.dart';
 import 'auth_event.dart';
@@ -28,24 +28,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         } else {
           emit(AuthError('Login failed'));
         }
-      } on FirebaseAuthException catch (e) {
-        String errorMessage;
-        switch (e.code) {
-          case 'user-not-found':
-            errorMessage = 'No account found with this email.';
-            break;
-          case 'wrong-password':
-            errorMessage = 'Incorrect password.';
-            break;
-          case 'invalid-email':
-            errorMessage = 'The email address is not valid.';
-            break;
-          default:
-            errorMessage = 'Authentication failed. Please try again.';
-        }
-        emit(AuthError(errorMessage));
       } catch (e) {
-        emit(AuthError('Unexpected error: ${e.toString()}'));
+        final errorMessage = e.toString().contains('Exception: ')
+            ? e.toString().replaceFirst('Exception: ', '')
+            : FirebaseErrorHandler.handleAuthError(e);
+        
+        emit(AuthError(errorMessage));
       }
     });
 
@@ -69,7 +57,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(AuthError('Sign up failed'));
         }
       } catch (e) {
-        emit(AuthError(e.toString()));
+        final errorMessage = e.toString().contains('Exception: ')
+            ? e.toString().replaceFirst('Exception: ', '')
+            : FirebaseErrorHandler.handleAuthError(e);
+        
+        emit(AuthError(errorMessage));
         Logger.log('Auth error: $e');
       }
     });
@@ -79,22 +71,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         await _authRepository.resetPassword(event.email);
         emit(ResetPasswordSuccess());
-      } on FirebaseAuthException catch (e) {
-        String errorMessage;
-        switch (e.code) {
-          case 'user-not-found':
-            errorMessage = 'No account found with this email.';
-            break;
-          case 'invalid-email':
-            errorMessage = 'Please enter a valid email address.';
-            break;
-          default:
-            errorMessage = 'An error occurred. Please try again.';
-        }
-        emit(AuthError(errorMessage));
-        Logger.log('Password reset error: $e');
       } catch (e) {
-        emit(AuthError('An unexpected error occurred.'));
+        final errorMessage = e.toString().contains('Exception: ')
+            ? e.toString().replaceFirst('Exception: ', '')
+            : FirebaseErrorHandler.handleAuthError(e);
+        
+        emit(AuthError(errorMessage));
         Logger.log('Password reset error: $e');
       }
     });

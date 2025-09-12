@@ -11,6 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  #autocomplete
+  flutter_typeahead: ^5.2.0
   #qrcode package
   pretty_qr_code: ^3.5.0
   #Required for initializing and connecting the app to Firebase services

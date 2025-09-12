@@ -1,4 +1,4 @@
-import 'package:cvms_desktop/features/auth/widgets/text/custom_alert_dialog.dart';
+import 'package:cvms_desktop/features/auth/widgets/dialogs/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 
 class LogoutDialog {
@@ -12,10 +12,16 @@ class LogoutDialog {
           message: 'Are you sure you want to logout?',
           btnTxt: 'Yes',
           onCancel: () => Navigator.of(context).pop(false),
-          onSubmit: () => Navigator.of(context).pop(true),
+          onSubmit: () async {
+            await Future.delayed(const Duration(seconds: 2));
+            if (context.mounted) {
+              Navigator.of(context).pop(true);
+            }
+          },
         );
       },
     );
+
     return result ?? false;
   }
 }

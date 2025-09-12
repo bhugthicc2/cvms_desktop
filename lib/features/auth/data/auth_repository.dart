@@ -1,12 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../core/error/firebase_error_handler.dart';
 
 /// Repository for handling Firebase Authentication operations
 /// Follows single responsibility principle - only auth operations
 class AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  String? get uid => _auth.currentUser?.uid;
 
   /// Sign in user with email and password
-  /// Returns User object if successful, null otherwise
+  /// Returns User object if successful, throws formatted error otherwise
   Future<User?> signIn(String email, String password) async {
     try {
       final userCredential = await _auth.signInWithEmailAndPassword(
@@ -15,12 +17,12 @@ class AuthRepository {
       );
       return userCredential.user;
     } catch (e) {
-      rethrow;
+      throw Exception(FirebaseErrorHandler.handleAuthError(e));
     }
   }
 
   /// Create new user account with email and password
-  /// Returns User object if successful, null otherwise
+  /// Returns User object if successful, throws formatted error otherwise
   Future<User?> signUp(String email, String password) async {
     try {
       final userCredential = await _auth.createUserWithEmailAndPassword(
@@ -29,7 +31,7 @@ class AuthRepository {
       );
       return userCredential.user;
     } catch (e) {
-      rethrow;
+      throw Exception(FirebaseErrorHandler.handleAuthError(e));
     }
   }
 
@@ -38,7 +40,7 @@ class AuthRepository {
     try {
       await _auth.sendPasswordResetEmail(email: email);
     } catch (e) {
-      rethrow;
+      throw Exception(FirebaseErrorHandler.handleAuthError(e));
     }
   }
 
@@ -47,7 +49,7 @@ class AuthRepository {
     try {
       await _auth.signOut();
     } catch (e) {
-      rethrow;
+      throw Exception(FirebaseErrorHandler.handleAuthError(e));
     }
   }
 

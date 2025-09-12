@@ -5,7 +5,7 @@ import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_delete_di
     show CustomDeleteDialog;
 import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_view_dialog.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/dialogs/reprort_vehicle_dialog.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/dialogs/update_status_dialog.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_update_dialog.dart';
 
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -99,7 +99,7 @@ class VehicleActionsMenu extends StatelessWidget {
 
   void _updateVehicle(BuildContext context) {
     //todo
-    showDialog(context: context, builder: (_) => const UpdateStatusDialog());
+    showDialog(context: context, builder: (_) => const CustomUpdateDialog());
   }
 
   void _reportVehicle(BuildContext context) {

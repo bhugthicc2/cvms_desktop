@@ -1,20 +1,31 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/core/theme/app_icon_sizes.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dialog.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_text_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import '../../models/vehicle_monitoring_entry.dart';
+import '../../models/vehicle_log_model.dart';
+import 'package:intl/intl.dart';
 
-class VehicleMonitoringInfoDialog extends StatelessWidget {
-  final VehicleMonitoringEntry entry;
+class VehicleLogsInfoDialog extends StatelessWidget {
+  final VehicleLogModel log;
 
-  const VehicleMonitoringInfoDialog({super.key, required this.entry});
+  const VehicleLogsInfoDialog({super.key, required this.log});
+
+  String _formatDateTime(Timestamp? ts) {
+    if (ts == null) return '';
+    return DateFormat("dd/MM/yyyy hh:mm a").format(ts.toDate());
+  }
+
+  String _formatDuration(Duration duration) {
+    return '${duration.inHours}h ${duration.inMinutes % 60}m';
+  }
 
   @override
   Widget build(BuildContext context) {
     return CustomDialog(
-      title: 'Vehicle Monitoring Information',
+      title: 'Vehicle Log Information',
       icon: PhosphorIconsBold.car,
       btnTxt: 'Close',
       width: 600,
@@ -23,12 +34,13 @@ class VehicleMonitoringInfoDialog extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Fullname & Vehicle
           Row(
             children: [
               Expanded(
                 child: CustomTextField(
-                  labelText: 'Name',
-                  controller: TextEditingController(text: entry.name),
+                  labelText: 'Onwer Name',
+                  controller: TextEditingController(text: log.ownerName),
                   enabled: false,
                   height: 55,
                 ),
@@ -37,7 +49,7 @@ class VehicleMonitoringInfoDialog extends StatelessWidget {
               Expanded(
                 child: CustomTextField(
                   labelText: 'Vehicle',
-                  controller: TextEditingController(text: entry.vehicle),
+                  controller: TextEditingController(text: log.vehicleModel),
                   enabled: false,
                   height: 55,
                 ),
@@ -45,12 +57,14 @@ class VehicleMonitoringInfoDialog extends StatelessWidget {
             ],
           ),
           Spacing.vertical(size: AppIconSizes.medium),
+
+          // Plate Number & Status
           Row(
             children: [
               Expanded(
                 child: CustomTextField(
                   labelText: 'Plate Number',
-                  controller: TextEditingController(text: entry.plateNumber),
+                  controller: TextEditingController(text: log.plateNumber),
                   enabled: false,
                   height: 55,
                 ),
@@ -60,7 +74,7 @@ class VehicleMonitoringInfoDialog extends StatelessWidget {
                 child: CustomTextField(
                   labelText: 'Status',
                   controller: TextEditingController(
-                    text: entry.status.toUpperCase(),
+                    text: log.status.toUpperCase(),
                   ),
                   enabled: false,
                   height: 55,
@@ -69,75 +83,58 @@ class VehicleMonitoringInfoDialog extends StatelessWidget {
             ],
           ),
           Spacing.vertical(size: AppIconSizes.medium),
+
+          // Duration
           Row(
             children: [
               Expanded(
                 child: CustomTextField(
                   labelText: 'Duration',
                   controller: TextEditingController(
-                    text:
-                        '${entry.duration.inHours}h ${entry.duration.inMinutes % 60}m',
+                    text: _formatDuration(
+                      Duration(minutes: log.durationMinutes ?? 0),
+                    ),
                   ),
                   enabled: false,
                   height: 55,
                 ),
               ),
               Spacing.horizontal(size: AppIconSizes.medium),
-              Expanded(
-                child: CustomTextField(
-                  labelText: 'Copy Mock',
-                  controller: TextEditingController(
-                    text:
-                        '${entry.duration.inHours}h ${entry.duration.inMinutes % 60}m',
-                  ),
-                  enabled: false,
-                  height: 55,
-                ), // Empty space for alignment
+              const Expanded(
+                child: SizedBox(), // keeps row alignment clean
               ),
             ],
           ),
-          if (entry.entryTime != null || entry.exitTime != null) ...[
+
+          // Entry / Exit times
+          ...[
             Spacing.vertical(size: AppIconSizes.medium),
             Row(
               children: [
                 Expanded(
-                  child:
-                      entry.entryTime != null
-                          ? CustomTextField(
-                            labelText: 'Entry Time',
-                            controller: TextEditingController(
-                              text:
-                                  '${entry.entryTime!.day}/${entry.entryTime!.month}/${entry.entryTime!.year} ${entry.entryTime!.hour}:${entry.entryTime!.minute.toString().padLeft(2, '0')}',
-                            ),
-                            enabled: false,
-                            height: 55,
-                          )
-                          : Expanded(
-                            child: CustomTextField(
-                              labelText: 'Copy Mock',
-                              controller: TextEditingController(
-                                text:
-                                    '${entry.duration.inHours}h ${entry.duration.inMinutes % 60}m',
-                              ),
-                              enabled: false,
-                              height: 55,
-                            ), // Empty space for alignment
-                          ),
+                  child: CustomTextField(
+                    labelText: 'Entry Time',
+                    controller: TextEditingController(
+                      text: _formatDateTime(log.timeIn),
+                    ),
+                    enabled: false,
+                    height: 55,
+                  ),
                 ),
                 Spacing.horizontal(size: AppIconSizes.medium),
                 Expanded(
                   child:
-                      entry.exitTime != null
+                      log.timeOut != null
                           ? CustomTextField(
                             labelText: 'Exit Time',
                             controller: TextEditingController(
-                              text:
-                                  '${entry.exitTime!.day}/${entry.exitTime!.month}/${entry.exitTime!.year} ${entry.exitTime!.hour}:${entry.exitTime!.minute.toString().padLeft(2, '0')}',
+                              text: _formatDateTime(log.timeOut),
                             ),
+
                             enabled: false,
                             height: 55,
                           )
-                          : Container(),
+                          : const SizedBox(),
                 ),
               ],
             ),

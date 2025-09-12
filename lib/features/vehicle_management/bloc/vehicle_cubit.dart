@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
 import 'package:cvms_desktop/features/auth/data/user_repository.dart';
@@ -13,6 +14,7 @@ class VehicleCubit extends Cubit<VehicleState> {
   final AuthRepository authRepository;
   final UserRepository userRepository;
   final VehicleViolationRepository violationRepository;
+  StreamSubscription<List<VehicleEntry>>? _vehiclesSubscription;
 
   VehicleCubit(
     this.repository,
@@ -27,31 +29,57 @@ class VehicleCubit extends Cubit<VehicleState> {
   }
 
   Future<void> loadVehicles() async {
-    final entries = await repository.fetchVehicles();
-    emit(state.copyWith(allEntries: entries));
-    _applyFilters();
+    try {
+      final entries = await repository.fetchVehicles();
+      emit(state.copyWith(allEntries: entries));
+      _applyFilters();
+    } catch (e) {
+      emit(state.copyWith(error: e.toString()));
+    }
   }
 
   Future<void> addVehicle(VehicleEntry entry) async {
-    await repository.addVehicle(entry);
-    await loadVehicles();
+    try {
+      await repository.addVehicle(entry);
+      await loadVehicles();
+    } catch (e) {
+      emit(state.copyWith(error: e.toString()));
+    }
   }
 
   Future<void> updateVehicle(String id, Map<String, dynamic> updates) async {
-    await repository.updateVehicle(id, updates);
-    await loadVehicles();
+    try {
+      await repository.updateVehicle(id, updates);
+      await loadVehicles();
+    } catch (e) {
+      emit(state.copyWith(error: e.toString()));
+    }
   }
 
   Future<void> deleteVehicle(String id) async {
-    await repository.deleteVehicle(id);
-    await loadVehicles();
+    try {
+      await repository.deleteVehicle(id);
+      await loadVehicles();
+    } catch (e) {
+      emit(state.copyWith(error: e.toString()));
+    }
   }
 
   void listenVehicles() {
-    repository.watchVehicles().listen((entries) {
-      emit(state.copyWith(allEntries: entries));
-      _applyFilters();
-    });
+    _vehiclesSubscription?.cancel();
+    _vehiclesSubscription = repository.watchVehicles().listen(
+      (entries) {
+        if (!isClosed) {
+          emit(state.copyWith(allEntries: entries));
+          _applyFilters();
+        }
+      },
+      onError: (error) {
+        if (!isClosed) {
+          emit(state.copyWith(error: error.toString()));
+        }
+      },
+    );
   }
 
   void toggleBulkMode() {
@@ -137,14 +165,7 @@ class VehicleCubit extends Cubit<VehicleState> {
                 e.licenseNumber.toLowerCase().contains(qLower) ||
                 e.orNumber.toLowerCase().contains(qLower) ||
                 e.crNumber.toLowerCase().contains(qLower) ||
-                e.status.toLowerCase().contains(qLower) ||
-                e.qrCodeID.toLowerCase().contains(qLower) ||
-                (e.createdAt != null &&
-                    e.createdAt!
-                        .toDate()
-                        .toIso8601String()
-                        .toLowerCase()
-                        .contains(qLower));
+                e.status.toLowerCase().contains(qLower);
           }).toList();
     }
 
@@ -255,5 +276,11 @@ class VehicleCubit extends Cubit<VehicleState> {
     } catch (e) {
       rethrow;
     }
+  }
+
+  @override
+  Future<void> close() {
+    _vehiclesSubscription?.cancel();
+    return super.close();
   }
 }

@@ -4,7 +4,7 @@ import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_cubit.dart';
-import 'package:cvms_desktop/features/vehicle_management/widgets/actions/custom_vehicle_button.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/buttons/custom_vehicle_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/widgets/app/search_field.dart';

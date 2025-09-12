@@ -13,11 +13,20 @@ class LineChartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final points = data.where((d) => d.date != null).toList();
-    return Card(
+    return Container(
       margin: EdgeInsets.zero,
-      elevation: 0,
-      color: AppColors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.grey.withValues(alpha: 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(

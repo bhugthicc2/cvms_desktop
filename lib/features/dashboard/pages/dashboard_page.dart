@@ -1,14 +1,12 @@
-import 'dart:math';
-import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_view_dialog.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard_cubit.dart';
-import 'package:cvms_desktop/features/dashboard/models/vehicle_entry.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_view_dialog.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/sections/dashboard_overview.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/tables/vehicle_table.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -24,34 +22,8 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
+    context.read<DashboardCubit>().startListening();
 
-    // Mock data dawg
-    final random = Random();
-    final firstNames = ["John", "Maria", "Paolo", "Angela"];
-    final lastNames = ["Reyes", "Cruz", "Patangan", "Medija"];
-
-    String randomName() =>
-        "${firstNames[random.nextInt(firstNames.length)]} ${lastNames[random.nextInt(lastNames.length)]}";
-
-    final allEntries = List.generate(
-      300,
-      (i) => VehicleEntry(
-        i.isEven ? "inside" : "outside",
-        name: randomName(),
-        vehicle: i.isEven ? "Honda Beat" : "Yamaha Mio",
-        plateNumber: "ABC-${100 + i}",
-        duration: Duration(
-          hours: 1 + random.nextInt(5),
-          minutes: random.nextInt(60),
-        ),
-      ),
-    );
-    // Mock data dawg
-
-    // Load entries into cubit
-    context.read<DashboardCubit>().loadEntries(allEntries);
-
-    // Listen to search controllers
     enteredSearchController.addListener(() {
       context.read<DashboardCubit>().filterEntered(
         enteredSearchController.text,
@@ -73,7 +45,6 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.greySurface,
-
       body: Padding(
         padding: const EdgeInsets.all(AppSpacing.medium),
         child: Column(
@@ -92,16 +63,14 @@ class _DashboardPageState extends State<DashboardPage> {
                           searchController: enteredSearchController,
                           hasSearchQuery:
                               enteredSearchController.text.isNotEmpty,
-                          onCellTap: (details) {
-                            if (details.rowColumnIndex.rowIndex > 0) {
-                              showDialog(
-                                context: context,
-                                builder:
-                                    (_) => CustomViewDialog(
-                                      title: 'Vehicle Information',
-                                    ),
-                              );
-                            }
+                          onCellTap: (_) {
+                            showDialog(
+                              context: context,
+                              builder:
+                                  (_) => const CustomViewDialog(
+                                    title: 'Vehicle Information',
+                                  ),
+                            );
                           },
                         );
                       },
@@ -117,16 +86,14 @@ class _DashboardPageState extends State<DashboardPage> {
                           searchController: exitedSearchController,
                           hasSearchQuery:
                               exitedSearchController.text.isNotEmpty,
-                          onCellTap: (details) {
-                            if (details.rowColumnIndex.rowIndex > 0) {
-                              showDialog(
-                                context: context,
-                                builder:
-                                    (_) => CustomViewDialog(
-                                      title: 'Vehicle Information',
-                                    ),
-                              );
-                            }
+                          onCellTap: (_) {
+                            showDialog(
+                              context: context,
+                              builder:
+                                  (_) => const CustomViewDialog(
+                                    title: 'Vehicle Information',
+                                  ),
+                            );
                           },
                         );
                       },

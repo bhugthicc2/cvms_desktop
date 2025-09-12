@@ -6,7 +6,7 @@ import 'package:cvms_desktop/features/vehicle_management/widgets/actions/vehicle
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import '../bloc/vehicle_cubit.dart';
+import '../../bloc/vehicle_cubit.dart';
 
 class VehicleDataSource extends DataGridSource {
   final List<VehicleEntry> _originalEntries;
@@ -44,6 +44,7 @@ class VehicleDataSource extends DataGridSource {
       ),
       DataGridCell<String>(columnName: 'ownerName', value: entry.ownerName),
       DataGridCell<String>(columnName: 'schoolID', value: entry.schoolID),
+      DataGridCell<String>(columnName: 'department', value: entry.department),
       DataGridCell<String>(columnName: 'plateNumber', value: entry.plateNumber),
       DataGridCell<String>(columnName: 'vehicleType', value: entry.vehicleType),
       DataGridCell<String>(
@@ -135,6 +136,8 @@ class VehicleDataSource extends DataGridSource {
           child: Text(
             cell.value.toString(),
             textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
               fontFamily: 'Sora',

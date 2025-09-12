@@ -1,7 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_cubit.dart';
-import 'package:cvms_desktop/features/user_management/data/user_data_source.dart';
+import 'package:cvms_desktop/features/user_management/widgets/datasource/user_data_source.dart';
 import 'package:cvms_desktop/features/user_management/models/user_model.dart';
 import 'package:cvms_desktop/features/user_management/widgets/tables/table_header.dart';
 import 'package:cvms_desktop/features/user_management/widgets/actions/toggle_actions.dart';

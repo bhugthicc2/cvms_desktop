@@ -28,6 +28,7 @@ class CustomTextField extends StatefulWidget {
   final double? height;
   final EdgeInsets? contentPadding;
   final AutovalidateMode autovalidateMode;
+  final FocusNode? focusNode;
 
   const CustomTextField({
     super.key,
@@ -54,6 +55,7 @@ class CustomTextField extends StatefulWidget {
     this.height,
     this.contentPadding,
     this.autovalidateMode = AutovalidateMode.disabled,
+    this.focusNode,
   });
 
   @override
@@ -61,7 +63,7 @@ class CustomTextField extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
-  final FocusNode _focusNode = FocusNode();
+  late final FocusNode _focusNode;
   bool _isObscured = false;
   bool _hasError = false;
   String? _errorMessage;
@@ -69,6 +71,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   void initState() {
     super.initState();
+    _focusNode = widget.focusNode ?? FocusNode();
     _isObscured = widget.obscureText;
     _focusNode.addListener(_updateState);
     if (widget.autovalidateMode == AutovalidateMode.always) {
@@ -94,7 +97,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   void dispose() {
     _focusNode.removeListener(_updateState);
-    _focusNode.dispose();
+    // Only dispose the focus node if we created it internally
+    if (widget.focusNode == null) {
+      _focusNode.dispose();
+    }
     super.dispose();
   }
 

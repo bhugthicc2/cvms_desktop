@@ -21,6 +21,9 @@ class ViewQrCodeDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final qrData =
+        vehicle
+            .vehicleID; //todo Later: AES128.encrypt(vehicle.vehicleID) vehicle document id for now
     final screenHeight = MediaQuery.of(context).size.height;
 
     return CustomDialog(
@@ -89,7 +92,9 @@ class ViewQrCodeDialog extends StatelessWidget {
             // QR CODE TEXT DATA FOR NOW //todo display the encrypted(8 round aes 128 algorithm with lfsr-based mixed columns and dynamic shiftrows) qr code data here
             CustomTextField(
               labelText: 'QR Code Data',
-              controller: TextEditingController(text: vehicle.qrCodeID),
+              controller: TextEditingController(
+                text: qrData,
+              ), //todo CIPHER DATA SOON
               obscureText: true,
               enableVisibilityToggle: true,
               enabled: true,
@@ -99,7 +104,7 @@ class ViewQrCodeDialog extends StatelessWidget {
               height: 280,
               width: 280,
               child: PrettyQrView.data(
-                data: vehicle.qrCodeID, // todo CIPHER DATA SOON
+                data: qrData, // todo CIPHER DATA SOON
                 decoration: const PrettyQrDecoration(
                   shape: PrettyQrSmoothSymbol(color: AppColors.darkBlue),
                   image: PrettyQrDecorationImage(

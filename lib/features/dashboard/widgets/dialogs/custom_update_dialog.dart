@@ -5,8 +5,8 @@ import 'package:cvms_desktop/core/widgets/app/custom_dropdown_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
 
-class UpdateStatusDialog extends StatelessWidget {
-  const UpdateStatusDialog({super.key});
+class CustomUpdateDialog extends StatelessWidget {
+  const CustomUpdateDialog({super.key});
 
   @override
   Widget build(BuildContext context) {

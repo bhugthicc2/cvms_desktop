@@ -4,6 +4,7 @@ class VehicleEntry {
   final String vehicleID;
   final String ownerName;
   final String schoolID;
+  final String department;
   final String plateNumber;
   final String vehicleType;
   final String vehicleModel;
@@ -12,12 +13,12 @@ class VehicleEntry {
   final String orNumber;
   final String crNumber;
   final String status;
-  final String qrCodeID;
   final Timestamp? createdAt;
   VehicleEntry({
     required this.vehicleID,
     required this.ownerName,
     required this.schoolID,
+    required this.department,
     required this.plateNumber,
     required this.vehicleType,
     required this.vehicleModel,
@@ -26,7 +27,6 @@ class VehicleEntry {
     required this.orNumber,
     required this.crNumber,
     required this.status,
-    required this.qrCodeID,
     this.createdAt,
   });
 
@@ -35,6 +35,7 @@ class VehicleEntry {
       vehicleID: id,
       ownerName: map['ownerName'] ?? '',
       schoolID: map['schoolID'] ?? '',
+      department: map['department'] ?? '',
       plateNumber: map['plateNumber'] ?? '',
       vehicleType: map['vehicleType'] ?? '',
       vehicleModel: map['vehicleModel'] ?? '',
@@ -43,7 +44,6 @@ class VehicleEntry {
       orNumber: map['orNumber'] ?? '',
       crNumber: map['crNumber'] ?? '',
       status: map['status'] ?? '',
-      qrCodeID: map['qrCodeID'] ?? '',
       createdAt: map['createdAt'],
     );
   }
@@ -52,6 +52,7 @@ class VehicleEntry {
     return {
       'ownerName': ownerName,
       'schoolID': schoolID,
+      'department': department,
       'plateNumber': plateNumber,
       'vehicleType': vehicleType,
       'vehicleModel': vehicleModel,
@@ -60,7 +61,6 @@ class VehicleEntry {
       'orNumber': orNumber,
       'crNumber': crNumber,
       'status': status,
-      'qrCodeID': qrCodeID,
       'createdAt': FieldValue.serverTimestamp(),
     };
   }

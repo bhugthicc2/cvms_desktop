@@ -7,12 +7,14 @@ class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
   final bool isLoading;
+  final Color? btnSubmitColor;
 
   const CustomButton({
     super.key,
     required this.text,
     this.onPressed,
     this.isLoading = false,
+    this.btnSubmitColor,
   });
 
   @override
@@ -25,7 +27,7 @@ class CustomButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           foregroundColor: AppColors.white,
-          backgroundColor: AppColors.primary,
+          backgroundColor: btnSubmitColor ?? AppColors.primary,
           elevation: 0,
         ),
         child:

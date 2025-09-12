@@ -12,12 +12,14 @@ class TableColumnFactory {
   }) {
     return GridColumn(
       columnName: name,
+      filterIconPadding: const EdgeInsets.all(8),
       width: width ?? double.nan,
       label: Container(
         alignment: alignment,
         padding: const EdgeInsets.all(8),
         color: AppColors.tableHeaderColor,
         child: Text(
+          overflow: TextOverflow.ellipsis,
           maxLines: 1,
           label,
           style: const TextStyle(

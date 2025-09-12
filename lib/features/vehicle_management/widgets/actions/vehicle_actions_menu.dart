@@ -106,17 +106,25 @@ class VehicleActionsMenu extends StatelessWidget {
             title: "Edit Vehicle Information",
             onSave: (updatedEntry) async {
               try {
-                CustomSnackBar.show(
-                  context: context,
-                  message: 'Vehicle details updated successfully.',
-                  type: SnackBarType.success,
+                await context.read<VehicleCubit>().updateVehicle(
+                  vehicleEntry.vehicleID,
+                  updatedEntry.toMap(),
                 );
+                if (context.mounted) {
+                  CustomSnackBar.show(
+                    context: context,
+                    message: 'Vehicle details updated successfully.',
+                    type: SnackBarType.success,
+                  );
+                }
               } catch (e) {
-                CustomSnackBar.show(
-                  context: context,
-                  message: 'Failed to update vehicle: $e',
-                  type: SnackBarType.error,
-                );
+                if (context.mounted) {
+                  CustomSnackBar.show(
+                    context: context,
+                    message: 'Failed to update vehicle: $e',
+                    type: SnackBarType.error,
+                  );
+                }
               }
             },
           ),
@@ -146,19 +154,21 @@ class VehicleActionsMenu extends StatelessWidget {
                   {'status': newStatus},
                 );
 
-                CustomSnackBar.show(
-                  // ignore: use_build_context_synchronously
-                  context: context,
-                  message: "Vehicle status updated to $newStatus",
-                  type: SnackBarType.success,
-                );
+                if (context.mounted) {
+                  CustomSnackBar.show(
+                    context: context,
+                    message: "Vehicle status updated to $newStatus",
+                    type: SnackBarType.success,
+                  );
+                }
               } catch (e) {
-                CustomSnackBar.show(
-                  // ignore: use_build_context_synchronously
-                  context: context,
-                  message: "Failed to update status: $e",
-                  type: SnackBarType.error,
-                );
+                if (context.mounted) {
+                  CustomSnackBar.show(
+                    context: context,
+                    message: "Failed to update status: $e",
+                    type: SnackBarType.error,
+                  );
+                }
               }
             },
           ),

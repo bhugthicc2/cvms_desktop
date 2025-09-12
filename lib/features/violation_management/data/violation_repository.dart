@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/violation_model.dart';
+import '../../../core/error/firebase_error_handler.dart';
 
 class ViolationRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -33,7 +34,7 @@ class ViolationRepository {
 
       await _firestore.collection(_collection).add(violationData);
     } catch (e) {
-      rethrow;
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
   }
 
@@ -50,7 +51,7 @@ class ViolationRepository {
         return ViolationEntry.fromMap(data, doc.id);
       }).toList();
     } catch (e) {
-      rethrow;
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
   }
 
@@ -70,7 +71,7 @@ class ViolationRepository {
         return ViolationEntry.fromMap(data, doc.id);
       }).toList();
     } catch (e) {
-      rethrow;
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
   }
 
@@ -81,7 +82,7 @@ class ViolationRepository {
         'lastUpdated': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      rethrow;
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
   }
 
@@ -95,6 +96,8 @@ class ViolationRepository {
             final data = doc.data();
             return ViolationEntry.fromMap(data, doc.id);
           }).toList();
+        }).handleError((error) {
+          throw Exception(FirebaseErrorHandler.handleFirestoreError(error));
         });
   }
 
@@ -102,7 +105,7 @@ class ViolationRepository {
     try {
       await _firestore.collection(_collection).doc(violationId).delete();
     } catch (e) {
-      rethrow;
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
   }
 
@@ -120,7 +123,7 @@ class ViolationRepository {
         'Other',
       ];
     } catch (e) {
-      rethrow;
+      throw Exception('Failed to get violation types: ${e.toString()}');
     }
   }
 }

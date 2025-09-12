@@ -46,6 +46,7 @@ class VehicleTableColumns {
       // TableColumnFactory.build(name: 'vehicleID', label: 'Vehicle ID'),
       TableColumnFactory.build(name: 'ownerName', label: 'Owner Name'),
       TableColumnFactory.build(name: 'schoolID', label: 'School ID'),
+      TableColumnFactory.build(name: 'department', label: 'Department'),
       TableColumnFactory.build(name: 'plateNumber', label: 'Plate Number'),
       TableColumnFactory.build(name: 'vehicleType', label: 'Vehicle Type'),
       TableColumnFactory.build(name: 'vehicleModel', label: 'Vehicle Model'),

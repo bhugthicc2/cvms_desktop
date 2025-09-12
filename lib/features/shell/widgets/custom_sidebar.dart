@@ -23,7 +23,10 @@ class CustomSidebar extends StatelessWidget {
 
   final List<NavItem> items = [
     NavItem(icon: PhosphorIconsRegular.squaresFour, label: "Dashboard"),
-    NavItem(icon: PhosphorIconsRegular.eye, label: "Vehicle Monitoring"),
+    NavItem(
+      icon: PhosphorIconsRegular.notepad,
+      label: "Vehicle Logs Management",
+    ),
     NavItem(icon: PhosphorIconsRegular.motorcycle, label: "Vehicle Management"),
     NavItem(icon: PhosphorIconsRegular.users, label: "User Management"),
     NavItem(icon: PhosphorIconsRegular.warning, label: "Violation Management"),
