@@ -52,12 +52,6 @@ class VehicleLogsCubit extends Cubit<VehicleLogsState> {
     }
   }
 
-  @override
-  Future<void> close() {
-    _logsSubscription?.cancel();
-    return super.close();
-  }
-
   void setLoading(bool isLoading) {
     if (!isClosed) {
       emit(state.copyWith(isLoading: isLoading));
@@ -113,5 +107,11 @@ class VehicleLogsCubit extends Cubit<VehicleLogsState> {
     } finally {
       setLoading(false);
     }
+  }
+
+  @override
+  Future<void> close() {
+    _logsSubscription?.cancel();
+    return super.close();
   }
 }

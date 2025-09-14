@@ -107,10 +107,11 @@ class ViewQrCodeDialog extends StatelessWidget {
                 data: qrData, // todo CIPHER DATA SOON
                 decoration: const PrettyQrDecoration(
                   shape: PrettyQrSmoothSymbol(color: AppColors.darkBlue),
-                  image: PrettyQrDecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage('assets/images/jrmsu-logo.png'),
-                  ),
+                  //todo debug the qr can't be scanned if there's an image
+                  // image: PrettyQrDecorationImage(
+                  //   fit: BoxFit.cover,
+                  //   image: AssetImage('assets/images/jrmsu-logo.png'),
+                  // ),
                   quietZone: PrettyQrQuietZone.standart,
                 ),
               ),

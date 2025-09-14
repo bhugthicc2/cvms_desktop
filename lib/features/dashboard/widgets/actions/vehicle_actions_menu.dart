@@ -4,7 +4,7 @@ import 'package:cvms_desktop/core/widgets/app/pop_up_menu_item.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_delete_dialog.dart'
     show CustomDeleteDialog;
 import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_view_dialog.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/dialogs/reprort_vehicle_dialog.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/dialogs/report_vehicle_dialog.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_update_dialog.dart';
 
 import 'package:flutter/material.dart';

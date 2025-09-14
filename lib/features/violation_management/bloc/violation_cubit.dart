@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
 import 'package:cvms_desktop/features/violation_management/data/violation_repository.dart';
@@ -8,6 +9,7 @@ part 'violation_state.dart';
 
 class ViolationCubit extends Cubit<ViolationState> {
   final ViolationRepository _repository = ViolationRepository();
+  StreamSubscription<List<ViolationEntry>>? _violationsSubscription;
 
   ViolationCubit() : super(ViolationState.initial());
 
@@ -27,10 +29,20 @@ class ViolationCubit extends Cubit<ViolationState> {
   }
 
   void listenViolations() {
-    _repository.watchViolations().listen((violations) {
-      emit(state.copyWith(allEntries: violations));
-      _applyFilters();
-    });
+    _violationsSubscription?.cancel();
+    _violationsSubscription = _repository.watchViolations().listen(
+      (violations) {
+        if (!isClosed) {
+          emit(state.copyWith(allEntries: violations));
+          _applyFilters();
+        }
+      },
+      onError: (error) {
+        if (!isClosed) {
+          debugPrint('Error in violations stream: $error');
+        }
+      },
+    );
   }
 
   Future<void> addViolationReport({
@@ -195,5 +207,11 @@ class ViolationCubit extends Cubit<ViolationState> {
     }
 
     emit(state.copyWith(filteredEntries: filtered));
+  }
+
+  @override
+  Future<void> close() {
+    _violationsSubscription?.cancel();
+    return super.close();
   }
 }

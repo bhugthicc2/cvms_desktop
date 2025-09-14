@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/vehicle_entry.dart';
 
-class VehicleRepository {
+class DashboardRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Stream<List<VehicleEntry>> streamVehicleLogs() {

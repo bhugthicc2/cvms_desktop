@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'package:cvms_desktop/features/dashboard/data/vehicle_repository.dart';
+import 'package:cvms_desktop/features/dashboard/data/dashboard_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/vehicle_entry.dart';
 
 part 'dashboard_state.dart';
 
 class DashboardCubit extends Cubit<DashboardState> {
-  final VehicleRepository repository;
+  final DashboardRepository repository;
   StreamSubscription? _subscription;
 
   DashboardCubit(this.repository) : super(DashboardState.initial());

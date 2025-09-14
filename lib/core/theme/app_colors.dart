@@ -28,8 +28,10 @@ class AppColors {
   //chart colors
   static const Color chartOrange = Color(0xFFFB923C);
   static const Color chartGreen = Color(0xFF22C55E);
+  static const Color chartGreenv2 = Color(0xFF53C6BA);
   static const Color donutBlue = Color(0xFF2563EB);
   static const Color donutPurple = Color(0xFFC084FC);
+  static const Color donutPink = Color(0xFFF285BA);
 
   //gradients
   static const LinearGradient blueViolet = LinearGradient(
@@ -54,5 +56,29 @@ class AppColors {
     colors: [Color(0xFFFF00D4), Color(0xFF00DDFF)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
+  );
+  //secondary gradients
+  static const Gradient greenWhite = LinearGradient(
+    begin: Alignment.bottomRight,
+    end: Alignment.topLeft,
+    colors: [Color(0xFF14B8A6), Color(0xFF53C6BA)],
+  );
+
+  static const Gradient yellowWhite = LinearGradient(
+    begin: Alignment.bottomRight,
+    end: Alignment.topLeft,
+    colors: [Color(0xFFF6A318), Color(0xFFF8B951)],
+  );
+
+  static const Gradient blueWhite = LinearGradient(
+    begin: Alignment.bottomRight,
+    end: Alignment.topLeft,
+    colors: [Color(0xFF1F5AF1), Color(0xFF5782F3)],
+  );
+
+  static const Gradient pinkWhite = LinearGradient(
+    begin: Alignment.bottomRight,
+    end: Alignment.topLeft,
+    colors: [Color(0xFFEC4899), Color(0xFFF285BA)],
   );
 }

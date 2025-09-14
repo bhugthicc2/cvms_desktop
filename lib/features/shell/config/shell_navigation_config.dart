@@ -21,12 +21,12 @@ import 'package:cvms_desktop/features/vehicle_logs_management/bloc/vehicle_logs_
 import 'package:cvms_desktop/features/user_management/pages/user_management_page.dart';
 import 'package:cvms_desktop/features/violation_management/pages/violation_management_page.dart';
 import 'package:cvms_desktop/features/profile/pages/profile_page.dart';
-import '../../dashboard/data/vehicle_repository.dart' as vehicle_repo;
+import '../../dashboard/data/dashboard_repository.dart' as vehicle_repo;
 
 class ShellNavigationConfig {
   static final pages = <Widget>[
     BlocProvider(
-      create: (context) => DashboardCubit(vehicle_repo.VehicleRepository()),
+      create: (context) => DashboardCubit(vehicle_repo.DashboardRepository()),
       child: const DashboardPage(),
     ),
 
