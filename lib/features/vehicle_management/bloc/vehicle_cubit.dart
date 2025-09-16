@@ -5,8 +5,14 @@ import 'package:cvms_desktop/features/auth/data/user_repository.dart';
 import 'package:cvms_desktop/features/vehicle_management/data/vehicle_violation_repository.dart';
 import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../data/vehicle_repository.dart';
+import 'package:file_selector/file_selector.dart';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 part 'vehicle_state.dart';
 
 class VehicleCubit extends Cubit<VehicleState> {
@@ -260,6 +266,50 @@ class VehicleCubit extends Cubit<VehicleState> {
       emit(state.copyWith(selectedEntries: []));
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<void> exportCardAsImage(GlobalKey repaintKey) async {
+    try {
+      emit(
+        state.copyWith(isExporting: true, exportedFilePath: null, error: null),
+      );
+
+      // 1. Find render boundary
+      RenderRepaintBoundary boundary =
+          repaintKey.currentContext!.findRenderObject()
+              as RenderRepaintBoundary;
+
+      // 2. Convert to image
+      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+
+      // 3. Convert to byte data
+      ByteData? byteData = await image.toByteData(
+        format: ui.ImageByteFormat.png,
+      );
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      // 4. Ask user for save location
+      final FileSaveLocation? saveLocation = await getSaveLocation(
+        acceptedTypeGroups: [
+          XTypeGroup(label: 'png', extensions: ['png']),
+        ],
+        suggestedName: 'vehicle_pass.png',
+      );
+
+      if (saveLocation == null) {
+        emit(state.copyWith(isExporting: false));
+        return;
+      }
+
+      final file = File(saveLocation.path);
+      await file.writeAsBytes(pngBytes);
+
+      emit(
+        state.copyWith(isExporting: false, exportedFilePath: saveLocation.path),
+      );
+    } catch (e) {
+      emit(state.copyWith(isExporting: false, error: e.toString()));
     }
   }
 

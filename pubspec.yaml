@@ -11,10 +11,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  #file selector
+  file_selector: ^1.0.3
   #autocomplete
   flutter_typeahead: ^5.2.0
   #qrcode package
-  pretty_qr_code: ^3.5.0
+  qr_flutter: ^4.1.0
   #Required for initializing and connecting the app to Firebase services
   firebase_core: ^4.0.0
   #Firebase Authentication - used for handling user sign-in, sign-up,
@@ -47,6 +49,7 @@ dependencies:
   syncfusion_flutter_datagrid: 30.2.7
   equatable: ^2.0.7
   intl: ^0.20.2
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:

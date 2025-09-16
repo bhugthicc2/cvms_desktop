@@ -1,3 +1,5 @@
+
+
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_cubit.dart';
@@ -11,8 +13,6 @@ import 'package:cvms_desktop/features/vehicle_management/widgets/qr/custom_qr_vi
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-//crypto
-import 'package:cvms_desktop/core/services/cyrpto_service.dart';
 
 class ViewQrCodeDialog extends StatefulWidget {
   final String title;
@@ -33,14 +33,10 @@ class _ViewQrCodeDialogState extends State<ViewQrCodeDialog> {
 
   @override
   Widget build(BuildContext context) {
-    // -------encryption----------
-    // 🔐 Use CryptoService instead of inline AES
-    final rawVehicleId = widget.vehicle.vehicleID;
-    final qrData = CryptoService.withDefaultKey().encryptVehicleId(
-      rawVehicleId,
-    );
-    // -------end of encryption----------
-
+    final qrData =
+        widget
+            .vehicle
+            .vehicleID; //todo Later: AES128.encrypt(widget.vehicle.vehicleID) vehicle document id for now
     final screenHeight = MediaQuery.of(context).size.height;
 
     return BlocConsumer<VehicleCubit, VehicleState>(

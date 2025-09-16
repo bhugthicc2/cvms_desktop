@@ -136,7 +136,10 @@ class VehicleActionsMenu extends StatelessWidget {
     showDialog(
       context: context,
       builder:
-          (_) => ViewQrCodeDialog(title: "Vehicle QR", vehicle: vehicleEntry),
+          (_) => BlocProvider.value(
+            value: context.read<VehicleCubit>(),
+            child: ViewQrCodeDialog(title: "Vehicle QR", vehicle: vehicleEntry),
+          ),
     );
   }
 

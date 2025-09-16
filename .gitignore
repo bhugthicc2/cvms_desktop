@@ -100,6 +100,7 @@ user_management_with_code.md
 auth_complete_structure_with_code_files.md
 FIREBASE_ERROR_HANDLING.md
 VEHICLE_MONITORING_STRUCTURE.md
+VEHICLE_LOGGING_DOCUMENTATION.md
 # Android related
 **/android/**/gradle-wrapper.jar
 .gradle/
@@ -183,3 +184,4 @@ app.*.symbols
 .python-version
 .gclient_previous_custom_vars
 .gclient_previous_sync_commits
+.metadata

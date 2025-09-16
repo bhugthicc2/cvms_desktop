@@ -11,6 +11,10 @@ class VehicleState {
   final bool isBulkModeEnabled;
   final String? error;
 
+  //Export status
+  final bool isExporting;
+  final String? exportedFilePath;
+
   VehicleState({
     required this.allEntries,
     required this.filteredEntries,
@@ -20,6 +24,8 @@ class VehicleState {
     required this.searchQuery,
     required this.isBulkModeEnabled,
     this.error,
+    this.isExporting = false,
+    this.exportedFilePath,
   });
 
   factory VehicleState.initial() => VehicleState(
@@ -31,6 +37,8 @@ class VehicleState {
     searchQuery: '',
     isBulkModeEnabled: false,
     error: null,
+    isExporting: false,
+    exportedFilePath: null,
   );
 
   VehicleState copyWith({
@@ -42,6 +50,8 @@ class VehicleState {
     String? searchQuery,
     bool? isBulkModeEnabled,
     String? error,
+    bool? isExporting,
+    String? exportedFilePath,
   }) {
     return VehicleState(
       allEntries: allEntries ?? this.allEntries,
@@ -52,6 +62,8 @@ class VehicleState {
       searchQuery: searchQuery ?? this.searchQuery,
       isBulkModeEnabled: isBulkModeEnabled ?? this.isBulkModeEnabled,
       error: error,
+      isExporting: isExporting ?? this.isExporting,
+      exportedFilePath: exportedFilePath,
     );
   }
 }
