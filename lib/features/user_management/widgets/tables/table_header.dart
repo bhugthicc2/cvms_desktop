@@ -47,6 +47,10 @@ class TableHeader extends StatelessWidget {
                     Spacing.horizontal(size: AppSpacing.medium),
                     Expanded(
                       child: CustomUserButton(
+                        textColor:
+                            state.isBulkModeEnabled
+                                ? AppColors.white
+                                : AppColors.black,
                         label:
                             state.isBulkModeEnabled
                                 ? "Exit Bulk Mode"
@@ -54,7 +58,7 @@ class TableHeader extends StatelessWidget {
                         backgroundColor:
                             state.isBulkModeEnabled
                                 ? AppColors.warning
-                                : AppColors.primary,
+                                : AppColors.white,
                         onPressed: () {
                           context.read<UserCubit>().toggleBulkMode();
                         },
@@ -67,12 +71,13 @@ class TableHeader extends StatelessWidget {
                         onPressed: () {
                           showDialog(
                             context: context,
-                            builder: (dialogContext) => BlocProvider.value(
-                              value: context.read<UserManagementBloc>(),
-                              child: const CustomAddDialog(
-                                title: "Add New User",
-                              ),
-                            ),
+                            builder:
+                                (dialogContext) => BlocProvider.value(
+                                  value: context.read<UserManagementBloc>(),
+                                  child: const CustomAddDialog(
+                                    title: "Add New User",
+                                  ),
+                                ),
                           );
                         },
                       ),

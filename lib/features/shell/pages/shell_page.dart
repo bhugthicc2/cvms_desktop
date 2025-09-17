@@ -61,6 +61,7 @@ class ShellPage extends StatelessWidget {
                     child: Column(
                       children: [
                         CustomHeader(
+                          currentUser: 'Jesie Gapol',
                           title: titles[state.selectedIndex],
                           onMenuPressed:
                               () => context.read<ShellCubit>().toggleSidebar(),

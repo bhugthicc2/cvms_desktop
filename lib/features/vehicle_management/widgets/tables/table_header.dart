@@ -49,7 +49,7 @@ class TableHeader extends StatelessWidget {
                     //VEHICLE TYPE FILTER
                     Expanded(
                       child: CustomDropdown(
-                        items: ['All', 'Two-wheeled', 'Four-wheeled'],
+                        items: ['All', 'two-wheeled', 'four-wheeled'],
                         initialValue: 'All',
                         onChanged: (value) {
                           context.read<VehicleCubit>().filterByType(value);
@@ -60,6 +60,10 @@ class TableHeader extends StatelessWidget {
                     //TOGGLE BULK MODE BUTTON
                     Expanded(
                       child: CustomVehicleButton(
+                        textColor:
+                            state.isBulkModeEnabled
+                                ? AppColors.white
+                                : AppColors.black,
                         label:
                             state.isBulkModeEnabled
                                 ? "Exit Bulk Mode"
@@ -67,7 +71,7 @@ class TableHeader extends StatelessWidget {
                         backgroundColor:
                             state.isBulkModeEnabled
                                 ? AppColors.warning
-                                : AppColors.primary,
+                                : AppColors.white,
                         onPressed: () {
                           context.read<VehicleCubit>().toggleBulkMode();
                         },
@@ -80,6 +84,7 @@ class TableHeader extends StatelessWidget {
                         label: "Add Vehicle",
                         onPressed: () {
                           showDialog(
+                            barrierDismissible: false,
                             context: context,
                             builder:
                                 (_) => CustomAddDialog(

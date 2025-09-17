@@ -126,6 +126,7 @@ class _CustomTableState extends State<CustomTable> {
                         controller: widget.controller,
                         onCellTap: widget.onCellTap,
                         gridLinesVisibility: GridLinesVisibility.horizontal,
+
                         rowHeight: 34,
                         allowSorting: true,
                         headerRowHeight: AppDimensions.tableHeaderHeight,

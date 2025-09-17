@@ -50,6 +50,10 @@ class TableHeader extends StatelessWidget {
                     Spacing.horizontal(size: AppSpacing.medium),
                     Expanded(
                       child: CustomViolationButton(
+                        textColor:
+                            state.isBulkModeEnabled
+                                ? AppColors.white
+                                : AppColors.black,
                         label:
                             state.isBulkModeEnabled
                                 ? "Exit Bulk Mode"
@@ -57,7 +61,7 @@ class TableHeader extends StatelessWidget {
                         backgroundColor:
                             state.isBulkModeEnabled
                                 ? AppColors.warning
-                                : AppColors.primary,
+                                : AppColors.white,
                         onPressed: () {
                           context.read<ViolationCubit>().toggleBulkMode();
                         },

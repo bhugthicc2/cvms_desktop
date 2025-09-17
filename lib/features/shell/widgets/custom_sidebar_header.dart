@@ -17,14 +17,14 @@ class CustomSidebarHeader extends StatelessWidget {
           bottom: BorderSide(color: AppColors.lineColor, width: 1),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 9),
+      padding: const EdgeInsets.symmetric(horizontal: 50 * 0.25, vertical: 9),
       child: Row(
         children: [
           ClipOval(
             child: Image.asset(
               "assets/images/jrmsu-logo.png",
-              width: 40,
-              height: 40,
+              width: 25,
+              height: 25,
               fit: BoxFit.cover,
             ),
           ),
@@ -39,26 +39,25 @@ class CustomSidebarHeader extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const SizedBox(width: 12),
-                          Column(
+                          Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
                                 "JRMSU-K",
                                 style: TextStyle(
+                                  fontFamily: 'Sora',
                                   color: AppColors.yellow,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: AppFontSizes.xxLarge,
+                                  fontSize: AppFontSizes.large,
                                 ),
                               ),
-                              Flexible(
-                                child: Text(
-                                  "CLOUD-BASED VMS",
-                                  style: TextStyle(
-                                    color: AppColors.sidebarheaderSub,
-                                    fontSize: AppFontSizes.xSmall,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
+                              Text(
+                                " CVMS",
+                                style: TextStyle(
+                                  color: AppColors.white,
+                                  fontWeight: FontWeight.w100,
+                                  fontSize: AppFontSizes.large,
                                 ),
                               ),
                             ],

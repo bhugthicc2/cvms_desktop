@@ -27,6 +27,7 @@ class VehicleLogsInfoDialog extends StatelessWidget {
     return CustomDialog(
       title: 'Vehicle Log Information',
       icon: PhosphorIconsBold.car,
+      mainContentPadding: 20,
       btnTxt: 'Close',
       width: 600,
       height: 445,

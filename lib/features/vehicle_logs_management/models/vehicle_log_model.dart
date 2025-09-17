@@ -40,6 +40,19 @@ class VehicleLogModel {
     };
   }
 
+  Duration get duration {
+    final end =
+        timeOut?.toDate() ??
+        DateTime.now(); // Convert Timestamp to DateTime if not null, otherwise use current time
+    final start = timeIn.toDate(); // Convert Timestamp to DateTime
+    return end.difference(start); // Calculate difference between end and start
+  }
+
+  String get formattedDuration {
+    final d = duration;
+    return "${d.inHours}h ${d.inMinutes % 60}m"; //converted the duration in minutes into hours and minutes
+  }
+
   factory VehicleLogModel.fromMap(Map<String, dynamic> map, String id) {
     return VehicleLogModel(
       logID: id,

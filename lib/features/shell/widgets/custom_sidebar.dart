@@ -42,7 +42,7 @@ class CustomSidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      width: isExpanded ? 250 : 70,
+      width: isExpanded ? 235 : 50,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: const AssetImage("assets/images/sidebar_bg.png"),

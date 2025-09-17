@@ -34,7 +34,7 @@ class _ViewQrCodeDialogState extends State<ViewQrCodeDialog> {
   @override
   Widget build(BuildContext context) {
     // -------encryption----------
-    // 🔐 Use CryptoService instead of inline AES
+    //  Use CryptoService instead of inline AES
     final rawVehicleId = widget.vehicle.vehicleID;
     final qrData = CryptoService.withDefaultKey().encryptVehicleId(
       rawVehicleId,
@@ -128,13 +128,9 @@ class _ViewQrCodeDialogState extends State<ViewQrCodeDialog> {
                 ),
 
                 Spacing.vertical(size: AppSpacing.medium),
-
-                // QR CODE TEXT DATA FOR NOW //todo display the encrypted(8 round aes 128 algorithm with lfsr-based mixed columns and dynamic shiftrows) qr code data here
                 CustomTextField(
                   labelText: 'QR Code Data',
-                  controller: TextEditingController(
-                    text: qrData,
-                  ), //todo CIPHER DATA SOON
+                  controller: TextEditingController(text: qrData),
                   obscureText: true,
                   enableVisibilityToggle: true,
                   enabled: true,

@@ -32,7 +32,7 @@ class TableHeader extends StatelessWidget {
           if (searchController != null)
             Expanded(
               child: SizedBox(
-                height: 40,
+                height: 35,
                 child: SearchField(controller: searchController!),
               ),
             ),

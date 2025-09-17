@@ -19,22 +19,36 @@ class SearchField extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(30),
       ),
       child: TextField(
+        cursorHeight: 20,
+        textAlignVertical: TextAlignVertical.center,
         cursorColor: AppColors.primary,
         controller: controller,
         onChanged: onChanged,
         decoration: InputDecoration(
+          maintainHintHeight: true,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: AppColors.grey, width: 1),
+            borderRadius: BorderRadius.circular(30),
+          ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: AppColors.primary, width: 2),
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(30),
           ),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-          hintText: "Search...",
-          hintStyle: TextStyle(fontSize: AppFontSizes.medium),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+          hintText: "Search name, plate number, etc...",
+
+          hintStyle: TextStyle(
+            fontSize: AppFontSizes.medium,
+            fontFamily: 'Sora',
+            color: AppColors.grey,
+          ),
+
           suffixIcon: Icon(
             PhosphorIconsRegular.magnifyingGlass,
+            size: 20,
             color: AppColors.grey,
           ),
         ),

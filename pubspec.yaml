@@ -11,6 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  #philippine list of provinces and barangays
+  philippines_rpcmb: ^0.0.3
   #file selector
   file_selector: ^1.0.3
   #autocomplete

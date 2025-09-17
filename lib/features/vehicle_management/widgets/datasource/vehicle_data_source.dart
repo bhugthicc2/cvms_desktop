@@ -17,10 +17,23 @@ class VehicleDataSource extends DataGridSource {
     required List<VehicleEntry> vehicleEntries,
     bool showCheckbox = false,
     BuildContext? context,
-  }) : _originalEntries = vehicleEntries,
+  }) : _originalEntries = List.of(vehicleEntries),
        _showCheckbox = showCheckbox,
        _context = context {
+    _sortByCreatedAtDesc();
     _buildRows();
+  }
+
+  // Sort by createdAt in descending order (newest first). Nulls go last.
+  void _sortByCreatedAtDesc() {
+    _originalEntries.sort((a, b) {
+      final aDt = a.createdAt?.toDate();
+      final bDt = b.createdAt?.toDate();
+      if (aDt == null && bDt == null) return 0;
+      if (aDt == null) return 1; // a is null -> after b
+      if (bDt == null) return -1; // b is null -> after a
+      return bDt.compareTo(aDt); // descending
+    });
   }
 
   void _buildRows() {

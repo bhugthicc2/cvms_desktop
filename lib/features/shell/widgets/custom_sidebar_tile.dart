@@ -48,7 +48,10 @@ class _CustomSidebarTileState extends State<CustomSidebarTile> {
         onTap: widget.onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 50 * 0.25,
+            vertical: 11,
+          ),
           color: _getBackgroundColor(),
           child: Row(
             children: [
@@ -72,7 +75,7 @@ class _CustomSidebarTileState extends State<CustomSidebarTile> {
                                 child: Text(
                                   widget.item.label,
                                   style: TextStyle(
-                                    fontSize: AppFontSizes.small,
+                                    fontSize: AppFontSizes.small - 1,
                                     color: widget.labelColor ?? AppColors.white,
                                   ),
                                   overflow: TextOverflow.ellipsis,

@@ -39,8 +39,10 @@ class TableHeader extends StatelessWidget {
                     //VEHICLE LOG STATUS FILTER
                     Expanded(
                       child: CustomDropdown(
-                        items: ['All', 'Inside', 'Outside'],
-                        initialValue: 'All',
+                        backgroundColor: AppColors.white,
+                        color: AppColors.black,
+                        items: ['Vehicle Status', 'Inside', 'Outside'],
+                        initialValue: 'Vehicle Status',
                         onChanged: (value) {
                           //TODO
                         },
@@ -50,8 +52,10 @@ class TableHeader extends StatelessWidget {
                     //VEHICLE LOG TYPE FILTER
                     Expanded(
                       child: CustomDropdown(
-                        items: ['All', 'Two-wheeled', 'Four-wheeled'],
-                        initialValue: 'All',
+                        backgroundColor: AppColors.white,
+                        color: AppColors.black,
+                        items: ['Vehicle Type', 'two-wheeled', 'four-wheeled'],
+                        initialValue: 'Vehicle Type',
                         onChanged: (value) {
                           //TODO
                         },
@@ -61,6 +65,10 @@ class TableHeader extends StatelessWidget {
                     //TOGGLE BULK MODE BUTTON
                     Expanded(
                       child: CustomVehicleLogsButton(
+                        textColor:
+                            state.isBulkModeEnabled
+                                ? AppColors.white
+                                : AppColors.black,
                         label:
                             state.isBulkModeEnabled
                                 ? "Exit Bulk Mode"
@@ -68,7 +76,7 @@ class TableHeader extends StatelessWidget {
                         backgroundColor:
                             state.isBulkModeEnabled
                                 ? AppColors.warning
-                                : AppColors.primary,
+                                : AppColors.white,
                         onPressed: () {
                           context.read<VehicleLogsCubit>().toggleBulkMode();
                         },

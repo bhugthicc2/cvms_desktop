@@ -61,7 +61,7 @@ class VehicleLogsDataSource extends DataGridSource {
         columnName: 'duration',
         value:
             entry.timeOut != null && entry.durationMinutes != null
-                ? '${entry.durationMinutes}m'
+                ? entry.formattedDuration
                 : 'N/A',
       ),
 

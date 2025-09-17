@@ -58,7 +58,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     child: BlocBuilder<DashboardCubit, DashboardState>(
                       builder: (context, state) {
                         return VehicleTable(
-                          title: "Vehicles Entered",
+                          title: "ENTERED",
                           entries: state.enteredFiltered,
                           searchController: enteredSearchController,
                           hasSearchQuery:
@@ -81,7 +81,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     child: BlocBuilder<DashboardCubit, DashboardState>(
                       builder: (context, state) {
                         return VehicleTable(
-                          title: "Vehicles Exited",
+                          title: "EXITED",
                           entries: state.exitedFiltered,
                           searchController: exitedSearchController,
                           hasSearchQuery:

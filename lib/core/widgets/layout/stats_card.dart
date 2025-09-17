@@ -25,7 +25,7 @@ class StatsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.medium),
+      padding: const EdgeInsets.all(AppSpacing.medium - 2),
       decoration: BoxDecoration(
         gradient:
             gradient ??
@@ -42,15 +42,15 @@ class StatsCard extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            height: 40,
-            width: 40,
+            height: 35,
+            width: 35,
             decoration: BoxDecoration(
               color: AppColors.white,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               icon,
-              size: 24,
+              size: 20,
               color: iconColor ?? AppColors.white,
               weight: 5,
             ),
@@ -62,7 +62,7 @@ class StatsCard extends StatelessWidget {
               Text(
                 "$value",
                 style: TextStyle(
-                  fontSize: AppFontSizes.elarge,
+                  fontSize: AppFontSizes.xLarge,
                   fontWeight: FontWeight.bold,
                   color: AppColors.white,
                 ),
@@ -70,7 +70,7 @@ class StatsCard extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: AppFontSizes.medium,
+                  fontSize: AppFontSizes.small,
                   color: AppColors.white.withValues(alpha: 0.8),
                 ),
               ),

@@ -8,6 +8,7 @@ class CustomDropdown extends StatefulWidget {
   final double borderRadius;
   final double horizontalPadding;
   final Color? backgroundColor;
+  final Color? color;
 
   const CustomDropdown({
     super.key,
@@ -17,7 +18,8 @@ class CustomDropdown extends StatefulWidget {
 
     this.borderRadius = 5,
     this.horizontalPadding = 12,
-    this.backgroundColor = AppColors.primary,
+    this.backgroundColor = AppColors.white,
+    this.color = AppColors.black,
   });
 
   @override
@@ -63,6 +65,13 @@ class _CustomDropdownState extends State<CustomDropdown> {
           decoration: BoxDecoration(
             color: widget.backgroundColor,
             borderRadius: BorderRadius.circular(widget.borderRadius),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.grey.withValues(alpha: 0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
@@ -70,7 +79,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
               value: selected,
               icon: Icon(
                 Icons.arrow_drop_down,
-                color: AppColors.white,
+                color: widget.color ?? AppColors.white,
                 size: iconSize,
               ),
               dropdownColor: widget.backgroundColor,
@@ -88,7 +97,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
                           child: Text(
                             e,
                             style: TextStyle(
-                              color: AppColors.white,
+                              color: widget.color ?? AppColors.white,
                               fontSize: fontSize,
                             ),
                           ),

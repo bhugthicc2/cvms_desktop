@@ -16,13 +16,13 @@ class VehicleEntry {
   });
 
   Duration get duration {
-    final end = timeOut ?? DateTime.now();
-    return end.difference(timeIn);
+    final end = timeOut ?? DateTime.now(); //current time if timeout is null
+    return end.difference(timeIn); //time in - current time
   }
 
   String get formattedDuration {
     final d = duration;
-    return "${d.inHours}h ${d.inMinutes % 60}m";
+    return "${d.inHours}h ${d.inMinutes % 60}m"; //converted the duration in minutes into hours and minutes
   }
 
   String get status => timeOut == null ? "inside" : "outside";
