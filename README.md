@@ -20,35 +20,3 @@
 | User Management      | ![User Management](./app_progress_shots/user_management.png)           |
 | Reports Analytics    | ![Reports Analytics](./app_progress_shots/reports_analytics.png)       |
 | Empty Search         | ![Empty Search](./app_progress_shots/empty_search.png)                 |
-
----
-
-## 👨‍💻 Developer
-
-- Jesie Gapol
-
----
-
-## 🛠 Tech Stack
-
-- **Flutter** – Cross-platform UI
-- **Dart** – Programming language
-- **Firebase** – Backend services
-
----
-
-## 🔄 State Management
-
-- **Bloc (Business Logic Component)** for predictable state management
-
----
-
-## 🚀 Features
-
-- Secure user authentication
-- QR code-based vehicle scanning
-- Real-time data synchronization with Firebase
-- User-friendly dashboard and activity logs
-- Responsive UI optimized for mobile devices
-
----
