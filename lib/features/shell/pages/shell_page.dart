@@ -1,3 +1,6 @@
+import 'package:cvms_desktop/features/auth/bloc/current_user_cubit.dart';
+import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
+import 'package:cvms_desktop/features/auth/data/user_repository.dart';
 import 'package:cvms_desktop/features/shell/widgets/logout_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,9 +39,19 @@ class ShellPage extends StatelessWidget {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ShellCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => ShellCubit()),
+        BlocProvider(
+          create:
+              (_) => CurrentUserCubit(
+                authRepository: AuthRepository(),
+                userRepository: UserRepository(),
+              ),
+        ),
+      ],
       child: BlocListener<AuthBloc, AuthState>(
         listener: _handleAuthState,
         child: BlocBuilder<ShellCubit, ShellState>(
@@ -60,11 +73,18 @@ class ShellPage extends StatelessWidget {
                   Expanded(
                     child: Column(
                       children: [
-                        CustomHeader(
-                          currentUser: 'Jesie Gapol',
-                          title: titles[state.selectedIndex],
-                          onMenuPressed:
-                              () => context.read<ShellCubit>().toggleSidebar(),
+                        BlocBuilder<CurrentUserCubit, CurrentUserState>(
+                          builder: (context, userState) {
+                            return CustomHeader(
+                              currentUser: userState.fullname ?? "Guest",
+                              title: titles[state.selectedIndex],
+                              onMenuPressed:
+                                  () =>
+                                      context
+                                          .read<ShellCubit>()
+                                          .toggleSidebar(),
+                            );
+                          },
                         ),
                         Expanded(child: pages[state.selectedIndex]),
                       ],
