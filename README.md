@@ -8,8 +8,6 @@
 | Email Sent Page      | ![Email Sent Page](./app_progress_shots/email_sent_page.png)           |
 | Dashboard Page       | ![Dashboard Page](./app_progress_shots/dashboard_page.png)             |
 | Collapsed Sidebar    | ![Collapsed Sidebar](./app_progress_shots/collapsed_sidebar.png)       |
-| Profile Page         | ![Profile Page](./app_progress_shots/profile_page.png)                 |
-| Settings Page        | ![Settings Page](./app_progress_shots/settings_page.png)               |
 | Vehicle Management   | ![Vehicle Management](./app_progress_shots/vehicle_management.png)     |
 | Vehicle Logs Page    | ![Vehicle Logs Page](./app_progress_shots/vehicle_logs_page.png)       |
 | Vehicle Log Bulk     | ![Vehicle Log Bulk](./app_progress_shots/vehicle_log_bulk.png)         |
@@ -20,3 +18,5 @@
 | User Management      | ![User Management](./app_progress_shots/user_management.png)           |
 | Reports Analytics    | ![Reports Analytics](./app_progress_shots/reports_analytics.png)       |
 | Empty Search         | ![Empty Search](./app_progress_shots/empty_search.png)                 |
+| Profile Page         | ![Profile Page](./app_progress_shots/profile_page.png)                 |
+| Settings Page        | ![Settings Page](./app_progress_shots/settings_page.png)               |
