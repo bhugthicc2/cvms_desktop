@@ -1,6 +1,6 @@
 import 'dart:math';
-import 'analytics_data_source.dart';
-import '../models/chart_data_model.dart';
+import '../../lib/features/report_and_analytics/data/analytics_repository.dart';
+import '../../lib/features/report_and_analytics/models/chart_data_model.dart';
 
 class MockAnalyticsDataSource implements AnalyticsDataSource {
   @override
@@ -11,6 +11,8 @@ class MockAnalyticsDataSource implements AnalyticsDataSource {
       ChartDataModel(category: 'CTED', value: 42),
       ChartDataModel(category: 'CAF-SOE', value: 22),
       ChartDataModel(category: 'SCJE', value: 15),
+      ChartDataModel(category: 'CBA', value: 28),
+      ChartDataModel(category: 'LHS', value: 42),
     ];
   }
 

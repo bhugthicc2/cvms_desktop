@@ -63,6 +63,8 @@ class DonutChartWidget extends StatelessWidget {
                         AppColors.donutPurple,
                         AppColors.chartOrange,
                         AppColors.chartGreen,
+                        AppColors.chartGreenv2,
+                        AppColors.donutPink,
                       ];
                       return colors[index % colors.length];
                     },

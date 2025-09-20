@@ -8,11 +8,14 @@ part 'dashboard_state.dart';
 class DashboardCubit extends Cubit<DashboardState> {
   final DashboardRepository repository;
   StreamSubscription? _subscription;
+  StreamSubscription? _violationsSub;
+  StreamSubscription? _logsSub;
 
   DashboardCubit(this.repository) : super(DashboardState.initial());
 
   void startListening() {
-    _subscription = repository.streamVehicleLogs().listen((entries) {
+    //  vehicle logs stream
+    _logsSub = repository.streamVehicleLogs().listen((entries) {
       emit(
         state.copyWith(
           allEntries: entries,
@@ -20,6 +23,16 @@ class DashboardCubit extends Cubit<DashboardState> {
           exitedFiltered: entries.where((e) => e.status == "outside").toList(),
         ),
       );
+    });
+
+    // violations stream
+    _violationsSub = repository.streamTotalViolations().listen((count) {
+      emit(state.copyWith(totalViolations: count));
+    });
+
+    //  vehicles (can also make reactive the same way if you want)
+    repository.getTotalVehicles().then((count) {
+      emit(state.copyWith(totalVehicles: count));
     });
   }
 
@@ -49,7 +62,8 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   @override
   Future<void> close() {
-    _subscription?.cancel();
+    _logsSub?.cancel();
+    _violationsSub?.cancel();
     return super.close();
   }
 }

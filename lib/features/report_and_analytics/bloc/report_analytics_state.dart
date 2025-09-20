@@ -5,7 +5,7 @@ class ReportAnalyticsState extends Equatable {
   final bool loading;
   final List<ChartDataModel> vehicleDistribution;
   final List<ChartDataModel> topViolations;
-  final List<ChartDataModel> monthlyTrend;
+  final List<ChartDataModel> weeklyTrend;
   final List<ChartDataModel> topViolators;
   final String? error;
 
@@ -13,7 +13,7 @@ class ReportAnalyticsState extends Equatable {
     this.loading = false,
     this.vehicleDistribution = const [],
     this.topViolations = const [],
-    this.monthlyTrend = const [],
+    this.weeklyTrend = const [],
     this.topViolators = const [],
     this.error,
   });
@@ -30,7 +30,7 @@ class ReportAnalyticsState extends Equatable {
       loading: loading ?? this.loading,
       vehicleDistribution: vehicleDistribution ?? this.vehicleDistribution,
       topViolations: topViolations ?? this.topViolations,
-      monthlyTrend: monthlyTrend ?? this.monthlyTrend,
+      weeklyTrend: monthlyTrend ?? this.weeklyTrend,
       topViolators: topViolators ?? this.topViolators,
       error: error,
     );
@@ -41,7 +41,7 @@ class ReportAnalyticsState extends Equatable {
     loading,
     vehicleDistribution,
     topViolations,
-    monthlyTrend,
+    weeklyTrend,
     topViolators,
     error,
   ];

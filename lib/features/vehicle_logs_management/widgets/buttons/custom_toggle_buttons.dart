@@ -6,13 +6,13 @@ class CustomToggleButtons extends StatelessWidget {
   final String title;
   final String value;
   final VoidCallback onTap;
-  final Color color;
+  final Color? color;
   const CustomToggleButtons({
     super.key,
     required this.title,
     required this.value,
     required this.onTap,
-    required this.color,
+    this.color,
   });
 
   @override
@@ -26,7 +26,7 @@ class CustomToggleButtons extends StatelessWidget {
         },
         child: Container(
           decoration: BoxDecoration(
-            color: AppColors.primary,
+            color: color ?? AppColors.primary,
             borderRadius: BorderRadius.circular(5),
           ),
           child: Padding(

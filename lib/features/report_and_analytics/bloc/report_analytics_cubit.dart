@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'report_analytics_state.dart';
-import '../data/analytics_data_source.dart';
+import '../data/analytics_repository.dart';
 
 class ReportAnalyticsCubit extends Cubit<ReportAnalyticsState> {
-  final AnalyticsDataSource dataSource;
+  final AnalyticsRepository dataSource;
 
   ReportAnalyticsCubit({required this.dataSource})
     : super(const ReportAnalyticsState());
@@ -14,7 +14,7 @@ class ReportAnalyticsCubit extends Cubit<ReportAnalyticsState> {
       final results = await Future.wait([
         dataSource.fetchVehicleDistribution(),
         dataSource.fetchTopViolations(),
-        dataSource.fetchMonthlyTrend(),
+        dataSource.fetchWeeklyTrend(),
         dataSource.fetchTopViolators(),
       ]);
       emit(
