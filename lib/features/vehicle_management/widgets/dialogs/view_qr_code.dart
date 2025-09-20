@@ -7,7 +7,7 @@ import 'package:cvms_desktop/core/widgets/app/custom_dialog.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_text_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
-import 'package:cvms_desktop/features/vehicle_management/widgets/qr/custom_qr_view.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/qr/custom_qr_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -63,7 +63,10 @@ class _ViewQrCodeDialogState extends State<ViewQrCodeDialog> {
           width: 500,
           btnTxt: 'Export',
           onSubmit:
-              () => context.read<VehicleCubit>().exportCardAsImage(_cardKey),
+              () => context.read<VehicleCubit>().exportCardAsImage(
+                _cardKey,
+                widget.vehicle.ownerName,
+              ),
           title: widget.title,
           height: screenHeight * 0.9,
           isExpanded: true,
@@ -138,89 +141,11 @@ class _ViewQrCodeDialogState extends State<ViewQrCodeDialog> {
                 Spacing.vertical(size: AppSpacing.large),
                 RepaintBoundary(
                   key: _cardKey,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage('assets/images/bg.jpg'),
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: EdgeInsets.all(AppSpacing.medium),
-                    height: 230,
-                    width: double.infinity,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    'Vehicle',
-                                    style: TextStyle(
-                                      fontFamily: 'Sora',
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: AppFontSizes.xxxLarge + 3,
-                                      color: AppColors.white,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Pass',
-                                    style: TextStyle(
-                                      fontFamily: 'Sora',
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: AppFontSizes.xxxLarge + 3,
-                                      color: AppColors.yellow,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                'JRMSU | KATIPUNAN',
-                                style: TextStyle(
-                                  fontFamily: 'Sora',
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: AppFontSizes.medium,
-                                  color: AppColors.white.withValues(alpha: 0.8),
-                                ),
-                              ),
-                              Spacer(),
-                              Text(
-                                widget.vehicle.plateNumber,
-                                style: TextStyle(
-                                  fontFamily: 'Sora',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: AppFontSizes.large,
-                                  fontStyle: FontStyle.italic,
-                                  color: AppColors.white.withValues(alpha: 0.8),
-                                ),
-                              ),
-
-                              Text(
-                                '*This sticker will be valid until March 2026. Please renew before the expiration. Thank you.',
-                                style: TextStyle(
-                                  fontFamily: 'Sora',
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: AppFontSizes.xSmall,
-                                  color: AppColors.white.withValues(alpha: 0.3),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: 190,
-                          width: 190,
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: CustomQrView(qrData: qrData),
-                        ),
-                      ],
+                  child: CustomQrCard(
+                    plateNumber: widget.vehicle.plateNumber,
+                    qrData: qrData,
+                    embeddedImage: const AssetImage(
+                      'assets/images/jrmsu-logo.png',
                     ),
                   ),
                 ),

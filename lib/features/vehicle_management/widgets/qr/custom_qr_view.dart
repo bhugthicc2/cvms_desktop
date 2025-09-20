@@ -6,11 +6,13 @@ import 'package:qr_flutter/qr_flutter.dart';
 class CustomQrView extends StatelessWidget {
   final String qrData;
   final String? qrImage;
+  final ImageProvider<Object>? embeddedImage;
   final double? size;
   const CustomQrView({
     super.key,
     required this.qrData,
     this.qrImage,
+    this.embeddedImage,
     this.size,
   });
 
@@ -29,7 +31,8 @@ class CustomQrView extends StatelessWidget {
       ),
       version: QrVersions.auto,
       size: size ?? 300,
-      embeddedImage: AssetImage(qrImage ?? 'assets/images/jrmsu-logo.png'),
+      embeddedImage:
+          embeddedImage ?? (qrImage != null ? AssetImage(qrImage!) : null),
       embeddedImageStyle: const QrEmbeddedImageStyle(size: Size(30, 30)),
     );
   }

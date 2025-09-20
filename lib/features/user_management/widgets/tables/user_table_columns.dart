@@ -43,7 +43,11 @@ class UserTableColumns {
 
     columns.addAll([
       TableColumnFactory.build(name: 'index', label: '#', width: 50),
-      TableColumnFactory.build(name: 'name', label: 'Name'),
+      TableColumnFactory.build(
+        name: 'name',
+        label: 'Name',
+        alignment: Alignment.centerLeft,
+      ),
       TableColumnFactory.build(name: 'email', label: 'Email'),
       TableColumnFactory.build(name: 'role', label: 'Role'),
       TableColumnFactory.build(name: 'status', label: 'Status'),

@@ -9,6 +9,7 @@
 | Dashboard Page       | ![Dashboard Page](./app_progress_shots/dashboard_page.png)             |
 | Collapsed Sidebar    | ![Collapsed Sidebar](./app_progress_shots/collapsed_sidebar.png)       |
 | Vehicle Management   | ![Vehicle Management](./app_progress_shots/vehicle_management.png)     |
+| Vehicle Bulk Mode    | ![Vehicle Bulk Mode](./app_progress_shots/vehicle_management_bulk.png) |
 | Vehicle Logs Page    | ![Vehicle Logs Page](./app_progress_shots/vehicle_logs_page.png)       |
 | Vehicle Log Bulk     | ![Vehicle Log Bulk](./app_progress_shots/vehicle_log_bulk.png)         |
 | Add Vehicle Dialog   | ![Add Vehicle Dialog](./app_progress_shots/add_vehicle_dialog.png)     |

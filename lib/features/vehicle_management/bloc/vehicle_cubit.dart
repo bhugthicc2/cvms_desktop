@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cvms_desktop/core/services/cyrpto_service.dart';
 import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
 import 'package:cvms_desktop/features/auth/data/user_repository.dart';
 import 'package:cvms_desktop/features/vehicle_management/data/vehicle_violation_repository.dart';
 import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
+import 'package:cvms_desktop/features/vehicle_management/utils/vehicle_card_renderer.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -13,6 +15,7 @@ import 'package:file_selector/file_selector.dart';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:path/path.dart' as path;
 part 'vehicle_state.dart';
 
 class VehicleCubit extends Cubit<VehicleState> {
@@ -269,7 +272,7 @@ class VehicleCubit extends Cubit<VehicleState> {
     }
   }
 
-  Future<void> exportCardAsImage(GlobalKey repaintKey) async {
+  Future<void> exportCardAsImage(GlobalKey repaintKey, String ownerName) async {
     try {
       emit(
         state.copyWith(isExporting: true, exportedFilePath: null, error: null),
@@ -294,7 +297,7 @@ class VehicleCubit extends Cubit<VehicleState> {
         acceptedTypeGroups: [
           XTypeGroup(label: 'png', extensions: ['png']),
         ],
-        suggestedName: 'vehicle_pass.png',
+        suggestedName: 'vehicle_pass_$ownerName.png',
       );
 
       if (saveLocation == null) {
@@ -325,6 +328,88 @@ class VehicleCubit extends Cubit<VehicleState> {
       await loadVehicles();
     } catch (e) {
       rethrow;
+    }
+  }
+
+  //bulk export motor vehicle pass card
+
+  Future<void> bulkExportAsPng() async {
+    if (state.selectedEntries.isEmpty) {
+      emit(state.copyWith(error: 'No vehicles selected for export'));
+      return;
+    }
+
+    try {
+      emit(state.copyWith(isExporting: true, error: null));
+      final String? directoryPath = await getDirectoryPath(
+        confirmButtonText: 'Select Folder',
+      );
+
+      if (directoryPath == null) {
+        emit(
+          state.copyWith(
+            isExporting: false,
+            error: 'No directory selected. Please choose a valid folder.',
+          ),
+        );
+        return;
+      }
+
+      final directory = Directory(directoryPath);
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
+
+      for (final entry in state.selectedEntries) {
+        final rawVehicleId = entry.vehicleID;
+
+        final qrData = CryptoService.withDefaultKey().encryptVehicleId(
+          rawVehicleId,
+        );
+
+        final Uint8List pngBytes = await VehicleCardRenderer.renderCardToPng(
+          plateNumber: entry.plateNumber,
+          qrData: qrData,
+        );
+
+        if (pngBytes.isEmpty) {
+          emit(
+            state.copyWith(
+              isExporting: false,
+              error: 'Failed to render PNG for ${entry.plateNumber}',
+            ),
+          );
+          return;
+        }
+        //save filename as owner name
+        final sanitizedOwnerName = entry.ownerName.replaceAll(
+          RegExp(r'[<>:"/\\|?*]'),
+          '_',
+        );
+        final filePath = path.join(
+          directoryPath,
+          'vehicle_pass_$sanitizedOwnerName.png',
+        );
+
+        final file = File(filePath);
+
+        try {
+          await file.parent.create(recursive: true);
+          await file.writeAsBytes(pngBytes);
+        } catch (e) {
+          emit(
+            state.copyWith(
+              isExporting: false,
+              error: 'Failed to save file for ${entry.plateNumber}: $e',
+            ),
+          );
+          return;
+        }
+      }
+
+      emit(state.copyWith(isExporting: false, exportedFilePath: directoryPath));
+    } catch (e) {
+      emit(state.copyWith(isExporting: false, error: 'Export failed: $e'));
     }
   }
 

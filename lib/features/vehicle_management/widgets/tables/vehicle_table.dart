@@ -28,7 +28,33 @@ class VehicleTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VehicleCubit, VehicleState>(
+    return BlocConsumer<VehicleCubit, VehicleState>(
+      listenWhen:
+          (previous, current) =>
+              previous.isExporting != current.isExporting ||
+              previous.exportedFilePath != current.exportedFilePath ||
+              previous.error != current.error,
+      listener: (context, state) {
+        // Show success when a directory/file path is returned
+        if (state.exportedFilePath != null) {
+          CustomSnackBar.show(
+            context: context,
+            message:
+                'Export complete. Files saved to: ${state.exportedFilePath}',
+            type: SnackBarType.success,
+          );
+          return;
+        }
+
+        // Show error if any
+        if (state.error != null) {
+          CustomSnackBar.show(
+            context: context,
+            message: state.error!,
+            type: SnackBarType.error,
+          );
+        }
+      },
       builder: (context, state) {
         return Column(
           children: [
@@ -41,11 +67,16 @@ class VehicleTable extends StatelessWidget {
                 deleteValue: state.selectedEntries.length.toString(),
                 updateValue: state.selectedEntries.length.toString(),
                 onExport: () {
-                  //todo Handle export QR codes
-                  debugPrint(
-                    'Exporting QR codes for ${state.selectedEntries.length} entries',
+                  // Immediate user feedback
+                  CustomSnackBar.show(
+                    context: context,
+                    message:
+                        'Starting export for ${state.selectedEntries.length} vehicle(s). You will be asked to choose a folder.',
+                    type: SnackBarType.info,
                   );
+                  context.read<VehicleCubit>().bulkExportAsPng();
                 },
+
                 onUpdate: () {
                   if (state.selectedEntries.isEmpty) return;
 

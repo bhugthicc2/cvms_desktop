@@ -120,6 +120,38 @@ class VehicleDataSource extends DataGridSource {
           },
         );
 
+      case 'ownerName':
+        return Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            cell.value.toString(),
+            textAlign: TextAlign.left,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: const TextStyle(
+              fontSize: AppFontSizes.small,
+              fontFamily: 'Sora',
+            ),
+          ),
+        );
+
+      case 'vehicleModel':
+        return Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            cell.value.toString(),
+            textAlign: TextAlign.left,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: const TextStyle(
+              fontSize: AppFontSizes.small,
+              fontFamily: 'Sora',
+            ),
+          ),
+        );
+
       case 'actions':
         return BlocBuilder<VehicleCubit, VehicleState>(
           builder: (context, state) {
