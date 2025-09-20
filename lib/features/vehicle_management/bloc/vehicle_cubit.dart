@@ -56,6 +56,15 @@ class VehicleCubit extends Cubit<VehicleState> {
     }
   }
 
+  Future<void> importVehicles(List<VehicleEntry> entries) async {
+    try {
+      await repository.addVehicles(entries);
+      await loadVehicles();
+    } catch (e) {
+      emit(state.copyWith(error: e.toString()));
+    }
+  }
+
   Future<void> updateVehicle(String id, Map<String, dynamic> updates) async {
     try {
       await repository.updateVehicle(id, updates);

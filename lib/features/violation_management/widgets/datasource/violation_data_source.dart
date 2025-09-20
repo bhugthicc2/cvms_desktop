@@ -2,6 +2,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/utils/date_time_formatter.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_checkbox.dart';
+import 'package:cvms_desktop/core/widgets/table/cell_badge.dart';
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
 import 'package:cvms_desktop/features/violation_management/widgets/actions/violation_actions.dart';
@@ -146,6 +147,33 @@ class ViolationDataSource extends DataGridSource {
               fontFamily: 'Sora',
             ),
           ),
+        );
+
+      case 'status':
+        final statusStr = cell.value.toString();
+        final statusLower = statusStr.toLowerCase();
+        final bool isResolved = statusLower == 'resolved';
+        final bool isPending = statusLower == 'pending';
+
+        final Color badgeBg =
+            isResolved
+                ? AppColors.successLight
+                : isPending
+                ? AppColors.chartOrange.withValues(alpha: 0.3)
+                : AppColors.grey.withValues(alpha: 0.2);
+
+        final Color textColor =
+            isResolved
+                ? const Color.fromARGB(255, 31, 144, 11)
+                : isPending
+                ? AppColors.chartOrange
+                : AppColors.black;
+
+        return CellBadge(
+          badgeBg: badgeBg,
+          textColor: textColor,
+          statusStr: statusStr,
+          fontSize: AppFontSizes.small,
         );
 
       default:

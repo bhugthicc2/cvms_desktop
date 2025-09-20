@@ -77,7 +77,14 @@ class _CustomBarangayDropdownState extends State<CustomBarangayDropdown> {
               ),
             ),
             child: PhilippineBarangayDropdownView(
-              value: widget.value,
+              value:
+                  (widget.value != null &&
+                          widget.barangays.any(
+                            (b) =>
+                                b.toLowerCase() == widget.value!.toLowerCase(),
+                          ))
+                      ? widget.value
+                      : null,
               barangays: widget.barangays,
               onChanged: (String? value) {
                 widget.onChanged(value);

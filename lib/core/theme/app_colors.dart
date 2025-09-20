@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  //color feedback
+
+  static const Color successLight = Color(0x664CAF50);
+  static const Color neutral = Color(0xFF2196F3);
+  static const Color neutralLight = Color(0x662196F3);
+  static const Color errorLight = Color(0x66E57373);
+
   // Primary proj colors
   static const Color primary = Color(0xFF1F5AF1);
   static const Color secondary = Color(0xFF1E1E1E);

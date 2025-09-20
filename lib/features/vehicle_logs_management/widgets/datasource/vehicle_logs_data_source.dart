@@ -2,6 +2,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/utils/date_time_formatter.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_checkbox.dart';
+import 'package:cvms_desktop/core/widgets/table/cell_badge.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/bloc/vehicle_logs_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/bloc/vehicle_logs_state.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/models/vehicle_log_model.dart';
@@ -145,7 +146,32 @@ class VehicleLogsDataSource extends DataGridSource {
             ),
           ),
         );
+      case 'status':
+        final statusStr = cell.value.toString();
+        final statusLower = statusStr.toLowerCase();
+        final bool isInside = statusLower == 'inside';
+        final bool isOutside = statusLower == 'outside';
 
+        final Color badgeBg =
+            isInside
+                ? AppColors.successLight
+                : isOutside
+                ? AppColors.errorLight
+                : AppColors.grey.withValues(alpha: 0.2);
+
+        final Color textColor =
+            isInside
+                ? const Color.fromARGB(255, 31, 144, 11)
+                : isOutside
+                ? AppColors.error
+                : AppColors.black;
+
+        return CellBadge(
+          badgeBg: badgeBg,
+          textColor: textColor,
+          statusStr: statusStr,
+          fontSize: AppFontSizes.small,
+        );
       case 'timeOut':
         return Container(
           alignment: Alignment.centerLeft,

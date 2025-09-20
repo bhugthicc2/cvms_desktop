@@ -2,6 +2,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/utils/date_time_formatter.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_checkbox.dart';
+import 'package:cvms_desktop/core/widgets/table/cell_badge.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_cubit.dart';
 import 'package:cvms_desktop/features/user_management/models/user_model.dart';
 import 'package:cvms_desktop/features/user_management/widgets/actions/user_actions.dart';
@@ -147,6 +148,32 @@ class UserDataSource extends DataGridSource {
               fontFamily: 'Sora',
             ),
           ),
+        );
+      case 'status':
+        final statusStr = cell.value.toString();
+        final statusLower = statusStr.toLowerCase();
+        final bool isActive = statusLower == 'active';
+        final bool isInactive = statusLower == 'inactive';
+
+        final Color badgeBg =
+            isActive
+                ? AppColors.successLight
+                : isInactive
+                ? AppColors.errorLight
+                : AppColors.grey.withValues(alpha: 0.2);
+
+        final Color textColor =
+            isActive
+                ? const Color.fromARGB(255, 31, 144, 11)
+                : isInactive
+                ? AppColors.error
+                : AppColors.black;
+
+        return CellBadge(
+          badgeBg: badgeBg,
+          textColor: textColor,
+          statusStr: statusStr,
+          fontSize: AppFontSizes.small,
         );
 
       default:

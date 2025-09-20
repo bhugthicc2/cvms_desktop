@@ -61,7 +61,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
         final padding = isSmall ? 8.0 : widget.horizontalPadding;
 
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: padding),
+          padding: EdgeInsets.symmetric(horizontal: padding - 2),
           decoration: BoxDecoration(
             color: widget.backgroundColor,
             borderRadius: BorderRadius.circular(widget.borderRadius),
@@ -95,6 +95,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
                         (e) => DropdownMenuItem<String>(
                           value: e,
                           child: Text(
+                            overflow: TextOverflow.ellipsis,
                             e,
                             style: TextStyle(
                               color: widget.color ?? AppColors.white,

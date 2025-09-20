@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_cubit.dart';
+import 'package:cvms_desktop/features/vehicle_management/utils/vehicle_csv_parser.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/buttons/custom_vehicle_button.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/widgets/app/search_field.dart';
@@ -65,9 +69,7 @@ class TableHeader extends StatelessWidget {
                                 ? AppColors.white
                                 : AppColors.black,
                         label:
-                            state.isBulkModeEnabled
-                                ? "Exit Bulk Mode"
-                                : "Bulk Mode",
+                            state.isBulkModeEnabled ? "Exit Bulk" : "Bulk Mode",
                         backgroundColor:
                             state.isBulkModeEnabled
                                 ? AppColors.warning
@@ -113,6 +115,44 @@ class TableHeader extends StatelessWidget {
                                   },
                                 ),
                           );
+                        },
+                      ),
+                    ),
+                    Spacing.horizontal(size: AppSpacing.medium),
+                    Expanded(
+                      child: CustomVehicleButton(
+                        label: "Import",
+                        onPressed: () async {
+                          final result = await FilePicker.platform.pickFiles(
+                            type: FileType.custom,
+                            allowedExtensions: ['csv'],
+                          );
+
+                          if (result != null &&
+                              result.files.single.path != null) {
+                            final file = File(result.files.single.path!);
+                            try {
+                              final entries = await VehicleCsvParser.parseCsv(
+                                file,
+                              );
+                              context.read<VehicleCubit>().importVehicles(
+                                entries,
+                              );
+
+                              CustomSnackBar.show(
+                                context: context,
+                                message:
+                                    "${entries.length} vehicles imported successfully!",
+                                type: SnackBarType.success,
+                              );
+                            } catch (e) {
+                              CustomSnackBar.show(
+                                context: context,
+                                message: "Import failed: $e",
+                                type: SnackBarType.error,
+                              );
+                            }
+                          }
                         },
                       ),
                     ),
