@@ -82,7 +82,7 @@ class ReportAndAnalyticsPage extends StatelessWidget {
                                 child: LineChartWidget(
                                   //retrieve the trend from vechicle_logs collection
                                   data: state.weeklyTrend,
-                                  title: 'Weekly trend',
+                                  title: 'Vehicle Logs for the last 7 days',
                                 ),
                               ),
                               const SizedBox(width: 16),

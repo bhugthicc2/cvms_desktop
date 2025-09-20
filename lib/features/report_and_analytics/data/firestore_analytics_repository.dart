@@ -41,47 +41,57 @@ class FirestoreAnalyticsRepository implements AnalyticsRepository {
         .toList();
   }
 
-  //--------------------------------todo----------------------------------------------
+  //--------------------------------vehicle logs for the last 7 days of the year----------------------------------------------
 
   @override
   Future<List<ChartDataModel>> fetchWeeklyTrend() async {
-    //todo
-    final snapshot = await _firestore.collection('vehicle_logs').get();
+    // Determine the last 7 days normalized to midnight (local time)
+    final now = DateTime.now();
+    final last7Days = List.generate(7, (i) {
+      final d = now.subtract(Duration(days: 6 - i));
+      return DateTime(d.year, d.month, d.day); // normalize to midnight
+    });
 
-    final Map<String, int> counts = {};
+    final startDate = last7Days.first; // earliest day in the window
+
+    // Query Firestore for logs from the start of the window to reduce reads
+    final snapshot =
+        await _firestore
+            .collection('vehicle_logs')
+            .where(
+              'timeIn',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+            )
+            .get();
+
+    // Track number of logs per day
+    final Map<DateTime, int> dayCounts = {};
     for (final doc in snapshot.docs) {
       final ts = doc['timeIn'] as Timestamp;
       final dt = ts.toDate();
-
-      // Get week number of year
-      final firstDayOfYear = DateTime(dt.year, 1, 1);
-      final daysOffset = dt.difference(firstDayOfYear).inDays;
-      final weekOfYear = (daysOffset ~/ 7) + 1;
-
-      final key = "${dt.year}-W${weekOfYear.toString().padLeft(2, '0')}";
-
-      counts[key] = (counts[key] ?? 0) + 1;
+      final dayKey = DateTime(dt.year, dt.month, dt.day);
+      // Only consider days within our last7Days window
+      if (!dayKey.isBefore(startDate) && !dayKey.isAfter(last7Days.last)) {
+        dayCounts[dayKey] = (dayCounts[dayKey] ?? 0) + 1;
+      }
     }
 
-    return counts.entries.map((e) {
-        final parts = e.key.split('-W');
-        final year = int.parse(parts[0]);
-        final week = int.parse(parts[1]);
+    // Build chart data: value is total number of logs recorded that day
+    final data =
+        last7Days.map((date) {
+          final count = (dayCounts[date] ?? 0).toDouble();
+          return ChartDataModel(
+            category: 'Day ${date.dayOfYear}',
+            value: count,
+            date: date,
+          );
+        }).toList();
 
-        // Approximate the start date of the week
-        final startOfYear = DateTime(year, 1, 1);
-        final startOfWeek = startOfYear.add(Duration(days: (week - 1) * 7));
-
-        return ChartDataModel(
-          category: e.key, // "2025-W37"
-          value: e.value.toDouble(),
-          date: startOfWeek,
-        );
-      }).toList()
-      ..sort((a, b) => a.date!.compareTo(b.date!)); // sort chronologically
+    // Already in chronological order due to how last7Days is constructed
+    return data;
   }
 
-  // --------------------------------todo----------------------------------------------
+  // --------------------------------vehicle logs for the last 7 days of the year----------------------------------------------
   @override
   Future<List<ChartDataModel>> fetchTopViolators() async {
     final snapshot = await _firestore.collection('violations').get();
@@ -99,5 +109,13 @@ class FirestoreAnalyticsRepository implements AnalyticsRepository {
         .take(5)
         .map((e) => ChartDataModel(category: e.key, value: e.value.toDouble()))
         .toList();
+  }
+}
+
+// Extension to get day of year (must be top-level in Dart)
+extension DateTimeExtension on DateTime {
+  int get dayOfYear {
+    final startOfYear = DateTime(year, 1, 1);
+    return difference(startOfYear).inDays + 1;
   }
 }
