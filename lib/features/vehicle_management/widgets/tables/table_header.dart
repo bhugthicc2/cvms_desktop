@@ -11,6 +11,7 @@ import 'package:cvms_desktop/features/vehicle_management/widgets/buttons/custom_
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../../core/widgets/app/search_field.dart';
 import '../dialogs/custom_add_dialog.dart';
 
@@ -18,6 +19,19 @@ class TableHeader extends StatelessWidget {
   final TextEditingController? searchController;
 
   const TableHeader({super.key, this.searchController});
+
+  // Returns a responsive width for the search field based on current screen width
+  double _searchWidthFor(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    if (screenWidth < 1280) {
+      return 300;
+    } else if (screenWidth < 1464) {
+      return 400;
+    }
+
+    return 560;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +41,12 @@ class TableHeader extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             if (searchController != null)
-              Expanded(
-                child: SizedBox(
-                  height: 40,
-                  child: SearchField(controller: searchController!),
-                ),
+              SizedBox(
+                width: _searchWidthFor(context),
+                height: 40,
+                child: SearchField(controller: searchController!),
               ),
+
             Spacing.horizontal(size: AppSpacing.medium),
             Expanded(
               child: SizedBox(
@@ -61,9 +75,11 @@ class TableHeader extends StatelessWidget {
                       ),
                     ),
                     Spacing.horizontal(size: AppSpacing.medium),
+
                     //TOGGLE BULK MODE BUTTON
                     Expanded(
                       child: CustomVehicleButton(
+                        icon: PhosphorIconsBold.package,
                         textColor:
                             state.isBulkModeEnabled
                                 ? AppColors.white
@@ -83,6 +99,7 @@ class TableHeader extends StatelessWidget {
                     //ADD VEHICLE BUTTON
                     Expanded(
                       child: CustomVehicleButton(
+                        icon: PhosphorIconsBold.plus,
                         label: "Add Vehicle",
                         onPressed: () {
                           showDialog(
@@ -97,16 +114,16 @@ class TableHeader extends StatelessWidget {
                                         entry,
                                       );
                                       //SHOW SNACKBAR WHEN SUCCESS
+                                      if (!context.mounted) return;
                                       CustomSnackBar.show(
-                                        // ignore: use_build_context_synchronously
                                         context: context,
                                         message: "Vehicle added successfully!",
                                         type: SnackBarType.success,
                                       );
                                     } catch (e) {
                                       //SHOW SNACKBAR WHEN FAIL
+                                      if (!context.mounted) return;
                                       CustomSnackBar.show(
-                                        // ignore: use_build_context_synchronously
                                         context: context,
                                         message: "Failed to add vehicle: $e",
                                         type: SnackBarType.error,
@@ -121,6 +138,7 @@ class TableHeader extends StatelessWidget {
                     Spacing.horizontal(size: AppSpacing.medium),
                     Expanded(
                       child: CustomVehicleButton(
+                        icon: PhosphorIconsBold.download,
                         label: "Import",
                         onPressed: () async {
                           final result = await FilePicker.platform.pickFiles(
@@ -135,6 +153,7 @@ class TableHeader extends StatelessWidget {
                               final entries = await VehicleCsvParser.parseCsv(
                                 file,
                               );
+                              if (!context.mounted) return;
                               context.read<VehicleCubit>().importVehicles(
                                 entries,
                               );
@@ -146,6 +165,7 @@ class TableHeader extends StatelessWidget {
                                 type: SnackBarType.success,
                               );
                             } catch (e) {
+                              if (!context.mounted) return;
                               CustomSnackBar.show(
                                 context: context,
                                 message: "Import failed: $e",

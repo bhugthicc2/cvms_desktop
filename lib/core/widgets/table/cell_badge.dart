@@ -6,19 +6,24 @@ class CellBadge extends StatelessWidget {
   final Color textColor;
   final String statusStr;
   final double? fontSize;
+  final double? horizontalPadding;
   const CellBadge({
     super.key,
     required this.badgeBg,
     required this.textColor,
     required this.statusStr,
     this.fontSize,
+    this.horizontalPadding,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 13),
+      padding: EdgeInsets.symmetric(
+        vertical: 5.0,
+        horizontal: horizontalPadding ?? 13,
+      ),
       child: Container(
         decoration: BoxDecoration(
           color: badgeBg,

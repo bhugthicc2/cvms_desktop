@@ -170,6 +170,7 @@ class ViolationDataSource extends DataGridSource {
                 : AppColors.black;
 
         return CellBadge(
+          horizontalPadding: 30,
           badgeBg: badgeBg,
           textColor: textColor,
           statusStr: statusStr,

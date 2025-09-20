@@ -9,6 +9,7 @@ class ReportAnalyticsCubit extends Cubit<ReportAnalyticsState> {
     : super(const ReportAnalyticsState());
 
   Future<void> loadAll() async {
+    if (isClosed) return;
     emit(state.copyWith(loading: true, error: null));
     try {
       final results = await Future.wait([
@@ -17,6 +18,7 @@ class ReportAnalyticsCubit extends Cubit<ReportAnalyticsState> {
         dataSource.fetchWeeklyTrend(),
         dataSource.fetchTopViolators(),
       ]);
+      if (isClosed) return;
       emit(
         state.copyWith(
           loading: false,
@@ -27,6 +29,7 @@ class ReportAnalyticsCubit extends Cubit<ReportAnalyticsState> {
         ),
       );
     } catch (e) {
+      if (isClosed) return;
       emit(state.copyWith(loading: false, error: e.toString()));
     }
   }
