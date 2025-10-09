@@ -63,12 +63,25 @@ class _DashboardPageState extends State<DashboardPage> {
                           searchController: enteredSearchController,
                           hasSearchQuery:
                               enteredSearchController.text.isNotEmpty,
-                          onCellTap: (_) {
+                          onCellTap: (details) {
+                            final rowIndex =
+                                details.rowColumnIndex.rowIndex - 1;
+                            if (rowIndex < 0 ||
+                                rowIndex >= state.enteredFiltered.length) {
+                              return;
+                            }
+
+                            final vehId =
+                                state.enteredFiltered[rowIndex].vehicleId;
                             showDialog(
                               context: context,
                               builder:
-                                  (_) => const CustomViewDialog(
-                                    title: 'Vehicle Information',
+                                  (_) => BlocProvider.value(
+                                    value: context.read<DashboardCubit>(),
+                                    child: CustomViewDialog(
+                                      title: "Edit Vehicle Information",
+                                      vehicleId: vehId,
+                                    ),
                                   ),
                             );
                           },
@@ -86,12 +99,24 @@ class _DashboardPageState extends State<DashboardPage> {
                           searchController: exitedSearchController,
                           hasSearchQuery:
                               exitedSearchController.text.isNotEmpty,
-                          onCellTap: (_) {
+                          onCellTap: (details) {
+                            final rowIndex =
+                                details.rowColumnIndex.rowIndex - 1;
+                            if (rowIndex < 0 ||
+                                rowIndex >= state.exitedFiltered.length) {
+                              return;
+                            }
+                            final vehId =
+                                state.exitedFiltered[rowIndex].vehicleId;
                             showDialog(
                               context: context,
                               builder:
-                                  (_) => const CustomViewDialog(
-                                    title: 'Vehicle Information',
+                                  (_) => BlocProvider.value(
+                                    value: context.read<DashboardCubit>(),
+                                    child: CustomViewDialog(
+                                      title: "Edit Vehicle Information",
+                                      vehicleId: vehId,
+                                    ),
                                   ),
                             );
                           },

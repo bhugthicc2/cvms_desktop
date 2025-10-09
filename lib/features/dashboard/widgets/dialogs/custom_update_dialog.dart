@@ -1,45 +1,57 @@
-import 'package:cvms_desktop/core/theme/app_colors.dart';
-import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dialog.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dropdown_field.dart';
-import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
 
-class CustomUpdateDialog extends StatelessWidget {
-  const CustomUpdateDialog({super.key});
+class CustomUpdateDialog extends StatefulWidget {
+  final String? vehicleId;
+  final String? currentStatus;
+  final int? selectedCount;
+  final Function(String newStatus) onSave;
+
+  const CustomUpdateDialog({
+    super.key,
+    this.vehicleId,
+    this.currentStatus,
+    this.selectedCount,
+    required this.onSave,
+  });
+
+  @override
+  State<CustomUpdateDialog> createState() => _CustomUpdateStatusDialogState();
+}
+
+class _CustomUpdateStatusDialogState extends State<CustomUpdateDialog> {
+  String? _selectedStatus;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedStatus = widget.currentStatus;
+  }
 
   @override
   Widget build(BuildContext context) {
     return CustomDialog(
-      mainContentPadding: 0,
       height: 250,
       width: 600,
       title: 'Update Vehicle Status',
-      onSubmit: () {},
       btnTxt: 'Update',
+      onSubmit: () {
+        widget.onSave(_selectedStatus!);
+        Navigator.of(context).pop();
+      },
+
       child: Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            Text(
-              'Update selected entries and select a status to update',
-              style: TextStyle(
-                fontSize: AppFontSizes.large,
-                fontWeight: FontWeight.w600,
-                color: AppColors.grey,
-              ),
-            ),
-            Spacing.horizontal(),
-            CustomDropdownField(
-              //todo
-              hintText: 'Select Status',
-              labelText: 'Entry Status',
-              items: [
-                DropdownItem(value: 'inside', label: 'Inside'),
-                DropdownItem(value: 'outside', label: 'Outside'),
-              ],
-            ),
+        padding: const EdgeInsets.all(20.0),
+        child: CustomDropdownField<String>(
+          value: _selectedStatus,
+          labelText: "Vehicle Status",
+          hintText: "Select status",
+          items: const [
+            DropdownItem(value: 'inside', label: 'Inside'),
+            DropdownItem(value: 'outside', label: 'Outside'),
           ],
+          onChanged: (status) => setState(() => _selectedStatus = status),
         ),
       ),
     );

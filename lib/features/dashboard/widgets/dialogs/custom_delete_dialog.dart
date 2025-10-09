@@ -5,21 +5,36 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CustomDeleteDialog extends StatelessWidget {
   final String title;
-  const CustomDeleteDialog({super.key, required this.title});
+  final String message;
+  final VoidCallback onConfirm;
+
+  const CustomDeleteDialog({
+    super.key,
+    required this.title,
+    required this.onConfirm,
+    this.message = 'Are you sure you want to delete this item?',
+  });
 
   @override
   Widget build(BuildContext context) {
     return CustomDialog(
       headerColor: AppColors.error,
-      icon: PhosphorIconsRegular.qrCode,
+      icon: PhosphorIconsRegular.trash,
       width: 500,
       btnTxt: 'Yes',
-      onSubmit: () {},
+      onSubmit: () {
+        Navigator.pop(context);
+        onConfirm(); // trigger delete callback
+      },
       title: title,
       height: 200,
       isExpanded: true,
       child: Center(
-        child: Text('Are you sure you want to delete this vehicle?'),
+        child: Text(
+          message,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 16),
+        ),
       ),
     );
   }

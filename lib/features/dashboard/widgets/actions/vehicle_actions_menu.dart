@@ -1,13 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
+import 'package:cvms_desktop/features/dashboard/bloc/dashboard_cubit.dart';
 import 'package:cvms_desktop/features/dashboard/models/vehicle_entry.dart';
 import 'package:cvms_desktop/core/widgets/app/pop_up_menu_item.dart';
+import 'package:cvms_desktop/features/dashboard/models/violation_model.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_delete_dialog.dart'
     show CustomDeleteDialog;
-import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_view_dialog.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/dialogs/report_vehicle_dialog.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_update_dialog.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class VehicleActionsMenu extends StatelessWidget {
@@ -43,13 +47,6 @@ class VehicleActionsMenu extends StatelessWidget {
         itemBuilder:
             (BuildContext context) => [
               CustomPopupMenuItem(
-                itemIcon: PhosphorIconsBold.notePencil,
-                itemLabel: 'Edit Details',
-                value: 'edit',
-                iconColor: AppColors.primary,
-                textColor: AppColors.primary,
-              ),
-              CustomPopupMenuItem(
                 itemIcon: PhosphorIconsBold.arrowsClockwise,
                 itemLabel: 'Update',
                 value: 'update',
@@ -75,8 +72,6 @@ class VehicleActionsMenu extends StatelessWidget {
 
   void _handleMenuAction(String action, BuildContext context) {
     switch (action) {
-      case 'edit':
-        _editVehicle(context);
       case 'update':
         _updateVehicle(context);
         break;
@@ -89,32 +84,124 @@ class VehicleActionsMenu extends StatelessWidget {
     }
   }
 
-  void _editVehicle(BuildContext context) {
-    //todo
+  void _updateVehicle(BuildContext context) {
     showDialog(
       context: context,
-      builder: (_) => const CustomViewDialog(title: "Edit Vehicle Information"),
-    );
-  }
+      builder:
+          (_) => CustomUpdateDialog(
+            onSave: (newStatus) async {
+              try {
+                await context.read<DashboardCubit>().updateVehicle(
+                  vehicleEntry.vehicleId,
+                  {'status': newStatus},
+                );
 
-  void _updateVehicle(BuildContext context) {
-    //todo
-    showDialog(context: context, builder: (_) => const CustomUpdateDialog());
+                if (context.mounted) {
+                  CustomSnackBar.show(
+                    context: context,
+                    message: "Vehicle status updated to $newStatus",
+                    type: SnackBarType.success,
+                  );
+                }
+              } catch (e) {
+                debugPrint('error: $e');
+                if (context.mounted) {
+                  CustomSnackBar.show(
+                    context: context,
+                    message: "Failed to update status: $e",
+                    type: SnackBarType.error,
+                  );
+                }
+              }
+            },
+            vehicleId: vehicleEntry.vehicleId,
+            currentStatus: vehicleEntry.status,
+          ),
+    );
   }
 
   void _reportVehicle(BuildContext context) {
-    //todo
     showDialog(
       context: context,
-      builder: (_) => const ReportVehicleDialog(title: "Report Vehicle"),
+      builder:
+          (_) => BlocProvider.value(
+            value: context.read<DashboardCubit>(),
+            child: ReportVehicleDialog(
+              title: "Report Vehicle",
+              vehicleId: vehicleEntry.vehicleId,
+              plateNumber: vehicleEntry.plateNumber,
+              ownerName: vehicleEntry.ownerName,
+              onSubmit: (violationType) async {
+                try {
+                  final violation = ViolationModel(
+                    violationID: '',
+                    dateTime: Timestamp.now(),
+                    reportedBy: 'CDRRMSU Admin',
+                    plateNumber: vehicleEntry.plateNumber,
+                    vehicleID: vehicleEntry.vehicleId,
+                    owner: vehicleEntry.ownerName,
+                    violation: violationType,
+                    status: 'pending',
+                  );
+
+                  await context.read<DashboardCubit>().reportViolation(
+                    violation,
+                  );
+
+                  if (context.mounted) {
+                    CustomSnackBar.show(
+                      context: context,
+                      message: "Violation reported successfully.",
+                      type: SnackBarType.success,
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    CustomSnackBar.show(
+                      context: context,
+                      message: "Failed to report violation: $e",
+                      type: SnackBarType.error,
+                    );
+                  }
+                }
+              },
+            ),
+          ),
     );
   }
 
-  void _deleteVehicle(BuildContext context) {
-    //todo
+  void _deleteVehicle(BuildContext innerContext) {
     showDialog(
-      context: context,
-      builder: (_) => const CustomDeleteDialog(title: "Delete Vehicle"),
+      context: innerContext,
+      builder:
+          (_) => CustomDeleteDialog(
+            title: "Delete Vehicle",
+            message:
+                "Are you sure you want to delete ${vehicleEntry.ownerName}'s vehicle (${vehicleEntry.plateNumber})?",
+            onConfirm: () async {
+              try {
+                await innerContext.read<DashboardCubit>().deleteVehicleLog(
+                  vehicleEntry.docId,
+                );
+
+                if (context.mounted) {
+                  CustomSnackBar.show(
+                    context: context,
+                    message: "Vehicle deleted successfully.",
+                    type: SnackBarType.success,
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  CustomSnackBar.show(
+                    context: context,
+                    message: "Failed to delete vehicle: $e",
+                    type: SnackBarType.error,
+                  );
+                }
+              }
+            },
+          ),
     );
   }
 }

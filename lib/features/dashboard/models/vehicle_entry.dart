@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class VehicleEntry {
+  final String docId;
+  final String vehicleId;
   final String ownerName;
   final String vehicleModel;
   final String plateNumber;
@@ -8,6 +10,8 @@ class VehicleEntry {
   final DateTime? timeOut;
 
   VehicleEntry({
+    required this.docId,
+    required this.vehicleId,
     required this.ownerName,
     required this.vehicleModel,
     required this.plateNumber,
@@ -15,21 +19,13 @@ class VehicleEntry {
     this.timeOut,
   });
 
-  Duration get duration {
-    final end = timeOut ?? DateTime.now(); //current time if timeout is null
-    return end.difference(timeIn); //time in - current time
-  }
-
-  String get formattedDuration {
-    final d = duration;
-    return "${d.inHours}h ${d.inMinutes % 60}m"; //converted the duration in minutes into hours and minutes
-  }
-
   String get status => timeOut == null ? "inside" : "outside";
 
-  // Factory for Firestore
-  factory VehicleEntry.fromMap(Map<String, dynamic> data) {
+  factory VehicleEntry.fromDoc(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
     return VehicleEntry(
+      docId: doc.id, //
+      vehicleId: data['vehicleId'] ?? '',
       ownerName: data['ownerName'] ?? '',
       vehicleModel: data['vehicleModel'] ?? '',
       plateNumber: data['plateNumber'] ?? '',
@@ -39,5 +35,20 @@ class VehicleEntry {
               ? (data['timeOut'] as Timestamp).toDate()
               : null,
     );
+  }
+
+  Duration get duration {
+    final end = timeOut ?? DateTime.now();
+    return end.difference(timeIn);
+  }
+
+  String get formattedDuration {
+    final d = duration;
+    return "${d.inHours}h ${d.inMinutes % 60}m";
+  }
+
+  @override
+  String toString() {
+    return 'VehicleEntry(owner: $ownerName, plate: $plateNumber, docId: $docId)';
   }
 }
