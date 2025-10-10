@@ -22,6 +22,13 @@ class _VehicleLogsPageState extends State<VehicleLogsPage> {
     super.initState();
 
     context.read<VehicleLogsCubit>().loadVehicleLogs();
+
+    // Add search controller listener
+    insideSearchController.addListener(() {
+      context.read<VehicleLogsCubit>().filterEntries(
+        insideSearchController.text,
+      );
+    });
   }
 
   @override
@@ -45,13 +52,16 @@ class _VehicleLogsPageState extends State<VehicleLogsPage> {
                 builder: (context, state) {
                   return VehicleLogsTable(
                     title: "Vehicles Inside",
-                    logs: state.allLogs,
+                    logs: state.filteredEntries,
                     searchController: insideSearchController,
                     hasSearchQuery: insideSearchController.text.isNotEmpty,
                     onCellTap: (details) {
                       if (details.rowColumnIndex.rowIndex > 0) {
                         final log =
-                            state.allLogs[details.rowColumnIndex.rowIndex - 1];
+                            state.filteredEntries[details
+                                    .rowColumnIndex
+                                    .rowIndex -
+                                1];
                         showDialog(
                           context: context,
                           builder: (_) => VehicleLogsInfoDialog(log: log),

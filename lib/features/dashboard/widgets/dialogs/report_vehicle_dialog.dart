@@ -12,7 +12,7 @@ class ReportVehicleDialog extends StatefulWidget {
   final String vehicleId;
   final String plateNumber;
   final String ownerName;
-  final ValueChanged<String> onSubmit; // 👈 callback sends selected violation
+  final ValueChanged<String> onSubmit; // callback sends selected violation
 
   const ReportVehicleDialog({
     super.key,
@@ -45,8 +45,9 @@ class _ReportVehicleDialogState extends State<ReportVehicleDialog> {
       width: 500,
       btnTxt: 'Report',
       onSubmit: () {
-        if (_selectedViolationType == null || _selectedViolationType!.isEmpty)
+        if (_selectedViolationType == null || _selectedViolationType!.isEmpty) {
           return;
+        }
 
         final violationType =
             _selectedViolationType == 'Other'
@@ -55,7 +56,7 @@ class _ReportVehicleDialogState extends State<ReportVehicleDialog> {
                     : _otherCtrl.text.trim()
                 : _selectedViolationType!;
 
-        widget.onSubmit(violationType); // 👈 only send the selected type
+        widget.onSubmit(violationType); //  only send the selected type
         Navigator.pop(context);
       },
       title: widget.title,

@@ -4,7 +4,9 @@ import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
 import 'package:cvms_desktop/features/auth/data/user_repository.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/bloc/vehicle_logs_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/models/vehicle_log_model.dart';
+import 'package:cvms_desktop/features/vehicle_logs_management/widgets/dialogs/custom_delete_dialog.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/widgets/dialogs/custom_update_dialog.dart';
+import 'package:cvms_desktop/features/vehicle_logs_management/widgets/dialogs/custom_view_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -82,6 +84,11 @@ class VehicleLogsActionsMenu extends StatelessWidget {
 
   void _editVehicle(BuildContext context) {
     //todo
+    showDialog(
+      context: context,
+      builder:
+          (_) => CustomViewDialog(vehicleId: 'todo', title: "Delete Vehicle"),
+    );
   }
 
   void _updateVehicle(
@@ -124,5 +131,17 @@ class VehicleLogsActionsMenu extends StatelessWidget {
 
   void _deleteVehicle(BuildContext context) {
     //todo
+    showDialog(
+      context: context,
+      builder:
+          (_) => CustomDeleteDialog(
+            title: "Delete Vehicle",
+            message:
+                "Are you sure you want to delete Name's vehicle plateNumber?",
+            onConfirm: () {
+              //todo
+            },
+          ),
+    );
   }
 }

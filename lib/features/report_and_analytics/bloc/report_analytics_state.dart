@@ -30,7 +30,7 @@ class ReportAnalyticsState extends Equatable {
       loading: loading ?? this.loading,
       vehicleDistribution: vehicleDistribution ?? this.vehicleDistribution,
       topViolations: topViolations ?? this.topViolations,
-      weeklyTrend: monthlyTrend ?? this.weeklyTrend,
+      weeklyTrend: monthlyTrend ?? weeklyTrend,
       topViolators: topViolators ?? this.topViolators,
       error: error,
     );

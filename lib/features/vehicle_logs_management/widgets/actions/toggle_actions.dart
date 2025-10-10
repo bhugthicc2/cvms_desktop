@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../buttons/custom_toggle_buttons.dart';
 
 class ToggleActions extends StatelessWidget {
-  final String exportValue;
   final String reportValue;
   final String updateValue;
   final String deleteValue;
@@ -16,7 +15,6 @@ class ToggleActions extends StatelessWidget {
 
   const ToggleActions({
     super.key,
-    required this.exportValue,
     required this.reportValue,
     required this.deleteValue,
     required this.updateValue,
@@ -37,13 +35,6 @@ class ToggleActions extends StatelessWidget {
             fontFamily: 'Sora',
             fontWeight: FontWeight.w600,
           ),
-        ),
-        Spacing.horizontal(size: AppFontSizes.medium),
-        CustomToggleButtons(
-          title: 'Export QR Codes',
-          value: exportValue,
-          color: AppColors.primary,
-          onTap: onExport,
         ),
         Spacing.horizontal(size: AppFontSizes.medium),
         CustomToggleButtons(

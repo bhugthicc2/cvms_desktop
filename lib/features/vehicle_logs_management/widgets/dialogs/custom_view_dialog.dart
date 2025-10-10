@@ -3,8 +3,6 @@ import 'package:cvms_desktop/core/widgets/app/custom_dialog.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_text_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cvms_desktop/features/dashboard/bloc/dashboard_cubit.dart';
 
 class CustomViewDialog extends StatefulWidget {
   final String title;
@@ -40,15 +38,9 @@ class _CustomViewDialogState extends State<CustomViewDialog> {
   final _vehicleModelCtrl = TextEditingController();
 
   bool _initialized = false;
-  late final Future<Map<String, dynamic>> _loadVehicleFuture;
+  // todo late final Future<Map<String, dynamic>> _loadVehicleFuture;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadVehicleFuture = context.read<DashboardCubit>().getVehicleById(
-      widget.vehicleId,
-    );
-  }
+  //todo init satte call the cubit
 
   void _initControllers(Map<String, dynamic> data) {
     if (_initialized) return;
@@ -100,7 +92,7 @@ class _CustomViewDialogState extends State<CustomViewDialog> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     return FutureBuilder<Map<String, dynamic>>(
-      future: _loadVehicleFuture,
+      future: null, //todo
       builder: (context, snap) {
         if (snap.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

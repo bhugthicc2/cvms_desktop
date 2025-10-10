@@ -41,10 +41,12 @@ class TableHeader extends StatelessWidget {
                       child: CustomDropdown(
                         backgroundColor: AppColors.white,
                         color: AppColors.black,
-                        items: ['Vehicle Status', 'Inside', 'Outside'],
-                        initialValue: 'Vehicle Status',
+                        items: ['All', 'Inside', 'Outside'],
+                        initialValue: state.statusFilter,
                         onChanged: (value) {
-                          //TODO
+                          context.read<VehicleLogsCubit>().filterByStatus(
+                            value,
+                          );
                         },
                       ),
                     ),
@@ -54,10 +56,10 @@ class TableHeader extends StatelessWidget {
                       child: CustomDropdown(
                         backgroundColor: AppColors.white,
                         color: AppColors.black,
-                        items: ['Vehicle Type', 'two-wheeled', 'four-wheeled'],
-                        initialValue: 'Vehicle Type',
+                        items: ['All', 'Honda CBR', 'Yamaha Sniper'],
+                        initialValue: state.typeFilter,
                         onChanged: (value) {
-                          //TODO
+                          context.read<VehicleLogsCubit>().filterByType(value);
                         },
                       ),
                     ),

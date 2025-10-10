@@ -28,7 +28,7 @@ class VehicleLogModel {
   Map<String, dynamic> toMap() {
     return {
       "logID": logID,
-      "vehicleID": vehicleID,
+      "vehicleId": vehicleID,
       "ownerName": ownerName,
       "plateNumber": plateNumber,
       "vehicleModel": vehicleModel,
@@ -56,7 +56,7 @@ class VehicleLogModel {
   factory VehicleLogModel.fromMap(Map<String, dynamic> map, String id) {
     return VehicleLogModel(
       logID: id,
-      vehicleID: map['vehicleID'] ?? '',
+      vehicleID: map['vehicleId'] ?? '',
       status: map['status'] ?? '',
       ownerName: map['ownerName'] ?? '',
       vehicleModel: map['vehicleModel'] ?? '',

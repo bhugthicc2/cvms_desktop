@@ -99,14 +99,19 @@ class VehicleLogsDataSource extends DataGridSource {
   Widget _buildCellWidget(DataGridCell cell, VehicleLogModel entry) {
     switch (cell.columnName) {
       case 'checkbox':
-        return Container(
-          alignment: Alignment.center,
-          child: CustomCheckbox(
-            value: false,
-            onChanged: (value) {
-              // todo Implement selection functionality when needed
-            },
-          ),
+        return BlocBuilder<VehicleLogsCubit, VehicleLogsState>(
+          builder: (context, state) {
+            final isSelected = state.selectedEntries.contains(entry);
+            return Container(
+              alignment: Alignment.center,
+              child: CustomCheckbox(
+                value: isSelected,
+                onChanged: (value) {
+                  context.read<VehicleLogsCubit>().selectEntry(entry);
+                },
+              ),
+            );
+          },
         );
 
       case 'actions':

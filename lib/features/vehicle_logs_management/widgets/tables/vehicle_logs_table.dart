@@ -1,6 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/widgets/actions/toggle_actions.dart';
+import 'package:cvms_desktop/features/vehicle_logs_management/widgets/dialogs/custom_delete_dialog.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/widgets/tables/table_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -42,7 +43,10 @@ class _VehicleLogsManagementState extends State<VehicleLogsTable> {
   @override
   void initState() {
     super.initState();
-    _dataSource = VehicleLogsDataSource(vehicleLogEntries: widget.logs);
+    _dataSource = VehicleLogsDataSource(
+      vehicleLogEntries: widget.logs,
+      showCheckbox: false, // Will be updated in didUpdateWidget
+    );
   }
 
   @override
@@ -50,7 +54,10 @@ class _VehicleLogsManagementState extends State<VehicleLogsTable> {
     super.didUpdateWidget(oldWidget);
     if (!listEquals(oldWidget.logs, widget.logs) ||
         oldWidget.onActionTap != widget.onActionTap) {
-      _dataSource = VehicleLogsDataSource(vehicleLogEntries: widget.logs);
+      _dataSource = VehicleLogsDataSource(
+        vehicleLogEntries: widget.logs,
+        showCheckbox: false, // Will be updated in build method
+      );
     }
   }
 
@@ -58,6 +65,12 @@ class _VehicleLogsManagementState extends State<VehicleLogsTable> {
   Widget build(BuildContext context) {
     return BlocBuilder<VehicleLogsCubit, VehicleLogsState>(
       builder: (context, state) {
+        // Update data source when bulk mode changes
+        _dataSource = VehicleLogsDataSource(
+          vehicleLogEntries: widget.logs,
+          showCheckbox: state.isBulkModeEnabled,
+        );
+
         return Container(
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
           child: Column(
@@ -66,21 +79,20 @@ class _VehicleLogsManagementState extends State<VehicleLogsTable> {
               if (state.isBulkModeEnabled) ...[
                 Spacing.vertical(size: AppFontSizes.medium),
                 ToggleActions(
-                  exportValue: '', //todo
-                  reportValue: '', //todo
-                  deleteValue: '', //todo
-                  updateValue: '', //todo
+                  reportValue: state.selectedEntries.length.toString(),
+                  deleteValue: state.selectedEntries.length.toString(),
+                  updateValue: state.selectedEntries.length.toString(),
                   onExport: () {
-                    //todo
+                    context.read<VehicleLogsCubit>().bulkExportLogs();
                   },
                   onUpdate: () {
-                    //todo
+                    _showUpdateStatusDialog(context);
                   },
                   onReport: () {
-                    //todo
+                    _showReportViolationsDialog(context);
                   },
                   onDelete: () async {
-                    //todo
+                    _showDeleteConfirmationDialog(context);
                   },
                 ),
               ],
@@ -91,7 +103,9 @@ class _VehicleLogsManagementState extends State<VehicleLogsTable> {
                   controller: _controller,
                   onCellTap: widget.onCellTap,
                   dataSource: _dataSource,
-                  columns: VehicleLogsTableColumns.columns,
+                  columns: VehicleLogsTableColumns.getColumns(
+                    showCheckbox: state.isBulkModeEnabled,
+                  ),
                   hasSearchQuery: widget.hasSearchQuery,
                   onSearchCleared: () {
                     widget.searchController.clear();
@@ -102,6 +116,29 @@ class _VehicleLogsManagementState extends State<VehicleLogsTable> {
           ),
         );
       },
+    );
+  }
+
+  void _showUpdateStatusDialog(BuildContext context) {
+    //todo
+  }
+
+  void _showReportViolationsDialog(BuildContext context) {
+    //todo
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context) {
+    //todo
+    showDialog(
+      context: context,
+      builder:
+          (_) => CustomDeleteDialog(
+            title: "Delete Vehicle",
+            message: "Are you sure you want to delete these selected vehicles?",
+            onConfirm: () {
+              //todo
+            },
+          ),
     );
   }
 }
