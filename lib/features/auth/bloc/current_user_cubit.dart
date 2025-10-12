@@ -13,9 +13,9 @@ class CurrentUserCubit extends Cubit<CurrentUserState> {
   CurrentUserCubit({
     required AuthRepository authRepository,
     required UserRepository userRepository,
-  })  : _authRepository = authRepository,
-        _userRepository = userRepository,
-        super(CurrentUserState.initial()) {
+  }) : _authRepository = authRepository,
+       _userRepository = userRepository,
+       super(CurrentUserState.initial()) {
     _listenAuthChanges();
   }
 
@@ -25,14 +25,26 @@ class CurrentUserCubit extends Cubit<CurrentUserState> {
       (user) async {
         if (isClosed) return;
         if (user == null) {
-          emit(state.copyWith(fullname: null, errorMessage: null, isLoading: false));
+          emit(
+            state.copyWith(
+              fullname: null,
+              errorMessage: null,
+              isLoading: false,
+            ),
+          );
         } else {
           await loadFullname(user.uid);
         }
       },
       onError: (e) {
         if (isClosed) return;
-        emit(state.copyWith(errorMessage: 'Auth stream error: $e', fullname: null, isLoading: false));
+        emit(
+          state.copyWith(
+            errorMessage: 'Auth stream error: $e',
+            fullname: null,
+            isLoading: false,
+          ),
+        );
       },
     );
   }
@@ -40,16 +52,30 @@ class CurrentUserCubit extends Cubit<CurrentUserState> {
   Future<void> loadFullname([String? uid]) async {
     final currentUid = uid ?? _authRepository.uid;
     if (currentUid == null) {
-      emit(state.copyWith(fullname: null, errorMessage: null, isLoading: false));
+      if (isClosed) return;
+      emit(
+        state.copyWith(fullname: null, errorMessage: null, isLoading: false),
+      );
       return;
     }
 
+    if (isClosed) return;
     emit(state.copyWith(isLoading: true, errorMessage: null));
     try {
       final name = await _userRepository.getUserFullname(currentUid);
-      emit(state.copyWith(isLoading: false, fullname: name, errorMessage: null));
+      if (isClosed) return;
+      emit(
+        state.copyWith(isLoading: false, fullname: name, errorMessage: null),
+      );
     } catch (e) {
-      emit(state.copyWith(isLoading: false, fullname: null, errorMessage: e.toString()));
+      if (isClosed) return;
+      emit(
+        state.copyWith(
+          isLoading: false,
+          fullname: null,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 

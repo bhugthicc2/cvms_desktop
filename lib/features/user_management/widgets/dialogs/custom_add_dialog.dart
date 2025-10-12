@@ -1,6 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_icon_sizes.dart';
 import 'package:cvms_desktop/core/utils/form_validator.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dialog.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_dropdown_field.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_text_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,10 @@ class _CustomAddDialogState extends State<CustomAddDialog> {
   String _selectedRole = 'security personnel';
   bool _isSubmitting = false;
 
-  final List<String> _roles = ['security personnel', 'cdrrmsu admin'];
+  List<DropdownItem<String>> get _roleItems => [
+    DropdownItem(value: 'security personnel', label: 'Security Personnel'),
+    DropdownItem(value: 'cdrrmsu admin', label: 'CDRRMSU Admin'),
+  ];
 
   @override
   void dispose() {
@@ -77,7 +81,7 @@ class _CustomAddDialogState extends State<CustomAddDialog> {
         btnTxt: _isSubmitting ? 'Adding User...' : 'Add User',
         onSubmit: _isSubmitting ? null : _handleSubmit,
         title: widget.title,
-        height: 580,
+        height: 530,
         icon: PhosphorIconsBold.user,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -106,7 +110,23 @@ class _CustomAddDialogState extends State<CustomAddDialog> {
                 ),
                 Spacing.vertical(size: AppIconSizes.medium),
 
-                _buildRoleDropdown(),
+                CustomDropdownField<String>(
+                  value: _selectedRole,
+                  items: _roleItems,
+                  labelText: 'Role',
+                  height: 55,
+                  onChanged:
+                      _isSubmitting
+                          ? null
+                          : (String? newValue) {
+                            if (newValue != null) {
+                              setState(() {
+                                _selectedRole = newValue;
+                              });
+                            }
+                          },
+                  enabled: !_isSubmitting,
+                ),
                 Spacing.vertical(size: AppIconSizes.medium),
                 CustomTextField(
                   controller: _passwordController,
@@ -154,55 +174,6 @@ class _CustomAddDialogState extends State<CustomAddDialog> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildRoleDropdown() {
-    return Container(
-      height: 55,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(
-          color: _isSubmitting ? Colors.grey.shade300 : Colors.grey,
-          width: 1,
-        ),
-        color: _isSubmitting ? Colors.grey.shade50 : Colors.white,
-      ),
-      child: DropdownButtonFormField<String>(
-        value: _selectedRole,
-        decoration: const InputDecoration(
-          labelText: 'Role',
-          border: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(vertical: 10),
-        ),
-        items:
-            _roles.map((String role) {
-              return DropdownMenuItem<String>(
-                value: role,
-                child: Text(
-                  role,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 14,
-                    color: _isSubmitting ? Colors.grey : Colors.black,
-                  ),
-                ),
-              );
-            }).toList(),
-        onChanged:
-            _isSubmitting
-                ? null
-                : (String? newValue) {
-                  if (newValue != null) {
-                    setState(() {
-                      _selectedRole = newValue;
-                    });
-                  }
-                },
       ),
     );
   }

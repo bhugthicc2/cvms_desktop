@@ -62,6 +62,7 @@
 /packages/flutter/coverage/
 version
 analysis_benchmark.json
+test/
 
 # packages file containing multi-root paths
 .packages.generated

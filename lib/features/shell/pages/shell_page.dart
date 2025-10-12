@@ -39,7 +39,6 @@ class ShellPage extends StatelessWidget {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
