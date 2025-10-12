@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_icon_button.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
 import 'package:cvms_desktop/features/violation_management/widgets/dialogs/custom_delete_dialog.dart';
@@ -34,11 +35,21 @@ class ViolationActions extends StatelessWidget {
             newStatus: isResolved ? 'pending' : 'resolved',
             title: "Confirm update status",
             onUpdate: () {
-              Navigator.of(dialogContext).pop();
+              //todo has an issue the app freezes after updating the violation status
+              //---------------------------------------------------------------------
+              // context.read<ViolationCubit>().toggleViolationStatus(
+              //   violationEntry,
+              // );//todo currently commented out because this line is problematic
 
-              context.read<ViolationCubit>().toggleViolationStatus(
-                violationEntry,
+              //---------------------------------------------------------------------
+              CustomSnackBar.show(
+                context: context,
+                message:
+                    'Violation Status update under maintenance. Update currently unavailable.',
+                type: SnackBarType.warning,
               );
+              Navigator.of(dialogContext).pop();
+              //todo has an issue the app freezes after updating the violation status
             },
           ),
     );

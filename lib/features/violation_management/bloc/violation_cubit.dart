@@ -125,6 +125,7 @@ class ViolationCubit extends Cubit<ViolationState> {
     emit(state.copyWith(message: null, messageType: null));
   }
 
+  //todo fix the problem and freezing issue
   Future<void> toggleViolationStatus(ViolationEntry entry) async {
     try {
       final newStatus =
@@ -168,6 +169,8 @@ class ViolationCubit extends Cubit<ViolationState> {
       );
     }
   }
+
+  //todo fix the problem and freezing issue
 
   void filterEntries(String query) {
     emit(state.copyWith(searchQuery: query));
