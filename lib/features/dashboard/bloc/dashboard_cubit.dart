@@ -33,9 +33,9 @@ class DashboardCubit extends Cubit<DashboardState> {
           state.copyWith(
             allEntries: entries,
             enteredFiltered:
-                entries.where((e) => e.status == "onsite").toList(),
+                entries.where((e) => e.status == "inside").toList(),
             exitedFiltered:
-                entries.where((e) => e.status == "offsite").toList(),
+                entries.where((e) => e.status == "outside").toList(),
           ),
         );
 
@@ -94,7 +94,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   void filterEntered(String query) {
     final filtered =
         state.allEntries.where((e) {
-          return e.status == "onsite" &&
+          return e.status == "inside" &&
               (e.ownerName.toLowerCase().contains(query.toLowerCase()) ||
                   e.vehicleModel.toLowerCase().contains(query.toLowerCase()) ||
                   e.plateNumber.toLowerCase().contains(query.toLowerCase()));
@@ -106,7 +106,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   void filterExited(String query) {
     final filtered =
         state.allEntries.where((e) {
-          return e.status == "offsite" &&
+          return e.status == "outside" &&
               (e.ownerName.toLowerCase().contains(query.toLowerCase()) ||
                   e.vehicleModel.toLowerCase().contains(query.toLowerCase()) ||
                   e.plateNumber.toLowerCase().contains(query.toLowerCase()));
