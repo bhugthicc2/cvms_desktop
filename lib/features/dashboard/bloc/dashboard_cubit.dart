@@ -13,6 +13,18 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   DashboardCubit(this.repository) : super(DashboardState.initial());
 
+  Future<void> _refreshVehicleCounts() async {
+    try {
+      final entered = await repository.getTotalEnteredVehicles();
+      final exited = await repository.getTotalExitedVehicles();
+      if (!isClosed) {
+        emit(state.copyWith(totalEntered: entered, totalExited: exited));
+      }
+    } catch (_) {
+      // ignore
+    }
+  }
+
   void startListening() {
     //  vehicle logs stream
     _logsSub = repository.streamVehicleLogs().listen((entries) {
@@ -21,11 +33,13 @@ class DashboardCubit extends Cubit<DashboardState> {
           state.copyWith(
             allEntries: entries,
             enteredFiltered:
-                entries.where((e) => e.status == "inside").toList(),
+                entries.where((e) => e.status == "onsite").toList(),
             exitedFiltered:
-                entries.where((e) => e.status == "outside").toList(),
+                entries.where((e) => e.status == "offsite").toList(),
           ),
         );
+
+        _refreshVehicleCounts();
       }
     });
 
@@ -41,6 +55,9 @@ class DashboardCubit extends Cubit<DashboardState> {
         emit(state.copyWith(totalVehicles: count));
       }
     });
+
+    // Initial fetch for entered/exited counts from vehicles collection
+    _refreshVehicleCounts();
   }
 
   Future<void> updateVehicle(String id, Map<String, dynamic> updates) async {
@@ -59,6 +76,8 @@ class DashboardCubit extends Cubit<DashboardState> {
       } else {
         await repository.updateVehicle(id, updates);
       }
+
+      await _refreshVehicleCounts();
     } catch (e) {
       //todo add error handling
     }
@@ -75,7 +94,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   void filterEntered(String query) {
     final filtered =
         state.allEntries.where((e) {
-          return e.status == "inside" &&
+          return e.status == "onsite" &&
               (e.ownerName.toLowerCase().contains(query.toLowerCase()) ||
                   e.vehicleModel.toLowerCase().contains(query.toLowerCase()) ||
                   e.plateNumber.toLowerCase().contains(query.toLowerCase()));
@@ -87,7 +106,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   void filterExited(String query) {
     final filtered =
         state.allEntries.where((e) {
-          return e.status == "outside" &&
+          return e.status == "offsite" &&
               (e.ownerName.toLowerCase().contains(query.toLowerCase()) ||
                   e.vehicleModel.toLowerCase().contains(query.toLowerCase()) ||
                   e.plateNumber.toLowerCase().contains(query.toLowerCase()));

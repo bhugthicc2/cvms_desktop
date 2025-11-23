@@ -24,6 +24,26 @@ class DashboardRepository {
     return snapshot.size; // quick count
   }
 
+  // Current entered vehicles
+  Future<int> getTotalEnteredVehicles() async {
+    final snapshot =
+        await _firestore
+            .collection('vehicles')
+            .where('status', isEqualTo: 'onsite')
+            .get();
+    return snapshot.size; // quick count
+  }
+
+  // Current exited vehicles
+  Future<int> getTotalExitedVehicles() async {
+    final snapshot =
+        await _firestore
+            .collection('vehicles')
+            .where('status', isEqualTo: 'offsite')
+            .get();
+    return snapshot.size; // quick count
+  }
+
   // Violations
   Stream<int> streamTotalViolations() {
     return _firestore
@@ -55,7 +75,7 @@ class DashboardRepository {
   // Updates vehicle status and corresponding vehicle_logs using a WriteBatch.
   Future<void> updateVehicleStatusAndLogs({
     required String vehicleId,
-    required String newStatus, // "inside" or "outside"
+    required String newStatus, // "onsite" or "offsite"
     String updatedBy = "Admin",
   }) async {
     try {
@@ -89,7 +109,7 @@ class DashboardRepository {
       // Always update master vehicle status
       batch.update(vehicleRef, {'status': newStatus});
 
-      if (newStatus == 'inside') {
+      if (newStatus == 'onsite') {
         if (activeQuery.docs.isEmpty) {
           final newLogRef = _firestore.collection(_vehicleLogsCollection).doc();
           batch.set(newLogRef, {
@@ -101,16 +121,16 @@ class DashboardRepository {
             'timeIn': now,
             'timeOut': null,
             'updatedBy': updatedBy,
-            'status': 'inside',
+            'status': 'onsite',
             'durationMinutes': null,
           });
         } else {
           batch.update(activeQuery.docs.first.reference, {
-            'status': 'inside',
+            'status': 'onsite',
             'updatedBy': updatedBy,
           });
         }
-      } else if (newStatus == 'outside') {
+      } else if (newStatus == 'offsite') {
         if (activeQuery.docs.isNotEmpty) {
           final doc = activeQuery.docs.first;
           final data = doc.data();
@@ -119,7 +139,7 @@ class DashboardRepository {
               now.toDate().difference(timeInTs.toDate()).inMinutes;
           batch.update(doc.reference, {
             'timeOut': now,
-            'status': 'outside',
+            'status': 'offsite',
             'durationMinutes': durationMinutes,
             'updatedBy': updatedBy,
           });

@@ -90,7 +90,7 @@ class ReportAndAnalyticsPage extends StatelessWidget {
                                 child: StackedBarWidget(
                                   //retrieve the top 5 violators from violations collection
                                   data: state.topViolators,
-                                  title: 'Top Violator',
+                                  title: 'Student with Most Violations',
                                 ),
                               ),
                             ],

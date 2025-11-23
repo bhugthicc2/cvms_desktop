@@ -44,7 +44,7 @@ class VehicleLogsTableColumns {
 
     columns.addAll([
       TableColumnFactory.build(name: 'index', label: '#', width: 50),
-      TableColumnFactory.build(name: 'fullname', label: 'Name'),
+      TableColumnFactory.build(name: 'fullname', label: 'OnwerName'),
       TableColumnFactory.build(name: 'vehicle', label: 'Vehicle'),
       TableColumnFactory.build(name: 'plateNumber', label: 'Plate Number'),
       TableColumnFactory.build(name: 'updatedBy', label: 'Updated By'),

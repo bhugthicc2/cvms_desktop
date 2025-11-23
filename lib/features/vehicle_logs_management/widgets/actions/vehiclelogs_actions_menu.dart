@@ -111,9 +111,9 @@ class VehicleLogsActionsMenu extends StatelessWidget {
                       ? (await userRepo.getUserFullname(uid)) ?? "Unknown"
                       : "Unknown";
 
-              if (status == "inside") {
+              if (status == "onsite") {
                 await cubit.startSession(vehicleID, updatedBy, vehicleInfo);
-              } else if (status == "outside") {
+              } else if (status == "offsite") {
                 await cubit.endSession(vehicleID, updatedBy);
               }
 

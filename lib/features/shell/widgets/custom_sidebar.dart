@@ -34,6 +34,7 @@ class CustomSidebar extends StatelessWidget {
       icon: PhosphorIconsRegular.chartLineUp,
       label: "Reports and Analytics",
     ),
+    NavItem(icon: PhosphorIconsRegular.clock, label: "Activity Logs"),
     NavItem(icon: PhosphorIconsRegular.userCircle, label: "Profile"),
     NavItem(icon: PhosphorIconsRegular.gearFine, label: "Settings"),
   ];

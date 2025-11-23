@@ -27,7 +27,7 @@ class VehicleLogsRepository {
 
       // also update vehicle status to reflect manual entry
       await _firestore.collection("vehicles").doc(entry.vehicleID).update({
-        "status": entry.status, // could be "inside" or "outside"
+        "status": entry.status, // 'onsite' or 'offsite'
       });
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
@@ -40,7 +40,7 @@ class VehicleLogsRepository {
     final snapshot =
         await FirebaseFirestore.instance
             .collection("vehicles")
-            .where("status", isEqualTo: "outside")
+            .where("status", isEqualTo: "offsite")
             .get();
 
     return snapshot.docs
@@ -109,12 +109,12 @@ class VehicleLogsRepository {
       vehicleModel: vehicleInfo['vehicleModel'] ?? '',
       timeIn: now,
       updatedBy: updatedBy,
-      status: "inside",
+      status: "onsite",
     );
 
     await _firestore.collection(_collection).add(log.toMap());
     await _firestore.collection("vehicles").doc(vehicleID).update({
-      "status": "inside",
+      "status": "onsite",
     });
   }
 
@@ -140,13 +140,13 @@ class VehicleLogsRepository {
 
     await _firestore.collection(_collection).doc(doc.id).update({
       "timeOut": now,
-      "status": "outside",
+      "status": "offsite",
       "durationMinutes": duration,
       "updatedBy": updatedBy,
     });
 
     await _firestore.collection("vehicles").doc(vehicleID).update({
-      "status": "outside",
+      "status": "offsite",
     });
   }
 }

@@ -178,8 +178,8 @@ class VehicleDataSource extends DataGridSource {
       case 'status':
         final statusStr = cell.value.toString();
         final statusLower = statusStr.toLowerCase();
-        final bool isInside = statusLower == 'inside';
-        final bool isOutside = statusLower == 'outside';
+        final bool isInside = statusLower == 'onsite';
+        final bool isOutside = statusLower == 'offsite';
 
         final Color badgeBg =
             isInside

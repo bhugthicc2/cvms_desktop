@@ -56,7 +56,7 @@ class TableHeader extends StatelessWidget {
                     //VEHICLE STATUS FILTER
                     Expanded(
                       child: CustomDropdown(
-                        items: ['All', 'Inside', 'Outside'],
+                        items: ['All', 'Onsite', 'Offsite'],
                         initialValue: 'All',
                         onChanged: (value) {
                           context.read<VehicleCubit>().filterByStatus(value);

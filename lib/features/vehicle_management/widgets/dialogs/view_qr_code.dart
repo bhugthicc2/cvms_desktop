@@ -33,8 +33,7 @@ class _ViewQrCodeDialogState extends State<ViewQrCodeDialog> {
 
   @override
   Widget build(BuildContext context) {
-    // -------encryption----------
-    //  Use CryptoService instead of inline AES
+    // -----------encryption----------
     final rawVehicleId = widget.vehicle.vehicleID;
     final qrData = CryptoService.withDefaultKey().encryptVehicleId(
       rawVehicleId,

@@ -1,4 +1,5 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
 import 'package:cvms_desktop/features/report_and_analytics/widgets/titles/custom_chart_title.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -32,9 +33,17 @@ class LineChartWidget extends StatelessWidget {
         child: Column(
           children: [
             if (title.isNotEmpty)
-              Align(
-                alignment: Alignment.centerLeft,
-                child: CustomChartTitle(title: title),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CustomChartTitle(title: title),
+                  const Spacer(),
+                  CustomDropdown(
+                    items: ['Last 7 days', 'Month', 'Year'],
+                    initialValue: 'Last 7 days',
+                    onChanged: (value) {},
+                  ),
+                ],
               ),
             Expanded(
               child: SfCartesianChart(

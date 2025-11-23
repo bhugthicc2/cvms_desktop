@@ -56,7 +56,7 @@ class VehicleLogsDataSource extends DataGridSource {
         value:
             entry.timeOut != null
                 ? DateTimeFormatter.formatNumeric(entry.timeOut!.toDate())
-                : "Still inside",
+                : "Still onsite",
       ),
       DataGridCell<String>(
         columnName: 'duration',
@@ -138,11 +138,11 @@ class VehicleLogsDataSource extends DataGridSource {
 
       case 'ownerName':
         return Container(
-          alignment: Alignment.centerLeft,
+          alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Text(
             cell.value.toString(),
-            textAlign: TextAlign.left,
+            textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
             style: const TextStyle(
@@ -154,8 +154,8 @@ class VehicleLogsDataSource extends DataGridSource {
       case 'status':
         final statusStr = cell.value.toString();
         final statusLower = statusStr.toLowerCase();
-        final bool isInside = statusLower == 'inside';
-        final bool isOutside = statusLower == 'outside';
+        final bool isInside = statusLower == 'onsite';
+        final bool isOutside = statusLower == 'offsite';
 
         final Color badgeBg =
             isInside

@@ -105,7 +105,7 @@ class VehicleFormDialogState<T extends VehicleFormDialog> extends State<T> {
         orElse: () => throw Exception('Region IX not found'),
       );
       _dropdownValues["vehicleType"] = "two-wheeled";
-      _dropdownValues["status"] = "outside";
+      _dropdownValues["status"] = "offsite";
       _createdAt = DateTimeFormatter.formatFull(DateTime.now());
     }
     _updateFormState();
@@ -349,7 +349,7 @@ class VehicleFormDialogState<T extends VehicleFormDialog> extends State<T> {
       licenseNumber: _controllers["licenseNumber"]!.text,
       orNumber: _controllers["orNumber"]!.text,
       crNumber: _controllers["crNumber"]!.text,
-      status: _dropdownValues["status"] ?? 'outside',
+      status: _dropdownValues["status"] ?? 'offsite',
       gender: _dropdownValues["gender"] ?? '',
       yearLevel: _dropdownValues["yearLevel"] ?? '',
       block: _dropdownValues["block"] ?? '',

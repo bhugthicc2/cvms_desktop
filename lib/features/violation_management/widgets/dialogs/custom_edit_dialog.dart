@@ -12,7 +12,7 @@ class CustomEditDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomDialog(
-      btnTxt: 'Save',
+      btnTxt: 'Update',
       onSubmit: () {},
       title: title,
       height: 480,

@@ -42,7 +42,6 @@ class VehicleRepository {
     }
   }
 
-  // vehicle_repository.dart
   static const int _batchSize = 500; // Firestore limit
 
   Future<void> addVehicles(List<VehicleEntry> entries) async {

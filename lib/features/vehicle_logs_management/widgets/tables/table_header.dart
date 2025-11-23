@@ -41,7 +41,7 @@ class TableHeader extends StatelessWidget {
                       child: CustomDropdown(
                         backgroundColor: AppColors.white,
                         color: AppColors.black,
-                        items: ['All', 'Inside', 'Outside'],
+                        items: ['All', 'Onsite', 'Offsite'],
                         initialValue: state.statusFilter,
                         onChanged: (value) {
                           context.read<VehicleLogsCubit>().filterByStatus(

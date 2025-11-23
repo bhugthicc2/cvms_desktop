@@ -107,7 +107,7 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
                   _controllers["Plate Number"]!.text = selected["plateNumber"];
                   _controllers["Vehicle Model"]!.text =
                       selected["vehicleModel"];
-                  _controllers["Status"]!.text = "inside";
+                  _controllers["Status"]!.text = "onsite";
                 },
                 builder: (context, _, focusNode) {
                   return CustomTextField(
@@ -201,7 +201,7 @@ class _CustomFormDialogState extends State<CustomAddDialog> {
     Timestamp? timeOut;
     int? durationMinutes;
 
-    if (status.toLowerCase() == "outside") {
+    if (status.toLowerCase() == "offsite") {
       timeOut = now;
       durationMinutes = timeOut.toDate().difference(timeIn.toDate()).inMinutes;
     }

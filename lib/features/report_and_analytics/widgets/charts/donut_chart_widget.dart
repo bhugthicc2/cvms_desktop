@@ -13,6 +13,7 @@ class DonutChartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double total = data.fold<double>(0, (sum, d) => sum + d.value);
     return Container(
       margin: EdgeInsets.zero,
 
@@ -37,37 +38,103 @@ class DonutChartWidget extends StatelessWidget {
                 child: CustomChartTitle(title: title),
               ),
             Expanded(
-              child: SfCircularChart(
-                legend: Legend(
-                  isVisible: true,
-                  position: LegendPosition.left,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    width: 180,
+                    padding: const EdgeInsets.only(right: AppSpacing.medium),
 
-                  overflowMode: LegendItemOverflowMode.wrap,
-                ),
-                tooltipBehavior: TooltipBehavior(enable: true),
-                series: <CircularSeries>[
-                  DoughnutSeries<ChartDataModel, String>(
-                    dataSource: data,
-                    xValueMapper: (d, _) => d.category,
-                    yValueMapper: (d, _) => d.value,
-                    dataLabelSettings: const DataLabelSettings(
-                      isVisible: false,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        for (int i = 0; i < data.length; i++)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                //dot color
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                    color: () {
+                                      final colors = [
+                                        AppColors.donutBlue,
+                                        AppColors.donutPurple,
+                                        AppColors.chartOrange,
+                                        AppColors.chartGreen,
+                                        AppColors.chartGreenv2,
+                                        AppColors.donutPink,
+                                      ];
+                                      return colors[i % colors.length];
+                                    }(),
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                //category label
+                                Expanded(
+                                  child: Text(
+                                    data[i].category,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+
+                                const SizedBox(width: 10),
+                                //value
+                                Text(
+                                  data[i].value % 1 == 0
+                                      ? data[i].value.toInt().toString()
+                                      : data[i].value.toString(),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
                     ),
-                    radius: '90%',
-                    innerRadius: '60%',
-                    strokeWidth: 2,
-                    strokeColor: AppColors.white,
-                    pointColorMapper: (data, index) {
-                      final colors = [
-                        AppColors.donutBlue,
-                        AppColors.donutPurple,
-                        AppColors.chartOrange,
-                        AppColors.chartGreen,
-                        AppColors.chartGreenv2,
-                        AppColors.donutPink,
-                      ];
-                      return colors[index % colors.length];
-                    },
+                  ),
+
+                  Expanded(
+                    child: SfCircularChart(
+                      legend: const Legend(isVisible: false),
+                      tooltipBehavior: TooltipBehavior(enable: true),
+                      series: <CircularSeries>[
+                        DoughnutSeries<ChartDataModel, String>(
+                          dataSource: data,
+                          xValueMapper: (d, _) => d.category,
+                          yValueMapper: (d, _) => d.value,
+                          dataLabelMapper: (d, _) {
+                            final v = d.value;
+                            if (total == 0) return '0%';
+                            final pct = (v / total) * 100;
+                            return '${pct.toStringAsFixed(1)}%';
+                          },
+                          dataLabelSettings: DataLabelSettings(
+                            isVisible: true,
+                            labelPosition: ChartDataLabelPosition.inside,
+                            textStyle: TextStyle(color: AppColors.white),
+                          ),
+                          radius: '90%',
+                          innerRadius: '60%',
+                          strokeWidth: 2,
+                          strokeColor: AppColors.white,
+                          pointColorMapper: (data, index) {
+                            final colors = [
+                              AppColors.donutBlue,
+                              AppColors.donutPurple,
+                              AppColors.chartOrange,
+                              AppColors.chartGreen,
+                              AppColors.chartGreenv2,
+                              AppColors.donutPink,
+                            ];
+                            return colors[index % colors.length];
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

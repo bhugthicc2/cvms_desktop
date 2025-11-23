@@ -17,6 +17,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         final user = await _authRepository.signIn(event.email, event.password);
         if (user != null) {
+          // Get user profile to check role
+          final userProfile = await _userRepository.getUserProfile(user.uid);
+
+          // Validate user role - only cdrrmsu admin can sign in
+          if (userProfile == null || userProfile['role'] != 'cdrrmsu admin') {
+            // Sign out the user immediately
+            await _authRepository.signOut();
+            emit(
+              AuthError(
+                'Access denied. Only CDRRMSU Admin accounts can sign in.',
+              ),
+            );
+            return;
+          }
+
           // Update user status in Firestore
           await _userRepository.updateLoginStatus(user.uid);
 
@@ -29,10 +44,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(AuthError('Login failed'));
         }
       } catch (e) {
-        final errorMessage = e.toString().contains('Exception: ')
-            ? e.toString().replaceFirst('Exception: ', '')
-            : FirebaseErrorHandler.handleAuthError(e);
-        
+        final errorMessage =
+            e.toString().contains('Exception: ')
+                ? e.toString().replaceFirst('Exception: ', '')
+                : FirebaseErrorHandler.handleAuthError(e);
+
         emit(AuthError(errorMessage));
       }
     });
@@ -57,10 +73,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(AuthError('Sign up failed'));
         }
       } catch (e) {
-        final errorMessage = e.toString().contains('Exception: ')
-            ? e.toString().replaceFirst('Exception: ', '')
-            : FirebaseErrorHandler.handleAuthError(e);
-        
+        final errorMessage =
+            e.toString().contains('Exception: ')
+                ? e.toString().replaceFirst('Exception: ', '')
+                : FirebaseErrorHandler.handleAuthError(e);
+
         emit(AuthError(errorMessage));
         Logger.log('Auth error: $e');
       }
@@ -72,10 +89,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await _authRepository.resetPassword(event.email);
         emit(ResetPasswordSuccess());
       } catch (e) {
-        final errorMessage = e.toString().contains('Exception: ')
-            ? e.toString().replaceFirst('Exception: ', '')
-            : FirebaseErrorHandler.handleAuthError(e);
-        
+        final errorMessage =
+            e.toString().contains('Exception: ')
+                ? e.toString().replaceFirst('Exception: ', '')
+                : FirebaseErrorHandler.handleAuthError(e);
+
         emit(AuthError(errorMessage));
         Logger.log('Password reset error: $e');
       }

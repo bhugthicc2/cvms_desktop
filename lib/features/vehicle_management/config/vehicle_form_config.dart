@@ -53,8 +53,8 @@ class VehicleFormConfig {
       DropdownItem(value: 'Gray', label: 'Gray'),
     ],
     'status': [
-      DropdownItem(value: 'inside', label: 'Inside'),
-      DropdownItem(value: 'outside', label: 'Outside'),
+      DropdownItem(value: 'onsite', label: 'Onsite'),
+      DropdownItem(value: 'offsite', label: 'Offsite'),
     ],
     'gender': [
       DropdownItem(value: 'Male', label: 'Male'),

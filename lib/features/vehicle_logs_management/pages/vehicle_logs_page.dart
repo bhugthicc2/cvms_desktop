@@ -14,8 +14,8 @@ class VehicleLogsPage extends StatefulWidget {
 }
 
 class _VehicleLogsPageState extends State<VehicleLogsPage> {
-  final TextEditingController insideSearchController = TextEditingController();
-  final TextEditingController outsideSearchController = TextEditingController();
+  final TextEditingController onsiteSearchController = TextEditingController();
+  final TextEditingController offsiteSearchController = TextEditingController();
 
   @override
   void initState() {
@@ -24,17 +24,17 @@ class _VehicleLogsPageState extends State<VehicleLogsPage> {
     context.read<VehicleLogsCubit>().loadVehicleLogs();
 
     // Add search controller listener
-    insideSearchController.addListener(() {
+    onsiteSearchController.addListener(() {
       context.read<VehicleLogsCubit>().filterEntries(
-        insideSearchController.text,
+        onsiteSearchController.text,
       );
     });
   }
 
   @override
   void dispose() {
-    insideSearchController.dispose();
-    outsideSearchController.dispose();
+    onsiteSearchController.dispose();
+    offsiteSearchController.dispose();
     super.dispose();
   }
 
@@ -46,15 +46,15 @@ class _VehicleLogsPageState extends State<VehicleLogsPage> {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
-            // Vehicles Inside
+            // Vehicles Onsite
             Expanded(
               child: BlocBuilder<VehicleLogsCubit, VehicleLogsState>(
                 builder: (context, state) {
                   return VehicleLogsTable(
-                    title: "Vehicles Inside",
+                    title: "Vehicles Onsite",
                     logs: state.filteredEntries,
-                    searchController: insideSearchController,
-                    hasSearchQuery: insideSearchController.text.isNotEmpty,
+                    searchController: onsiteSearchController,
+                    hasSearchQuery: onsiteSearchController.text.isNotEmpty,
                     onCellTap: (details) {
                       if (details.rowColumnIndex.rowIndex > 0) {
                         final log =

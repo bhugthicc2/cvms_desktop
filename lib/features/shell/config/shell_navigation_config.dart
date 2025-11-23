@@ -1,3 +1,4 @@
+import 'package:cvms_desktop/features/activity_logs/pages/activity_logs_page.dart';
 import 'package:cvms_desktop/features/report_and_analytics/pages/report_and_analytics_page.dart';
 import 'package:cvms_desktop/features/settings/pages/setttings_page.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_cubit.dart';
@@ -66,6 +67,7 @@ class ShellNavigationConfig {
       child: ViolationManagementPage(),
     ),
     ReportAndAnalyticsPage(),
+    ActivityLogsPage(),
     ProfilePage(),
     SettingsPage(),
   ];
@@ -77,6 +79,7 @@ class ShellNavigationConfig {
     "User Management",
     "Violation Management",
     "Reports and Analytics",
+    "Activity Logs",
     "Profile",
     "Settings",
   ];
