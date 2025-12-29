@@ -149,4 +149,32 @@ class VehicleLogsRepository {
       "status": "offsite",
     });
   }
+
+  /// Check if a vehicle has any logs (transactions)
+  Future<bool> hasVehicleLogs(String vehicleID) async {
+    try {
+      final snapshot =
+          await _firestore
+              .collection(_collection)
+              .where("vehicleID", isEqualTo: vehicleID)
+              .limit(1)
+              .get();
+      return snapshot.docs.isNotEmpty;
+    } catch (e) {
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
+    }
+  }
+
+  /// Get all vehicle IDs that have at least one log
+  Future<Set<String>> getVehiclesWithLogs() async {
+    try {
+      final snapshot = await _firestore.collection(_collection).get();
+      return snapshot.docs
+          .map((doc) => doc.data()['vehicleID'] as String? ?? '')
+          .where((id) => id.isNotEmpty)
+          .toSet();
+    } catch (e) {
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
+    }
+  }
 }

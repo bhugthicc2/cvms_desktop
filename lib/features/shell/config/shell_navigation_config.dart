@@ -42,6 +42,7 @@ class ShellNavigationConfig {
             AuthRepository(),
             UserRepository(),
             VehicleViolationRepository(),
+            VehicleLogsRepository(),
           ),
       child: const VehicleManagementPage(),
     ),

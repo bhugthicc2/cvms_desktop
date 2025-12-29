@@ -15,6 +15,9 @@ class VehicleState {
   final bool isExporting;
   final String? exportedFilePath;
 
+  // Track which vehicles have logs (transactions)
+  final Set<String> vehiclesWithLogs;
+
   VehicleState({
     required this.allEntries,
     required this.filteredEntries,
@@ -26,6 +29,7 @@ class VehicleState {
     this.error,
     this.isExporting = false,
     this.exportedFilePath,
+    this.vehiclesWithLogs = const {},
   });
 
   factory VehicleState.initial() => VehicleState(
@@ -39,6 +43,7 @@ class VehicleState {
     error: null,
     isExporting: false,
     exportedFilePath: null,
+    vehiclesWithLogs: {},
   );
 
   VehicleState copyWith({
@@ -52,6 +57,7 @@ class VehicleState {
     String? error,
     bool? isExporting,
     String? exportedFilePath,
+    Set<String>? vehiclesWithLogs,
   }) {
     return VehicleState(
       allEntries: allEntries ?? this.allEntries,
@@ -64,6 +70,7 @@ class VehicleState {
       error: error,
       isExporting: isExporting ?? this.isExporting,
       exportedFilePath: exportedFilePath,
+      vehiclesWithLogs: vehiclesWithLogs ?? this.vehiclesWithLogs,
     );
   }
 }

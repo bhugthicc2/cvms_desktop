@@ -7,6 +7,7 @@ import 'package:cvms_desktop/features/vehicle_management/data/vehicle_violation_
 import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
 import 'package:cvms_desktop/features/vehicle_management/utils/vehicle_card_renderer.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
+import 'package:cvms_desktop/features/vehicle_logs_management/data/vehicle_logs_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +24,7 @@ class VehicleCubit extends Cubit<VehicleState> {
   final AuthRepository authRepository;
   final UserRepository userRepository;
   final VehicleViolationRepository violationRepository;
+  final VehicleLogsRepository logsRepository;
   StreamSubscription<List<VehicleEntry>>? _vehiclesSubscription;
 
   VehicleCubit(
@@ -30,6 +32,7 @@ class VehicleCubit extends Cubit<VehicleState> {
     this.authRepository,
     this.userRepository,
     this.violationRepository,
+    this.logsRepository,
   ) : super(VehicleState.initial());
 
   void loadEntries(List<VehicleEntry> entries) {
@@ -40,7 +43,11 @@ class VehicleCubit extends Cubit<VehicleState> {
   Future<void> loadVehicles() async {
     try {
       final entries = await repository.fetchVehicles();
-      emit(state.copyWith(allEntries: entries));
+      final vehiclesWithLogs = await logsRepository.getVehiclesWithLogs();
+      emit(state.copyWith(
+        allEntries: entries,
+        vehiclesWithLogs: vehiclesWithLogs,
+      ));
       _applyFilters();
     } catch (e) {
       emit(state.copyWith(error: e.toString()));
@@ -86,10 +93,20 @@ class VehicleCubit extends Cubit<VehicleState> {
   void listenVehicles() {
     _vehiclesSubscription?.cancel();
     _vehiclesSubscription = repository.watchVehicles().listen(
-      (entries) {
+      (entries) async {
         if (!isClosed) {
-          emit(state.copyWith(allEntries: entries));
-          _applyFilters();
+          try {
+            final vehiclesWithLogs = await logsRepository.getVehiclesWithLogs();
+            emit(state.copyWith(
+              allEntries: entries,
+              vehiclesWithLogs: vehiclesWithLogs,
+            ));
+            _applyFilters();
+          } catch (e) {
+            // If fetching logs fails, still update vehicles but keep existing logs set
+            emit(state.copyWith(allEntries: entries));
+            _applyFilters();
+          }
         }
       },
       onError: (error) {

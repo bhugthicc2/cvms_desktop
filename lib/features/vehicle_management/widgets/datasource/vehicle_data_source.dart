@@ -176,30 +176,39 @@ class VehicleDataSource extends DataGridSource {
         );
 
       case 'status':
-        final statusStr = cell.value.toString();
-        final statusLower = statusStr.toLowerCase();
-        final bool isInside = statusLower == 'onsite';
-        final bool isOutside = statusLower == 'offsite';
+        return BlocBuilder<VehicleCubit, VehicleState>(
+          builder: (context, state) {
+            // Hide status if vehicle has no logs (no transactions yet)
+            if (!state.vehiclesWithLogs.contains(entry.vehicleID)) {
+              return const SizedBox.shrink();
+            }
 
-        final Color badgeBg =
-            isInside
-                ? AppColors.successLight
-                : isOutside
-                ? AppColors.errorLight
-                : AppColors.grey.withValues(alpha: 0.2);
+            final statusStr = cell.value.toString();
+            final statusLower = statusStr.toLowerCase();
+            final bool isInside = statusLower == 'onsite';
+            final bool isOutside = statusLower == 'offsite';
 
-        final Color textColor =
-            isInside
-                ? const Color.fromARGB(255, 31, 144, 11)
-                : isOutside
-                ? AppColors.error
-                : AppColors.black;
+            final Color badgeBg =
+                isInside
+                    ? AppColors.successLight
+                    : isOutside
+                    ? AppColors.errorLight
+                    : AppColors.grey.withValues(alpha: 0.2);
 
-        return CellBadge(
-          badgeBg: badgeBg,
-          textColor: textColor,
-          statusStr: statusStr,
-          fontSize: AppFontSizes.small,
+            final Color textColor =
+                isInside
+                    ? const Color.fromARGB(255, 31, 144, 11)
+                    : isOutside
+                    ? AppColors.error
+                    : AppColors.black;
+
+            return CellBadge(
+              badgeBg: badgeBg,
+              textColor: textColor,
+              statusStr: statusStr,
+              fontSize: AppFontSizes.small,
+            );
+          },
         );
 
       default:
