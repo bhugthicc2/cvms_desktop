@@ -12,7 +12,6 @@ class VehicleFormConfig {
     'licenseNumber': 'License Number',
     'orNumber': 'OR Number',
     'crNumber': 'CR Number',
-    'status': 'Status',
     'gender': 'Gender',
     'yearLevel': 'Year Level',
     'block': 'Block',
@@ -23,8 +22,8 @@ class VehicleFormConfig {
     ['ownerName', 'schoolID', 'department'],
     ['plateNumber', 'vehicleType', 'vehicleModel'],
     ['vehicleColor', 'licenseNumber', 'orNumber'],
-    ['crNumber', 'status', 'gender'],
-    ['yearLevel', 'block', 'contact'],
+    ['crNumber', 'gender', 'yearLevel'],
+    ['block', 'contact'],
   ];
 
   static const Map<String, List<DropdownItem<String>>> dropdownOptions = {
@@ -52,6 +51,8 @@ class VehicleFormConfig {
       DropdownItem(value: 'Silver', label: 'Silver'),
       DropdownItem(value: 'Gray', label: 'Gray'),
     ],
+    // Status options kept for validation of existing vehicles
+    // Status is not shown in form - it's set automatically when vehicle has first log
     'status': [
       DropdownItem(value: 'onsite', label: 'Onsite'),
       DropdownItem(value: 'offsite', label: 'Offsite'),

@@ -54,7 +54,6 @@ class VehicleFormDialogState<T extends VehicleFormDialog> extends State<T> {
     "vehicleType": null,
     "department": null,
     "vehicleColor": null,
-    "status": null,
     "gender": null,
     "yearLevel": null,
     "block": null,
@@ -105,7 +104,6 @@ class VehicleFormDialogState<T extends VehicleFormDialog> extends State<T> {
         orElse: () => throw Exception('Region IX not found'),
       );
       _dropdownValues["vehicleType"] = "two-wheeled";
-      _dropdownValues["status"] = "offsite";
       _createdAt = DateTimeFormatter.formatFull(DateTime.now());
     }
     _updateFormState();
@@ -137,8 +135,6 @@ class VehicleFormDialogState<T extends VehicleFormDialog> extends State<T> {
         return entry.department;
       case "vehicleColor":
         return entry.vehicleColor;
-      case "status":
-        return entry.status;
       case "gender":
         return entry.gender;
       case "yearLevel":
@@ -349,7 +345,9 @@ class VehicleFormDialogState<T extends VehicleFormDialog> extends State<T> {
       licenseNumber: _controllers["licenseNumber"]!.text,
       orNumber: _controllers["orNumber"]!.text,
       crNumber: _controllers["crNumber"]!.text,
-      status: _dropdownValues["status"] ?? 'offsite',
+      status:
+          widget.initialEntry?.status ??
+          '', // Empty for new vehicles, keep existing for edits
       gender: _dropdownValues["gender"] ?? '',
       yearLevel: _dropdownValues["yearLevel"] ?? '',
       block: _dropdownValues["block"] ?? '',

@@ -9,10 +9,11 @@ class VehicleLogsRepository {
   Future<void> addManualLog(VehicleLogModel entry) async {
     try {
       // check if vehicle already has an active session
+      // Note: Firestore field is 'vehicleId' (lowercase 'd')
       final active =
           await _firestore
               .collection(_collection)
-              .where("vehicleID", isEqualTo: entry.vehicleID)
+              .where("vehicleId", isEqualTo: entry.vehicleID)
               .where("timeOut", isNull: true) // still active session
               .limit(1)
               .get();
@@ -78,18 +79,8 @@ class VehicleLogsRepository {
           (snapshot) =>
               snapshot.docs.map((doc) {
                 final data = doc.data();
-                return VehicleLogModel(
-                  logID: doc.id,
-                  vehicleID: data['vehicleID'] ?? '',
-                  ownerName: data['ownerName'] ?? '',
-                  vehicleModel: data['vehicleModel'] ?? '',
-                  plateNumber: data['plateNumber'] ?? '',
-                  status: data['status'] ?? '',
-                  updatedBy: data['updatedBy'] ?? '',
-                  timeIn: data['timeIn'],
-                  timeOut: data['timeOut'],
-                  durationMinutes: data['durationMinutes'],
-                );
+                // Use VehicleLogModel.fromMap which correctly handles 'vehicleId' field
+                return VehicleLogModel.fromMap(data, doc.id);
               }).toList(),
         );
   }
@@ -122,10 +113,11 @@ class VehicleLogsRepository {
     final now = Timestamp.now();
 
     // find active session
+    // Note: Firestore field is 'vehicleId' (lowercase 'd')
     final active =
         await _firestore
             .collection(_collection)
-            .where("vehicleID", isEqualTo: vehicleID)
+            .where("vehicleId", isEqualTo: vehicleID)
             .where("timeOut", isNull: true)
             .limit(1)
             .get();
@@ -153,10 +145,11 @@ class VehicleLogsRepository {
   /// Check if a vehicle has any logs (transactions)
   Future<bool> hasVehicleLogs(String vehicleID) async {
     try {
+      // Note: Firestore field is 'vehicleId' (lowercase 'd')
       final snapshot =
           await _firestore
               .collection(_collection)
-              .where("vehicleID", isEqualTo: vehicleID)
+              .where("vehicleId", isEqualTo: vehicleID)
               .limit(1)
               .get();
       return snapshot.docs.isNotEmpty;
@@ -169,10 +162,26 @@ class VehicleLogsRepository {
   Future<Set<String>> getVehiclesWithLogs() async {
     try {
       final snapshot = await _firestore.collection(_collection).get();
-      return snapshot.docs
-          .map((doc) => doc.data()['vehicleID'] as String? ?? '')
-          .where((id) => id.isNotEmpty)
-          .toSet();
+
+      if (snapshot.docs.isEmpty) {
+        return <String>{};
+      }
+
+      // Extract vehicle IDs
+      // Note: Firestore uses 'vehicleId' (lowercase 'd') as per VehicleLogModel.toMap()
+      final allVehicleIDs =
+          snapshot.docs.map((doc) {
+            final data = doc.data();
+            // Try both 'vehicleId' (actual) and 'vehicleID' (fallback) for compatibility
+            return (data['vehicleId'] as String? ??
+                data['vehicleID'] as String? ??
+                '');
+          }).toList();
+
+      final vehiclesWithLogs =
+          allVehicleIDs.where((id) => id.isNotEmpty).toSet();
+
+      return vehiclesWithLogs;
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }

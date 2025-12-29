@@ -143,7 +143,8 @@ class VehicleEntry {
     if (!inOptions('vehicleColor', vehicleColor)) {
       throw Exception('Invalid vehicle color: $vehicleColor');
     }
-    if (!inOptions('status', status)) {
+    // Status validation: allow empty string for new vehicles (status set when first log is created)
+    if (status.isNotEmpty && !inOptions('status', status)) {
       throw Exception('Invalid status: $status');
     }
     if (!inOptions('gender', gender)) {
@@ -172,7 +173,10 @@ class VehicleEntry {
     }
 
     // Plate number: alphanumeric, spaces/dash allowed, at least 3 chars
-    if (!RegExp(r'^[A-Z0-9\- ]{3,}$', caseSensitive: false).hasMatch(plateNumber)) {
+    if (!RegExp(
+      r'^[A-Z0-9\- ]{3,}$',
+      caseSensitive: false,
+    ).hasMatch(plateNumber)) {
       throw Exception('Invalid plate number');
     }
 

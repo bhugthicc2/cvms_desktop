@@ -8,7 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class VehicleTableColumns {
-  static List<GridColumn> getColumns({bool showCheckbox = false}) {
+  static List<GridColumn> getColumns({
+    bool showCheckbox = false,
+    bool showStatus = true,
+  }) {
     final columns = <GridColumn>[];
 
     if (showCheckbox) {
@@ -41,7 +44,7 @@ class VehicleTableColumns {
       );
     }
 
-    columns.addAll([
+    final baseColumns = [
       TableColumnFactory.build(name: 'index', label: '#', width: 50),
       // TableColumnFactory.build(name: 'vehicleID', label: 'Vehicle ID'),
       TableColumnFactory.build(name: 'ownerName', label: 'Owner Name'),
@@ -52,7 +55,16 @@ class VehicleTableColumns {
       TableColumnFactory.build(name: 'vehicleModel', label: 'Vehicle Model'),
       TableColumnFactory.build(name: 'vehicleColor', label: 'Vehicle Color'),
       TableColumnFactory.build(name: 'licenseNumber', label: 'License Number'),
-      TableColumnFactory.build(name: 'status', label: 'Status'),
+    ];
+
+    // Only add status column if at least one vehicle has logs
+    if (showStatus) {
+      baseColumns.add(
+        TableColumnFactory.build(name: 'status', label: 'Status'),
+      );
+    }
+
+    baseColumns.add(
       // TableColumnFactory.build(name: 'createdAt', label: 'Created At'),
       GridColumn(
         columnName: 'actions',
@@ -71,7 +83,9 @@ class VehicleTableColumns {
         ),
         allowSorting: false,
       ),
-    ]);
+    );
+
+    columns.addAll(baseColumns);
 
     return columns;
   }

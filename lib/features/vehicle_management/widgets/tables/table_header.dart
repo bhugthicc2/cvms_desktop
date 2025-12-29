@@ -53,17 +53,19 @@ class TableHeader extends StatelessWidget {
                 height: 40,
                 child: Row(
                   children: [
-                    //VEHICLE STATUS FILTER
-                    Expanded(
-                      child: CustomDropdown(
-                        items: ['All', 'Onsite', 'Offsite'],
-                        initialValue: 'All',
-                        onChanged: (value) {
-                          context.read<VehicleCubit>().filterByStatus(value);
-                        },
+                    //VEHICLE STATUS FILTER - Only show if at least one vehicle has logs
+                    if (state.vehiclesWithLogs.isNotEmpty) ...[
+                      Expanded(
+                        child: CustomDropdown(
+                          items: ['All', 'Onsite', 'Offsite'],
+                          initialValue: 'All',
+                          onChanged: (value) {
+                            context.read<VehicleCubit>().filterByStatus(value);
+                          },
+                        ),
                       ),
-                    ),
-                    Spacing.horizontal(size: AppSpacing.medium),
+                      Spacing.horizontal(size: AppSpacing.medium),
+                    ],
                     //VEHICLE TYPE FILTER
                     Expanded(
                       child: CustomDropdown(

@@ -48,7 +48,8 @@ class VehicleCsvParser {
         licenseNumber: map['licensenumber'] ?? '',
         orNumber: map['ornumber'] ?? '',
         crNumber: map['crnumber'] ?? '',
-        status: map['status'] ?? 'offsite', // Default
+        status:
+            '', // Empty - status will be set when vehicle has first log/transaction
       );
 
       entry.validate(); // Throws if invalid

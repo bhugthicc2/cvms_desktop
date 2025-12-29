@@ -12,14 +12,17 @@ import '../../bloc/vehicle_cubit.dart';
 class VehicleDataSource extends DataGridSource {
   final List<VehicleEntry> _originalEntries;
   final bool _showCheckbox;
+  final bool _showStatus;
   final BuildContext? _context;
 
   VehicleDataSource({
     required List<VehicleEntry> vehicleEntries,
     bool showCheckbox = false,
+    bool showStatus = true,
     BuildContext? context,
   }) : _originalEntries = List.of(vehicleEntries),
        _showCheckbox = showCheckbox,
+       _showStatus = showStatus,
        _context = context {
     _sortByCreatedAtDesc();
     _buildRows();
@@ -73,9 +76,16 @@ class VehicleDataSource extends DataGridSource {
         columnName: 'licenseNumber',
         value: entry.licenseNumber,
       ),
-      DataGridCell<String>(columnName: 'status', value: entry.status),
-      DataGridCell<String>(columnName: 'actions', value: ''),
     ]);
+
+    // Only add status cell if status column is shown
+    if (_showStatus) {
+      cells.add(
+        DataGridCell<String>(columnName: 'status', value: entry.status),
+      );
+    }
+
+    cells.add(DataGridCell<String>(columnName: 'actions', value: ''));
 
     return cells;
   }

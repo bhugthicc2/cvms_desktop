@@ -166,17 +166,27 @@ class VehicleTable extends StatelessWidget {
             ],
             Spacing.vertical(size: AppFontSizes.medium),
             Expanded(
-              child: CustomTable(
-                dataSource: VehicleDataSource(
-                  vehicleEntries: entries,
-                  showCheckbox: state.isBulkModeEnabled,
-                  context: context,
-                ),
-                columns: VehicleTableColumns.getColumns(
-                  showCheckbox: state.isBulkModeEnabled,
-                ),
-                onSearchCleared: () {
-                  searchController.clear();
+              child: Builder(
+                builder: (context) {
+                  // Show status column if at least one vehicle in the system has logs
+                  // Individual cells will show empty for vehicles without logs
+                  final showStatus = state.vehiclesWithLogs.isNotEmpty;
+
+                  return CustomTable(
+                    dataSource: VehicleDataSource(
+                      vehicleEntries: entries,
+                      showCheckbox: state.isBulkModeEnabled,
+                      showStatus: showStatus,
+                      context: context,
+                    ),
+                    columns: VehicleTableColumns.getColumns(
+                      showCheckbox: state.isBulkModeEnabled,
+                      showStatus: showStatus,
+                    ),
+                    onSearchCleared: () {
+                      searchController.clear();
+                    },
+                  );
                 },
               ),
             ),
