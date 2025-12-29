@@ -42,7 +42,7 @@ class DashboardCubit extends Cubit<DashboardState> {
         _refreshVehicleCounts();
       }
     });
-
+      
     // violations stream
     _violationsSub = repository.streamTotalViolations().listen((count) {
       if (!isClosed) {

@@ -1,30 +1,98 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:flutter/material.dart';
+import 'package:cvms_desktop/features/activity_logs/bloc/activity_logs_cubit.dart';
+import 'package:cvms_desktop/features/activity_logs/data/activity_logs_repository.dart';
+import 'package:cvms_desktop/features/activity_logs/models/activity_entry.dart';
+import 'package:cvms_desktop/features/activity_logs/widgets/tables/activity_table.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_loading_indicator.dart';
 
-class ActivityLogsPage extends StatelessWidget {
+class ActivityLogsPage extends StatefulWidget {
   const ActivityLogsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<ActivityLogsPage> createState() => _ActivityLogsPageState();
+}
+
+class _ActivityLogsPageState extends State<ActivityLogsPage> {
+  final TextEditingController searchController = TextEditingController();
+  late final ActivityLogsCubit _cubit;
+  Timer? _debounce;
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit = ActivityLogsCubit(ActivityLogsRepository());
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _cubit.close();
+    searchController.dispose();
+    super.dispose();
+  }
+
+
+  Widget _buildLoadingState() {
+    return const Center(child: CustomLoadingIndicator());
+  }
+
+  Widget _buildErrorState(String error) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, color: Colors.red, size: 48),
+          const SizedBox(height: 16),
+          Text(
+            'Failed to load activity logs',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            error,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () => _cubit.init(),
+            child: const Text('Retry'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent(List<ActivityLog> logs) {
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.medium),
-      child: Container(
-        height: double.infinity,
-        width: double.infinity,
-        padding: const EdgeInsets.all(AppSpacing.medium),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.grey.withValues(alpha: 0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: const SizedBox.shrink(), // todo empty container
+      child: ActivityTable(
+        title: "Activity Logs",
+        logs: logs,
+        searchController: searchController,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider.value(
+      value: _cubit,
+      child: BlocBuilder<ActivityLogsCubit, ActivityLogsState>(
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: AppColors.greySurface,
+            body: state.allLogs.isEmpty && state.error == null
+                ? _buildLoadingState()
+                : state.error != null
+                    ? _buildErrorState(state.error!)
+                    : _buildContent(state.filteredLogs),
+          );
+        },
       ),
     );
   }
