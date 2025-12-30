@@ -25,6 +25,8 @@ class TopViolationsDetailView extends StatelessWidget {
           children: [
             Expanded(
               child: BarChartWidget(
+                showSearchBar: true,
+                showViewBtn: false,
                 onViewTap: () {},
                 data: data,
                 onBarChartPointTap: onBarChartPointTap,
@@ -38,4 +40,5 @@ class TopViolationsDetailView extends StatelessWidget {
     );
   }
 }
+
 //todo add a detailed violation report of each violation type

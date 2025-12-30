@@ -25,6 +25,9 @@ class VehicleDistributionDetailView extends StatelessWidget {
           children: [
             Expanded(
               child: DonutChartWidget(
+                controller: SearchController(),
+                showSearchBar: true,
+                showViewBtn: false,
                 onViewTap: () {},
                 data: data,
                 onDonutChartPointTap: onDonutChartPointTap,

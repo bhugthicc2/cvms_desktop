@@ -25,6 +25,7 @@ class VehicleLogsDetailView extends StatelessWidget {
           children: [
             Expanded(
               child: LineChartWidget(
+                showViewBtn: false,
                 onViewTap: () {},
                 data: data,
                 onLineChartPointTap: onLineChartPointTap,

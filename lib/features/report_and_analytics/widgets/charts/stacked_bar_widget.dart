@@ -9,6 +9,9 @@ class StackedBarWidget extends StatelessWidget {
   final VoidCallback onViewTap;
   final String title;
   final Function(ChartPointDetails)? onStackBarPointTapped;
+  final bool showViewBtn;
+  final bool showSearchBar;
+  final TextEditingController? controller;
 
   const StackedBarWidget({
     super.key,
@@ -16,6 +19,9 @@ class StackedBarWidget extends StatelessWidget {
     this.title = '',
     this.onStackBarPointTapped,
     required this.onViewTap,
+    this.showViewBtn = true,
+    this.showSearchBar = false,
+    this.controller,
   });
 
   @override
@@ -60,7 +66,13 @@ class StackedBarWidget extends StatelessWidget {
             if (title.isNotEmpty)
               Align(
                 alignment: Alignment.centerLeft,
-                child: CustomChartTitle(title: title, onViewTap: onViewTap),
+                child: CustomChartTitle(
+                  title: title,
+                  onViewTap: onViewTap,
+                  showViewBtn: showViewBtn,
+                  showSearchBar: showSearchBar,
+                  controller: controller,
+                ),
               ),
             Expanded(
               child: SfCartesianChart(

@@ -10,6 +10,9 @@ class BarChartWidget extends StatelessWidget {
   final VoidCallback onViewTap;
   final String title;
   final Function(ChartPointDetails)? onBarChartPointTap;
+  final bool showViewBtn;
+  final bool showSearchBar;
+  final TextEditingController? controller;
 
   const BarChartWidget({
     super.key,
@@ -17,6 +20,9 @@ class BarChartWidget extends StatelessWidget {
     this.title = '',
     this.onBarChartPointTap,
     required this.onViewTap,
+    this.showViewBtn = true,
+    this.showSearchBar = false,
+    this.controller,
   });
 
   @override
@@ -60,7 +66,13 @@ class BarChartWidget extends StatelessWidget {
             if (title.isNotEmpty)
               Align(
                 alignment: Alignment.centerLeft,
-                child: CustomChartTitle(title: title, onViewTap: onViewTap),
+                child: CustomChartTitle(
+                  title: title,
+                  onViewTap: onViewTap,
+                  showSearchBar: showSearchBar,
+                  showViewBtn: showViewBtn,
+                  controller: controller,
+                ),
               ),
             Expanded(
               child: MouseRegion(

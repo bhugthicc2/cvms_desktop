@@ -14,7 +14,10 @@ class CustomSidebarHeader extends StatelessWidget {
       height: AppDimensions.headerHeight,
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: AppColors.lineColor, width: 1),
+          bottom: BorderSide(
+            color: AppColors.lineColor.withValues(alpha: 0.4),
+            width: 1,
+          ),
         ),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 50 * 0.25, vertical: 9),

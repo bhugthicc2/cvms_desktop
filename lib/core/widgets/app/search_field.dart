@@ -14,6 +14,7 @@ class SearchField extends StatelessWidget {
   final double hintFontSize;
   final double txtFontSize;
   final double searchFieldHeight;
+  final double hoverScale;
 
   const SearchField({
     super.key,
@@ -27,12 +28,13 @@ class SearchField extends StatelessWidget {
     this.hintFontSize = AppFontSizes.medium,
     this.txtFontSize = AppFontSizes.medium,
     this.searchFieldHeight = 0,
+    this.hoverScale = 1.02,
   });
 
   @override
   Widget build(BuildContext context) {
     return HoverGrow(
-      hoverScale: 1.02,
+      hoverScale: hoverScale,
       child: Container(
         height: searchFieldHeight,
         decoration: BoxDecoration(

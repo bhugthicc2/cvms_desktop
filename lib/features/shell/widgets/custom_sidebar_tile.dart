@@ -48,12 +48,19 @@ class _CustomSidebarTileState extends State<CustomSidebarTile> {
       child: HoverGrow(
         onTap: widget.onTap,
         child: AnimatedContainer(
+          decoration: BoxDecoration(
+            color: _getBackgroundColor(),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(999),
+              bottomLeft: Radius.circular(999),
+            ),
+          ),
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(
             horizontal: 50 * 0.25,
             vertical: 11,
           ),
-          color: _getBackgroundColor(),
+
           child: Row(
             children: [
               Image.asset(widget.item.icon, height: 24, width: 24),

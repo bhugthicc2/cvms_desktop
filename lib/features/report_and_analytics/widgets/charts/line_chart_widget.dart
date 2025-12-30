@@ -1,6 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
+import 'package:cvms_desktop/core/widgets/app/search_field.dart';
 import 'package:cvms_desktop/features/report_and_analytics/widgets/button/custom_view_button.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -11,6 +12,9 @@ class LineChartWidget extends StatelessWidget {
   final String title;
   final Function(ChartPointDetails)? onLineChartPointTap;
   final VoidCallback onViewTap;
+  final bool showViewBtn;
+  final bool showSearchBar;
+  final TextEditingController? controller;
 
   const LineChartWidget({
     super.key,
@@ -18,6 +22,9 @@ class LineChartWidget extends StatelessWidget {
     this.title = '',
     this.onLineChartPointTap,
     required this.onViewTap,
+    this.showViewBtn = true,
+    this.showSearchBar = false,
+    this.controller,
   });
 
   @override
@@ -84,7 +91,9 @@ class LineChartWidget extends StatelessWidget {
                     ///todo
                   ),
                   Spacer(),
-                  CustomViewButton(onTap: onViewTap),
+                  if (showViewBtn) CustomViewButton(onTap: onViewTap),
+                  if (showSearchBar && controller != null)
+                    SearchField(controller: controller!),
                 ],
               ),
             Expanded(

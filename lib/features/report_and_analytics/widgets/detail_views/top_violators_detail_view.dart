@@ -25,6 +25,8 @@ class TopViolatorsDetailView extends StatelessWidget {
           children: [
             Expanded(
               child: StackedBarWidget(
+                showViewBtn: false,
+
                 onViewTap: () {},
                 data: data,
                 onStackBarPointTapped: onStackBarPointTapped,
@@ -38,4 +40,5 @@ class TopViolatorsDetailView extends StatelessWidget {
     );
   }
 }
+
 //todo add a detailed violation report of each vehicle/student

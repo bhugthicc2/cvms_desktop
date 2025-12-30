@@ -10,6 +10,9 @@ class DonutChartWidget extends StatelessWidget {
   final List<ChartDataModel> data;
   final String title;
   final Function(ChartPointDetails)? onDonutChartPointTap;
+  final bool showViewBtn;
+  final bool showSearchBar;
+  final TextEditingController? controller;
 
   const DonutChartWidget({
     super.key,
@@ -17,6 +20,9 @@ class DonutChartWidget extends StatelessWidget {
     this.title = '',
     this.onDonutChartPointTap,
     required this.onViewTap,
+    this.showViewBtn = true,
+    this.showSearchBar = false,
+    this.controller,
   });
 
   @override
@@ -62,7 +68,13 @@ class DonutChartWidget extends StatelessWidget {
             if (title.isNotEmpty)
               Align(
                 alignment: Alignment.centerLeft,
-                child: CustomChartTitle(title: title, onViewTap: onViewTap),
+                child: CustomChartTitle(
+                  title: title,
+                  onViewTap: onViewTap,
+                  showViewBtn: showViewBtn,
+                  showSearchBar: showSearchBar,
+                  controller: controller,
+                ),
               ),
 
             Expanded(
@@ -150,6 +162,7 @@ class DonutChartWidget extends StatelessWidget {
                           innerRadius: '60%',
                           strokeWidth: 2,
                           strokeColor: AppColors.white,
+
                           pointColorMapper: (data, index) {
                             final colors = [
                               AppColors.donutBlue,
