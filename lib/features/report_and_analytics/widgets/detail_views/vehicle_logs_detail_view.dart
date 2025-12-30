@@ -39,3 +39,4 @@ class VehicleLogsDetailView extends StatelessWidget {
   }
 }
 
+//todo add a detailed vehicle logs report (timeline i think) for each vehicle

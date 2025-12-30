@@ -38,4 +38,4 @@ class TopViolationsDetailView extends StatelessWidget {
     );
   }
 }
-
+//todo add a detailed violation report of each violation type

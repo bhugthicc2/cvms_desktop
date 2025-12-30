@@ -38,4 +38,4 @@ class TopViolatorsDetailView extends StatelessWidget {
     );
   }
 }
-
+//todo add a detailed violation report of each vehicle/student

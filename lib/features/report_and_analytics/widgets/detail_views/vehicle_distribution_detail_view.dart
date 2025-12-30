@@ -38,3 +38,5 @@ class VehicleDistributionDetailView extends StatelessWidget {
     );
   }
 }
+
+//todo add a detailed distribution report
