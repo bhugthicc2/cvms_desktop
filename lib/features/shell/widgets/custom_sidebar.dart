@@ -3,7 +3,6 @@ import 'package:cvms_desktop/features/shell/models/nav_item.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_sidebar_header.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_sidebar_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CustomSidebar extends StatelessWidget {
   final bool isExpanded;
@@ -22,21 +21,21 @@ class CustomSidebar extends StatelessWidget {
   });
 
   final List<NavItem> items = [
-    NavItem(icon: PhosphorIconsRegular.squaresFour, label: "Dashboard"),
+    NavItem(icon: 'assets/icons/dashboard.png', label: "Dashboard"),
     NavItem(
-      icon: PhosphorIconsRegular.notepad,
+      icon: 'assets/icons/vehicle_logs.png',
       label: "Vehicle Logs Management",
     ),
-    NavItem(icon: PhosphorIconsRegular.motorcycle, label: "Vehicle Management"),
-    NavItem(icon: PhosphorIconsRegular.users, label: "User Management"),
-    NavItem(icon: PhosphorIconsRegular.warning, label: "Violation Management"),
     NavItem(
-      icon: PhosphorIconsRegular.chartLineUp,
-      label: "Reports and Analytics",
+      icon: 'assets/icons/vehicle_management.png',
+      label: "Vehicle Management",
     ),
-    NavItem(icon: PhosphorIconsRegular.clock, label: "Activity Logs"),
-    NavItem(icon: PhosphorIconsRegular.userCircle, label: "Profile"),
-    NavItem(icon: PhosphorIconsRegular.gearFine, label: "Settings"),
+    NavItem(icon: 'assets/icons/user.png', label: "User Management"),
+    NavItem(icon: 'assets/icons/violation.png', label: "Violation Management"),
+    NavItem(icon: 'assets/icons/analytics.png', label: "Reports and Analytics"),
+    NavItem(icon: 'assets/icons/activity.png', label: "Activity Logs"),
+    NavItem(icon: 'assets/icons/profile.png', label: "Profile"),
+    NavItem(icon: 'assets/icons/setting.png', label: "Settings"),
   ];
 
   @override
@@ -78,7 +77,7 @@ class CustomSidebar extends StatelessWidget {
           //LOGOUT TILE DAWG
           CustomSidebarTile(
             hover: () {},
-            item: NavItem(icon: PhosphorIconsRegular.signOut, label: "Logout"),
+            item: NavItem(icon: 'assets/icons/logout.png', label: "Logout"),
             iconColor: AppColors.error,
             labelColor: AppColors.error,
             isExpanded: isExpanded,

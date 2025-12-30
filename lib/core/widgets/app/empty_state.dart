@@ -53,7 +53,6 @@ class EmptyState extends StatelessWidget {
           Text(
             title ?? config.title,
             style: const TextStyle(
-              fontFamily: 'Sora',
               fontSize: AppFontSizes.xLarge,
               fontWeight: FontWeight.w600,
               color: AppColors.black,
@@ -65,7 +64,6 @@ class EmptyState extends StatelessWidget {
           Text(
             subtitle ?? config.subtitle,
             style: const TextStyle(
-              fontFamily: 'Sora',
               fontSize: AppFontSizes.medium,
               fontWeight: FontWeight.w400,
               color: AppColors.grey,
@@ -90,7 +88,6 @@ class EmptyState extends StatelessWidget {
               child: Text(
                 actionText!,
                 style: const TextStyle(
-                  fontFamily: 'Sora',
                   fontSize: AppFontSizes.medium,
                   fontWeight: FontWeight.w500,
                 ),

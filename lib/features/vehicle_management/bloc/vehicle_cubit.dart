@@ -44,10 +44,9 @@ class VehicleCubit extends Cubit<VehicleState> {
     try {
       final entries = await repository.fetchVehicles();
       final vehiclesWithLogs = await logsRepository.getVehiclesWithLogs();
-      emit(state.copyWith(
-        allEntries: entries,
-        vehiclesWithLogs: vehiclesWithLogs,
-      ));
+      emit(
+        state.copyWith(allEntries: entries, vehiclesWithLogs: vehiclesWithLogs),
+      );
       _applyFilters();
     } catch (e) {
       emit(state.copyWith(error: e.toString()));
@@ -97,10 +96,12 @@ class VehicleCubit extends Cubit<VehicleState> {
         if (!isClosed) {
           try {
             final vehiclesWithLogs = await logsRepository.getVehiclesWithLogs();
-            emit(state.copyWith(
-              allEntries: entries,
-              vehiclesWithLogs: vehiclesWithLogs,
-            ));
+            emit(
+              state.copyWith(
+                allEntries: entries,
+                vehiclesWithLogs: vehiclesWithLogs,
+              ),
+            );
             _applyFilters();
           } catch (e) {
             // If fetching logs fails, still update vehicles but keep existing logs set
@@ -111,6 +112,7 @@ class VehicleCubit extends Cubit<VehicleState> {
       },
       onError: (error) {
         if (!isClosed) {
+          //todo add exception handling to handle internet outage
           emit(state.copyWith(error: error.toString()));
         }
       },

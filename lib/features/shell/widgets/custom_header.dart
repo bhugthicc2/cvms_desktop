@@ -2,6 +2,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:cvms_desktop/core/theme/app_dimensions.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_window_buttons.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,8 @@ class CustomHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         textBaseline: TextBaseline.alphabetic,
         children: [
-          InkWell(
+          HoverGrow(
+            hoverScale: 1.1,
             onTap: onMenuPressed,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -65,7 +67,7 @@ class CustomHeader extends StatelessWidget {
                   currentUser,
                   style: const TextStyle(
                     color: AppColors.black,
-                    fontFamily: 'Sora',
+
                     fontWeight: FontWeight.w500,
                     fontSize: AppFontSizes.small,
                     height: 1.0,

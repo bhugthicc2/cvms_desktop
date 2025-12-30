@@ -11,7 +11,6 @@ class TextSubHeading extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-        fontFamily: 'Sora',
         color: AppColors.grey,
         fontWeight: FontWeight.w400,
         fontSize: AppFontSizes.small,

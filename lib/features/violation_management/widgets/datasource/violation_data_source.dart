@@ -128,7 +128,7 @@ class ViolationDataSource extends DataGridSource {
             maxLines: 2,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Sora',
+              fontFamily: 'Poppins',
             ),
           ),
         );
@@ -144,7 +144,7 @@ class ViolationDataSource extends DataGridSource {
             maxLines: 2,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Sora',
+              fontFamily: 'Poppins',
             ),
           ),
         );
@@ -186,7 +186,7 @@ class ViolationDataSource extends DataGridSource {
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Sora',
+              fontFamily: 'Poppins',
             ),
           ),
         );

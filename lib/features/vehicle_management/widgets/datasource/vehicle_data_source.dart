@@ -142,7 +142,7 @@ class VehicleDataSource extends DataGridSource {
             maxLines: 2,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Sora',
+              fontFamily: 'Poppins',
             ),
           ),
         );
@@ -158,7 +158,7 @@ class VehicleDataSource extends DataGridSource {
             maxLines: 2,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Sora',
+              fontFamily: 'Poppins',
             ),
           ),
         );
@@ -232,7 +232,7 @@ class VehicleDataSource extends DataGridSource {
             maxLines: 2,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Sora',
+              fontFamily: 'Poppins',
             ),
           ),
         );

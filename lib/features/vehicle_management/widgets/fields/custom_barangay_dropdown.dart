@@ -61,10 +61,12 @@ class _CustomBarangayDropdownState extends State<CustomBarangayDropdown> {
                   fontWeight: FontWeight.normal,
                   fontSize: AppFontSizes.medium,
                   color: AppColors.grey,
+                  fontFamily: 'Poppins',
                 ),
                 floatingLabelStyle: const TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: AppFontSizes.large,
+                  fontFamily: 'Poppins',
                   color: AppColors.grey,
                 ),
                 border: InputBorder.none,
@@ -99,6 +101,7 @@ class _CustomBarangayDropdownState extends State<CustomBarangayDropdown> {
             child: Text(
               _errorMessage!,
               style: const TextStyle(
+                fontFamily: 'Poppins',
                 fontSize: AppFontSizes.small,
                 color: AppColors.error,
               ),

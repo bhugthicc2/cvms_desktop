@@ -6,12 +6,39 @@ import '../../models/chart_data_model.dart';
 
 class StackedBarWidget extends StatelessWidget {
   final List<ChartDataModel> data;
+  final VoidCallback onViewTap;
   final String title;
+  final Function(ChartPointDetails)? onStackBarPointTapped;
 
-  const StackedBarWidget({super.key, required this.data, this.title = ''});
+  const StackedBarWidget({
+    super.key,
+    required this.data,
+    this.title = '',
+    this.onStackBarPointTapped,
+    required this.onViewTap,
+  });
 
   @override
   Widget build(BuildContext context) {
+    // Safety check: return empty state if data is empty
+    if (data.isEmpty) {
+      return Container(
+        margin: EdgeInsets.zero,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.grey.withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: const Center(child: Text('No data available')),
+      );
+    }
+
     return Container(
       margin: EdgeInsets.zero,
 
@@ -33,7 +60,7 @@ class StackedBarWidget extends StatelessWidget {
             if (title.isNotEmpty)
               Align(
                 alignment: Alignment.centerLeft,
-                child: CustomChartTitle(title: title),
+                child: CustomChartTitle(title: title, onViewTap: onViewTap),
               ),
             Expanded(
               child: SfCartesianChart(
@@ -41,6 +68,7 @@ class StackedBarWidget extends StatelessWidget {
                 tooltipBehavior: TooltipBehavior(enable: true),
                 series: <CartesianSeries>[
                   BarSeries<ChartDataModel, String>(
+                    onPointTap: onStackBarPointTapped,
                     dataSource: data,
                     xValueMapper: (d, _) => d.category,
                     yValueMapper: (d, _) => d.value,

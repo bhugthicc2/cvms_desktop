@@ -41,7 +41,6 @@ class CustomQrCard extends StatelessWidget {
                     Text(
                       'Vehicle',
                       style: TextStyle(
-                        fontFamily: 'Sora',
                         fontWeight: FontWeight.bold,
                         fontSize: AppFontSizes.xxxLarge + 3,
                         color: AppColors.white,
@@ -50,7 +49,6 @@ class CustomQrCard extends StatelessWidget {
                     Text(
                       'Pass',
                       style: TextStyle(
-                        fontFamily: 'Sora',
                         fontWeight: FontWeight.bold,
                         fontSize: AppFontSizes.xxxLarge + 3,
                         color: AppColors.yellow,
@@ -61,7 +59,6 @@ class CustomQrCard extends StatelessWidget {
                 Text(
                   'JRMSU | KATIPUNAN',
                   style: TextStyle(
-                    fontFamily: 'Sora',
                     fontWeight: FontWeight.w400,
                     fontSize: AppFontSizes.medium,
                     color: AppColors.white.withValues(alpha: 0.8),
@@ -71,7 +68,6 @@ class CustomQrCard extends StatelessWidget {
                 Text(
                   plateNumber,
                   style: TextStyle(
-                    fontFamily: 'Sora',
                     fontWeight: FontWeight.bold,
                     fontSize: AppFontSizes.large,
                     fontStyle: FontStyle.italic,
@@ -81,7 +77,6 @@ class CustomQrCard extends StatelessWidget {
                 Text(
                   '*This sticker will be valid until March 2026. Please renew before the expiration. Thank you.',
                   style: TextStyle(
-                    fontFamily: 'Sora',
                     fontWeight: FontWeight.w400,
                     fontSize: AppFontSizes.xSmall,
                     color: AppColors.white.withValues(alpha: 0.3),

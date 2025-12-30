@@ -63,7 +63,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
           widget.title,
           style: const TextStyle(
             fontSize: AppFontSizes.xxLarge,
-            fontFamily: 'Sora',
+
             fontWeight: FontWeight.w600,
             color: AppColors.white,
           ),
@@ -116,19 +116,13 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                       const SizedBox(width: 8),
                       Text(
                         widget.btnTxt,
-                        style: const TextStyle(
-                          fontFamily: 'Sora',
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
                     ],
                   )
                   : Text(
                     widget.btnTxt,
-                    style: const TextStyle(
-                      fontFamily: 'Sora',
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
         ),
       ],

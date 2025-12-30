@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,36 +20,41 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 55,
-      width: double.infinity,
+    return HoverGrow(
+      child: SizedBox(
+        height: 55,
+        width: double.infinity,
 
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-          foregroundColor: AppColors.white,
-          backgroundColor: btnSubmitColor ?? AppColors.primary,
-          elevation: 0,
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            foregroundColor: AppColors.white,
+            backgroundColor: btnSubmitColor ?? AppColors.primary,
+            elevation: 0,
+          ),
+          child:
+              isLoading
+                  ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      color: AppColors.white,
+                      strokeWidth: 2.5,
+                    ),
+                  )
+                  : Text(
+                    text,
+                    style: GoogleFonts.poppins(
+                      fontSize: AppFontSizes.medium,
+                      letterSpacing: 0.8,
+
+                      color: AppColors.white,
+                    ),
+                  ),
         ),
-        child:
-            isLoading
-                ? const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    color: AppColors.white,
-                    strokeWidth: 2.5,
-                  ),
-                )
-                : Text(
-                  text,
-                  style: GoogleFonts.sora(
-                    fontSize: AppFontSizes.medium,
-                    letterSpacing: 0.8,
-                    color: AppColors.white,
-                  ),
-                ),
       ),
     );
   }

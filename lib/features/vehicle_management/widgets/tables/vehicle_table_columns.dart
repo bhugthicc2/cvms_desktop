@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:cvms_desktop/core/widgets/table/table_column_factory.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_checkbox.dart';
@@ -20,24 +21,27 @@ class VehicleTableColumns {
           allowSorting: false,
           columnName: 'checkbox',
           width: 50,
-          label: Container(
-            alignment: Alignment.center,
-            child: BlocBuilder<VehicleCubit, VehicleState>(
-              builder: (context, state) {
-                final allFiltered = state.filteredEntries;
-                final allSelected =
-                    allFiltered.isNotEmpty &&
-                    allFiltered.every(
-                      (entry) => state.selectedEntries.contains(entry),
-                    );
+          label: HoverGrow(
+            cursor: SystemMouseCursors.click,
+            child: Container(
+              alignment: Alignment.center,
+              child: BlocBuilder<VehicleCubit, VehicleState>(
+                builder: (context, state) {
+                  final allFiltered = state.filteredEntries;
+                  final allSelected =
+                      allFiltered.isNotEmpty &&
+                      allFiltered.every(
+                        (entry) => state.selectedEntries.contains(entry),
+                      );
 
-                return CustomCheckbox(
-                  value: allSelected,
-                  onChanged: (value) {
-                    context.read<VehicleCubit>().selectAllEntries();
-                  },
-                );
-              },
+                  return CustomCheckbox(
+                    value: allSelected,
+                    onChanged: (value) {
+                      context.read<VehicleCubit>().selectAllEntries();
+                    },
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -68,16 +72,18 @@ class VehicleTableColumns {
       // TableColumnFactory.build(name: 'createdAt', label: 'Created At'),
       GridColumn(
         columnName: 'actions',
-        label: Container(
-          alignment: Alignment.center,
-          child: const Text(
-            'Actions',
-            style: TextStyle(
-              fontFamily: 'Sora',
-              fontWeight: FontWeight.w600,
-              fontSize: AppFontSizes.small,
-              color: AppColors.white,
-              overflow: TextOverflow.ellipsis,
+        label: HoverGrow(
+          child: Container(
+            alignment: Alignment.center,
+            child: const Text(
+              'Actions',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w600,
+                fontSize: AppFontSizes.small,
+                color: AppColors.white,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ),
         ),

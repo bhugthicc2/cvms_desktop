@@ -95,10 +95,10 @@ class _CustomDropdownFieldState<T> extends State<CustomDropdownField<T>> {
                       ? Text(
                         widget.hintText!,
                         style: const TextStyle(
-                          fontFamily: 'Sora',
                           fontWeight: FontWeight.w600,
                           color: AppColors.grey,
                           fontSize: AppFontSizes.medium,
+                          fontFamily: 'Poppins',
                         ),
                       )
                       : null,
@@ -113,10 +113,10 @@ class _CustomDropdownFieldState<T> extends State<CustomDropdownField<T>> {
               style:
                   widget.textStyle ??
                   const TextStyle(
-                    fontFamily: 'Sora',
                     fontWeight: FontWeight.w600,
                     color: AppColors.black,
                     fontSize: AppFontSizes.medium,
+                    fontFamily: 'Poppins',
                   ),
               dropdownColor: AppColors.white,
               items:
@@ -136,6 +136,7 @@ class _CustomDropdownFieldState<T> extends State<CustomDropdownField<T>> {
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.black,
                                 fontSize: AppFontSizes.medium,
+                                fontFamily: 'Poppins',
                               ),
                             ),
                           ),

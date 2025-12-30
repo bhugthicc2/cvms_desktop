@@ -61,7 +61,6 @@ class UserTableColumns {
           child: const Text(
             'Actions',
             style: TextStyle(
-              fontFamily: 'Sora',
               fontWeight: FontWeight.w600,
               fontSize: AppFontSizes.small,
               color: AppColors.white,

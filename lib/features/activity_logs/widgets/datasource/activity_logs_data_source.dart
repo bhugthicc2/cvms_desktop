@@ -131,7 +131,7 @@ class ActivityLogsDataSource extends DataGridSource {
             maxLines: 2,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Sora',
+              fontFamily: 'Poppins',
             ),
           ),
         );
@@ -151,7 +151,7 @@ class ActivityLogsDataSource extends DataGridSource {
               type,
               style: const TextStyle(
                 fontSize: AppFontSizes.small,
-                fontFamily: 'Sora',
+                fontFamily: 'Poppins',
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
               ),
@@ -167,7 +167,7 @@ class ActivityLogsDataSource extends DataGridSource {
             cell.value.toString(),
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Sora',
+              fontFamily: 'Poppins',
             ),
           ),
         );

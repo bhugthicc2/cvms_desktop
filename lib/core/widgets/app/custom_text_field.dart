@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -140,71 +141,78 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: widget.width,
-          height: widget.height,
-          padding:
-              widget.contentPadding ??
-              const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            border: Border.all(color: borderColor, width: 1),
-            color: widget.fillColor ?? AppColors.white,
-          ),
-          child: TextFormField(
-            controller: widget.controller,
-            keyboardType: widget.keyboardType,
-            validator: widget.validator,
-            onChanged: (value) {
-              widget.onChanged?.call(value);
-              if (widget.autovalidateMode ==
-                  AutovalidateMode.onUserInteraction) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  _validate(value);
-                });
-              }
-            },
-            autovalidateMode: widget.autovalidateMode,
-            obscuringCharacter: '*',
-            obscureText: _isObscured,
-            cursorColor: AppColors.primary,
-            enabled: widget.enabled,
-            maxLines: widget.maxLines,
-            maxLength: widget.maxLength,
-            inputFormatters: widget.inputFormatters,
-            focusNode: _focusNode,
-            style:
-                widget.textStyle ??
-                const TextStyle(
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.black,
+        HoverGrow(
+          hoverScale: 1.02,
+          child: Container(
+            width: widget.width,
+            height: widget.height,
+            padding:
+                widget.contentPadding ??
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(color: borderColor, width: 1),
+              color: widget.fillColor ?? AppColors.white,
+            ),
+            child: TextFormField(
+              controller: widget.controller,
+              keyboardType: widget.keyboardType,
+              validator: widget.validator,
+              onChanged: (value) {
+                widget.onChanged?.call(value);
+                if (widget.autovalidateMode ==
+                    AutovalidateMode.onUserInteraction) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _validate(value);
+                  });
+                }
+              },
+              autovalidateMode: widget.autovalidateMode,
+              obscuringCharacter: '*',
+              obscureText: _isObscured,
+              cursorColor: AppColors.primary,
+              enabled: widget.enabled,
+              maxLines: widget.maxLines,
+              maxLength: widget.maxLength,
+              inputFormatters: widget.inputFormatters,
+              focusNode: _focusNode,
+              style:
+                  widget.textStyle ??
+                  const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.black,
+                    fontSize: AppFontSizes.medium,
+                  ),
+              decoration: InputDecoration(
+                hintText: widget.hintText,
+                labelText: widget.labelText,
+                prefixIcon:
+                    widget.prefixIcon != null
+                        ? Icon(
+                          widget.prefixIcon,
+                          color: AppColors.grey,
+                          size: 20,
+                        )
+                        : null,
+                suffixIcon: _buildSuffixIcon(),
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                focusedErrorBorder: InputBorder.none,
+                labelStyle: const TextStyle(
+                  fontWeight: FontWeight.normal,
                   fontSize: AppFontSizes.medium,
+                  color: AppColors.grey,
                 ),
-            decoration: InputDecoration(
-              hintText: widget.hintText,
-              labelText: widget.labelText,
-              prefixIcon:
-                  widget.prefixIcon != null
-                      ? Icon(widget.prefixIcon, color: AppColors.grey, size: 20)
-                      : null,
-              suffixIcon: _buildSuffixIcon(),
-              border: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              focusedErrorBorder: InputBorder.none,
-              labelStyle: const TextStyle(
-                fontWeight: FontWeight.normal,
-                fontSize: AppFontSizes.medium,
-                color: AppColors.grey,
+                floatingLabelStyle: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: AppFontSizes.large,
+                  color: AppColors.grey,
+                ),
+                errorStyle: const TextStyle(fontSize: 0),
+                contentPadding: const EdgeInsets.symmetric(vertical: 10),
               ),
-              floatingLabelStyle: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: AppFontSizes.large,
-                color: AppColors.grey,
-              ),
-              errorStyle: const TextStyle(fontSize: 0),
-              contentPadding: const EdgeInsets.symmetric(vertical: 10),
             ),
           ),
         ),

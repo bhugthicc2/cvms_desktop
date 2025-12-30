@@ -7,12 +7,39 @@ import '../../models/chart_data_model.dart';
 
 class BarChartWidget extends StatelessWidget {
   final List<ChartDataModel> data;
+  final VoidCallback onViewTap;
   final String title;
+  final Function(ChartPointDetails)? onBarChartPointTap;
 
-  const BarChartWidget({super.key, required this.data, this.title = ''});
+  const BarChartWidget({
+    super.key,
+    required this.data,
+    this.title = '',
+    this.onBarChartPointTap,
+    required this.onViewTap,
+  });
 
   @override
   Widget build(BuildContext context) {
+    // Safety check: return empty state if data is empty
+    if (data.isEmpty) {
+      return Container(
+        margin: EdgeInsets.zero,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.grey.withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: const Center(child: Text('No data available')),
+      );
+    }
+
     return Container(
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
@@ -33,38 +60,50 @@ class BarChartWidget extends StatelessWidget {
             if (title.isNotEmpty)
               Align(
                 alignment: Alignment.centerLeft,
-                child: CustomChartTitle(title: title),
+                child: CustomChartTitle(title: title, onViewTap: onViewTap),
               ),
             Expanded(
-              child: SfCartesianChart(
-                primaryXAxis: CategoryAxis(
-                  // labelRotation: -45,
-                  labelIntersectAction:
-                      AxisLabelIntersectAction.wrap, // Allow wrapping
-                  labelStyle: const TextStyle(
-                    fontSize:
-                        AppFontSizes.small -
-                        2, // Slightly smaller text to fit better
+              child: MouseRegion(
+                cursor:
+                    onBarChartPointTap != null
+                        ? SystemMouseCursors.click
+                        : SystemMouseCursors.basic,
+                child: SfCartesianChart(
+                  primaryXAxis: CategoryAxis(
+                    // labelRotation: -45,
+                    labelIntersectAction:
+                        AxisLabelIntersectAction.wrap, // Allow wrapping
+                    labelStyle: const TextStyle(
+                      fontSize:
+                          AppFontSizes.small -
+                          2, // Slightly smaller text to fit better
+                    ),
                   ),
+                  tooltipBehavior: TooltipBehavior(enable: true),
+                  series: <CartesianSeries>[
+                    ColumnSeries<ChartDataModel, String>(
+                      onPointTap:
+                          onBarChartPointTap != null
+                              ? (details) => onBarChartPointTap!(details)
+                              : null,
+                      dataSource: data,
+                      xValueMapper: (d, _) => d.category,
+                      yValueMapper: (d, _) => d.value,
+                      dataLabelSettings: const DataLabelSettings(
+                        isVisible: true,
+                      ),
+                      pointColorMapper: (data, index) {
+                        final colors = [
+                          AppColors.donutBlue,
+                          AppColors.donutPurple,
+                          AppColors.chartOrange,
+                          AppColors.chartGreen,
+                        ];
+                        return colors[index % colors.length];
+                      },
+                    ),
+                  ],
                 ),
-                tooltipBehavior: TooltipBehavior(enable: true),
-                series: <CartesianSeries>[
-                  ColumnSeries<ChartDataModel, String>(
-                    dataSource: data,
-                    xValueMapper: (d, _) => d.category,
-                    yValueMapper: (d, _) => d.value,
-                    dataLabelSettings: const DataLabelSettings(isVisible: true),
-                    pointColorMapper: (data, index) {
-                      final colors = [
-                        AppColors.donutBlue,
-                        AppColors.donutPurple,
-                        AppColors.chartOrange,
-                        AppColors.chartGreen,
-                      ];
-                      return colors[index % colors.length];
-                    },
-                  ),
-                ],
               ),
             ),
           ],

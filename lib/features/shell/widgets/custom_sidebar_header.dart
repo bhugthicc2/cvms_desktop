@@ -46,7 +46,6 @@ class CustomSidebarHeader extends StatelessWidget {
                               Text(
                                 "JRMSU-K",
                                 style: TextStyle(
-                                  fontFamily: 'Sora',
                                   color: AppColors.yellow,
                                   fontWeight: FontWeight.bold,
                                   fontSize: AppFontSizes.large,

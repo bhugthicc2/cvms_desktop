@@ -22,7 +22,6 @@ class TableHeader extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              fontFamily: 'Sora',
               fontWeight: FontWeight.bold,
               fontSize: AppFontSizes.small,
               color: AppColors.tableHeaderColor,

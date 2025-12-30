@@ -6,13 +6,40 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../models/chart_data_model.dart';
 
 class DonutChartWidget extends StatelessWidget {
+  final VoidCallback onViewTap;
   final List<ChartDataModel> data;
   final String title;
+  final Function(ChartPointDetails)? onDonutChartPointTap;
 
-  const DonutChartWidget({super.key, required this.data, this.title = ''});
+  const DonutChartWidget({
+    super.key,
+    required this.data,
+    this.title = '',
+    this.onDonutChartPointTap,
+    required this.onViewTap,
+  });
 
   @override
   Widget build(BuildContext context) {
+    // Safety check: return empty state if data is empty
+    if (data.isEmpty) {
+      return Container(
+        margin: EdgeInsets.zero,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.grey.withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: const Center(child: Text('No data available')),
+      );
+    }
+
     final double total = data.fold<double>(0, (sum, d) => sum + d.value);
     return Container(
       margin: EdgeInsets.zero,
@@ -35,8 +62,9 @@ class DonutChartWidget extends StatelessWidget {
             if (title.isNotEmpty)
               Align(
                 alignment: Alignment.centerLeft,
-                child: CustomChartTitle(title: title),
+                child: CustomChartTitle(title: title, onViewTap: onViewTap),
               ),
+
             Expanded(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -103,6 +131,7 @@ class DonutChartWidget extends StatelessWidget {
                       tooltipBehavior: TooltipBehavior(enable: true),
                       series: <CircularSeries>[
                         DoughnutSeries<ChartDataModel, String>(
+                          onPointTap: onDonutChartPointTap,
                           dataSource: data,
                           xValueMapper: (d, _) => d.category,
                           yValueMapper: (d, _) => d.value,

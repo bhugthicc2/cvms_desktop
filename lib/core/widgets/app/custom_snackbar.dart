@@ -55,7 +55,7 @@ class CustomSnackBar {
           Expanded(
             child: Text(
               message,
-              style: GoogleFonts.sora(
+              style: GoogleFonts.poppins(
                 fontSize: AppFontSizes.medium,
                 color: textColor,
                 fontWeight: FontWeight.w600,

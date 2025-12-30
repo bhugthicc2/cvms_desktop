@@ -1,4 +1,5 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:flutter/material.dart';
 
 class CustomWindowIconButton extends StatelessWidget {
@@ -21,18 +22,28 @@ class CustomWindowIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Tooltip(
-      message: tooltip ?? "",
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(0),
-          hoverColor: hoverColor,
-          onTap: onPressed,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8.0),
-            child: Center(
-              child: Icon(icon, size: 18, color: iconColor ?? AppColors.black),
+    return HoverGrow(
+      hoverScale: 1.1,
+      child: Tooltip(
+        message: tooltip ?? "",
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(0),
+            hoverColor: hoverColor,
+            onTap: onPressed,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 15,
+                vertical: 8.0,
+              ),
+              child: Center(
+                child: Icon(
+                  icon,
+                  size: 18,
+                  color: iconColor ?? AppColors.black,
+                ),
+              ),
             ),
           ),
         ),

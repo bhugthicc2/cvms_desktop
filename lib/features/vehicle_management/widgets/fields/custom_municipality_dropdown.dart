@@ -62,11 +62,13 @@ class _CustomMunicipalityDropdownState
                   fontWeight: FontWeight.normal,
                   fontSize: AppFontSizes.medium,
                   color: AppColors.grey,
+                  fontFamily: 'Poppins',
                 ),
                 floatingLabelStyle: const TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: AppFontSizes.large,
                   color: AppColors.grey,
+                  fontFamily: 'Poppins',
                 ),
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
@@ -95,6 +97,7 @@ class _CustomMunicipalityDropdownState
               style: const TextStyle(
                 fontSize: AppFontSizes.small,
                 color: AppColors.error,
+                fontFamily: 'Poppins',
               ),
             ),
           ),

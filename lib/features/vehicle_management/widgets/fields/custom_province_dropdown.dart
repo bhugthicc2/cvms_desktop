@@ -60,11 +60,13 @@ class _CustomProvinceDropdownState extends State<CustomProvinceDropdown> {
                   fontWeight: FontWeight.normal,
                   fontSize: AppFontSizes.medium,
                   color: AppColors.grey,
+                  fontFamily: 'Poppins',
                 ),
                 floatingLabelStyle: const TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: AppFontSizes.large,
                   color: AppColors.grey,
+                  fontFamily: 'Poppins',
                 ),
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
@@ -93,6 +95,7 @@ class _CustomProvinceDropdownState extends State<CustomProvinceDropdown> {
               style: const TextStyle(
                 fontSize: AppFontSizes.small,
                 color: AppColors.error,
+                fontFamily: 'Poppins',
               ),
             ),
           ),

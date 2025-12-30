@@ -19,7 +19,7 @@ class CustomFormHeader extends StatelessWidget {
             'JRMSU - KATIPUNAN',
             style: TextStyle(
               fontWeight: FontWeight.w700,
-              fontFamily: 'Sora',
+
               fontSize: AppFontSizes.xxxxLarge,
               color: AppColors.black,
             ),

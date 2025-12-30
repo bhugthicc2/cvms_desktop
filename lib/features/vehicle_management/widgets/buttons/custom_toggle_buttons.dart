@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:flutter/material.dart';
 
 class CustomToggleButtons extends StatelessWidget {
@@ -17,28 +18,30 @@ class CustomToggleButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
+    return HoverGrow(
+      child: SizedBox(
+        height: 40,
 
-      child: GestureDetector(
-        onTap: () {
-          onTap();
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: color ?? AppColors.primary,
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Center(
-              child: Text(
-                '$title ($value)',
-                style: TextStyle(
-                  fontSize: AppFontSizes.small,
-                  color: AppColors.white,
-                  fontFamily: 'Sora',
-                  fontWeight: FontWeight.bold,
+        child: GestureDetector(
+          onTap: () {
+            onTap();
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: color ?? AppColors.primary,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Center(
+                child: Text(
+                  '$title ($value)',
+                  style: TextStyle(
+                    fontSize: AppFontSizes.small,
+                    color: AppColors.white,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

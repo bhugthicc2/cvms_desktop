@@ -32,11 +32,7 @@ class ToggleActions extends StatelessWidget {
       children: [
         Text(
           'Toggle actions:',
-          style: TextStyle(
-            color: AppColors.black,
-            fontFamily: 'Sora',
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: AppColors.black, fontWeight: FontWeight.w600),
         ),
         Spacing.horizontal(size: AppFontSizes.medium),
         CustomToggleButtons(

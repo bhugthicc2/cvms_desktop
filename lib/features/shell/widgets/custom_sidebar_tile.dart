@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:cvms_desktop/features/shell/models/nav_item.dart';
 import 'package:flutter/material.dart';
 
@@ -44,7 +45,7 @@ class _CustomSidebarTileState extends State<CustomSidebarTile> {
           _isHovered = false;
         });
       },
-      child: InkWell(
+      child: HoverGrow(
         onTap: widget.onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
@@ -55,11 +56,7 @@ class _CustomSidebarTileState extends State<CustomSidebarTile> {
           color: _getBackgroundColor(),
           child: Row(
             children: [
-              Icon(
-                widget.item.icon,
-                color: widget.iconColor ?? AppColors.white,
-                size: 20,
-              ),
+              Image.asset(widget.item.icon, height: 24, width: 24),
               AnimatedSize(
                 duration: const Duration(milliseconds: 300),
                 child: AnimatedOpacity(

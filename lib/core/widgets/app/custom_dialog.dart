@@ -149,10 +149,7 @@ class CustomDialog extends StatelessWidget {
                           ),
                           child: Text(
                             btnTxt,
-                            style: TextStyle(
-                              fontFamily: 'Sora',
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: TextStyle(fontWeight: FontWeight.w600),
                           ),
                         ),
                       )
@@ -168,10 +165,7 @@ class CustomDialog extends StatelessWidget {
                         ),
                         child: Text(
                           btnTxt,
-                          style: TextStyle(
-                            fontFamily: 'Sora',
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ),
                 ],

@@ -42,7 +42,6 @@ class CustomToggleButton extends StatelessWidget {
               style: const TextStyle(
                 fontSize: AppFontSizes.small,
                 fontWeight: FontWeight.w600,
-                fontFamily: 'Sora',
               ),
             ),
           ],

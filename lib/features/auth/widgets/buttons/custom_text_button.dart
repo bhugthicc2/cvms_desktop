@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextButton extends StatelessWidget {
@@ -24,23 +25,25 @@ class CustomTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        onPressed?.call();
-        if (routeName != null) {
-          Navigator.pushNamed(context, routeName!);
-        }
-      },
-      child: Text(
-        text,
-        style:
-            textStyle ??
-            TextStyle(
-              fontSize: fontSize ?? AppFontSizes.small,
-              fontFamily: 'Sora',
-              color: textColor ?? AppColors.primary,
-              fontWeight: FontWeight.w700,
-            ),
+    return HoverGrow(
+      child: TextButton(
+        onPressed: () {
+          onPressed?.call();
+          if (routeName != null) {
+            Navigator.pushNamed(context, routeName!);
+          }
+        },
+        child: Text(
+          text,
+          style:
+              textStyle ??
+              TextStyle(
+                fontSize: fontSize ?? AppFontSizes.small,
+
+                color: textColor ?? AppColors.primary,
+                fontWeight: FontWeight.w700,
+              ),
+        ),
       ),
     );
   }

@@ -39,7 +39,6 @@ class CellBadge extends StatelessWidget {
             style: TextStyle(
               color: textColor,
               fontSize: fontSize ?? AppFontSizes.small,
-              fontFamily: 'Sora',
             ),
           ),
         ),

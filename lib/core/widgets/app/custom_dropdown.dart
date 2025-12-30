@@ -1,4 +1,5 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:flutter/material.dart';
 
 class CustomDropdown extends StatefulWidget {
@@ -9,17 +10,22 @@ class CustomDropdown extends StatefulWidget {
   final double horizontalPadding;
   final Color? backgroundColor;
   final Color? color;
+  final double verticalPadding;
+  final double fontSize;
+  final bool addPadding;
 
   const CustomDropdown({
     super.key,
     required this.items,
     required this.initialValue,
     required this.onChanged,
-
     this.borderRadius = 5,
     this.horizontalPadding = 12,
     this.backgroundColor = AppColors.white,
     this.color = AppColors.black,
+    this.verticalPadding = 12,
+    this.fontSize = 12,
+    this.addPadding = false,
   });
 
   @override
@@ -44,13 +50,6 @@ class _CustomDropdownState extends State<CustomDropdown> {
         final isSmall = width < 300;
         final isMedium = width >= 300 && width < 600;
 
-        final fontSize =
-            isSmall
-                ? 12.0
-                : isMedium
-                ? 14.0
-                : 16.0;
-
         final iconSize =
             isSmall
                 ? 16.0
@@ -60,57 +59,74 @@ class _CustomDropdownState extends State<CustomDropdown> {
 
         final padding = isSmall ? 8.0 : widget.horizontalPadding;
 
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: padding - 2),
-          decoration: BoxDecoration(
-            color: widget.backgroundColor,
-            borderRadius: BorderRadius.circular(widget.borderRadius),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.grey.withValues(alpha: 0.1),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              borderRadius: BorderRadius.circular(5),
-              value: selected,
-              icon: Icon(
-                Icons.arrow_drop_down,
-                color: widget.color ?? AppColors.white,
-                size: iconSize,
-              ),
-              dropdownColor: widget.backgroundColor,
-              style: TextStyle(
-                color: AppColors.grey,
-                fontFamily: 'Sora',
-                fontWeight: FontWeight.w600,
-                fontSize: fontSize,
-              ),
-              items:
-                  widget.items
-                      .map(
-                        (e) => DropdownMenuItem<String>(
-                          value: e,
-                          child: Text(
-                            overflow: TextOverflow.ellipsis,
-                            e,
-                            style: TextStyle(
-                              color: widget.color ?? AppColors.white,
-                              fontSize: fontSize,
-                            ),
+        return HoverGrow(
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: padding - 2,
+              vertical: widget.verticalPadding,
+            ),
+            decoration: BoxDecoration(
+              color: widget.backgroundColor,
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                padding: EdgeInsets.zero,
+                isDense: true,
+                borderRadius: BorderRadius.circular(5),
+                value: selected,
+                icon: Icon(
+                  Icons.arrow_drop_down,
+                  color: widget.color ?? AppColors.white,
+                  size: iconSize,
+                ),
+                dropdownColor: widget.backgroundColor,
+                style: TextStyle(
+                  color: AppColors.grey,
+
+                  fontWeight: FontWeight.w600,
+                  fontSize: widget.fontSize,
+                ),
+                items:
+                    widget.items
+                        .map(
+                          (e) => DropdownMenuItem<String>(
+                            value: e,
+                            child:
+                                widget.addPadding
+                                    ? Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: widget.verticalPadding,
+                                      ),
+                                      child: Text(
+                                        overflow: TextOverflow.ellipsis,
+                                        e,
+                                        style: TextStyle(
+                                          color: widget.color ?? AppColors.grey,
+                                          fontSize: widget.fontSize,
+                                          fontFamily: 'Poppins',
+                                        ),
+                                      ),
+                                    )
+                                    : Text(
+                                      overflow: TextOverflow.ellipsis,
+                                      e,
+                                      style: TextStyle(
+                                        color: widget.color ?? AppColors.grey,
+                                        fontSize: widget.fontSize,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    ),
                           ),
-                        ),
-                      )
-                      .toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() => selected = value);
-                  widget.onChanged(value);
-                }
-              },
+                        )
+                        .toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() => selected = value);
+                    widget.onChanged(value);
+                  }
+                },
+              ),
             ),
           ),
         );

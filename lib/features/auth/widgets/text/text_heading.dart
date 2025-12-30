@@ -10,7 +10,6 @@ class TextHeading extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-        fontFamily: 'Sora',
         fontWeight: FontWeight.w700,
         fontSize: AppFontSizes.xxxLarge,
       ),

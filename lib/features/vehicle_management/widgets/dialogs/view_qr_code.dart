@@ -99,7 +99,6 @@ class _ViewQrCodeDialogState extends State<ViewQrCodeDialog> {
                 Text(
                   widget.vehicle.ownerName,
                   style: TextStyle(
-                    fontFamily: 'Sora',
                     fontSize: AppFontSizes.xLarge,
                     fontWeight: FontWeight.bold,
                     color: AppColors.black,
