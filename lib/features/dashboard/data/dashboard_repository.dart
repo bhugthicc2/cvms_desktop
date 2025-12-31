@@ -24,22 +24,22 @@ class DashboardRepository {
     return snapshot.size; // quick count
   }
 
-  // Current entered vehicles
+  // Current entered vehicles (onsite or inside)
   Future<int> getTotalEnteredVehicles() async {
     final snapshot =
         await _firestore
             .collection('vehicles')
-            .where('status', isEqualTo: 'inside')
+            .where('status', whereIn: ['inside', 'onsite'])
             .get();
     return snapshot.size; // quick count
   }
 
-  // Current entered vehicles
+  // Current exited vehicles (offsite or outside)
   Future<int> getTotalExitedVehicles() async {
     final snapshot =
         await _firestore
             .collection('vehicles')
-            .where('status', isEqualTo: 'outside')
+            .where('status', whereIn: ['outside', 'offsite'])
             .get();
     return snapshot.size; // quick count
   }

@@ -38,6 +38,8 @@ class CellBadge extends StatelessWidget {
             maxLines: 1,
             style: TextStyle(
               color: textColor,
+
+              fontFamily: 'Poppins',
               fontSize: fontSize ?? AppFontSizes.small,
             ),
           ),

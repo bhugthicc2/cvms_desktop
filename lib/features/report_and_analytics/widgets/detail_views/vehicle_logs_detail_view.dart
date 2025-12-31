@@ -1,5 +1,8 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/app/search_field.dart';
+import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/report_and_analytics/models/chart_data_model.dart';
 import 'package:cvms_desktop/features/report_and_analytics/widgets/charts/line_chart_widget.dart';
 import 'package:flutter/material.dart';
@@ -17,27 +20,66 @@ class VehicleLogsDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String ownerName = "Jesie Gapol"; //todo
     return Container(
       color: AppColors.greySurface,
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.medium),
-        child: Column(
-          children: [
-            Expanded(
-              child: LineChartWidget(
-                showViewBtn: false,
-                onViewTap: () {},
-                data: data,
-                onLineChartPointTap: onLineChartPointTap,
-                title: 'Vehicle Logs Trend',
-              ),
+        child: Expanded(
+          child: Container(
+            margin: EdgeInsets.zero,
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.grey.withValues(alpha: 0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-            // Add more content here: data table, filters, etc.
-          ],
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(AppSpacing.medium),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Vehicle Logs Report - $ownerName',
+                        style: TextStyle(
+                          fontSize: AppFontSizes.medium,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+
+                      Spacer(),
+                      Expanded(
+                        child: SearchField(
+                          searchFieldHeight: 40,
+                          controller: SearchController(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: LineChartWidget(
+                    showViewBtn: false,
+                    showShadow: false,
+                    onViewTap: () {},
+                    onLineChartPointTap: (details) {},
+                    data: data,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
+
+        // Add more content here: data table, filters, etc.
       ),
     );
   }
 }
-
 //todo add a detailed vehicle logs report (timeline i think) for each vehicle

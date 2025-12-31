@@ -33,16 +33,22 @@ class DashboardCubit extends Cubit<DashboardState> {
           state.copyWith(
             allEntries: entries,
             enteredFiltered:
-                entries.where((e) => e.status == "inside").toList(),
+                entries
+                    .where((e) => e.status == "inside" || e.status == "onsite")
+                    .toList(),
             exitedFiltered:
-                entries.where((e) => e.status == "outside").toList(),
+                entries
+                    .where(
+                      (e) => e.status == "outside" || e.status == "offsite",
+                    )
+                    .toList(),
           ),
         );
 
         _refreshVehicleCounts();
       }
     });
-      
+
     // violations stream
     _violationsSub = repository.streamTotalViolations().listen((count) {
       if (!isClosed) {
@@ -94,7 +100,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   void filterEntered(String query) {
     final filtered =
         state.allEntries.where((e) {
-          return e.status == "inside" &&
+          return (e.status == "inside" || e.status == "onsite") &&
               (e.ownerName.toLowerCase().contains(query.toLowerCase()) ||
                   e.vehicleModel.toLowerCase().contains(query.toLowerCase()) ||
                   e.plateNumber.toLowerCase().contains(query.toLowerCase()));
@@ -106,7 +112,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   void filterExited(String query) {
     final filtered =
         state.allEntries.where((e) {
-          return e.status == "outside" &&
+          return (e.status == "outside" || e.status == "offsite") &&
               (e.ownerName.toLowerCase().contains(query.toLowerCase()) ||
                   e.vehicleModel.toLowerCase().contains(query.toLowerCase()) ||
                   e.plateNumber.toLowerCase().contains(query.toLowerCase()));

@@ -24,13 +24,20 @@ class TopViolatorsDetailView extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: StackedBarWidget(
-                showViewBtn: false,
-
-                onViewTap: () {},
-                data: data,
-                onStackBarPointTapped: onStackBarPointTapped,
-                title: 'Students with Most Violations',
+              child: Container(
+                margin: EdgeInsets.zero,
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.grey.withValues(alpha: 0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Center(child: Text('Top Violators')),
               ),
             ),
             // Add more content here: data table, filters, etc.

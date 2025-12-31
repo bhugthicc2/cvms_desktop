@@ -15,6 +15,7 @@ class LineChartWidget extends StatelessWidget {
   final bool showViewBtn;
   final bool showSearchBar;
   final TextEditingController? controller;
+  final bool showShadow;
 
   const LineChartWidget({
     super.key,
@@ -25,6 +26,7 @@ class LineChartWidget extends StatelessWidget {
     this.showViewBtn = true,
     this.showSearchBar = false,
     this.controller,
+    this.showShadow = true,
   });
 
   @override
