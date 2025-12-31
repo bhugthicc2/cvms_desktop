@@ -74,9 +74,25 @@ class ShellPage extends StatelessWidget {
                       children: [
                         BlocBuilder<CurrentUserCubit, CurrentUserState>(
                           builder: (context, userState) {
+                            // Show breadcrumbs for Reports and Analytics page (index 5)
+                            final isReportsAndAnalytics =
+                                state.selectedIndex == 5;
+                            String? breadcrumbTitle;
+
+                            // Check if there's a selected detail view in ReportAnalyticsState
+                            if (isReportsAndAnalytics) {
+                              breadcrumbTitle = 'Vehicle Report';
+                            }
+
                             return CustomHeader(
                               currentUser: userState.fullname ?? "Guest",
                               title: titles[state.selectedIndex],
+                              showBreadCrumbs: isReportsAndAnalytics,
+                              itemTitle: breadcrumbTitle,
+                              isBreadCrumbSelected: false,
+                              breadCrumbItemOnTap:
+                                  () {}, //todo navigate/switch to vehicles report page when clicked
+
                               onMenuPressed:
                                   () =>
                                       context
