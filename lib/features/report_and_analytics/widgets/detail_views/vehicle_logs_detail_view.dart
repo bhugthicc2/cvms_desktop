@@ -44,6 +44,7 @@ class VehicleLogsDetailView extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(AppSpacing.medium),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'Vehicle Logs Report - $ownerName',
@@ -52,13 +53,11 @@ class VehicleLogsDetailView extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-
-                      Spacer(),
-                      Expanded(
-                        child: SearchField(
-                          searchFieldHeight: 40,
-                          controller: SearchController(),
-                        ),
+                      Spacing.horizontal(size: AppSpacing.medium),
+                      SearchField(
+                        searchFieldWidth: 500,
+                        searchFieldHeight: 40,
+                        controller: SearchController(),
                       ),
                     ],
                   ),
@@ -82,4 +81,5 @@ class VehicleLogsDetailView extends StatelessWidget {
     );
   }
 }
+
 //todo add a detailed vehicle logs report (timeline i think) for each vehicle

@@ -35,7 +35,6 @@ class _ActivityLogsPageState extends State<ActivityLogsPage> {
     super.dispose();
   }
 
-
   Widget _buildLoadingState() {
     return const Center(child: CustomLoadingIndicator());
   }
@@ -86,9 +85,10 @@ class _ActivityLogsPageState extends State<ActivityLogsPage> {
         builder: (context, state) {
           return Scaffold(
             backgroundColor: AppColors.greySurface,
-            body: state.allLogs.isEmpty && state.error == null
-                ? _buildLoadingState()
-                : state.error != null
+            body:
+                state.allLogs.isEmpty && state.error == null
+                    ? _buildLoadingState()
+                    : state.error != null
                     ? _buildErrorState(state.error!)
                     : _buildContent(state.filteredLogs),
           );

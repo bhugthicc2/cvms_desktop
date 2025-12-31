@@ -21,21 +21,15 @@ class CustomSidebar extends StatelessWidget {
   });
 
   final List<NavItem> items = [
-    NavItem(icon: 'assets/icons/dashboard.png', label: "Dashboard"),
-    NavItem(
-      icon: 'assets/icons/vehicle_logs.png',
-      label: "Vehicle Logs Management",
-    ),
-    NavItem(
-      icon: 'assets/icons/vehicle_management.png',
-      label: "Vehicle Management",
-    ),
-    NavItem(icon: 'assets/icons/user.png', label: "User Management"),
-    NavItem(icon: 'assets/icons/violation.png', label: "Violation Management"),
-    NavItem(icon: 'assets/icons/analytics.png', label: "Reports and Analytics"),
-    NavItem(icon: 'assets/icons/activity.png', label: "Activity Logs"),
-    NavItem(icon: 'assets/icons/profile.png', label: "Profile"),
-    NavItem(icon: 'assets/icons/setting.png', label: "Settings"),
+    NavItem(icon: 'dashboard.png', label: "Dashboard"),
+    NavItem(icon: 'vehicle_logs.png', label: "Vehicle Logs Management"),
+    NavItem(icon: 'vehicle_management.png', label: "Vehicle Management"),
+    NavItem(icon: 'user.png', label: "User Management"),
+    NavItem(icon: 'violation.png', label: "Violation Management"),
+    NavItem(icon: 'analytics.png', label: "Reports and Analytics"),
+    NavItem(icon: 'activity.png', label: "Activity Logs"),
+    NavItem(icon: 'profile.png', label: "Profile"),
+    NavItem(icon: 'settings.png', label: "Settings"),
   ];
 
   @override
@@ -77,7 +71,7 @@ class CustomSidebar extends StatelessWidget {
           //LOGOUT TILE DAWG
           CustomSidebarTile(
             hover: () {},
-            item: NavItem(icon: 'assets/icons/logout.png', label: "Logout"),
+            item: NavItem(icon: 'logout.png', label: "Logout"),
             iconColor: AppColors.error,
             labelColor: AppColors.error,
             isExpanded: isExpanded,

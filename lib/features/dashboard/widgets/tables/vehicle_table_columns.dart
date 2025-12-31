@@ -24,6 +24,7 @@ class VehicleTableColumns {
             fontSize: AppFontSizes.small,
             color: AppColors.white,
             overflow: TextOverflow.ellipsis,
+            fontFamily: 'Poppins',
           ),
         ),
       ),

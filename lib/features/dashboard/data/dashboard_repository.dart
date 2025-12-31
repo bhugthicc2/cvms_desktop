@@ -39,7 +39,7 @@ class DashboardRepository {
     final snapshot =
         await _firestore
             .collection('vehicles')
-            .where('status', whereIn: ['outside', 'offsite'])
+            .where('status', whereIn: ['outside'])
             .get();
     return snapshot.size; // quick count
   }

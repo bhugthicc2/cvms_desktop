@@ -12,6 +12,7 @@ class CustomSidebarTile extends StatefulWidget {
   final Color? iconColor;
   final Color? labelColor;
   final VoidCallback hover;
+  final bool isStencil;
 
   const CustomSidebarTile({
     super.key,
@@ -22,6 +23,7 @@ class CustomSidebarTile extends StatefulWidget {
     this.iconColor,
     this.labelColor,
     required this.hover,
+    this.isStencil = true,
   });
 
   @override
@@ -63,7 +65,13 @@ class _CustomSidebarTileState extends State<CustomSidebarTile> {
 
           child: Row(
             children: [
-              Image.asset(widget.item.icon, height: 24, width: 24),
+              Image.asset(
+                widget.isStencil
+                    ? "assets/icons/stencil/${widget.item.icon}"
+                    : "assets/icons/${widget.item.icon}",
+                height: 20,
+                width: 20,
+              ),
               AnimatedSize(
                 duration: const Duration(milliseconds: 300),
                 child: AnimatedOpacity(

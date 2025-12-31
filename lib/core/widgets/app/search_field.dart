@@ -14,6 +14,7 @@ class SearchField extends StatelessWidget {
   final double hintFontSize;
   final double txtFontSize;
   final double searchFieldHeight;
+  final double searchFieldWidth;
   final double hoverScale;
 
   const SearchField({
@@ -28,6 +29,7 @@ class SearchField extends StatelessWidget {
     this.hintFontSize = AppFontSizes.medium,
     this.txtFontSize = AppFontSizes.medium,
     this.searchFieldHeight = 0,
+    this.searchFieldWidth = 0,
     this.hoverScale = 1.02,
   });
 
@@ -36,6 +38,7 @@ class SearchField extends StatelessWidget {
     return HoverGrow(
       hoverScale: hoverScale,
       child: Container(
+        width: searchFieldWidth,
         height: searchFieldHeight,
         decoration: BoxDecoration(
           color: AppColors.white,

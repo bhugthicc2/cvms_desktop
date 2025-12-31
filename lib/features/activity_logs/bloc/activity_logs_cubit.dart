@@ -25,7 +25,12 @@ class ActivityLogsCubit extends Cubit<ActivityLogsState> {
         emit(
           state.copyWith(
             allLogs: logs,
-            filteredLogs: _applyFilters(logs, state.searchQuery, state.statusFilter, state.typeFilter),
+            filteredLogs: _applyFilters(
+              logs,
+              state.searchQuery,
+              state.statusFilter,
+              state.typeFilter,
+            ),
             error: null,
           ),
         );
@@ -73,7 +78,12 @@ class ActivityLogsCubit extends Cubit<ActivityLogsState> {
     emit(
       state.copyWith(
         searchQuery: query,
-        filteredLogs: _applyFilters(state.allLogs, query, state.statusFilter, state.typeFilter),
+        filteredLogs: _applyFilters(
+          state.allLogs,
+          query,
+          state.statusFilter,
+          state.typeFilter,
+        ),
       ),
     );
   }
@@ -83,7 +93,12 @@ class ActivityLogsCubit extends Cubit<ActivityLogsState> {
     emit(
       state.copyWith(
         statusFilter: status,
-        filteredLogs: _applyFilters(state.allLogs, state.searchQuery, status, state.typeFilter),
+        filteredLogs: _applyFilters(
+          state.allLogs,
+          state.searchQuery,
+          status,
+          state.typeFilter,
+        ),
       ),
     );
   }
@@ -93,7 +108,12 @@ class ActivityLogsCubit extends Cubit<ActivityLogsState> {
     emit(
       state.copyWith(
         typeFilter: type,
-        filteredLogs: _applyFilters(state.allLogs, state.searchQuery, state.statusFilter, type),
+        filteredLogs: _applyFilters(
+          state.allLogs,
+          state.searchQuery,
+          state.statusFilter,
+          type,
+        ),
       ),
     );
   }
@@ -109,17 +129,19 @@ class ActivityLogsCubit extends Cubit<ActivityLogsState> {
     // Apply search query filter
     if (searchQuery.isNotEmpty) {
       final query = searchQuery.toLowerCase();
-      filtered = filtered.where((log) {
-        return log.description.toLowerCase().contains(query) ||
-            (log.userEmail?.toLowerCase().contains(query) ?? false);
-      }).toList();
+      filtered =
+          filtered.where((log) {
+            return log.description.toLowerCase().contains(query) ||
+                (log.userEmail?.toLowerCase().contains(query) ?? false);
+          }).toList();
     }
 
     // Apply status filter
     if (statusFilter != 'All') {
-      filtered = filtered.where((log) {
-        return log.type.toString().split('.').last == statusFilter;
-      }).toList();
+      filtered =
+          filtered.where((log) {
+            return log.type.toString().split('.').last == statusFilter;
+          }).toList();
     }
 
     // Apply type filter
