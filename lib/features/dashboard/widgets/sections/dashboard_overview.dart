@@ -8,7 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class DashboardOverview extends StatelessWidget {
-  const DashboardOverview({super.key});
+  final double angle;
+  const DashboardOverview({super.key, this.angle = 0.03});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +19,7 @@ class DashboardOverview extends StatelessWidget {
           children: [
             Expanded(
               child: StatsCard(
+                angle: angle,
                 color: AppColors.white,
                 icon: PhosphorIconsBold.signIn,
                 label: "Entered Vehicles",
@@ -29,6 +31,7 @@ class DashboardOverview extends StatelessWidget {
             const Spacing.horizontal(size: AppSpacing.medium),
             Expanded(
               child: StatsCard(
+                angle: angle,
                 color: AppColors.white,
                 icon: PhosphorIconsBold.signOut,
                 label: "Exited Vehicles",
@@ -40,6 +43,7 @@ class DashboardOverview extends StatelessWidget {
             const Spacing.horizontal(size: AppSpacing.medium),
             Expanded(
               child: StatsCard(
+                angle: angle,
                 color: AppColors.white,
                 icon: PhosphorIconsBold.warning,
                 label: "Total Violations",
@@ -51,6 +55,7 @@ class DashboardOverview extends StatelessWidget {
             const Spacing.horizontal(size: AppSpacing.medium),
             Expanded(
               child: StatsCard(
+                angle: angle,
                 color: AppColors.white,
                 icon: PhosphorIconsBold.motorcycle,
                 label: "Total Vehicles",

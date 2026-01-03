@@ -2,6 +2,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/features/shell/models/nav_item.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_sidebar_header.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_sidebar_tile.dart';
+import 'package:cvms_desktop/features/shell/widgets/selected_tile.dart';
 import 'package:flutter/material.dart';
 
 class CustomSidebar extends StatelessWidget {
@@ -34,6 +35,10 @@ class CustomSidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double tileHeight = 42.0;
+    final double indicatorOffset = 63.0; // Half of 126 for centering
+    final double indicatorTop = selectedIndex * tileHeight - indicatorOffset;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       width: isExpanded ? 235 : 50,
@@ -55,17 +60,40 @@ class CustomSidebar extends StatelessWidget {
         children: [
           CustomSidebarHeader(isExpanded: isExpanded),
           Expanded(
-            child: ListView.builder(
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                return CustomSidebarTile(
-                  hover: () {},
-                  item: items[index],
-                  isExpanded: isExpanded,
-                  isSelected: index == selectedIndex,
-                  onTap: () => onItemSelected(index),
-                );
-              },
+            child: Stack(
+              clipBehavior: Clip.hardEdge,
+              children: [
+                // Indicator layer first (behind)
+                if (selectedIndex < items.length)
+                  AnimatedPositioned(
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
+                    top: indicatorTop,
+                    left: 0,
+                    right: 0,
+                    height: 126.0,
+                    child: IgnorePointer(
+                      child: CustomPaint(
+                        painter: SelectedTile(isExpanded: isExpanded),
+                        size: Size.infinite,
+                      ),
+                    ),
+                  ),
+                // Content layer second (on top)
+                ListView.builder(
+                  itemExtent: tileHeight,
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    return CustomSidebarTile(
+                      hover: () {},
+                      item: items[index],
+                      isExpanded: isExpanded,
+                      isSelected: index == selectedIndex,
+                      onTap: () => onItemSelected(index),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
           //LOGOUT TILE DAWG

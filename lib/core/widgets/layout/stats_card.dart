@@ -12,6 +12,7 @@ class StatsCard extends StatelessWidget {
   final Color color;
   final Gradient? gradient;
   final Color? iconColor;
+  final double angle;
 
   const StatsCard({
     super.key,
@@ -21,12 +22,13 @@ class StatsCard extends StatelessWidget {
     required this.color,
     this.gradient,
     required this.iconColor,
+    this.angle = 0.03,
   });
 
   @override
   Widget build(BuildContext context) {
     return HoverRotate(
-      angle: 0.03,
+      angle: angle,
       child: Container(
         padding: const EdgeInsets.all(AppSpacing.medium - 2),
         decoration: BoxDecoration(

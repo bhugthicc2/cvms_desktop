@@ -11,13 +11,10 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CustomHeader extends StatelessWidget {
   final String title;
-  final String? itemTitle;
   final String currentUser;
   final List<Widget>? actions;
   final VoidCallback? onMenuPressed;
-  final bool showBreadCrumbs;
-  final bool isBreadCrumbSelected;
-  final VoidCallback? breadCrumbItemOnTap;
+  final Widget? subNavigation;
 
   const CustomHeader({
     super.key,
@@ -25,10 +22,7 @@ class CustomHeader extends StatelessWidget {
     this.actions,
     this.onMenuPressed,
     required this.currentUser,
-    this.itemTitle,
-    this.showBreadCrumbs = false,
-    this.isBreadCrumbSelected = true,
-    this.breadCrumbItemOnTap,
+    this.subNavigation,
   });
 
   @override
@@ -65,31 +59,13 @@ class CustomHeader extends StatelessWidget {
               height: 1.0,
             ),
           ),
-          if (showBreadCrumbs == true && itemTitle != null)
-            Row(
-              children: [
-                Icon(
-                  PhosphorIconsRegular.caretRight,
-                  size: 18,
-                  color: AppColors.lineColor,
-                ),
-                HoverGrow(
-                  onTap: breadCrumbItemOnTap,
-                  child: Text(
-                    itemTitle!,
-                    style: TextStyle(
-                      color:
-                          isBreadCrumbSelected
-                              ? AppColors.black
-                              : AppColors.lineColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: AppFontSizes.medium,
-                      height: 1.0,
-                    ),
-                  ),
-                ),
-              ],
+          Expanded(child: MoveWindow()),
+          if (subNavigation != null) ...[
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: subNavigation!,
             ),
+          ],
           Expanded(child: MoveWindow()),
           Padding(
             padding: const EdgeInsets.all(10.0),
@@ -100,7 +76,6 @@ class CustomHeader extends StatelessWidget {
                   currentUser,
                   style: const TextStyle(
                     color: AppColors.black,
-
                     fontWeight: FontWeight.w500,
                     fontSize: AppFontSizes.small,
                     height: 1.0,

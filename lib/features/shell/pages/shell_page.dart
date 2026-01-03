@@ -1,3 +1,4 @@
+import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/features/auth/bloc/current_user_cubit.dart';
 import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
 import 'package:cvms_desktop/features/auth/data/user_repository.dart';
@@ -13,9 +14,30 @@ import 'package:cvms_desktop/features/shell/bloc/shell_cubit.dart';
 import 'package:cvms_desktop/features/shell/config/shell_navigation_config.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_header.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_sidebar.dart';
+import 'package:cvms_desktop/features/report_and_analytics/pages/report_and_analytics_page.dart';
 
-class ShellPage extends StatelessWidget {
+class ShellPage extends StatefulWidget {
   const ShellPage({super.key});
+
+  @override
+  State<ShellPage> createState() => _ShellPageState();
+}
+
+class _ShellPageState extends State<ShellPage>
+    with SingleTickerProviderStateMixin {
+  late TabController? _reportTabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _reportTabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _reportTabController?.dispose();
+    super.dispose();
+  }
 
   void _handleLogout(BuildContext context) async {
     final confirmed = await LogoutDialog.show(context);
@@ -57,6 +79,39 @@ class ShellPage extends StatelessWidget {
           builder: (context, state) {
             final pages = ShellNavigationConfig.pages;
             final titles = ShellNavigationConfig.titles;
+            final reportIndex = 5; // Index for Reports and Analytics
+
+            Widget? subNavigation;
+            if (state.selectedIndex == reportIndex) {
+              subNavigation = TabBar(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                tabAlignment: TabAlignment.center,
+                controller: _reportTabController,
+                dividerHeight: 0,
+                labelColor: AppColors.primary,
+                unselectedLabelColor: AppColors.black,
+                indicatorColor: AppColors.primary,
+                labelStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Poppins',
+                ),
+                unselectedLabelStyle: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontFamily: 'Poppins',
+                ),
+                isScrollable: true,
+                tabs: [Tab(text: 'Overview'), Tab(text: 'Vehicle Report')],
+              );
+            }
+
+            Widget body;
+            if (state.selectedIndex == reportIndex) {
+              body = ReportAndAnalyticsPage(
+                tabController: _reportTabController,
+              );
+            } else {
+              body = pages[state.selectedIndex];
+            }
 
             return Scaffold(
               body: Row(
@@ -74,25 +129,10 @@ class ShellPage extends StatelessWidget {
                       children: [
                         BlocBuilder<CurrentUserCubit, CurrentUserState>(
                           builder: (context, userState) {
-                            // Show breadcrumbs for Reports and Analytics page (index 5)
-                            final isReportsAndAnalytics =
-                                state.selectedIndex == 5;
-                            String? breadcrumbTitle;
-
-                            // Check if there's a selected detail view in ReportAnalyticsState
-                            if (isReportsAndAnalytics) {
-                              breadcrumbTitle = 'Vehicle Report';
-                            }
-
                             return CustomHeader(
                               currentUser: userState.fullname ?? "Guest",
                               title: titles[state.selectedIndex],
-                              showBreadCrumbs: isReportsAndAnalytics,
-                              itemTitle: breadcrumbTitle,
-                              isBreadCrumbSelected: false,
-                              breadCrumbItemOnTap:
-                                  () {}, //todo navigate/switch to vehicles report page when clicked
-
+                              subNavigation: subNavigation,
                               onMenuPressed:
                                   () =>
                                       context
@@ -101,7 +141,7 @@ class ShellPage extends StatelessWidget {
                             );
                           },
                         ),
-                        Expanded(child: pages[state.selectedIndex]),
+                        Expanded(child: body),
                       ],
                     ),
                   ),

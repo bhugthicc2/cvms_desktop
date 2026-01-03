@@ -3,7 +3,7 @@ import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/features/report_and_analytics/widgets/titles/custom_chart_title.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import '../../models/chart_data_model.dart';
+import '../../../models/chart_data_model.dart';
 
 class BarChartWidget extends StatelessWidget {
   final List<ChartDataModel> data;
