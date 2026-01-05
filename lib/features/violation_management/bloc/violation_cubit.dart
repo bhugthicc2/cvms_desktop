@@ -29,17 +29,19 @@ class ViolationCubit extends Cubit<ViolationState> {
   }
 
   void listenViolations() {
+    emit(state.copyWith(isLoading: true));
     _violationsSubscription?.cancel();
     _violationsSubscription = _repository.watchViolations().listen(
       (violations) {
         if (!isClosed) {
-          emit(state.copyWith(allEntries: violations));
+          emit(state.copyWith(allEntries: violations, isLoading: false));
           _applyFilters();
         }
       },
       onError: (error) {
         if (!isClosed) {
           debugPrint('Error in violations stream: $error');
+          emit(state.copyWith(isLoading: false));
         }
       },
     );
@@ -173,7 +175,7 @@ class ViolationCubit extends Cubit<ViolationState> {
   //todo fix the problem and freezing issue
 
   void filterEntries(String query) {
-    emit(state.copyWith(searchQuery: query));
+    emit(state.copyWith(searchQuery: query, isLoading: false));
     _applyFilters();
   }
 

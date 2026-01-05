@@ -10,6 +10,7 @@ class ViolationState {
   final String dateFilter;
   final String searchQuery;
   final bool isBulkModeEnabled;
+  final bool isLoading;
 
   ViolationState({
     this.message,
@@ -20,6 +21,7 @@ class ViolationState {
     required this.dateFilter,
     required this.searchQuery,
     required this.isBulkModeEnabled,
+    this.isLoading = false,
   });
 
   factory ViolationState.initial() => ViolationState(
@@ -29,6 +31,7 @@ class ViolationState {
     dateFilter: 'All', //todo implement date filtering
     searchQuery: '',
     isBulkModeEnabled: false,
+    isLoading: true,
   );
 
   ViolationState copyWith({
@@ -40,6 +43,7 @@ class ViolationState {
     String? dateFilter,
     String? searchQuery,
     bool? isBulkModeEnabled,
+    bool? isLoading,
   }) {
     return ViolationState(
       message: message ?? this.message,
@@ -50,8 +54,9 @@ class ViolationState {
       dateFilter: dateFilter ?? this.dateFilter,
       searchQuery: searchQuery ?? this.searchQuery,
       isBulkModeEnabled: isBulkModeEnabled ?? this.isBulkModeEnabled,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
 
-  //todo might add loading state soon
+  // Loading state added for skeletonizer
 }

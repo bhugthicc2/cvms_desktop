@@ -71,4 +71,16 @@ class UserEntry {
 
   @override
   int get hashCode => id.hashCode;
+
+  static UserEntry sample() {
+    return UserEntry(
+      id: 'sample-user-id',
+      fullname: 'Sample User',
+      email: 'sample@example.com',
+      role: 'Security Personnel',
+      status: 'active',
+      lastLogin: DateTime.now().subtract(const Duration(hours: 2)),
+      password: 'sample-password',
+    );
+  }
 }

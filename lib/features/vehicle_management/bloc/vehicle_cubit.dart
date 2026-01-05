@@ -90,6 +90,7 @@ class VehicleCubit extends Cubit<VehicleState> {
   }
 
   void listenVehicles() {
+    emit(state.copyWith(isLoading: true));
     _vehiclesSubscription?.cancel();
     _vehiclesSubscription = repository.watchVehicles().listen(
       (entries) async {
@@ -100,12 +101,13 @@ class VehicleCubit extends Cubit<VehicleState> {
               state.copyWith(
                 allEntries: entries,
                 vehiclesWithLogs: vehiclesWithLogs,
+                isLoading: false,
               ),
             );
             _applyFilters();
           } catch (e) {
             // If fetching logs fails, still update vehicles but keep existing logs set
-            emit(state.copyWith(allEntries: entries));
+            emit(state.copyWith(allEntries: entries, isLoading: false));
             _applyFilters();
           }
         }
@@ -113,7 +115,7 @@ class VehicleCubit extends Cubit<VehicleState> {
       onError: (error) {
         if (!isClosed) {
           //todo add exception handling to handle internet outage
-          emit(state.copyWith(error: error.toString()));
+          emit(state.copyWith(error: error.toString(), isLoading: false));
         }
       },
     );
@@ -170,7 +172,7 @@ class VehicleCubit extends Cubit<VehicleState> {
   }
 
   void filterEntries(String query) {
-    emit(state.copyWith(searchQuery: query));
+    emit(state.copyWith(searchQuery: query, isLoading: false));
     _applyFilters();
   }
 

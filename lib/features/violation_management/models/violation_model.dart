@@ -69,4 +69,17 @@ class ViolationEntry {
       status: status ?? this.status,
     );
   }
+
+  static ViolationEntry sample() {
+    return ViolationEntry(
+      violationID: 'sample-violation-id',
+      dateTime: Timestamp.now(),
+      reportedBy: 'Sample Reporter',
+      plateNumber: 'ABC-123',
+      vehicleID: 'sample-vehicle-id',
+      owner: 'Sample Owner',
+      violation: 'Parking Violation',
+      status: 'pending',
+    );
+  }
 }

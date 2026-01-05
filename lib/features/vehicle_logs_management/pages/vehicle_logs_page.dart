@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../bloc/vehicle_logs_cubit.dart';
 import '../bloc/vehicle_logs_state.dart';
+import '../models/vehicle_log_model.dart';
 import '../widgets/tables/vehicle_logs_table.dart';
 import '../widgets/dialogs/vehicle_logs_info_dialog.dart';
 
@@ -44,13 +46,35 @@ class _VehicleLogsPageState extends State<VehicleLogsPage> {
       backgroundColor: AppColors.greySurface,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            // Vehicles Onsite
-            Expanded(
-              child: BlocBuilder<VehicleLogsCubit, VehicleLogsState>(
-                builder: (context, state) {
-                  return VehicleLogsTable(
+        child: BlocBuilder<VehicleLogsCubit, VehicleLogsState>(
+          builder: (context, state) {
+            if (state.isLoading) {
+              return Skeletonizer(
+                enabled: state.isLoading,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: VehicleLogsTable(
+                        title: "Vehicles Onsite",
+                        logs: List.generate(
+                          5,
+                          (index) => VehicleLogModel.sample(),
+                        ),
+                        searchController: onsiteSearchController,
+                        hasSearchQuery: onsiteSearchController.text.isNotEmpty,
+                        onCellTap: (details) {},
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            return Row(
+              children: [
+                // Vehicles Onsite
+                Expanded(
+                  child: VehicleLogsTable(
                     title: "Vehicles Onsite",
                     logs: state.filteredEntries,
                     searchController: onsiteSearchController,
@@ -68,11 +92,11 @@ class _VehicleLogsPageState extends State<VehicleLogsPage> {
                         );
                       }
                     },
-                  );
-                },
-              ),
-            ),
-          ],
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

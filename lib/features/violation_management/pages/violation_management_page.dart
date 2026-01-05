@@ -2,9 +2,11 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
+import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
 import 'package:cvms_desktop/features/violation_management/widgets/tables/violation_table.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ViolationManagementPage extends StatefulWidget {
   const ViolationManagementPage({super.key});
@@ -55,7 +57,17 @@ class _ViolationManagementPageState extends State<ViolationManagementPage> {
             }
           },
           builder: (context, state) {
-            //todo add loading indicator
+            if (state.isLoading && state.allEntries.isEmpty) {
+              return Skeletonizer(
+                enabled: state.isLoading,
+                child: ViolationTable(
+                  title: "Violation Management",
+                  entries: List.generate(5, (index) => ViolationEntry.sample()),
+                  searchController: violationController,
+                ),
+              );
+            }
+
             return ViolationTable(
               title: "Violation Management",
               entries: state.filteredEntries,
