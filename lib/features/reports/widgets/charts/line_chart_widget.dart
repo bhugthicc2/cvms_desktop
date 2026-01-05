@@ -1,7 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
-import 'package:cvms_desktop/features/report_and_analytics/widgets/button/custom_view_button.dart';
+import 'package:cvms_desktop/features/reports/widgets/button/custom_view_button.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../models/chart_data_model.dart';

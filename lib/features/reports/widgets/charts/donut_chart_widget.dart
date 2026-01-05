@@ -1,6 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:cvms_desktop/features/report_and_analytics/widgets/titles/custom_chart_title.dart';
+import 'package:cvms_desktop/features/reports/widgets/titles/custom_chart_title.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../models/chart_data_model.dart';
