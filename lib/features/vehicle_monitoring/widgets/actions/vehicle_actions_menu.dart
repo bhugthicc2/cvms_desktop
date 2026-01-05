@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
-import 'package:cvms_desktop/features/dashboard/bloc/dashboard_cubit.dart';
-import 'package:cvms_desktop/features/dashboard/models/vehicle_entry.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/bloc/dashboard_cubit.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/models/vehicle_entry.dart';
 import 'package:cvms_desktop/core/widgets/app/pop_up_menu_item.dart';
-import 'package:cvms_desktop/features/dashboard/models/violation_model.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_delete_dialog.dart'
+import 'package:cvms_desktop/features/vehicle_monitoring/models/violation_model.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/widgets/dialogs/custom_delete_dialog.dart'
     show CustomDeleteDialog;
-import 'package:cvms_desktop/features/dashboard/widgets/dialogs/report_vehicle_dialog.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/dialogs/custom_update_dialog.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/widgets/dialogs/report_vehicle_dialog.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/widgets/dialogs/custom_update_dialog.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

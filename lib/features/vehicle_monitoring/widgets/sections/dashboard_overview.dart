@@ -2,7 +2,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/core/widgets/layout/stats_card.dart';
-import 'package:cvms_desktop/features/dashboard/bloc/dashboard_cubit.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/bloc/dashboard_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';

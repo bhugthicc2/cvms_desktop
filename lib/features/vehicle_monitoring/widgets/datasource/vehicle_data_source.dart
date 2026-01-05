@@ -1,7 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
-import 'package:cvms_desktop/features/dashboard/models/vehicle_entry.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/actions/vehicle_actions_menu.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/models/vehicle_entry.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/widgets/actions/vehicle_actions_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 

@@ -1,5 +1,5 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/tables/table_header.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/widgets/tables/table_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cvms_desktop/core/widgets/table/custom_table.dart';

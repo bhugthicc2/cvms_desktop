@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/core/error/firebase_error_handler.dart';
-import 'package:cvms_desktop/features/dashboard/models/violation_model.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/models/violation_model.dart';
 import '../models/vehicle_entry.dart';
 
 class DashboardRepository {

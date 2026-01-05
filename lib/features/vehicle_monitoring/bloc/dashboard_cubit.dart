@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:cvms_desktop/features/dashboard/data/dashboard_repository.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/data/dashboard_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/vehicle_entry.dart';
 import '../models/violation_model.dart';

@@ -1,8 +1,8 @@
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:flutter/material.dart';
 
-class VehicleMonitoringPage extends StatelessWidget {
-  const VehicleMonitoringPage({super.key});
+class ReportsPage extends StatelessWidget {
+  const ReportsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +12,3 @@ class VehicleMonitoringPage extends StatelessWidget {
     );
   }
 }
-
-
-//TODO

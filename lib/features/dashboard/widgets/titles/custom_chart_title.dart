@@ -1,5 +1,5 @@
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
-import 'package:cvms_desktop/features/reports/widgets/button/custom_view_button.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/button/custom_view_button.dart';
 import 'package:flutter/material.dart';
 
 class CustomChartTitle extends StatelessWidget {
