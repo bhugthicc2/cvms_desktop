@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
-import 'package:cvms_desktop/features/vehicle_monitoring/bloc/dashboard_cubit.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/models/vehicle_entry.dart';
 import 'package:cvms_desktop/core/widgets/app/pop_up_menu_item.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/models/violation_model.dart';
@@ -91,7 +91,7 @@ class VehicleActionsMenu extends StatelessWidget {
           (_) => CustomUpdateDialog(
             onSave: (newStatus) async {
               try {
-                await context.read<DashboardCubit>().updateVehicle(
+                await context.read<VehicleMonitoringCubit>().updateVehicle(
                   vehicleEntry.vehicleId,
                   {'status': newStatus},
                 );
@@ -125,7 +125,7 @@ class VehicleActionsMenu extends StatelessWidget {
       context: context,
       builder:
           (_) => BlocProvider.value(
-            value: context.read<DashboardCubit>(),
+            value: context.read<VehicleMonitoringCubit>(),
             child: ReportVehicleDialog(
               title: "Report Vehicle",
               vehicleId: vehicleEntry.vehicleId,
@@ -144,7 +144,7 @@ class VehicleActionsMenu extends StatelessWidget {
                     status: 'pending',
                   );
 
-                  await context.read<DashboardCubit>().reportViolation(
+                  await context.read<VehicleMonitoringCubit>().reportViolation(
                     violation,
                   );
 
@@ -180,9 +180,9 @@ class VehicleActionsMenu extends StatelessWidget {
                 "Are you sure you want to delete ${vehicleEntry.ownerName}'s vehicle (${vehicleEntry.plateNumber})?",
             onConfirm: () async {
               try {
-                await innerContext.read<DashboardCubit>().deleteVehicleLog(
-                  vehicleEntry.docId,
-                );
+                await innerContext
+                    .read<VehicleMonitoringCubit>()
+                    .deleteVehicleLog(vehicleEntry.docId);
 
                 if (context.mounted) {
                   CustomSnackBar.show(

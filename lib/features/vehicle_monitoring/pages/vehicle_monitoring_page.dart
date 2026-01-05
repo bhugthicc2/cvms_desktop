@@ -1,36 +1,38 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
-import 'package:cvms_desktop/features/vehicle_monitoring/bloc/dashboard_cubit.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/dialogs/custom_view_dialog.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/sections/dashboard_overview.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/tables/vehicle_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key});
+class VehicleMonitoringPage extends StatefulWidget {
+  const VehicleMonitoringPage({super.key});
 
   @override
-  State<DashboardPage> createState() => _DashboardPageState();
+  State<VehicleMonitoringPage> createState() => _VehicleMonitoringPageState();
 }
 
-class _DashboardPageState extends State<DashboardPage> {
+class _VehicleMonitoringPageState extends State<VehicleMonitoringPage> {
   final TextEditingController enteredSearchController = TextEditingController();
   final TextEditingController exitedSearchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    context.read<DashboardCubit>().startListening();
+    context.read<VehicleMonitoringCubit>().startListening();
 
     enteredSearchController.addListener(() {
-      context.read<DashboardCubit>().filterEntered(
+      context.read<VehicleMonitoringCubit>().filterEntered(
         enteredSearchController.text,
       );
     });
     exitedSearchController.addListener(() {
-      context.read<DashboardCubit>().filterExited(exitedSearchController.text);
+      context.read<VehicleMonitoringCubit>().filterExited(
+        exitedSearchController.text,
+      );
     });
   }
 
@@ -55,7 +57,10 @@ class _DashboardPageState extends State<DashboardPage> {
               child: Row(
                 children: [
                   Expanded(
-                    child: BlocBuilder<DashboardCubit, DashboardState>(
+                    child: BlocBuilder<
+                      VehicleMonitoringCubit,
+                      VehicleMonitoringState
+                    >(
                       builder: (context, state) {
                         return VehicleTable(
                           title: "ONSITE",
@@ -77,7 +82,8 @@ class _DashboardPageState extends State<DashboardPage> {
                               context: context,
                               builder:
                                   (_) => BlocProvider.value(
-                                    value: context.read<DashboardCubit>(),
+                                    value:
+                                        context.read<VehicleMonitoringCubit>(),
                                     child: CustomViewDialog(
                                       title: "Edit Vehicle Information",
                                       vehicleId: vehId,
@@ -91,7 +97,10 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                   Spacing.horizontal(size: AppSpacing.medium),
                   Expanded(
-                    child: BlocBuilder<DashboardCubit, DashboardState>(
+                    child: BlocBuilder<
+                      VehicleMonitoringCubit,
+                      VehicleMonitoringState
+                    >(
                       builder: (context, state) {
                         return VehicleTable(
                           title: "OFFSITE",
@@ -112,7 +121,8 @@ class _DashboardPageState extends State<DashboardPage> {
                               context: context,
                               builder:
                                   (_) => BlocProvider.value(
-                                    value: context.read<DashboardCubit>(),
+                                    value:
+                                        context.read<VehicleMonitoringCubit>(),
                                     child: CustomViewDialog(
                                       title: "Edit Vehicle Information",
                                       vehicleId: vehId,

@@ -4,9 +4,9 @@ import 'package:cvms_desktop/core/widgets/app/custom_progress_indicator.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/sections/dashboard_overview.dart';
-import 'package:cvms_desktop/features/vehicle_monitoring/bloc/dashboard_cubit.dart';
-import 'package:cvms_desktop/features/vehicle_monitoring/data/dashboard_repository.dart';
-import 'package:cvms_desktop/features/dashboard/bloc/report_analytics_state.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/data/vehicle_monitoring_repository.dart';
+import 'package:cvms_desktop/features/dashboard/bloc/dashboard_state.dart';
 import 'package:cvms_desktop/features/dashboard/data/firestore_analytics_repository.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/charts/bar_chart_widget.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/charts/donut_chart_widget.dart';
@@ -14,34 +14,36 @@ import 'package:cvms_desktop/features/dashboard/widgets/charts/line_chart_widget
 import 'package:cvms_desktop/features/dashboard/widgets/charts/stacked_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/report_analytics_cubit.dart';
+import '../bloc/dashboard_cubit.dart';
 
-class ReportAndAnalyticsPage extends StatefulWidget {
-  const ReportAndAnalyticsPage({super.key});
+class DashboardPage extends StatefulWidget {
+  const DashboardPage({super.key});
 
   @override
-  State<ReportAndAnalyticsPage> createState() => _ReportAndAnalyticsPageState();
+  State<DashboardPage> createState() => _DashboardPageState();
 }
 
-class _ReportAndAnalyticsPageState extends State<ReportAndAnalyticsPage> {
+class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create:
-              (_) => ReportAnalyticsCubit(
-                dataSource: FirestoreAnalyticsRepository(),
-              )..loadAll(),
+              (_) =>
+                  DashboardCubit(dataSource: FirestoreAnalyticsRepository())
+                    ..loadAll(),
         ),
         BlocProvider(
           create:
-              (_) => DashboardCubit(DashboardRepository())..startListening(),
+              (_) =>
+                  VehicleMonitoringCubit(DashboardRepository())
+                    ..startListening(),
         ),
       ],
       child: Scaffold(
         backgroundColor: AppColors.greySurface,
-        body: BlocBuilder<ReportAnalyticsCubit, ReportAnalyticsState>(
+        body: BlocBuilder<DashboardCubit, DashboardState>(
           builder: (context, state) {
             if (state.loading) {
               return const Center(child: CustomProgressIndicator());

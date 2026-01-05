@@ -1,5 +1,5 @@
 import 'package:cvms_desktop/features/activity_logs/pages/activity_logs_page.dart';
-import 'package:cvms_desktop/features/dashboard/pages/report_and_analytics_page.dart';
+import 'package:cvms_desktop/features/dashboard/pages/dashboard_page.dart';
 import 'package:cvms_desktop/features/reports/pages/reports_page.dart';
 import 'package:cvms_desktop/features/settings/pages/setttings_page.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_cubit.dart';
@@ -16,22 +16,24 @@ import 'package:cvms_desktop/features/vehicle_management/pages/vehicle_managemen
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cvms_desktop/features/vehicle_monitoring/pages/dashboard_page.dart';
-import 'package:cvms_desktop/features/vehicle_monitoring/bloc/dashboard_cubit.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/pages/vehicle_monitoring_page.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/pages/vehicle_logs_page.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/bloc/vehicle_logs_cubit.dart';
 import 'package:cvms_desktop/features/user_management/pages/user_management_page.dart';
 import 'package:cvms_desktop/features/violation_management/pages/violation_management_page.dart';
 import 'package:cvms_desktop/features/profile/pages/profile_page.dart';
-import '../../vehicle_monitoring/data/dashboard_repository.dart'
+import '../../vehicle_monitoring/data/vehicle_monitoring_repository.dart'
     as vehicle_repo;
 
 class ShellNavigationConfig {
   static final pages = <Widget>[
-    ReportAndAnalyticsPage(), //todo refactor turn reports and analytics page as dashboard
+    DashboardPage(),
     BlocProvider(
-      create: (context) => DashboardCubit(vehicle_repo.DashboardRepository()),
-      child: const DashboardPage(),
+      create:
+          (context) =>
+              VehicleMonitoringCubit(vehicle_repo.DashboardRepository()),
+      child: const VehicleMonitoringPage(),
     ),
 
     BlocProvider(
@@ -83,7 +85,7 @@ class ShellNavigationConfig {
     "Vehicle Management",
     "User Management",
     "Violation Management",
-    "Reports and Analytics",
+    "Reports",
     "Activity Logs",
     "Profile",
     "Settings",

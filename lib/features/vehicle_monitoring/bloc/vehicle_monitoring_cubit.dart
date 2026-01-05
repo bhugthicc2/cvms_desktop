@@ -1,17 +1,18 @@
 import 'dart:async';
-import 'package:cvms_desktop/features/vehicle_monitoring/data/dashboard_repository.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/data/vehicle_monitoring_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/vehicle_entry.dart';
 import '../models/violation_model.dart';
 
-part 'dashboard_state.dart';
+part 'vehicle_monitoring_state.dart';
 
-class DashboardCubit extends Cubit<DashboardState> {
+class VehicleMonitoringCubit extends Cubit<VehicleMonitoringState> {
   final DashboardRepository repository;
   StreamSubscription? _violationsSub;
   StreamSubscription? _logsSub;
 
-  DashboardCubit(this.repository) : super(DashboardState.initial());
+  VehicleMonitoringCubit(this.repository)
+    : super(VehicleMonitoringState.initial());
 
   Future<void> _refreshVehicleCounts() async {
     try {

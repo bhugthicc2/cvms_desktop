@@ -1,7 +1,7 @@
 import '../models/chart_data_model.dart';
 import 'package:equatable/equatable.dart';
 
-class ReportAnalyticsState extends Equatable {
+class DashboardState extends Equatable {
   final bool loading;
   final List<ChartDataModel> vehicleDistribution;
   final List<ChartDataModel> topViolations;
@@ -9,7 +9,7 @@ class ReportAnalyticsState extends Equatable {
   final List<ChartDataModel> topViolators;
   final String? error;
 
-  const ReportAnalyticsState({
+  const DashboardState({
     this.loading = false,
     this.vehicleDistribution = const [],
     this.topViolations = const [],
@@ -18,7 +18,7 @@ class ReportAnalyticsState extends Equatable {
     this.error,
   });
 
-  ReportAnalyticsState copyWith({
+  DashboardState copyWith({
     bool? loading,
     List<ChartDataModel>? vehicleDistribution,
     List<ChartDataModel>? topViolations,
@@ -26,7 +26,7 @@ class ReportAnalyticsState extends Equatable {
     List<ChartDataModel>? topViolators,
     String? error,
   }) {
-    return ReportAnalyticsState(
+    return DashboardState(
       loading: loading ?? this.loading,
       vehicleDistribution: vehicleDistribution ?? this.vehicleDistribution,
       topViolations: topViolations ?? this.topViolations,

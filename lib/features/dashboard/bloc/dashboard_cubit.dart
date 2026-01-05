@@ -1,12 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'report_analytics_state.dart';
+import 'dashboard_state.dart';
 import '../data/analytics_repository.dart';
 
-class ReportAnalyticsCubit extends Cubit<ReportAnalyticsState> {
+class DashboardCubit extends Cubit<DashboardState> {
   final AnalyticsRepository dataSource;
 
-  ReportAnalyticsCubit({required this.dataSource})
-    : super(const ReportAnalyticsState());
+  DashboardCubit({required this.dataSource}) : super(const DashboardState());
 
   Future<void> loadAll() async {
     if (isClosed) return;

@@ -1,6 +1,6 @@
-part of 'dashboard_cubit.dart';
+part of 'vehicle_monitoring_cubit.dart';
 
-class DashboardState {
+class VehicleMonitoringState {
   final List<VehicleEntry> allEntries;
   final List<VehicleEntry> enteredFiltered;
   final List<VehicleEntry> exitedFiltered;
@@ -9,7 +9,7 @@ class DashboardState {
   final int totalEntered;
   final int totalExited;
 
-  DashboardState({
+  VehicleMonitoringState({
     required this.allEntries,
     required this.enteredFiltered,
     required this.exitedFiltered,
@@ -19,7 +19,7 @@ class DashboardState {
     required this.totalExited,
   });
 
-  factory DashboardState.initial() => DashboardState(
+  factory VehicleMonitoringState.initial() => VehicleMonitoringState(
     allEntries: [],
     enteredFiltered: [],
     exitedFiltered: [],
@@ -29,7 +29,7 @@ class DashboardState {
     totalExited: 0,
   );
 
-  DashboardState copyWith({
+  VehicleMonitoringState copyWith({
     List<VehicleEntry>? allEntries,
     List<VehicleEntry>? enteredFiltered,
     List<VehicleEntry>? exitedFiltered,
@@ -38,7 +38,7 @@ class DashboardState {
     int? totalEntered,
     int? totalExited,
   }) {
-    return DashboardState(
+    return VehicleMonitoringState(
       allEntries: allEntries ?? this.allEntries,
       enteredFiltered: enteredFiltered ?? this.enteredFiltered,
       exitedFiltered: exitedFiltered ?? this.exitedFiltered,

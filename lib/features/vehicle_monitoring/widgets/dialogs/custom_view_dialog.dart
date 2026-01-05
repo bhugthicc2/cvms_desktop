@@ -4,7 +4,7 @@ import 'package:cvms_desktop/core/widgets/app/custom_text_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cvms_desktop/features/vehicle_monitoring/bloc/dashboard_cubit.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';
 
 class CustomViewDialog extends StatefulWidget {
   final String title;
@@ -45,7 +45,7 @@ class _CustomViewDialogState extends State<CustomViewDialog> {
   @override
   void initState() {
     super.initState();
-    _loadVehicleFuture = context.read<DashboardCubit>().getVehicleById(
+    _loadVehicleFuture = context.read<VehicleMonitoringCubit>().getVehicleById(
       widget.vehicleId,
     );
   }
