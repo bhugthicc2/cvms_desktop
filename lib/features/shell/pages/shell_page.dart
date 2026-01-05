@@ -55,7 +55,6 @@ class ShellPage extends StatelessWidget {
         listener: _handleAuthState,
         child: BlocBuilder<ShellCubit, ShellState>(
           builder: (context, state) {
-            final pages = ShellNavigationConfig.pages;
             final titles = ShellNavigationConfig.titles;
 
             return Scaffold(
@@ -85,7 +84,12 @@ class ShellPage extends StatelessWidget {
                             );
                           },
                         ),
-                        Expanded(child: pages[state.selectedIndex]),
+                        Expanded(
+                          child: ShellNavigationConfig.getPage(
+                            state.selectedIndex,
+                            context,
+                          ),
+                        ),
                       ],
                     ),
                   ),

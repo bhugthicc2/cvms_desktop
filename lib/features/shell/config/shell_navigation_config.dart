@@ -25,58 +25,90 @@ import 'package:cvms_desktop/features/violation_management/pages/violation_manag
 import 'package:cvms_desktop/features/profile/pages/profile_page.dart';
 import '../../vehicle_monitoring/data/vehicle_monitoring_repository.dart'
     as vehicle_repo;
+import '../bloc/shell_cubit.dart';
 
 class ShellNavigationConfig {
-  static final pages = <Widget>[
-    DashboardPage(),
-    BlocProvider(
-      create:
-          (context) =>
-              VehicleMonitoringCubit(vehicle_repo.DashboardRepository()),
-      child: const VehicleMonitoringPage(),
-    ),
+  static Widget getPage(int index, BuildContext context) {
+    final shellCubit = context.read<ShellCubit>();
 
-    BlocProvider(
-      create: (context) => VehicleLogsCubit(VehicleLogsRepository()),
-      child: const VehicleLogsPage(),
-    ),
-    BlocProvider(
-      create:
-          (context) => VehicleCubit(
-            VehicleRepository(),
-            AuthRepository(),
-            UserRepository(),
-            VehicleViolationRepository(),
-            VehicleLogsRepository(),
-          ),
-      child: const VehicleManagementPage(),
-    ),
+    switch (index) {
+      case 0:
+        return const DashboardPage();
 
-    MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create:
-              (context) => UserCubit(repository: user_mgmt.UserRepository()),
-        ),
-        BlocProvider(
-          create:
-              (context) => UserManagementBloc(
-                authRepository: AuthRepository(),
-                userRepository: UserRepository(),
-              ),
-        ),
-      ],
-      child: const UserManagementPage(),
-    ),
-    BlocProvider(
-      create: (context) => ViolationCubit(),
-      child: ViolationManagementPage(),
-    ),
-    ReportsPage(),
-    ActivityLogsPage(),
-    ProfilePage(),
-    SettingsPage(),
-  ];
+      case 1:
+        final cubit =
+            shellCubit.getCachedBloc<VehicleMonitoringCubit>(1) ??
+            VehicleMonitoringCubit(vehicle_repo.DashboardRepository());
+        return BlocProvider.value(
+          value: cubit,
+          child: const VehicleMonitoringPage(),
+        );
+
+      case 2:
+        final cubit =
+            shellCubit.getCachedBloc<VehicleLogsCubit>(2) ??
+            VehicleLogsCubit(VehicleLogsRepository());
+        return BlocProvider.value(value: cubit, child: const VehicleLogsPage());
+
+      case 3:
+        final cubit =
+            shellCubit.getCachedBloc<VehicleCubit>(3) ??
+            VehicleCubit(
+              VehicleRepository(),
+              AuthRepository(),
+              UserRepository(),
+              VehicleViolationRepository(),
+              VehicleLogsRepository(),
+            );
+        return BlocProvider.value(
+          value: cubit,
+          child: const VehicleManagementPage(),
+        );
+
+      case 4:
+        final userCubit =
+            shellCubit.getCachedBloc<UserCubit>(4) ??
+            UserCubit(repository: user_mgmt.UserRepository());
+        final userMgmtBloc = UserManagementBloc(
+          authRepository: AuthRepository(),
+          userRepository: UserRepository(),
+        );
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: userCubit),
+            BlocProvider.value(value: userMgmtBloc),
+          ],
+          child: const UserManagementPage(),
+        );
+
+      case 5:
+        final cubit =
+            shellCubit.getCachedBloc<ViolationCubit>(5) ?? ViolationCubit();
+        return BlocProvider.value(
+          value: cubit,
+          child: ViolationManagementPage(),
+        );
+
+      case 6:
+        return const ReportsPage();
+
+      case 7:
+        return const ActivityLogsPage();
+
+      case 8:
+        return const ProfilePage();
+
+      case 9:
+        return const SettingsPage();
+
+      default:
+        return const DashboardPage();
+    }
+  }
+
+  static Widget getProviderPage(int index, BuildContext context) {
+    return getPage(index, context);
+  }
 
   static final titles = <String>[
     "Dashboard",
