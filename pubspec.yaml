@@ -57,6 +57,7 @@ dependencies:
   csv: ^6.0.0
   #filepicker
   file_picker: ^10.3.3
+  skeletonizer: ^1.4.3
 
 dev_dependencies:
   flutter_test:

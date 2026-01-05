@@ -51,4 +51,16 @@ class VehicleEntry {
   String toString() {
     return 'VehicleEntry(owner: $ownerName, plate: $plateNumber, docId: $docId)';
   }
+
+  static VehicleEntry sample() {
+    return VehicleEntry(
+      docId: 'sample-doc-id',
+      vehicleId: 'sample-vehicle-id',
+      ownerName: 'Sample Owner',
+      vehicleModel: 'Sample Model',
+      plateNumber: 'ABC-123',
+      timeIn: DateTime.now().subtract(const Duration(hours: 2)),
+      timeOut: null,
+    );
+  }
 }

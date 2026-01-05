@@ -2,11 +2,13 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/models/vehicle_entry.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/dialogs/custom_view_dialog.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/sections/dashboard_overview.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/tables/vehicle_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class VehicleMonitoringPage extends StatefulWidget {
   const VehicleMonitoringPage({super.key});
@@ -54,15 +56,53 @@ class _VehicleMonitoringPageState extends State<VehicleMonitoringPage> {
             const DashboardOverview(),
             Spacing.vertical(size: AppSpacing.medium),
             Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: BlocBuilder<
-                      VehicleMonitoringCubit,
-                      VehicleMonitoringState
-                    >(
-                      builder: (context, state) {
-                        return VehicleTable(
+              child: BlocBuilder<
+                VehicleMonitoringCubit,
+                VehicleMonitoringState
+              >(
+                builder: (context, state) {
+                  if (state.loading) {
+                    return Skeletonizer(
+                      enabled: state.loading,
+
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: VehicleTable(
+                              title: "ONSITE",
+                              entries: List.generate(
+                                5,
+                                (index) => VehicleEntry.sample(),
+                              ),
+                              searchController: enteredSearchController,
+                              hasSearchQuery:
+                                  enteredSearchController.text.isNotEmpty,
+                              onCellTap: (details) {},
+                            ),
+                          ),
+                          Spacing.horizontal(size: AppSpacing.medium),
+                          Expanded(
+                            child: VehicleTable(
+                              title: "OFFSITE",
+                              entries: List.generate(
+                                5,
+                                (index) => VehicleEntry.sample(),
+                              ),
+                              searchController: exitedSearchController,
+                              hasSearchQuery:
+                                  exitedSearchController.text.isNotEmpty,
+                              onCellTap: (details) {},
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: VehicleTable(
                           title: "ONSITE",
                           entries: state.enteredFiltered,
                           searchController: enteredSearchController,
@@ -91,18 +131,11 @@ class _VehicleMonitoringPageState extends State<VehicleMonitoringPage> {
                                   ),
                             );
                           },
-                        );
-                      },
-                    ),
-                  ),
-                  Spacing.horizontal(size: AppSpacing.medium),
-                  Expanded(
-                    child: BlocBuilder<
-                      VehicleMonitoringCubit,
-                      VehicleMonitoringState
-                    >(
-                      builder: (context, state) {
-                        return VehicleTable(
+                        ),
+                      ),
+                      Spacing.horizontal(size: AppSpacing.medium),
+                      Expanded(
+                        child: VehicleTable(
                           title: "OFFSITE",
                           entries: state.exitedFiltered,
                           searchController: exitedSearchController,
@@ -130,11 +163,11 @@ class _VehicleMonitoringPageState extends State<VehicleMonitoringPage> {
                                   ),
                             );
                           },
-                        );
-                      },
-                    ),
-                  ),
-                ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ],

@@ -27,11 +27,14 @@ class VehicleMonitoringCubit extends Cubit<VehicleMonitoringState> {
   }
 
   void startListening() {
+    emit(state.copyWith(loading: true));
+
     //  vehicle logs stream
     _logsSub = repository.streamVehicleLogs().listen((entries) {
       if (!isClosed) {
         emit(
           state.copyWith(
+            loading: false,
             allEntries: entries,
             enteredFiltered:
                 entries
@@ -107,7 +110,7 @@ class VehicleMonitoringCubit extends Cubit<VehicleMonitoringState> {
                   e.plateNumber.toLowerCase().contains(query.toLowerCase()));
         }).toList();
 
-    emit(state.copyWith(enteredFiltered: filtered));
+    emit(state.copyWith(enteredFiltered: filtered, loading: false));
   }
 
   void filterExited(String query) {
@@ -119,7 +122,7 @@ class VehicleMonitoringCubit extends Cubit<VehicleMonitoringState> {
                   e.plateNumber.toLowerCase().contains(query.toLowerCase()));
         }).toList();
 
-    emit(state.copyWith(exitedFiltered: filtered));
+    emit(state.copyWith(exitedFiltered: filtered, loading: false));
   }
 
   Future<void> deleteVehicleLog(String docId) async {

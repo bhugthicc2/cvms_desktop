@@ -1,6 +1,5 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:cvms_desktop/core/widgets/app/custom_progress_indicator.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/sections/dashboard_overview.dart';
@@ -14,6 +13,7 @@ import 'package:cvms_desktop/features/dashboard/widgets/charts/line_chart_widget
 import 'package:cvms_desktop/features/dashboard/widgets/charts/stacked_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../bloc/dashboard_cubit.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -46,7 +46,63 @@ class _DashboardPageState extends State<DashboardPage> {
         body: BlocBuilder<DashboardCubit, DashboardState>(
           builder: (context, state) {
             if (state.loading) {
-              return const Center(child: CustomProgressIndicator());
+              return Skeletonizer(
+                enabled: state.loading,
+
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.medium),
+                  child: Column(
+                    children: [
+                      const DashboardOverview(),
+                      Spacing.vertical(size: AppSpacing.medium),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: DonutChartWidget(
+                                onViewTap: () {},
+                                data: state.vehicleDistribution,
+                                title:
+                                    'College/Department Vehicle Distribution',
+                              ),
+                            ),
+                            Spacing.horizontal(size: AppSpacing.medium),
+                            Expanded(
+                              child: BarChartWidget(
+                                onViewTap: () {},
+                                data: state.topViolations,
+                                title: 'Top violation',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Spacing.vertical(size: AppSpacing.medium),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: LineChartWidget(
+                                onViewTap: () {},
+                                data: state.weeklyTrend,
+                                title: 'Vehicle Logs for the last',
+                              ),
+                            ),
+                            Spacing.horizontal(size: AppSpacing.medium),
+                            Expanded(
+                              child: StackedBarWidget(
+                                onViewTap: () {},
+                                data: state.topViolators,
+                                title: 'Student with Most Violations',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             }
             if (state.error != null) {
               return Center(child: Text('Error: ${state.error}'));

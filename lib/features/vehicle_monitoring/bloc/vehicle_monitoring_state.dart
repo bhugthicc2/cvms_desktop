@@ -8,6 +8,7 @@ class VehicleMonitoringState {
   final int totalViolations;
   final int totalEntered;
   final int totalExited;
+  final bool loading;
 
   VehicleMonitoringState({
     required this.allEntries,
@@ -17,6 +18,7 @@ class VehicleMonitoringState {
     required this.totalViolations,
     required this.totalEntered,
     required this.totalExited,
+    this.loading = false,
   });
 
   factory VehicleMonitoringState.initial() => VehicleMonitoringState(
@@ -27,6 +29,7 @@ class VehicleMonitoringState {
     totalViolations: 0,
     totalEntered: 0,
     totalExited: 0,
+    loading: true,
   );
 
   VehicleMonitoringState copyWith({
@@ -37,6 +40,7 @@ class VehicleMonitoringState {
     int? totalViolations,
     int? totalEntered,
     int? totalExited,
+    bool? loading,
   }) {
     return VehicleMonitoringState(
       allEntries: allEntries ?? this.allEntries,
@@ -46,6 +50,7 @@ class VehicleMonitoringState {
       totalViolations: totalViolations ?? this.totalViolations,
       totalEntered: totalEntered ?? this.totalEntered,
       totalExited: totalExited ?? this.totalExited,
+      loading: loading ?? this.loading,
     );
   }
 }
