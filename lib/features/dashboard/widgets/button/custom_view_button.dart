@@ -21,6 +21,7 @@ class CustomViewButton extends StatelessWidget {
       child: Row(
         children: [
           Text(buttonTxt, style: TextStyle(color: AppColors.donutBlue)),
+          const SizedBox(width: 4),
           Icon(
             PhosphorIconsBold.arrowUpRight,
             size: iconSize,

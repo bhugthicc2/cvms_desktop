@@ -2,6 +2,10 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/skeletons/bar_chart_skeleton.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/skeletons/donut_chart_skeleton.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/skeletons/line_chart_skeleton.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/skeletons/stacked_bar_skeleton.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/sections/dashboard_overview.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/data/vehicle_monitoring_repository.dart';
@@ -47,8 +51,7 @@ class _DashboardPageState extends State<DashboardPage> {
           builder: (context, state) {
             if (state.loading) {
               return Skeletonizer(
-                enabled: state.loading,
-
+                enabled: true,
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.medium),
                   child: Column(
@@ -59,19 +62,13 @@ class _DashboardPageState extends State<DashboardPage> {
                         child: Row(
                           children: [
                             Expanded(
-                              child: DonutChartWidget(
-                                onViewTap: () {},
-                                data: state.vehicleDistribution,
-                                title:
-                                    'College/Department Vehicle Distribution',
-                              ),
+                              child: DonutChartSkeleton(onViewTap: () {}),
                             ),
                             Spacing.horizontal(size: AppSpacing.medium),
                             Expanded(
-                              child: BarChartWidget(
-                                onViewTap: () {},
-                                data: state.topViolations,
+                              child: BarChartSkeleton(
                                 title: 'Top violation',
+                                onViewTap: () {},
                               ),
                             ),
                           ],
@@ -82,18 +79,13 @@ class _DashboardPageState extends State<DashboardPage> {
                         child: Row(
                           children: [
                             Expanded(
-                              child: LineChartWidget(
-                                onViewTap: () {},
-                                data: state.weeklyTrend,
-                                title: 'Vehicle Logs for the last',
-                              ),
+                              child: LineChartSkeleton(onViewTap: () {}),
                             ),
                             Spacing.horizontal(size: AppSpacing.medium),
                             Expanded(
-                              child: StackedBarWidget(
-                                onViewTap: () {},
-                                data: state.topViolators,
+                              child: StackedBarSkeleton(
                                 title: 'Student with Most Violations',
+                                onViewTap: () {},
                               ),
                             ),
                           ],
@@ -104,6 +96,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
               );
             }
+
             if (state.error != null) {
               return Center(child: Text('Error: ${state.error}'));
             }

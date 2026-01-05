@@ -10,6 +10,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   Future<void> loadAll() async {
     if (isClosed) return;
     emit(state.copyWith(loading: true, error: null));
+
     try {
       final results = await Future.wait([
         dataSource.fetchVehicleDistribution(),
