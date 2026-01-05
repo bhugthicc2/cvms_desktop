@@ -3,16 +3,13 @@ import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/features/report_and_analytics/widgets/titles/custom_chart_title.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import '../../../models/chart_data_model.dart';
+import '../../models/chart_data_model.dart';
 
 class BarChartWidget extends StatelessWidget {
   final List<ChartDataModel> data;
   final VoidCallback onViewTap;
   final String title;
   final Function(ChartPointDetails)? onBarChartPointTap;
-  final bool showViewBtn;
-  final bool showSearchBar;
-  final TextEditingController? controller;
 
   const BarChartWidget({
     super.key,
@@ -20,9 +17,6 @@ class BarChartWidget extends StatelessWidget {
     this.title = '',
     this.onBarChartPointTap,
     required this.onViewTap,
-    this.showViewBtn = true,
-    this.showSearchBar = false,
-    this.controller,
   });
 
   @override
@@ -66,13 +60,7 @@ class BarChartWidget extends StatelessWidget {
             if (title.isNotEmpty)
               Align(
                 alignment: Alignment.centerLeft,
-                child: CustomChartTitle(
-                  title: title,
-                  onViewTap: onViewTap,
-                  showSearchBar: showSearchBar,
-                  showViewBtn: showViewBtn,
-                  controller: controller,
-                ),
+                child: CustomChartTitle(title: title, onViewTap: onViewTap),
               ),
             Expanded(
               child: MouseRegion(

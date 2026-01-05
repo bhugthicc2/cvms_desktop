@@ -3,16 +3,13 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/features/report_and_analytics/widgets/titles/custom_chart_title.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import '../../../models/chart_data_model.dart';
+import '../../models/chart_data_model.dart';
 
 class DonutChartWidget extends StatelessWidget {
   final VoidCallback onViewTap;
   final List<ChartDataModel> data;
   final String title;
   final Function(ChartPointDetails)? onDonutChartPointTap;
-  final bool showViewBtn;
-  final bool showSearchBar;
-  final TextEditingController? controller;
 
   const DonutChartWidget({
     super.key,
@@ -20,9 +17,6 @@ class DonutChartWidget extends StatelessWidget {
     this.title = '',
     this.onDonutChartPointTap,
     required this.onViewTap,
-    this.showViewBtn = true,
-    this.showSearchBar = false,
-    this.controller,
   });
 
   @override
@@ -68,13 +62,7 @@ class DonutChartWidget extends StatelessWidget {
             if (title.isNotEmpty)
               Align(
                 alignment: Alignment.centerLeft,
-                child: CustomChartTitle(
-                  title: title,
-                  onViewTap: onViewTap,
-                  showViewBtn: showViewBtn,
-                  showSearchBar: showSearchBar,
-                  controller: controller,
-                ),
+                child: CustomChartTitle(title: title, onViewTap: onViewTap),
               ),
 
             Expanded(
@@ -162,7 +150,6 @@ class DonutChartWidget extends StatelessWidget {
                           innerRadius: '60%',
                           strokeWidth: 2,
                           strokeColor: AppColors.white,
-
                           pointColorMapper: (data, index) {
                             final colors = [
                               AppColors.donutBlue,

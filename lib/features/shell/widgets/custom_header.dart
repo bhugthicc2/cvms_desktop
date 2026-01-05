@@ -14,7 +14,6 @@ class CustomHeader extends StatelessWidget {
   final String currentUser;
   final List<Widget>? actions;
   final VoidCallback? onMenuPressed;
-  final Widget? subNavigation;
 
   const CustomHeader({
     super.key,
@@ -22,7 +21,6 @@ class CustomHeader extends StatelessWidget {
     this.actions,
     this.onMenuPressed,
     required this.currentUser,
-    this.subNavigation,
   });
 
   @override
@@ -60,13 +58,7 @@ class CustomHeader extends StatelessWidget {
             ),
           ),
           Expanded(child: MoveWindow()),
-          if (subNavigation != null) ...[
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: subNavigation!,
-            ),
-          ],
-          Expanded(child: MoveWindow()),
+          
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Row(

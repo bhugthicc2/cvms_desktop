@@ -1,4 +1,3 @@
-import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/features/auth/bloc/current_user_cubit.dart';
 import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
 import 'package:cvms_desktop/features/auth/data/user_repository.dart';
@@ -14,30 +13,9 @@ import 'package:cvms_desktop/features/shell/bloc/shell_cubit.dart';
 import 'package:cvms_desktop/features/shell/config/shell_navigation_config.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_header.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_sidebar.dart';
-import 'package:cvms_desktop/features/report_and_analytics/pages/report_and_analytics_page.dart';
 
-class ShellPage extends StatefulWidget {
+class ShellPage extends StatelessWidget {
   const ShellPage({super.key});
-
-  @override
-  State<ShellPage> createState() => _ShellPageState();
-}
-
-class _ShellPageState extends State<ShellPage>
-    with SingleTickerProviderStateMixin {
-  late TabController? _reportTabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _reportTabController = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _reportTabController?.dispose();
-    super.dispose();
-  }
 
   void _handleLogout(BuildContext context) async {
     final confirmed = await LogoutDialog.show(context);
@@ -79,39 +57,6 @@ class _ShellPageState extends State<ShellPage>
           builder: (context, state) {
             final pages = ShellNavigationConfig.pages;
             final titles = ShellNavigationConfig.titles;
-            final reportIndex = 5; // Index for Reports and Analytics
-
-            Widget? subNavigation;
-            if (state.selectedIndex == reportIndex) {
-              subNavigation = TabBar(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                tabAlignment: TabAlignment.center,
-                controller: _reportTabController,
-                dividerHeight: 0,
-                labelColor: AppColors.primary,
-                unselectedLabelColor: AppColors.black,
-                indicatorColor: AppColors.primary,
-                labelStyle: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Poppins',
-                ),
-                unselectedLabelStyle: const TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontFamily: 'Poppins',
-                ),
-                isScrollable: true,
-                tabs: [Tab(text: 'Overview'), Tab(text: 'Vehicle Report')],
-              );
-            }
-
-            Widget body;
-            if (state.selectedIndex == reportIndex) {
-              body = ReportAndAnalyticsPage(
-                tabController: _reportTabController,
-              );
-            } else {
-              body = pages[state.selectedIndex];
-            }
 
             return Scaffold(
               body: Row(
@@ -132,7 +77,6 @@ class _ShellPageState extends State<ShellPage>
                             return CustomHeader(
                               currentUser: userState.fullname ?? "Guest",
                               title: titles[state.selectedIndex],
-                              subNavigation: subNavigation,
                               onMenuPressed:
                                   () =>
                                       context
@@ -141,7 +85,7 @@ class _ShellPageState extends State<ShellPage>
                             );
                           },
                         ),
-                        Expanded(child: body),
+                        Expanded(child: pages[state.selectedIndex]),
                       ],
                     ),
                   ),
