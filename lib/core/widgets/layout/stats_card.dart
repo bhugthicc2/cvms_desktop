@@ -87,6 +87,7 @@ class StatsCard extends StatelessWidget {
             Spacing.horizontal(size: AppSpacing.medium),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   "$value",

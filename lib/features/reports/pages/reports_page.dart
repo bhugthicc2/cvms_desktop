@@ -1,9 +1,15 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/utils/card_decor.dart';
+import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/button/custom_view_button.dart';
 import 'package:cvms_desktop/features/reports/widgets/report_header.dart';
+import 'package:cvms_desktop/features/reports/widgets/vehicle_info_text.dart';
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+
+import '../../../core/widgets/layout/stats_card.dart';
 
 class ReportsPage extends StatelessWidget {
   const ReportsPage({super.key});
@@ -45,7 +51,7 @@ class ReportsPage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: AppSpacing.medium),
                 child: SizedBox(
-                  height: 260,
+                  height: 230,
                   child: Row(
                     children: [
                       // LEFT: 2x2 stat cards
@@ -54,20 +60,35 @@ class ReportsPage extends StatelessWidget {
                         child: Column(
                           children: [
                             Expanded(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      decoration: cardDecoration(),
+                              child: SizedBox(
+                                height: 110,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: StatsCard(
+                                        angle: 0,
+                                        color: AppColors.white,
+                                        icon: PhosphorIconsBold.calendarMinus,
+                                        label: "Days Until Expiration",
+                                        value: 150,
+                                        gradient: AppColors.greenWhite,
+                                        iconColor: AppColors.chartGreenv2,
+                                      ),
                                     ),
-                                  ),
-                                  Spacing.horizontal(size: AppSpacing.medium),
-                                  Expanded(
-                                    child: Container(
-                                      decoration: cardDecoration(),
+                                    Spacing.horizontal(size: AppSpacing.medium),
+                                    Expanded(
+                                      child: StatsCard(
+                                        angle: 0,
+                                        color: AppColors.orange,
+                                        icon: PhosphorIconsBold.calendarMinus,
+                                        label: "Active Violations",
+                                        value: 22,
+                                        gradient: AppColors.yellowOrange,
+                                        iconColor: AppColors.orange,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                             Spacing.vertical(size: AppSpacing.medium),
@@ -75,14 +96,26 @@ class ReportsPage extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: Container(
-                                      decoration: cardDecoration(),
+                                    child: StatsCard(
+                                      angle: 0,
+                                      color: AppColors.white,
+                                      icon: PhosphorIconsBold.calendarMinus,
+                                      label: "Total Violations",
+                                      value: 230,
+                                      gradient: AppColors.purpleBlue,
+                                      iconColor: AppColors.primary,
                                     ),
                                   ),
                                   Spacing.horizontal(size: AppSpacing.medium),
                                   Expanded(
-                                    child: Container(
-                                      decoration: cardDecoration(),
+                                    child: StatsCard(
+                                      angle: 0,
+                                      color: AppColors.white,
+                                      icon: PhosphorIconsBold.calendarMinus,
+                                      label: "Total Entries/Exits",
+                                      value: 540,
+                                      gradient: AppColors.pinkWhite,
+                                      iconColor: AppColors.donutPink,
                                     ),
                                   ),
                                 ],
@@ -97,7 +130,135 @@ class ReportsPage extends StatelessWidget {
                       // RIGHT: Vehicle Info
                       Expanded(
                         flex: 2,
-                        child: Container(decoration: cardDecoration()),
+                        child: Container(
+                          decoration: cardDecoration(),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //title
+                              Padding(
+                                padding: const EdgeInsets.all(
+                                  AppSpacing.medium,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      PhosphorIconsBold.info,
+                                      size: 22,
+                                      color: AppColors.primary,
+                                    ),
+                                    Spacing.horizontal(size: AppSpacing.xSmall),
+                                    Text(
+                                      "Vehicle Information",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    CustomViewButton(
+                                      onTap: () {
+                                        //todo view all the vehicle info
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  AppSpacing.xLarge,
+                                  0,
+                                  AppSpacing.xLarge,
+                                  AppSpacing.medium,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          VehicleInfoText(
+                                            label: "Vehicle Make",
+                                            value: "Honda",
+                                          ),
+                                          Spacing.vertical(
+                                            size: AppSpacing.small,
+                                          ),
+                                          VehicleInfoText(
+                                            label: "Vehicle Model",
+                                            value: "Beat",
+                                          ),
+                                          Spacing.vertical(
+                                            size: AppSpacing.small,
+                                          ),
+                                          VehicleInfoText(
+                                            label: "Vehicle Type",
+                                            value: "Two-wheeled",
+                                          ),
+                                          Spacing.vertical(
+                                            size: AppSpacing.small,
+                                          ),
+                                          VehicleInfoText(
+                                            label: "Vehicle Color",
+                                            value: "Red",
+                                          ),
+                                          Spacing.vertical(
+                                            size: AppSpacing.small,
+                                          ),
+                                          VehicleInfoText(
+                                            label: "Plate Number",
+                                            value: "231421d",
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Spacing.horizontal(size: AppSpacing.medium),
+                                    CustomDivider(),
+                                    Spacing.horizontal(size: AppSpacing.medium),
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          VehicleInfoText(
+                                            label: "Owner",
+                                            value: "Otenciano Mautganon",
+                                          ),
+                                          Spacing.vertical(
+                                            size: AppSpacing.small,
+                                          ),
+                                          VehicleInfoText(
+                                            label: "College",
+                                            value: "CCS",
+                                          ),
+                                          Spacing.vertical(
+                                            size: AppSpacing.small,
+                                          ),
+                                          VehicleInfoText(
+                                            label: "Year Level",
+                                            value: "1st Year",
+                                          ),
+                                          Spacing.vertical(
+                                            size: AppSpacing.small,
+                                          ),
+                                          VehicleInfoText(
+                                            label: "Course",
+                                            value: "BS Computer Science",
+                                          ),
+                                          Spacing.vertical(
+                                            size: AppSpacing.small,
+                                          ),
+                                          VehicleInfoText(
+                                            label: "Block",
+                                            value: "A",
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
