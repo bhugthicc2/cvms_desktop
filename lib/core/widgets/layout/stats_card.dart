@@ -6,6 +6,7 @@ import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
 
 class StatsCard extends StatelessWidget {
+  final bool isWhiteTheme;
   final IconData icon;
   final String label;
   final int value;
@@ -13,6 +14,7 @@ class StatsCard extends StatelessWidget {
   final Gradient? gradient;
   final Color? iconColor;
   final double angle;
+  final bool addSideBorder;
 
   const StatsCard({
     super.key,
@@ -23,6 +25,8 @@ class StatsCard extends StatelessWidget {
     this.gradient,
     required this.iconColor,
     this.angle = 0.03,
+    this.isWhiteTheme = true,
+    this.addSideBorder = false,
   });
 
   @override
@@ -32,9 +36,14 @@ class StatsCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(AppSpacing.medium - 2),
         decoration: BoxDecoration(
+          color: isWhiteTheme ? AppColors.white : null,
           gradient:
-              gradient ??
-              LinearGradient(colors: [color.withValues(alpha: 0.9), color]),
+              isWhiteTheme
+                  ? null
+                  : gradient ??
+                      LinearGradient(
+                        colors: [color.withValues(alpha: 0.9), color],
+                      ),
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
@@ -47,16 +56,31 @@ class StatsCard extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              height: 35,
-              width: 35,
+              height: 40,
+              width: 40,
               decoration: BoxDecoration(
-                color: AppColors.white,
+                gradient:
+                    isWhiteTheme
+                        ? gradient
+                        : LinearGradient(
+                          colors: [color.withValues(alpha: 0.9), color],
+                        ),
                 borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: iconColor!.withValues(alpha: 0.5),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
               child: Icon(
                 icon,
                 size: 20,
-                color: iconColor ?? AppColors.white,
+                color:
+                    isWhiteTheme
+                        ? AppColors.white
+                        : iconColor ?? AppColors.white,
                 weight: 5,
               ),
             ),
@@ -69,14 +93,17 @@ class StatsCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: AppFontSizes.xLarge,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.white,
+                    color: isWhiteTheme ? AppColors.black : color,
                   ),
                 ),
                 Text(
                   label,
                   style: TextStyle(
                     fontSize: AppFontSizes.small,
-                    color: AppColors.white.withValues(alpha: 0.8),
+                    color:
+                        isWhiteTheme
+                            ? AppColors.grey.withValues(alpha: 0.9)
+                            : AppColors.white.withValues(alpha: 0.8),
                   ),
                 ),
               ],

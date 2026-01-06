@@ -42,7 +42,7 @@ class SearchField extends StatelessWidget {
         height: searchFieldHeight,
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: TextField(
           style: TextStyle(fontSize: txtFontSize),
@@ -54,14 +54,17 @@ class SearchField extends StatelessWidget {
           decoration: InputDecoration(
             maintainHintHeight: true,
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: AppColors.grey, width: 1),
-              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(
+                color: AppColors.grey.withValues(alpha: 0.5),
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(8),
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: AppColors.primary, width: 2),
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(8),
             ),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             hintText: hintText,
             hintStyle: TextStyle(fontSize: hintFontSize, color: AppColors.grey),
             contentPadding: EdgeInsets.symmetric(

@@ -9,7 +9,12 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class DashboardOverview extends StatelessWidget {
   final double angle;
-  const DashboardOverview({super.key, this.angle = 0.03});
+  final bool isWhiteTheme;
+  const DashboardOverview({
+    super.key,
+    this.angle = 0.03,
+    this.isWhiteTheme = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +24,7 @@ class DashboardOverview extends StatelessWidget {
           children: [
             Expanded(
               child: StatsCard(
+                isWhiteTheme: isWhiteTheme,
                 angle: angle,
                 color: AppColors.white,
                 icon: PhosphorIconsBold.signIn,
@@ -31,6 +37,7 @@ class DashboardOverview extends StatelessWidget {
             const Spacing.horizontal(size: AppSpacing.medium),
             Expanded(
               child: StatsCard(
+                isWhiteTheme: isWhiteTheme,
                 angle: angle,
                 color: AppColors.white,
                 icon: PhosphorIconsBold.signOut,
@@ -43,6 +50,7 @@ class DashboardOverview extends StatelessWidget {
             const Spacing.horizontal(size: AppSpacing.medium),
             Expanded(
               child: StatsCard(
+                isWhiteTheme: isWhiteTheme,
                 angle: angle,
                 color: AppColors.white,
                 icon: PhosphorIconsBold.warning,
@@ -55,6 +63,7 @@ class DashboardOverview extends StatelessWidget {
             const Spacing.horizontal(size: AppSpacing.medium),
             Expanded(
               child: StatsCard(
+                isWhiteTheme: isWhiteTheme,
                 angle: angle,
                 color: AppColors.white,
                 icon: PhosphorIconsBold.motorcycle,

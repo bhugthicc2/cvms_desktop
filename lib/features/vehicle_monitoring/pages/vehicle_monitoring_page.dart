@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/skeleton/dashboard_overview_skeleton.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/skeletons/table_skeleton.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';
@@ -61,7 +62,8 @@ class _VehicleMonitoringPageState extends State<VehicleMonitoringPage> {
                 enabled: true,
                 child: Column(
                   children: [
-                    const DashboardOverview(),
+                    buildSkeletonDashOverview(),
+
                     Spacing.vertical(size: AppSpacing.medium),
                     Expanded(
                       child: Row(

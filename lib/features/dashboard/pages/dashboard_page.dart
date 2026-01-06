@@ -2,6 +2,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+import 'package:cvms_desktop/core/widgets/skeleton/dashboard_overview_skeleton.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/skeletons/bar_chart_skeleton.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/skeletons/donut_chart_skeleton.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/skeletons/line_chart_skeleton.dart';
@@ -56,7 +57,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   padding: const EdgeInsets.all(AppSpacing.medium),
                   child: Column(
                     children: [
-                      const DashboardOverview(),
+                      buildSkeletonDashOverview(),
                       Spacing.vertical(size: AppSpacing.medium),
                       Expanded(
                         child: Row(
