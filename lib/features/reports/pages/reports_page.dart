@@ -142,12 +142,6 @@ class ReportsPage extends StatelessWidget {
                                 ),
                                 child: Row(
                                   children: [
-                                    Icon(
-                                      PhosphorIconsBold.info,
-                                      size: 22,
-                                      color: AppColors.primary,
-                                    ),
-                                    Spacing.horizontal(size: AppSpacing.xSmall),
                                     Text(
                                       "Vehicle Information",
                                       style: TextStyle(
@@ -278,9 +272,13 @@ class ReportsPage extends StatelessWidget {
                   height: 320,
                   child: Row(
                     children: [
-                      Expanded(child: Container(decoration: cardDecoration())),
+                      Expanded(
+                        child: Container(decoration: cardDecoration()),
+                      ), //violation by type bar chart
                       Spacing.horizontal(size: AppSpacing.medium),
-                      Expanded(child: Container(decoration: cardDecoration())),
+                      Expanded(
+                        child: Container(decoration: cardDecoration()),
+                      ), //vehicle logs line chart (weekly, monthly and yearly)
                     ],
                   ),
                 ),
