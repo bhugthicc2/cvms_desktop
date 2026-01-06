@@ -1,3 +1,4 @@
+import 'package:cvms_desktop/features/vehicle_logs_management/widgets/skeletons/table_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
@@ -50,23 +51,8 @@ class _VehicleLogsPageState extends State<VehicleLogsPage> {
           builder: (context, state) {
             if (state.isLoading) {
               return Skeletonizer(
-                enabled: state.isLoading,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: VehicleLogsTable(
-                        title: "Vehicles Onsite",
-                        logs: List.generate(
-                          5,
-                          (index) => VehicleLogModel.sample(),
-                        ),
-                        searchController: onsiteSearchController,
-                        hasSearchQuery: onsiteSearchController.text.isNotEmpty,
-                        onCellTap: (details) {},
-                      ),
-                    ),
-                  ],
-                ),
+                enabled: true,
+                child: Row(children: [Expanded(child: buildSkeletonTable())]),
               );
             }
 

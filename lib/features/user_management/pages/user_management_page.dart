@@ -3,7 +3,7 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_cubit.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_management_bloc.dart';
-import 'package:cvms_desktop/features/user_management/models/user_model.dart';
+import 'package:cvms_desktop/features/user_management/widgets/skeletons/table_skeleton.dart';
 import 'package:cvms_desktop/features/user_management/widgets/tables/user_table.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -77,14 +77,10 @@ class _UserManagementPageState extends State<UserManagementPage> {
           ],
           child: BlocBuilder<UserCubit, UserState>(
             builder: (context, state) {
-              if (state.isLoading && state.allEntries.isEmpty) {
+              if (state.isLoading) {
                 return Skeletonizer(
                   enabled: state.isLoading,
-                  child: UserTable(
-                    title: "User Management",
-                    entries: List.generate(5, (index) => UserEntry.sample()),
-                    searchController: searchController,
-                  ),
+                  child: buildSkeletonTable(),
                 );
               }
 

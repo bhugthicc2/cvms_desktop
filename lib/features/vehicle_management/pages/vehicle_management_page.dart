@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/skeletons/table_skeleton.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/tables/vehicle_table.dart';
 import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,11 +45,7 @@ class _VehicleManagementPageState extends State<VehicleManagementPage> {
             if (state.isLoading) {
               return Skeletonizer(
                 enabled: state.isLoading,
-                child: VehicleTable(
-                  title: "Vehicle Management",
-                  entries: List.generate(5, (index) => VehicleEntry.sample()),
-                  searchController: vehicleController,
-                ),
+                child: buildSkeletonTable(),
               );
             }
 

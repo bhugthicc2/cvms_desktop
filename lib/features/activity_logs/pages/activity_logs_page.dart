@@ -7,7 +7,6 @@ import 'package:cvms_desktop/features/activity_logs/bloc/activity_logs_cubit.dar
 import 'package:cvms_desktop/features/activity_logs/data/activity_logs_repository.dart';
 import 'package:cvms_desktop/features/activity_logs/models/activity_entry.dart';
 import 'package:cvms_desktop/features/activity_logs/widgets/tables/activity_table.dart';
-import 'package:cvms_desktop/core/widgets/app/custom_loading_indicator.dart';
 
 class ActivityLogsPage extends StatefulWidget {
   const ActivityLogsPage({super.key});
@@ -35,8 +34,28 @@ class _ActivityLogsPageState extends State<ActivityLogsPage> {
     super.dispose();
   }
 
-  Widget _buildLoadingState() {
-    return const Center(child: CustomLoadingIndicator());
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.history, color: Colors.grey, size: 48),
+          const SizedBox(height: 16),
+          Text(
+            'No activity logs found',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Activity logs will appear here when users perform actions',
+            textAlign: TextAlign.center,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildErrorState(String error) {
@@ -86,10 +105,10 @@ class _ActivityLogsPageState extends State<ActivityLogsPage> {
           return Scaffold(
             backgroundColor: AppColors.greySurface,
             body:
-                state.allLogs.isEmpty && state.error == null
-                    ? _buildLoadingState()
-                    : state.error != null
+                state.error != null
                     ? _buildErrorState(state.error!)
+                    : state.allLogs.isEmpty
+                    ? _buildEmptyState()
                     : _buildContent(state.filteredLogs),
           );
         },

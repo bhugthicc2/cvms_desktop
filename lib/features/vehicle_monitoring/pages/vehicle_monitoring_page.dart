@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/widgets/skeletons/table_skeleton.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/models/vehicle_entry.dart';
@@ -45,61 +46,45 @@ class _VehicleMonitoringPageState extends State<VehicleMonitoringPage> {
     super.dispose();
   }
 
+  // Helper method
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.greySurface,
       body: Padding(
         padding: const EdgeInsets.all(AppSpacing.medium),
-        child: Column(
-          children: [
-            const DashboardOverview(),
-            Spacing.vertical(size: AppSpacing.medium),
-            Expanded(
-              child: BlocBuilder<
-                VehicleMonitoringCubit,
-                VehicleMonitoringState
-              >(
-                builder: (context, state) {
-                  if (state.loading) {
-                    return Skeletonizer(
-                      enabled: state.loading,
-
+        child: BlocBuilder<VehicleMonitoringCubit, VehicleMonitoringState>(
+          builder: (context, state) {
+            if (state.loading) {
+              return Skeletonizer(
+                enabled: true,
+                child: Column(
+                  children: [
+                    const DashboardOverview(),
+                    Spacing.vertical(size: AppSpacing.medium),
+                    Expanded(
                       child: Row(
                         children: [
                           Expanded(
-                            child: VehicleTable(
-                              title: "ONSITE",
-                              entries: List.generate(
-                                5,
-                                (index) => VehicleEntry.sample(),
-                              ),
-                              searchController: enteredSearchController,
-                              hasSearchQuery:
-                                  enteredSearchController.text.isNotEmpty,
-                              onCellTap: (details) {},
-                            ),
-                          ),
+                            child: buildSkeletonTable("ONSITE"),
+                          ), // Dummy widget
                           Spacing.horizontal(size: AppSpacing.medium),
-                          Expanded(
-                            child: VehicleTable(
-                              title: "OFFSITE",
-                              entries: List.generate(
-                                5,
-                                (index) => VehicleEntry.sample(),
-                              ),
-                              searchController: exitedSearchController,
-                              hasSearchQuery:
-                                  exitedSearchController.text.isNotEmpty,
-                              onCellTap: (details) {},
-                            ),
-                          ),
+                          Expanded(child: buildSkeletonTable("OFFSITE")),
                         ],
                       ),
-                    );
-                  }
+                    ),
+                  ],
+                ),
+              );
+            }
 
-                  return Row(
+            return Column(
+              children: [
+                const DashboardOverview(),
+                Spacing.vertical(size: AppSpacing.medium),
+                Expanded(
+                  child: Row(
                     children: [
                       Expanded(
                         child: VehicleTable(
@@ -166,11 +151,11 @@ class _VehicleMonitoringPageState extends State<VehicleMonitoringPage> {
                         ),
                       ),
                     ],
-                  );
-                },
-              ),
-            ),
-          ],
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
