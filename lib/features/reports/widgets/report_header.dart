@@ -8,12 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class ReportHeader extends StatelessWidget {
+  final String plateNumber;
   final VoidCallback onExportPDF;
   final VoidCallback onExportCSV;
   const ReportHeader({
     super.key,
     required this.onExportPDF,
     required this.onExportCSV,
+    required this.plateNumber,
   });
 
   @override
@@ -22,7 +24,7 @@ class ReportHeader extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            'Vehicle Report',
+            'Vehicle Report ($plateNumber)',
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,

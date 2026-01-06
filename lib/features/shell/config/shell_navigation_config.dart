@@ -90,7 +90,7 @@ class ShellNavigationConfig {
         );
 
       case 6:
-        return const ReportsPage();
+        return ReportsPage();
 
       case 7:
         return const ActivityLogsPage();

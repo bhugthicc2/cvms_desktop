@@ -3,7 +3,10 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/utils/card_decor.dart';
 import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/button/custom_view_button.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/charts/bar_chart_widget.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/charts/line_chart_widget.dart';
 import 'package:cvms_desktop/features/reports/widgets/report_header.dart';
 import 'package:cvms_desktop/features/reports/widgets/vehicle_info_text.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +15,25 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../core/widgets/layout/stats_card.dart';
 
 class ReportsPage extends StatelessWidget {
-  const ReportsPage({super.key});
+  ReportsPage({super.key});
+
+  //mock data
+  final List<ChartDataModel> violationTypeData = [
+    ChartDataModel(category: 'Speeding', value: 35),
+    ChartDataModel(category: 'Over Speed', value: 30),
+    ChartDataModel(category: 'Illegal Parking', value: 20),
+    ChartDataModel(category: 'No License', value: 15),
+  ];
+
+  final List<ChartDataModel> vehicleLogsData = [
+    ChartDataModel(category: 'Mon', value: 120, date: DateTime(2024, 1, 1)),
+    ChartDataModel(category: 'Tue', value: 150, date: DateTime(2024, 1, 2)),
+    ChartDataModel(category: 'Wed', value: 90, date: DateTime(2024, 1, 3)),
+    ChartDataModel(category: 'Thu', value: 170, date: DateTime(2024, 1, 4)),
+    ChartDataModel(category: 'Fri', value: 200, date: DateTime(2024, 1, 5)),
+    ChartDataModel(category: 'Sat', value: 140, date: DateTime(2024, 1, 6)),
+    ChartDataModel(category: 'Sun', value: 110, date: DateTime(2024, 1, 7)),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +55,7 @@ class ReportsPage extends StatelessWidget {
                       AppSpacing.medium,
                     ),
                     child: ReportHeader(
+                      plateNumber: '231421d',
                       onExportPDF: () {
                         //todo handle export PDF
                       },
@@ -145,7 +167,7 @@ class ReportsPage extends StatelessWidget {
                                     Text(
                                       "Vehicle Information",
                                       style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -273,11 +295,23 @@ class ReportsPage extends StatelessWidget {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Container(decoration: cardDecoration()),
+                        child: BarChartWidget(
+                          onViewTap: () {},
+                          onBarChartPointTap: (details) {},
+                          data:
+                              violationTypeData, //todo add a hardcoded data for now
+                          title: 'Violation by Type',
+                        ),
                       ), //violation by type bar chart
                       Spacing.horizontal(size: AppSpacing.medium),
                       Expanded(
-                        child: Container(decoration: cardDecoration()),
+                        child: LineChartWidget(
+                          onViewTap: () {},
+                          onLineChartPointTap: (details) {},
+                          data:
+                              vehicleLogsData, //todo add a hardcoded data for now
+                          title: 'Vehicle Logs for the last',
+                        ),
                       ), //vehicle logs line chart (weekly, monthly and yearly)
                     ],
                   ),
