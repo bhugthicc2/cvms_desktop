@@ -1,4 +1,5 @@
 import 'package:cvms_desktop/core/widgets/table/table_column_factory.dart';
+import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ViolationHistoryTableColumns {
@@ -17,16 +18,19 @@ class ViolationHistoryTableColumns {
         width: 100,
       ),
       TableColumnFactory.build(
+        alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'dateTime',
         label: 'Date/Time',
       ),
       TableColumnFactory.build(
+        alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'violationType',
         label: 'Violation Type',
       ),
       TableColumnFactory.build(
+        alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'reportedBy',
         label: 'Reported By',
@@ -35,14 +39,16 @@ class ViolationHistoryTableColumns {
         istableHeaderDark: istableHeaderDark,
         name: 'status',
         label: 'Status',
-        width: 120,
+        width: 140,
       ),
       TableColumnFactory.build(
+        alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'createdAt',
         label: 'Created At',
       ),
       TableColumnFactory.build(
+        alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'lastUpdated',
         label: 'Last Updated',

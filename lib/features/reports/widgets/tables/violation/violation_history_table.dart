@@ -1,6 +1,6 @@
 import 'package:cvms_desktop/features/reports/models/violation_history_model.dart';
-import 'package:cvms_desktop/features/reports/widgets/datasource/violation_history_data_source.dart';
-import 'package:cvms_desktop/features/reports/widgets/tables/violation_history_table_columns.dart';
+import 'package:cvms_desktop/features/reports/widgets/datasource/violation/violation_history_data_source.dart';
+import 'package:cvms_desktop/features/reports/widgets/tables/violation/violation_history_table_columns.dart';
 import 'package:cvms_desktop/core/widgets/table/custom_table.dart';
 import 'package:flutter/material.dart';
 

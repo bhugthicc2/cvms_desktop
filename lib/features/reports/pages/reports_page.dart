@@ -1,6 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/utils/card_decor.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
 import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
@@ -9,8 +10,8 @@ import 'package:cvms_desktop/features/dashboard/widgets/charts/bar_chart_widget.
 import 'package:cvms_desktop/features/dashboard/widgets/charts/line_chart_widget.dart';
 import 'package:cvms_desktop/features/reports/widgets/report_header.dart';
 import 'package:cvms_desktop/features/reports/widgets/report_table_header.dart';
-import 'package:cvms_desktop/features/reports/widgets/tables/violation_history_table.dart';
-import 'package:cvms_desktop/features/reports/widgets/tables/vehicle_logs_table.dart';
+import 'package:cvms_desktop/features/reports/widgets/tables/violation/violation_history_table.dart';
+import 'package:cvms_desktop/features/reports/widgets/tables/vehicle_logs/vehicle_logs_table.dart';
 import 'package:cvms_desktop/features/reports/widgets/vehicle_info_text.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -322,6 +323,16 @@ class ReportsPage extends StatelessWidget {
                       Spacing.horizontal(size: AppSpacing.medium),
                       Expanded(
                         child: LineChartWidget(
+                          customWidget: CustomDropdown(
+                            color: AppColors.donutBlue,
+                            fontSize: 14,
+                            verticalPadding: 0,
+                            items: const ['7 days', 'Month', 'Year'],
+                            initialValue: '7 days',
+                            onChanged: (value) {
+                              //todo
+                            },
+                          ),
                           onViewTap: () {},
                           onLineChartPointTap: (details) {},
                           data:

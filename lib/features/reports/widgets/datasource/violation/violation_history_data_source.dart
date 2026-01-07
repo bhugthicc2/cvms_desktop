@@ -89,6 +89,19 @@ class ViolationHistoryDataSource extends DataGridSource {
             ),
           ),
         );
+      case 'dateTime':
+        return Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            cell.value.toString(),
+            textAlign: TextAlign.left,
+            style: const TextStyle(
+              fontSize: AppFontSizes.small,
+              fontFamily: 'Poppins',
+            ),
+          ),
+        );
 
       case 'violationType':
         return Container(
@@ -102,6 +115,7 @@ class ViolationHistoryDataSource extends DataGridSource {
             style: const TextStyle(
               fontSize: AppFontSizes.small,
               fontFamily: 'Poppins',
+              fontWeight: FontWeight.w600,
             ),
           ),
         );
@@ -157,7 +171,7 @@ class ViolationHistoryDataSource extends DataGridSource {
 
       default:
         return Container(
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft,
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Text(
             cell.value.toString(),

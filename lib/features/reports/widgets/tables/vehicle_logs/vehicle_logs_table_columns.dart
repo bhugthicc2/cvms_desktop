@@ -1,4 +1,5 @@
 import 'package:cvms_desktop/core/widgets/table/table_column_factory.dart';
+import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class VehicleLogsTableColumns {
@@ -39,6 +40,7 @@ class VehicleLogsTableColumns {
         width: 120,
       ),
       TableColumnFactory.build(
+        alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'updatedBy',
         label: 'Updated By',
