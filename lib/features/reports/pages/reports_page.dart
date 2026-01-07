@@ -9,6 +9,8 @@ import 'package:cvms_desktop/features/dashboard/widgets/charts/bar_chart_widget.
 import 'package:cvms_desktop/features/dashboard/widgets/charts/line_chart_widget.dart';
 import 'package:cvms_desktop/features/reports/widgets/report_header.dart';
 import 'package:cvms_desktop/features/reports/widgets/report_table_header.dart';
+import 'package:cvms_desktop/features/reports/widgets/tables/violation_history_table.dart';
+import 'package:cvms_desktop/features/reports/widgets/tables/vehicle_logs_table.dart';
 import 'package:cvms_desktop/features/reports/widgets/vehicle_info_text.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -225,6 +227,13 @@ class ReportsPage extends StatelessWidget {
                                             label: "Plate Number",
                                             value: "231421d",
                                           ),
+                                          Spacing.vertical(
+                                            size: AppSpacing.small,
+                                          ),
+                                          VehicleInfoText(
+                                            label: "Date Registered",
+                                            value: "Dec. 23, 2025",
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -265,6 +274,13 @@ class ReportsPage extends StatelessWidget {
                                           VehicleInfoText(
                                             label: "Block",
                                             value: "A",
+                                          ),
+                                          Spacing.vertical(
+                                            size: AppSpacing.small,
+                                          ),
+                                          VehicleInfoText(
+                                            label: "Date Expired",
+                                            value: "May 23, 2026",
                                           ),
                                         ],
                                       ),
@@ -327,7 +343,12 @@ class ReportsPage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: AppSpacing.medium),
                 child: Container(
-                  padding: const EdgeInsets.all(AppSpacing.medium),
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.medium,
+                    AppSpacing.small,
+                    AppSpacing.medium,
+                    0,
+                  ),
                   height: 400, // table viewport
                   decoration: cardDecoration(),
                   child: Column(
@@ -335,6 +356,13 @@ class ReportsPage extends StatelessWidget {
                       ReportTableHeader(
                         tableTitle: 'Violation History',
                         onTap: () {},
+                      ),
+                      Spacing.vertical(size: AppSpacing.medium),
+                      const Expanded(
+                        child: ViolationHistoryTable(
+                          istableHeaderDark: false,
+                          allowSorting: true,
+                        ),
                       ),
                     ],
                   ),
@@ -351,7 +379,12 @@ class ReportsPage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: AppSpacing.medium),
                 child: Container(
-                  padding: const EdgeInsets.all(AppSpacing.medium),
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.medium,
+                    AppSpacing.small,
+                    AppSpacing.medium,
+                    0,
+                  ),
                   height: 400, // table viewport
                   decoration: cardDecoration(),
                   child: Column(
@@ -359,6 +392,13 @@ class ReportsPage extends StatelessWidget {
                       ReportTableHeader(
                         tableTitle: 'Vehicle Logs',
                         onTap: () {},
+                      ),
+                      Spacing.vertical(size: AppSpacing.medium),
+                      const Expanded(
+                        child: VehicleLogsTable(
+                          istableHeaderDark: false,
+                          allowSorting: true,
+                        ),
                       ),
                     ],
                   ),

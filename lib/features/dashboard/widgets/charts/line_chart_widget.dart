@@ -11,6 +11,7 @@ class LineChartWidget extends StatelessWidget {
   final String title;
   final Function(ChartPointDetails)? onLineChartPointTap;
   final VoidCallback onViewTap;
+  final Widget? customWidget;
 
   const LineChartWidget({
     super.key,
@@ -18,6 +19,7 @@ class LineChartWidget extends StatelessWidget {
     this.title = '',
     this.onLineChartPointTap,
     required this.onViewTap,
+    this.customWidget,
   });
 
   @override
@@ -73,16 +75,7 @@ class LineChartWidget extends StatelessWidget {
                     ),
                   ),
 
-                  CustomDropdown(
-                    color: AppColors.donutBlue,
-                    fontSize: 14,
-                    verticalPadding: 0,
-                    items: ['7 days', 'Month', 'Year'],
-                    initialValue: '7 days',
-                    onChanged: (value) {},
-
-                    ///todo
-                  ),
+                  customWidget ?? const SizedBox.shrink(),
                   Spacer(),
                   CustomViewButton(onTap: onViewTap),
                 ],

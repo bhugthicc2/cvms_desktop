@@ -39,9 +39,11 @@ class StackedBarWidget extends StatelessWidget {
       );
     }
 
+    // Calculate total for percentage
+    final total = data.fold<double>(0, (sum, item) => sum + item.value);
+
     return Container(
       margin: EdgeInsets.zero,
-
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(10),
@@ -72,8 +74,31 @@ class StackedBarWidget extends StatelessWidget {
                     dataSource: data,
                     xValueMapper: (d, _) => d.category,
                     yValueMapper: (d, _) => d.value,
-                    dataLabelSettings: const DataLabelSettings(
-                      isVisible: false,
+                    dataLabelSettings: DataLabelSettings(
+                      isVisible: true,
+                      labelPosition: ChartDataLabelPosition.outside,
+                      connectorLineSettings: const ConnectorLineSettings(
+                        type: ConnectorType.line,
+                        length: '15%',
+                      ),
+                      builder: (
+                        dynamic data,
+                        dynamic point,
+                        dynamic series,
+                        int pointIndex,
+                        int seriesIndex,
+                      ) {
+                        final value = (data as ChartDataModel).value;
+                        final percentage =
+                            total > 0 ? (value / total * 100) : 0;
+                        return Text(
+                          '${percentage.toStringAsFixed(1)}%',
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      },
                     ),
                     pointColorMapper: (data, index) {
                       final colors = [

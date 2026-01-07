@@ -38,76 +38,79 @@ class DonutChartSkeleton extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Legend section
-                Container(
-                  width: 180,
-                  padding: const EdgeInsets.only(right: AppSpacing.medium),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      6, // Match real chart's 6 items
-                      (_) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 6),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: const [
-                            // Color dot - match real chart's 10x10 size
-                            Skeleton.leaf(
-                              child: SizedBox(
-                                width: 15,
-                                height: 15,
-                                child: DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            // Category label - match real chart's ellipsis behavior
-                            Expanded(
-                              child: Skeleton.leaf(
-                                child: SizedBox(
-                                  height: 20,
-                                  width: double.infinity,
-                                  child: Text(
-                                    'Sample College',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            // Value - match real chart's left alignment
-                            Skeleton.leaf(
-                              child: SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: Text(
-                                  '23',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
                 // Donut chart section
                 Expanded(
                   child: Skeleton.leaf(
                     child: Container(
-                      width: 160,
-                      height: 160,
+                      width: 140,
+                      height: 140,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
                           width:
                               48, // Matches innerRadius: '60%' of 160px (96px inner, 64px outer)
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                // Legend section
+                Expanded(
+                  child: Container(
+                    width: 180,
+                    padding: const EdgeInsets.only(right: AppSpacing.medium),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        6, // Match real chart's 6 items
+                        (_) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: const [
+                              // Color dot - match real chart's 10x10 size
+                              Skeleton.leaf(
+                                child: SizedBox(
+                                  width: 15,
+                                  height: 15,
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              // Category label - match real chart's ellipsis behavior
+                              Expanded(
+                                child: Skeleton.leaf(
+                                  child: SizedBox(
+                                    height: 20,
+                                    width: double.infinity,
+                                    child: Text(
+                                      'Sample College',
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              // Value - match real chart's left alignment
+                              Expanded(
+                                child: Skeleton.leaf(
+                                  child: SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: Text(
+                                      '23',
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

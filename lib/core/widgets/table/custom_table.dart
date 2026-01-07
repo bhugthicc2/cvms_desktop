@@ -17,6 +17,8 @@ class CustomTable extends StatefulWidget {
   final DataGridCellTapCallback? onCellTap;
   final DataGridController? controller;
   final Key? gridKey;
+  final bool isTableHeaderDark;
+  final bool allowSorting;
 
   const CustomTable({
     super.key,
@@ -27,6 +29,8 @@ class CustomTable extends StatefulWidget {
     this.onCellTap,
     this.controller,
     this.gridKey,
+    this.isTableHeaderDark = true,
+    this.allowSorting = true,
   });
 
   @override
@@ -113,21 +117,28 @@ class _CustomTableState extends State<CustomTable> {
                 hasData
                     ? SfDataGridTheme(
                       data: SfDataGridThemeData(
-                        headerColor: AppColors.tableHeaderColor,
+                        headerColor:
+                            widget.isTableHeaderDark
+                                ? AppColors.tableHeaderColor
+                                : AppColors.greySurface,
                         gridLineStrokeWidth: 0,
                         sortIcon: Icon(
                           PhosphorIconsFill.caretDown,
-                          color: AppColors.white,
+                          color:
+                              widget.isTableHeaderDark
+                                  ? AppColors.white
+                                  : AppColors.grey,
                           size: 11,
                         ),
                       ),
                       child: SfDataGrid(
+                        headerGridLinesVisibility: GridLinesVisibility.none,
                         key: widget.gridKey,
                         controller: widget.controller,
                         onCellTap: widget.onCellTap,
                         gridLinesVisibility: GridLinesVisibility.none,
                         rowHeight: 34,
-                        allowSorting: true,
+                        allowSorting: widget.allowSorting,
                         headerRowHeight: AppDimensions.tableHeaderHeight,
                         source: _paginatedSource!,
                         columnWidthMode: ColumnWidthMode.fill,

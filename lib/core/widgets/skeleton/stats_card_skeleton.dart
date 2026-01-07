@@ -12,7 +12,7 @@ class StatsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return HoverRotate(
       child: Container(
-        padding: const EdgeInsets.all(AppSpacing.medium - 2),
+        padding: const EdgeInsets.all(AppSpacing.medium),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(8),

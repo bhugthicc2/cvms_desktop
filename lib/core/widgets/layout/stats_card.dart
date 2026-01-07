@@ -34,7 +34,7 @@ class StatsCard extends StatelessWidget {
     return HoverRotate(
       angle: angle,
       child: Container(
-        padding: const EdgeInsets.all(AppSpacing.medium - 2),
+        padding: const EdgeInsets.all(AppSpacing.medium),
         decoration: BoxDecoration(
           color: isWhiteTheme ? AppColors.white : null,
           gradient:

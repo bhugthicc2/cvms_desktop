@@ -1,12 +1,15 @@
 import '../models/chart_data_model.dart';
 import 'package:equatable/equatable.dart';
 
+enum TimeRange { days7, month, year }
+
 class DashboardState extends Equatable {
   final bool loading;
   final List<ChartDataModel> vehicleDistribution;
   final List<ChartDataModel> topViolations;
   final List<ChartDataModel> weeklyTrend;
   final List<ChartDataModel> topViolators;
+  final TimeRange selectedTimeRange;
   final String? error;
 
   const DashboardState({
@@ -15,6 +18,7 @@ class DashboardState extends Equatable {
     this.topViolations = const [],
     this.weeklyTrend = const [],
     this.topViolators = const [],
+    this.selectedTimeRange = TimeRange.days7,
     this.error,
   });
 
@@ -22,16 +26,18 @@ class DashboardState extends Equatable {
     bool? loading,
     List<ChartDataModel>? vehicleDistribution,
     List<ChartDataModel>? topViolations,
-    List<ChartDataModel>? monthlyTrend,
+    List<ChartDataModel>? weeklyTrend,
     List<ChartDataModel>? topViolators,
+    TimeRange? selectedTimeRange,
     String? error,
   }) {
     return DashboardState(
       loading: loading ?? this.loading,
       vehicleDistribution: vehicleDistribution ?? this.vehicleDistribution,
       topViolations: topViolations ?? this.topViolations,
-      weeklyTrend: monthlyTrend ?? weeklyTrend,
+      weeklyTrend: weeklyTrend ?? this.weeklyTrend,
       topViolators: topViolators ?? this.topViolators,
+      selectedTimeRange: selectedTimeRange ?? this.selectedTimeRange,
       error: error,
     );
   }
@@ -43,6 +49,7 @@ class DashboardState extends Equatable {
     topViolations,
     weeklyTrend,
     topViolators,
+    selectedTimeRange,
     error,
   ];
 }

@@ -92,6 +92,108 @@ class FirestoreAnalyticsRepository implements AnalyticsRepository {
   }
 
   // --------------------------------vehicle logs for the last 7 days of the year----------------------------------------------
+  // --------------------------------vehicle logs for the last month----------------------------------------------
+  @override
+  Future<List<ChartDataModel>> fetchMonthlyTrend() async {
+    final now = DateTime.now();
+    final last30Days = List.generate(30, (i) {
+      final d = now.subtract(Duration(days: 29 - i));
+      return DateTime(d.year, d.month, d.day);
+    });
+
+    final startDate = last30Days.first;
+
+    final snapshot =
+        await _firestore
+            .collection('vehicle_logs')
+            .where(
+              'timeIn',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+            )
+            .get();
+
+    final Map<DateTime, int> dayCounts = {};
+    for (final doc in snapshot.docs) {
+      final ts = doc['timeIn'] as Timestamp;
+      final dt = ts.toDate();
+      final dayKey = DateTime(dt.year, dt.month, dt.day);
+      if (!dayKey.isBefore(startDate) && !dayKey.isAfter(last30Days.last)) {
+        dayCounts[dayKey] = (dayCounts[dayKey] ?? 0) + 1;
+      }
+    }
+
+    final data =
+        last30Days.map((date) {
+          final count = (dayCounts[date] ?? 0).toDouble();
+          return ChartDataModel(
+            category: '${date.month}/${date.day}',
+            value: count,
+            date: date,
+          );
+        }).toList();
+
+    return data;
+  }
+
+  // --------------------------------vehicle logs for the last year----------------------------------------------
+  @override
+  Future<List<ChartDataModel>> fetchYearlyTrend() async {
+    final now = DateTime.now();
+    final last12Months =
+        List.generate(12, (i) {
+          final month = DateTime(now.year, now.month - i, 1);
+          return DateTime(month.year, month.month, 1);
+        }).reversed.toList();
+
+    final startDate = last12Months.first;
+
+    final snapshot =
+        await _firestore
+            .collection('vehicle_logs')
+            .where(
+              'timeIn',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+            )
+            .get();
+
+    final Map<DateTime, int> monthCounts = {};
+    for (final doc in snapshot.docs) {
+      final ts = doc['timeIn'] as Timestamp;
+      final dt = ts.toDate();
+      final monthKey = DateTime(dt.year, dt.month, 1);
+      if (!monthKey.isBefore(startDate) &&
+          !monthKey.isAfter(last12Months.last)) {
+        monthCounts[monthKey] = (monthCounts[monthKey] ?? 0) + 1;
+      }
+    }
+
+    final data =
+        last12Months.map((month) {
+          final count = (monthCounts[month] ?? 0).toDouble();
+          final monthNames = [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec',
+          ];
+          return ChartDataModel(
+            category: monthNames[month.month - 1],
+            value: count,
+            date: month,
+          );
+        }).toList();
+
+    return data;
+  }
+
   @override
   Future<List<ChartDataModel>> fetchTopViolators() async {
     final snapshot = await _firestore.collection('violations').get();

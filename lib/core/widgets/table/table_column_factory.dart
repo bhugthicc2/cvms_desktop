@@ -8,6 +8,7 @@ class TableColumnFactory {
   static GridColumn build({
     required String name,
     required String label,
+    bool istableHeaderDark = true,
     double? width,
     Alignment alignment = Alignment.center,
   }) {
@@ -19,16 +20,19 @@ class TableColumnFactory {
         child: Container(
           alignment: alignment,
           padding: const EdgeInsets.all(8),
-          color: AppColors.tableHeaderColor,
+          color:
+              istableHeaderDark
+                  ? AppColors.tableHeaderColor
+                  : AppColors.greySurface,
           child: Text(
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: AppFontSizes.small,
               fontFamily: 'Poppins',
-              color: AppColors.white,
+              color: istableHeaderDark ? AppColors.white : AppColors.black,
               overflow: TextOverflow.ellipsis,
             ),
           ),

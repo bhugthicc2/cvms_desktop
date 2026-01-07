@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/core/widgets/skeleton/dashboard_overview_skeleton.dart';
@@ -29,6 +30,30 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  String _getInitialValue(TimeRange timeRange) {
+    switch (timeRange) {
+      case TimeRange.days7:
+        return '7 days';
+      case TimeRange.month:
+        return 'Month';
+      case TimeRange.year:
+        return 'Year';
+    }
+  }
+
+  TimeRange? _mapStringToTimeRange(String? value) {
+    switch (value) {
+      case '7 days':
+        return TimeRange.days7;
+      case 'Month':
+        return TimeRange.month;
+      case 'Year':
+        return TimeRange.year;
+      default:
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -123,7 +148,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 duration: const Duration(seconds: 3),
                               );
                             },
-                            title: 'College/Department Vehicle Distribution',
+                            title: 'College Vehicle Distribution',
                           ),
                         ),
                         Spacing.horizontal(size: AppSpacing.medium),
@@ -152,6 +177,23 @@ class _DashboardPageState extends State<DashboardPage> {
                       children: [
                         Expanded(
                           child: LineChartWidget(
+                            customWidget: CustomDropdown(
+                              color: AppColors.donutBlue,
+                              fontSize: 14,
+                              verticalPadding: 0,
+                              items: const ['7 days', 'Month', 'Year'],
+                              initialValue: _getInitialValue(
+                                state.selectedTimeRange,
+                              ),
+                              onChanged: (value) {
+                                final timeRange = _mapStringToTimeRange(value);
+                                if (timeRange != null) {
+                                  context
+                                      .read<DashboardCubit>()
+                                      .changeTimeRange(timeRange);
+                                }
+                              },
+                            ),
                             onViewTap: () {},
                             onLineChartPointTap: (details) {
                               CustomSnackBar.show(
@@ -195,3 +237,6 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 }
+
+
+//ISSUE: THE WHOLE PAGE IS REFRESHED ONLINE CHART VALUE CHANGED
