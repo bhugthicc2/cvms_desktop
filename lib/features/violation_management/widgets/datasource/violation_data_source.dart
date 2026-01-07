@@ -13,15 +13,18 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 class ViolationDataSource extends DataGridSource {
   final List<ViolationEntry> _originalEntries;
   final bool _showCheckbox;
+  final bool _showActions;
   // ignore: unused_field
   final BuildContext? _context;
 
   ViolationDataSource({
     required List<ViolationEntry> violationEntries,
     bool showCheckbox = false,
+    bool showActions = true,
     BuildContext? context,
   }) : _originalEntries = violationEntries,
        _showCheckbox = showCheckbox,
+       _showActions = showActions,
        _context = context {
     _buildRows();
   }
@@ -54,8 +57,11 @@ class ViolationDataSource extends DataGridSource {
       DataGridCell<String>(columnName: 'owner', value: entry.owner),
       DataGridCell<String>(columnName: 'violation', value: entry.violation),
       DataGridCell<String>(columnName: 'status', value: entry.status),
-      DataGridCell<String>(columnName: 'actions', value: ''),
     ]);
+
+    if (_showActions) {
+      cells.add(DataGridCell<String>(columnName: 'actions', value: ''));
+    }
 
     return cells;
   }

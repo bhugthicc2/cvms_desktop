@@ -8,6 +8,7 @@ import 'package:cvms_desktop/features/dashboard/widgets/button/custom_view_butto
 import 'package:cvms_desktop/features/dashboard/widgets/charts/bar_chart_widget.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/charts/line_chart_widget.dart';
 import 'package:cvms_desktop/features/reports/widgets/report_header.dart';
+import 'package:cvms_desktop/features/reports/widgets/report_table_header.dart';
 import 'package:cvms_desktop/features/reports/widgets/vehicle_info_text.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -55,7 +56,6 @@ class ReportsPage extends StatelessWidget {
                       AppSpacing.medium,
                     ),
                     child: ReportHeader(
-                      plateNumber: '231421d',
                       onExportPDF: () {
                         //todo handle export PDF
                       },
@@ -321,16 +321,23 @@ class ReportsPage extends StatelessWidget {
 
             SliverToBoxAdapter(
               child: Spacing.vertical(size: AppSpacing.medium),
-            ),
-
+            ), //space
             // VIOLATION HISTORY TABLE
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.only(right: AppSpacing.medium),
                 child: Container(
+                  padding: const EdgeInsets.all(AppSpacing.medium),
                   height: 400, // table viewport
                   decoration: cardDecoration(),
-                  child: const Center(child: Text('Violation History Table')),
+                  child: Column(
+                    children: [
+                      ReportTableHeader(
+                        tableTitle: 'Violation History',
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -344,15 +351,23 @@ class ReportsPage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: AppSpacing.medium),
                 child: Container(
-                  height: 400,
+                  padding: const EdgeInsets.all(AppSpacing.medium),
+                  height: 400, // table viewport
                   decoration: cardDecoration(),
-                  child: const Center(child: Text('Vehicle Logs Table')),
+                  child: Column(
+                    children: [
+                      ReportTableHeader(
+                        tableTitle: 'Vehicle Logs',
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
             SliverToBoxAdapter(
               child: Spacing.vertical(size: AppSpacing.medium),
-            ),
+            ), //space
           ],
         ),
       ),
