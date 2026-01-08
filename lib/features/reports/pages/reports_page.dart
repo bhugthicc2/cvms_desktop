@@ -2,30 +2,29 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/utils/card_decor.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
-import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/button/custom_view_button.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/charts/bar_chart_widget.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/charts/line_chart_widget.dart';
+import 'package:cvms_desktop/features/reports/utils/mvp_progress_calculator.dart';
 import 'package:cvms_desktop/features/reports/widgets/report_header.dart';
 import 'package:cvms_desktop/features/reports/widgets/report_table_header.dart';
+import 'package:cvms_desktop/features/reports/widgets/sections/stats_card_section.dart';
+import 'package:cvms_desktop/features/reports/widgets/sections/vehicle_info_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/tables/violation/violation_history_table.dart';
 import 'package:cvms_desktop/features/reports/widgets/tables/vehicle_logs/vehicle_logs_table.dart';
-import 'package:cvms_desktop/features/reports/widgets/vehicle_info_text.dart';
 import 'package:flutter/material.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
-
-import '../../../core/widgets/layout/stats_card.dart';
 
 class ReportsPage extends StatelessWidget {
   ReportsPage({super.key});
 
   //mock data
   final List<ChartDataModel> violationTypeData = [
-    ChartDataModel(category: 'Speeding', value: 35),
+    ChartDataModel(category: 'Speeding', value: 100),
+    ChartDataModel(category: 'Horn', value: 200),
+    ChartDataModel(category: 'Muffler', value: 92),
     ChartDataModel(category: 'Over Speed', value: 30),
-    ChartDataModel(category: 'Illegal Parking', value: 20),
+    ChartDataModel(category: 'Illegal Parking', value: 140),
     ChartDataModel(category: 'No License', value: 15),
   ];
 
@@ -76,77 +75,25 @@ class ReportsPage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: AppSpacing.medium),
                 child: SizedBox(
-                  height: 230,
+                  height: 255,
                   child: Row(
                     children: [
                       // LEFT: 2x2 stat cards
                       Expanded(
                         flex: 2,
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                                height: 110,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: StatsCard(
-                                        angle: 0,
-                                        color: AppColors.white,
-                                        icon: PhosphorIconsBold.calendarMinus,
-                                        label: "Days Until Expiration",
-                                        value: 150,
-                                        gradient: AppColors.greenWhite,
-                                        iconColor: AppColors.chartGreenv2,
-                                      ),
-                                    ),
-                                    Spacing.horizontal(size: AppSpacing.medium),
-                                    Expanded(
-                                      child: StatsCard(
-                                        angle: 0,
-                                        color: AppColors.orange,
-                                        icon: PhosphorIconsBold.calendarMinus,
-                                        label: "Active Violations",
-                                        value: 22,
-                                        gradient: AppColors.yellowOrange,
-                                        iconColor: AppColors.orange,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Spacing.vertical(size: AppSpacing.medium),
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: StatsCard(
-                                      angle: 0,
-                                      color: AppColors.white,
-                                      icon: PhosphorIconsBold.calendarMinus,
-                                      label: "Total Violations",
-                                      value: 230,
-                                      gradient: AppColors.purpleBlue,
-                                      iconColor: AppColors.primary,
-                                    ),
-                                  ),
-                                  Spacing.horizontal(size: AppSpacing.medium),
-                                  Expanded(
-                                    child: StatsCard(
-                                      angle: 0,
-                                      color: AppColors.white,
-                                      icon: PhosphorIconsBold.calendarMinus,
-                                      label: "Total Entries/Exits",
-                                      value: 540,
-                                      gradient: AppColors.pinkWhite,
-                                      iconColor: AppColors.donutPink,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                        child: StatsCardSection(
+                          //card1
+                          statsCard1Label: "Days Until Expiration",
+                          statsCard1Value: 150,
+                          //card2
+                          statsCard2Label: "Active Violations",
+                          statsCard2Value: 22,
+                          //card3
+                          statsCard3Label: "Total Violations",
+                          statsCard3Value: 230,
+                          //card4
+                          statsCard4Label: "Total Entries/Exits",
+                          statsCard4Value: 540,
                         ),
                       ),
 
@@ -155,142 +102,44 @@ class ReportsPage extends StatelessWidget {
                       // RIGHT: Vehicle Info
                       Expanded(
                         flex: 2,
-                        child: Container(
-                          decoration: cardDecoration(),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              //title
-                              Padding(
-                                padding: const EdgeInsets.all(
-                                  AppSpacing.medium,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "Vehicle Information",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    CustomViewButton(
-                                      onTap: () {
-                                        //todo view all the vehicle info
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
+                        child: Builder(
+                          builder: (context) {
+                            final registeredDate = DateTime(
+                              2025,
+                              5,
+                              23,
+                            ); //yyyy, mm, dd
+                            final expiryDate = DateTime(
+                              2026,
+                              12,
+                              2,
+                            ); //yyyy, mm, dd
+                            final mvpProgress =
+                                MvpProgressCalculator.calculateProgress(
+                                  registeredDate: registeredDate,
+                                  expiryDate: expiryDate,
+                                );
 
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                  AppSpacing.xLarge,
-                                  0,
-                                  AppSpacing.xLarge,
-                                  AppSpacing.medium,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        children: [
-                                          VehicleInfoText(
-                                            label: "Vehicle Make",
-                                            value: "Honda",
-                                          ),
-                                          Spacing.vertical(
-                                            size: AppSpacing.small,
-                                          ),
-                                          VehicleInfoText(
-                                            label: "Vehicle Model",
-                                            value: "Beat",
-                                          ),
-                                          Spacing.vertical(
-                                            size: AppSpacing.small,
-                                          ),
-                                          VehicleInfoText(
-                                            label: "Vehicle Type",
-                                            value: "Two-wheeled",
-                                          ),
-                                          Spacing.vertical(
-                                            size: AppSpacing.small,
-                                          ),
-                                          VehicleInfoText(
-                                            label: "Vehicle Color",
-                                            value: "Red",
-                                          ),
-                                          Spacing.vertical(
-                                            size: AppSpacing.small,
-                                          ),
-                                          VehicleInfoText(
-                                            label: "Plate Number",
-                                            value: "231421d",
-                                          ),
-                                          Spacing.vertical(
-                                            size: AppSpacing.small,
-                                          ),
-                                          VehicleInfoText(
-                                            label: "Date Registered",
-                                            value: "Dec. 23, 2025",
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Spacing.horizontal(size: AppSpacing.medium),
-                                    CustomDivider(),
-                                    Spacing.horizontal(size: AppSpacing.medium),
-                                    Expanded(
-                                      child: Column(
-                                        children: [
-                                          VehicleInfoText(
-                                            label: "Owner",
-                                            value: "Otenciano Mautganon",
-                                          ),
-                                          Spacing.vertical(
-                                            size: AppSpacing.small,
-                                          ),
-                                          VehicleInfoText(
-                                            label: "College",
-                                            value: "CCS",
-                                          ),
-                                          Spacing.vertical(
-                                            size: AppSpacing.small,
-                                          ),
-                                          VehicleInfoText(
-                                            label: "Year Level",
-                                            value: "1st Year",
-                                          ),
-                                          Spacing.vertical(
-                                            size: AppSpacing.small,
-                                          ),
-                                          VehicleInfoText(
-                                            label: "Course",
-                                            value: "BS Computer Science",
-                                          ),
-                                          Spacing.vertical(
-                                            size: AppSpacing.small,
-                                          ),
-                                          VehicleInfoText(
-                                            label: "Block",
-                                            value: "A",
-                                          ),
-                                          Spacing.vertical(
-                                            size: AppSpacing.small,
-                                          ),
-                                          VehicleInfoText(
-                                            label: "Date Expired",
-                                            value: "May 23, 2026",
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                            return VehicleInfoSection(
+                              title: "Vehicle Information",
+                              onViewTap: () {},
+
+                              // Vehicle
+                              vehicleModel: "Toyota Avanza",
+                              plateNumber: "WXY-9012",
+                              vehicleType: "Four-wheeled",
+
+                              // Owner & Access
+                              ownerName: "Mila Hernandez",
+                              department: "CAF-SOE",
+                              status: "Offsite",
+
+                              // MVP
+                              mvpProgress: mvpProgress,
+                              mvpRegisteredDate: registeredDate,
+                              mvpExpiryDate: expiryDate,
+                            );
+                          },
                         ),
                       ),
                     ],
@@ -356,7 +205,7 @@ class ReportsPage extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(
                     AppSpacing.medium,
-                    AppSpacing.small,
+                    AppSpacing.medium,
                     AppSpacing.medium,
                     0,
                   ),
@@ -392,7 +241,7 @@ class ReportsPage extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(
                     AppSpacing.medium,
-                    AppSpacing.small,
+                    AppSpacing.medium,
                     AppSpacing.medium,
                     0,
                   ),

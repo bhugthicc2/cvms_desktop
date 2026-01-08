@@ -77,7 +77,7 @@ class ViolationHistoryDataSource extends DataGridSource {
     switch (cell.columnName) {
       case 'violationId':
         return Container(
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft,
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Text(
             cell.value.toString(),

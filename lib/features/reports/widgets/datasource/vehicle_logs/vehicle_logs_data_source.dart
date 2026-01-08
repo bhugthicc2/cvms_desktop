@@ -70,9 +70,22 @@ class VehicleLogsDataSource extends DataGridSource {
 
   Widget _buildCellWidget(DataGridCell cell, VehicleLogsEntry entry) {
     switch (cell.columnName) {
+      case 'index':
+        return Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            cell.value.toString(),
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: AppFontSizes.small,
+              fontFamily: 'Poppins',
+            ),
+          ),
+        );
       case 'logId':
         return Container(
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft,
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Text(
             cell.value.toString(),
@@ -88,7 +101,7 @@ class VehicleLogsDataSource extends DataGridSource {
       case 'timeIn':
       case 'timeOut':
         return Container(
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft,
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Text(
             cell.value.toString(),
@@ -102,7 +115,7 @@ class VehicleLogsDataSource extends DataGridSource {
 
       case 'durationMinutes':
         return Container(
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft,
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Text(
             '${cell.value} min',

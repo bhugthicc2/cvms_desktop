@@ -21,22 +21,26 @@ class ReportHeader extends StatelessWidget {
     return SizedBox(
       child: Row(
         children: [
-          Text(
-            'Vehicle Report',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: AppColors.black,
+          // Text(
+          //   'Vehicle Report',
+          //   style: TextStyle(
+          //     fontSize: 22,
+          //     fontWeight: FontWeight.bold,
+          //     color: AppColors.black,
+          //   ),
+          // ),
+          // Spacing.horizontal(size: AppSpacing.medium),
+          Expanded(
+            child: SearchField(
+              hoverScale: 1,
+              hintText: 'Search by plate no., owner, or model',
+              searchFieldHeight: 40,
+
+              controller: SearchController(),
             ),
           ),
-          const Spacer(),
-          SearchField(
-            hintText: 'Search vehicle...',
-            searchFieldHeight: 40,
-            searchFieldWidth: 300,
-            controller: SearchController(),
-          ),
           Spacing.horizontal(size: AppSpacing.medium),
+
           HoverGrow(
             cursor: SystemMouseCursors.click,
             onTap: onExportPDF,

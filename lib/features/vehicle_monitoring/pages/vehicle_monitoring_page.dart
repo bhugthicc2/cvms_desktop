@@ -4,7 +4,6 @@ import 'package:cvms_desktop/core/widgets/skeleton/dashboard_overview_skeleton.d
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/skeletons/table_skeleton.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';
-import 'package:cvms_desktop/features/vehicle_monitoring/models/vehicle_entry.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/dialogs/custom_view_dialog.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/sections/dashboard_overview.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/tables/vehicle_table.dart';

@@ -20,10 +20,12 @@ class TableColumnFactory {
         child: Container(
           alignment: alignment,
           padding: const EdgeInsets.all(8),
-          color:
-              istableHeaderDark
-                  ? AppColors.tableHeaderColor
-                  : AppColors.greySurface,
+          decoration: BoxDecoration(
+            color:
+                istableHeaderDark
+                    ? AppColors.tableHeaderColor
+                    : AppColors.greySurface,
+          ),
           child: Text(
             overflow: TextOverflow.ellipsis,
             maxLines: 1,

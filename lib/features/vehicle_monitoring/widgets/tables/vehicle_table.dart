@@ -78,6 +78,8 @@ class _VehicleTableState extends State<VehicleTable> {
           ),
           Expanded(
             child: CustomTable(
+              headerTopLeftRadii: 0,
+              headerTopRightRadii: 0,
               gridKey: ValueKey('vehicleGrid-${widget.title}'),
               controller: _controller,
               onCellTap: widget.onCellTap,

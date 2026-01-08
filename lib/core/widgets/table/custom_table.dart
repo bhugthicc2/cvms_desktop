@@ -19,6 +19,8 @@ class CustomTable extends StatefulWidget {
   final Key? gridKey;
   final bool isTableHeaderDark;
   final bool allowSorting;
+  final double headerTopLeftRadii;
+  final double headerTopRightRadii;
 
   const CustomTable({
     super.key,
@@ -31,6 +33,8 @@ class CustomTable extends StatefulWidget {
     this.gridKey,
     this.isTableHeaderDark = true,
     this.allowSorting = true,
+    this.headerTopLeftRadii = 8,
+    this.headerTopRightRadii = 8,
   });
 
   @override
@@ -115,34 +119,41 @@ class _CustomTableState extends State<CustomTable> {
           Expanded(
             child:
                 hasData
-                    ? SfDataGridTheme(
-                      data: SfDataGridThemeData(
-                        headerColor:
-                            widget.isTableHeaderDark
-                                ? AppColors.tableHeaderColor
-                                : AppColors.greySurface,
-                        gridLineStrokeWidth: 0,
-                        sortIcon: Icon(
-                          PhosphorIconsFill.caretDown,
-                          color:
-                              widget.isTableHeaderDark
-                                  ? AppColors.white
-                                  : AppColors.grey,
-                          size: 11,
-                        ),
+                    ? ClipRRect(
+                      //applies border radius for the table header
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(widget.headerTopLeftRadii),
+                        topRight: Radius.circular(widget.headerTopRightRadii),
                       ),
-                      child: SfDataGrid(
-                        headerGridLinesVisibility: GridLinesVisibility.none,
-                        key: widget.gridKey,
-                        controller: widget.controller,
-                        onCellTap: widget.onCellTap,
-                        gridLinesVisibility: GridLinesVisibility.none,
-                        rowHeight: 34,
-                        allowSorting: widget.allowSorting,
-                        headerRowHeight: AppDimensions.tableHeaderHeight,
-                        source: _paginatedSource!,
-                        columnWidthMode: ColumnWidthMode.fill,
-                        columns: widget.columns,
+                      child: SfDataGridTheme(
+                        data: SfDataGridThemeData(
+                          headerColor:
+                              widget.isTableHeaderDark
+                                  ? AppColors.tableHeaderColor
+                                  : AppColors.greySurface,
+                          gridLineStrokeWidth: 0,
+                          sortIcon: Icon(
+                            PhosphorIconsFill.caretDown,
+                            color:
+                                widget.isTableHeaderDark
+                                    ? AppColors.white
+                                    : AppColors.grey,
+                            size: 11,
+                          ),
+                        ),
+                        child: SfDataGrid(
+                          headerGridLinesVisibility: GridLinesVisibility.none,
+                          key: widget.gridKey,
+                          controller: widget.controller,
+                          onCellTap: widget.onCellTap,
+                          gridLinesVisibility: GridLinesVisibility.none,
+                          rowHeight: 34,
+                          allowSorting: widget.allowSorting,
+                          headerRowHeight: AppDimensions.tableHeaderHeight,
+                          source: _paginatedSource!,
+                          columnWidthMode: ColumnWidthMode.fill,
+                          columns: widget.columns,
+                        ),
                       ),
                     )
                     : EmptyState(

@@ -10,40 +10,46 @@ class VehicleLogsTableColumns {
         name: 'index',
         label: '#',
         width: 50,
+        alignment: Alignment.centerLeft,
       ),
       TableColumnFactory.build(
+        alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'logId',
-        label: 'Log ID',
-        width: 80,
+        label: 'ID',
+        width: 100,
       ),
       TableColumnFactory.build(
+        alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'timeIn',
-        label: 'Time In',
+        label: 'TIME IN',
       ),
       TableColumnFactory.build(
+        alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'timeOut',
-        label: 'Time Out',
+
+        label: 'TIME OUT',
       ),
       TableColumnFactory.build(
+        alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'durationMinutes',
-        label: 'Duration (Minutes)',
+        label: 'DURATION',
         width: 140,
       ),
       TableColumnFactory.build(
         istableHeaderDark: istableHeaderDark,
         name: 'status',
-        label: 'Status',
+        label: 'STATUS',
         width: 120,
       ),
       TableColumnFactory.build(
         alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'updatedBy',
-        label: 'Updated By',
+        label: 'UPDATED BY',
       ),
     ];
   }
