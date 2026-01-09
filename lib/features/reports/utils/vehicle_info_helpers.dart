@@ -37,6 +37,17 @@ class VehicleInfoHelpers {
     }
   }
 
+  static String getVehicleTypeIcon(String vehicleType) {
+    switch (vehicleType.toLowerCase()) {
+      case 'two-wheeled':
+        return 'assets/images/two_wheeled.png';
+      case 'four-wheeled':
+        return 'assets/images/four_wheeled.png';
+      default:
+        return 'assets/images/two_wheeled.png';
+    }
+  }
+
   static String formatDate(DateTime? date, String prefix) {
     if (date == null) return '${prefix}Not set';
     final formatter = DateFormat('MMMM d, y');

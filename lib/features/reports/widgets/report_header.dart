@@ -31,6 +31,7 @@ class ReportHeader extends StatelessWidget {
           // ),
           // Spacing.horizontal(size: AppSpacing.medium),
           Expanded(
+            //search bar
             child: SearchField(
               hoverScale: 1,
               hintText: 'Search by plate no., owner, or model',

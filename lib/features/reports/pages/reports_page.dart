@@ -29,13 +29,13 @@ class ReportsPage extends StatelessWidget {
   ];
 
   final List<ChartDataModel> vehicleLogsData = [
-    ChartDataModel(category: 'Mon', value: 120, date: DateTime(2024, 1, 1)),
-    ChartDataModel(category: 'Tue', value: 150, date: DateTime(2024, 1, 2)),
-    ChartDataModel(category: 'Wed', value: 90, date: DateTime(2024, 1, 3)),
-    ChartDataModel(category: 'Thu', value: 170, date: DateTime(2024, 1, 4)),
-    ChartDataModel(category: 'Fri', value: 200, date: DateTime(2024, 1, 5)),
-    ChartDataModel(category: 'Sat', value: 140, date: DateTime(2024, 1, 6)),
-    ChartDataModel(category: 'Sun', value: 110, date: DateTime(2024, 1, 7)),
+    ChartDataModel(category: 'Mon', value: 120, date: DateTime(2026, 1, 1)),
+    ChartDataModel(category: 'Tue', value: 150, date: DateTime(2026, 1, 2)),
+    ChartDataModel(category: 'Wed', value: 90, date: DateTime(2026, 1, 3)),
+    ChartDataModel(category: 'Thu', value: 170, date: DateTime(2026, 1, 4)),
+    ChartDataModel(category: 'Fri', value: 200, date: DateTime(2026, 1, 5)),
+    ChartDataModel(category: 'Sat', value: 140, date: DateTime(2026, 1, 6)),
+    ChartDataModel(category: 'Sun', value: 110, date: DateTime(2026, 1, 7)),
   ];
 
   @override

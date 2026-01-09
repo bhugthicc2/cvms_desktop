@@ -5,6 +5,7 @@ import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/button/custom_view_button.dart';
 import 'package:cvms_desktop/features/reports/utils/vehicle_info_helpers.dart';
+import 'package:cvms_desktop/features/reports/widgets/texts/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class VehicleInfoSection extends StatefulWidget {
@@ -111,7 +112,7 @@ class _VehicleInfoSectionState extends State<VehicleInfoSection>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Image.asset(
-                  "assets/images/four_wheeled.png",
+                  VehicleInfoHelpers.getVehicleTypeIcon(widget.vehicleType),
                   width: 40,
                   height: 40,
                 ),
@@ -119,17 +120,12 @@ class _VehicleInfoSectionState extends State<VehicleInfoSection>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.vehicleModel,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    CustomText(
+                      text: widget.vehicleModel,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Text(
-                      widget.plateNumber,
-                      style: const TextStyle(fontSize: 14),
-                    ),
+                    CustomText(text: widget.plateNumber),
                   ],
                 ),
                 const Spacer(),
@@ -148,11 +144,9 @@ class _VehicleInfoSectionState extends State<VehicleInfoSection>
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // LEFT
                     Expanded(
@@ -168,20 +162,14 @@ class _VehicleInfoSectionState extends State<VehicleInfoSection>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Owner',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.grey,
-                                  ),
+                                CustomText(
+                                  text: 'Owner',
+                                  fontSize: 12,
+                                  color: AppColors.grey,
                                 ),
-
-                                Text(
-                                  widget.ownerName,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                CustomText(
+                                  text: widget.ownerName,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ],
                             ),
@@ -204,20 +192,14 @@ class _VehicleInfoSectionState extends State<VehicleInfoSection>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Type',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.grey,
-                                  ),
+                                CustomText(
+                                  text: 'Type',
+                                  fontSize: 12,
+                                  color: AppColors.grey,
                                 ),
-
-                                Text(
-                                  widget.vehicleType,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                CustomText(
+                                  text: widget.vehicleType,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ],
                             ),
@@ -245,20 +227,14 @@ class _VehicleInfoSectionState extends State<VehicleInfoSection>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Department',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.grey,
-                                  ),
+                                CustomText(
+                                  text: 'Department',
+                                  fontSize: 12,
+                                  color: AppColors.grey,
                                 ),
-
-                                Text(
-                                  widget.department,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                CustomText(
+                                  text: widget.department,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ],
                             ),
@@ -281,29 +257,28 @@ class _VehicleInfoSectionState extends State<VehicleInfoSection>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Status',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.grey,
-                                  ),
+                                CustomText(
+                                  text: 'Status',
+                                  fontSize: 12,
+                                  color: AppColors.grey,
                                 ),
+
                                 Spacing.vertical(size: AppSpacing.xSmall),
                                 Container(
                                   padding: EdgeInsets.symmetric(
                                     horizontal: AppSpacing.medium,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColors.chartOrange,
+                                    color: VehicleInfoHelpers.getStatusColor(
+                                      widget.status,
+                                    ),
                                     borderRadius: BorderRadius.circular(999),
                                   ),
-                                  child: Text(
-                                    widget.status,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: AppColors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  child: CustomText(
+                                    text: widget.status,
+                                    fontSize: 12,
+                                    color: AppColors.white,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
@@ -339,27 +314,22 @@ class _VehicleInfoSectionState extends State<VehicleInfoSection>
                 Spacing.vertical(size: AppSpacing.xSmall),
                 Row(
                   children: [
-                    const Text(
-                      "MVP Validity Status",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    CustomText(
+                      text: 'MVP Validity Status',
+                      fontSize: 12,
+
+                      fontWeight: FontWeight.w600,
                     ),
+
                     const Spacer(),
-                    Text(
-                      VehicleInfoHelpers.getMvpStatusText(
+                    CustomText(
+                      text: VehicleInfoHelpers.getMvpStatusText(
                         widget.mvpRegisteredDate,
                         widget.mvpExpiryDate,
                       ),
-                      style: TextStyle(
-                        color: VehicleInfoHelpers.getMvpStatusColor(
-                          widget.mvpRegisteredDate,
-                          widget.mvpExpiryDate,
-                        ),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      fontSize: 12,
+
+                      fontWeight: FontWeight.w600,
                     ),
                   ],
                 ),
@@ -385,23 +355,25 @@ class _VehicleInfoSectionState extends State<VehicleInfoSection>
                 Spacing.vertical(size: AppSpacing.xSmall),
                 Row(
                   children: [
-                    Text(
-                      VehicleInfoHelpers.formatDate(
+                    CustomText(
+                      text: VehicleInfoHelpers.formatDate(
                         widget.mvpRegisteredDate,
                         'Registered on ',
                       ),
-                      style: TextStyle(fontSize: 11, color: AppColors.primary),
+
+                      fontSize: 11,
+                      color: AppColors.primary,
                     ),
+
                     Spacer(),
-                    Text(
-                      VehicleInfoHelpers.formatDate(
+                    CustomText(
+                      text: VehicleInfoHelpers.formatDate(
                         widget.mvpExpiryDate,
                         'Expires on ',
                       ),
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey.shade600,
-                      ),
+
+                      fontSize: 11,
+                      color: AppColors.grey,
                     ),
                   ],
                 ),
