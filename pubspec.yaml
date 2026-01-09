@@ -46,9 +46,9 @@ dependencies:
   #syncfusion main package
   collection: ^1.19.1
   #charting library
-  syncfusion_flutter_charts: 30.2.7
-  syncfusion_flutter_core: 30.2.7
-  syncfusion_flutter_datagrid: 30.2.7
+  syncfusion_flutter_charts: 29.2.11
+  syncfusion_flutter_core: 29.2.11
+  syncfusion_flutter_datagrid: 29.2.11
   equatable: ^2.0.7
   intl: ^0.20.2
   path_provider: ^2.1.5
@@ -61,8 +61,8 @@ dependencies:
   # fl_chart: ^0.71.0
 
   #pdf
-  syncfusion_flutter_pdfviewer: ^32.1.22
-  syncfusion_flutter_pdf: ^32.1.22
+  syncfusion_flutter_pdfviewer: ^29.2.10
+  syncfusion_flutter_pdf: ^29.1.33
 
 dev_dependencies:
   flutter_test:
