@@ -84,6 +84,7 @@ class ShellPage extends StatelessWidget {
                             );
                           },
                         ),
+                        //body
                         Expanded(
                           child: ShellNavigationConfig.getPage(
                             state.selectedIndex,

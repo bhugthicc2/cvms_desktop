@@ -2,6 +2,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/utils/card_decor.dart';
 import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/app/typeahead_search_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,8 @@ class _ReportHeaderState extends State<ReportHeader> {
   void _onSuggestionSelected(String suggestion) {
     _searchController.text = suggestion;
     // TODO: Implement search functionality with selected suggestion
-    print('Selected: $suggestion');
+    CustomSnackBar.showSuccess(context, 'Selected: $suggestion');
+    //todo change the report content
   }
 
   @override
@@ -94,7 +96,7 @@ class _ReportHeaderState extends State<ReportHeader> {
               decoration: cardDecoration(radii: 8),
               child: Center(
                 child: Icon(
-                  PhosphorIconsBold.filePdf,
+                  PhosphorIconsRegular.filePdf,
                   color: AppColors.primary,
                 ),
               ),
@@ -111,7 +113,7 @@ class _ReportHeaderState extends State<ReportHeader> {
               decoration: cardDecoration(radii: 8),
               child: Center(
                 child: Icon(
-                  PhosphorIconsBold.fileCsv,
+                  PhosphorIconsRegular.fileCsv,
                   color: AppColors.primary,
                 ),
               ),
