@@ -60,6 +60,10 @@ dependencies:
   skeletonizer: ^1.4.3
   # fl_chart: ^0.71.0
 
+  #pdf
+  syncfusion_flutter_pdfviewer: ^32.1.22
+  syncfusion_flutter_pdf: ^32.1.22
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
