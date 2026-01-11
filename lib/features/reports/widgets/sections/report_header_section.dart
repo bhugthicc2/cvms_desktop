@@ -8,20 +8,20 @@ import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class ReportHeader extends StatefulWidget {
+class ReportHeaderSection extends StatefulWidget {
   final VoidCallback onExportPDF;
   final VoidCallback onExportCSV;
-  const ReportHeader({
+  const ReportHeaderSection({
     super.key,
     required this.onExportPDF,
     required this.onExportCSV,
   });
 
   @override
-  State<ReportHeader> createState() => _ReportHeaderState();
+  State<ReportHeaderSection> createState() => _ReportHeaderSectionState();
 }
 
-class _ReportHeaderState extends State<ReportHeader> {
+class _ReportHeaderSectionState extends State<ReportHeaderSection> {
   final TextEditingController _searchController = TextEditingController();
 
   // Mock data for suggestions - replace with actual data from your database ---TOBE REMOVED---
@@ -91,31 +91,24 @@ class _ReportHeaderState extends State<ReportHeader> {
             onTap: widget.onExportPDF,
             child: Container(
               height: 40,
-              width: 40,
-              padding: const EdgeInsets.all(8),
-              decoration: cardDecoration(radii: 8),
-              child: Center(
-                child: Icon(
-                  PhosphorIconsRegular.filePdf,
-                  color: AppColors.primary,
-                ),
+
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(5),
               ),
-            ),
-          ),
-          Spacing.horizontal(size: AppSpacing.medium),
-          HoverGrow(
-            cursor: SystemMouseCursors.click,
-            onTap: widget.onExportCSV,
-            child: Container(
-              height: 40,
-              width: 40,
-              padding: const EdgeInsets.all(8),
-              decoration: cardDecoration(radii: 8),
-              child: Center(
-                child: Icon(
-                  PhosphorIconsRegular.fileCsv,
-                  color: AppColors.primary,
-                ),
+              child: Row(
+                children: [
+                  Text(
+                    'GENERATE REPORT',
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontSize: 12,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

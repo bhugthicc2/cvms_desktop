@@ -1,0 +1,46 @@
+import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+
+class PdfZoomController {
+  final PdfViewerController pdfController;
+  final Set<LogicalKeyboardKey> _pressedKeys = <LogicalKeyboardKey>{};
+
+  PdfZoomController({required this.pdfController});
+
+  void handleKeyEvent(KeyEvent event) {
+    if (event is KeyDownEvent) {
+      _pressedKeys.add(event.logicalKey);
+
+      if (event.logicalKey == LogicalKeyboardKey.controlLeft ||
+          event.logicalKey == LogicalKeyboardKey.controlRight) {
+        // Ctrl key pressed - handled by _pressedKeys set
+      }
+    } else if (event is KeyUpEvent) {
+      _pressedKeys.remove(event.logicalKey);
+    }
+  }
+
+  bool get isCtrlPressed =>
+      _pressedKeys.contains(LogicalKeyboardKey.controlLeft) ||
+      _pressedKeys.contains(LogicalKeyboardKey.controlRight);
+
+  void handleScroll(PointerScrollEvent event) {
+    if (isCtrlPressed) {
+      final currentZoom = pdfController.zoomLevel;
+      final scrollDelta = event.scrollDelta.dy;
+
+      if (scrollDelta < 0) {
+        // Scroll up - zoom in
+        pdfController.zoomLevel = (currentZoom + 0.1).clamp(0.5, 3.0);
+      } else {
+        // Scroll down - zoom out
+        pdfController.zoomLevel = (currentZoom - 0.1).clamp(0.5, 3.0);
+      }
+    }
+  }
+
+  void dispose() {
+    pdfController.dispose();
+  }
+}

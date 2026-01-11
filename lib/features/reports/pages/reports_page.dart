@@ -6,25 +6,33 @@ import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/charts/bar_chart_widget.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/charts/line_chart_widget.dart';
-import 'package:cvms_desktop/features/reports/pages/pdf_report_preview_page.dart';
+import 'package:cvms_desktop/features/reports/pages/pdf_report_page.dart';
 import 'package:cvms_desktop/features/reports/utils/mvp_progress_calculator.dart';
-import 'package:cvms_desktop/features/reports/widgets/sections/report_header.dart';
+import 'package:cvms_desktop/features/reports/widgets/sections/report_header_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/report_table_header.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/stats_card_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/vehicle_info_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/tables/violation/violation_history_table.dart';
 import 'package:cvms_desktop/features/reports/widgets/tables/vehicle_logs/vehicle_logs_table.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/reports_cubit.dart';
+import '../bloc/reports_state.dart';
 
-class ReportsPage extends StatefulWidget {
+class ReportsPage extends StatelessWidget {
   const ReportsPage({super.key});
 
   @override
-  State<ReportsPage> createState() => _ReportsPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => ReportsCubit(),
+      child: _ReportsPageContent(),
+    );
+  }
 }
 
-class _ReportsPageState extends State<ReportsPage> {
-  bool _showPdfPreview = false;
+class _ReportsPageContent extends StatelessWidget {
+  _ReportsPageContent();
 
   //mock data
   final List<ChartDataModel> violationTypeData = [
@@ -50,23 +58,39 @@ class _ReportsPageState extends State<ReportsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.greySurface,
-      body:
-          _showPdfPreview
+      body: BlocBuilder<ReportsCubit, ReportsState>(
+        builder: (context, state) {
+          if (state.loading) {
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.primary),
+            );
+          }
+
+          if (state.error != null) {
+            return Center(
+              child: Text(
+                'Error: ${state.error}',
+                style: const TextStyle(color: Colors.red),
+              ),
+            );
+          }
+
+          return state.showPdfPreview
               ? Container(
                 decoration: cardDecoration(),
-                child: PdfReportPreviewContent(
+                child: PdfReportPage(
                   onBackPressed: () {
-                    setState(() {
-                      _showPdfPreview = false;
-                    });
+                    context.read<ReportsCubit>().hidePdfPreview();
                   },
                 ),
               )
-              : _buildReportsContent(),
+              : _buildReportsContent(context);
+        },
+      ),
     );
   }
 
-  Widget _buildReportsContent() {
+  Widget _buildReportsContent(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: AppSpacing.medium),
       child: CustomScrollView(
@@ -82,12 +106,10 @@ class _ReportsPageState extends State<ReportsPage> {
                     AppSpacing.medium,
                     AppSpacing.medium,
                   ),
-                  child: ReportHeader(
+                  child: ReportHeaderSection(
                     onExportPDF: () {
                       // Show PDF preview locally
-                      setState(() {
-                        _showPdfPreview = true;
-                      });
+                      context.read<ReportsCubit>().showPdfPreview();
                     },
                     onExportCSV: () {
                       //todo handle export CSV

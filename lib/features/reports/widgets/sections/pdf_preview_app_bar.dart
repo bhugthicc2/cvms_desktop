@@ -2,11 +2,13 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/features/reports/widgets/buttons/custom_icon_button.dart';
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class PdfPreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onBackPressed;
   final VoidCallback onDownLoadPressed;
   final VoidCallback onPrintPressed;
+  final VoidCallback onEditPressed;
   final double kToolbarHeight;
   final String title;
   const PdfPreviewAppBar({
@@ -16,6 +18,7 @@ class PdfPreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.onDownLoadPressed,
     required this.onPrintPressed,
     this.kToolbarHeight = 35,
+    required this.onEditPressed,
   });
 
   @override
@@ -39,10 +42,21 @@ class PdfPreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: CustomIconButton(onTap: onBackPressed, icon: Icons.chevron_left),
 
       actions: [
-        CustomIconButton(onTap: onDownLoadPressed, icon: Icons.download),
+        CustomIconButton(
+          onTap: onEditPressed,
+          icon: PhosphorIconsRegular.penNib,
+        ),
+        const SizedBox(width: AppSpacing.medium),
+        CustomIconButton(
+          onTap: onDownLoadPressed,
+          icon: PhosphorIconsRegular.download,
+        ),
 
         const SizedBox(width: AppSpacing.medium),
-        CustomIconButton(onTap: onPrintPressed, icon: Icons.print),
+        CustomIconButton(
+          onTap: onPrintPressed,
+          icon: PhosphorIconsRegular.printer,
+        ),
         const SizedBox(width: AppSpacing.medium),
       ],
     );

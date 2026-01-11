@@ -328,7 +328,10 @@ class _VehicleInfoSectionState extends State<VehicleInfoSection>
                         widget.mvpExpiryDate,
                       ),
                       fontSize: 12,
-
+                      color: VehicleInfoHelpers.getMvpStatusColor(
+                        widget.mvpRegisteredDate,
+                        widget.mvpExpiryDate,
+                      ),
                       fontWeight: FontWeight.w600,
                     ),
                   ],

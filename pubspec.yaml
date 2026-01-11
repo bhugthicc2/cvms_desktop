@@ -59,11 +59,11 @@ dependencies:
   file_picker: ^10.3.3
   skeletonizer: ^1.4.3
   # fl_chart: ^0.71.0
+  desktop_drop: ^0.7.0
 
   #pdf
-  syncfusion_flutter_pdfviewer: ^29.2.10
-  syncfusion_flutter_pdf: ^29.1.33
-
+  pdf: ^3.11.3
+  pdfx: ^2.9.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
