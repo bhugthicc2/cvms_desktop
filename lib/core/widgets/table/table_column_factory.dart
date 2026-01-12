@@ -11,12 +11,14 @@ class TableColumnFactory {
     bool istableHeaderDark = true,
     double? width,
     Alignment alignment = Alignment.center,
+    double hoverScale = 1.05,
   }) {
     return GridColumn(
       columnName: name,
       filterIconPadding: const EdgeInsets.all(8),
       width: width ?? double.nan,
       label: HoverGrow(
+        hoverScale: hoverScale,
         child: Container(
           alignment: alignment,
           padding: const EdgeInsets.all(8),

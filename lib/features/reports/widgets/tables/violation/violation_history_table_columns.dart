@@ -6,12 +6,14 @@ class ViolationHistoryTableColumns {
   static List<GridColumn> getColumns({bool istableHeaderDark = false}) {
     return [
       TableColumnFactory.build(
+        hoverScale: 1,
         istableHeaderDark: istableHeaderDark,
         name: 'index',
         label: '#',
         width: 50,
       ),
       TableColumnFactory.build(
+        hoverScale: 1,
         alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'violationId',
@@ -19,36 +21,42 @@ class ViolationHistoryTableColumns {
         width: 120,
       ),
       TableColumnFactory.build(
+        hoverScale: 1,
         alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'dateTime',
         label: 'DATE/TIME',
       ),
       TableColumnFactory.build(
+        hoverScale: 1,
         alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'violationType',
         label: 'VIOLATION TYPE',
       ),
       TableColumnFactory.build(
+        hoverScale: 1,
         alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'reportedBy',
         label: 'REPORTED BY',
       ),
       TableColumnFactory.build(
+        hoverScale: 1,
         istableHeaderDark: istableHeaderDark,
         name: 'status',
         label: 'STATUS',
         width: 140,
       ),
       TableColumnFactory.build(
+        hoverScale: 1,
         alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'createdAt',
         label: 'CREATED AT',
       ),
       TableColumnFactory.build(
+        hoverScale: 1,
         alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'lastUpdated',

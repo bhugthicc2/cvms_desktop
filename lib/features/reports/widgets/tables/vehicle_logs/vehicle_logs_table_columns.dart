@@ -6,6 +6,7 @@ class VehicleLogsTableColumns {
   static List<GridColumn> getColumns({bool istableHeaderDark = false}) {
     return [
       TableColumnFactory.build(
+        hoverScale: 1,
         istableHeaderDark: istableHeaderDark,
         name: 'index',
         label: '#',
@@ -13,6 +14,7 @@ class VehicleLogsTableColumns {
         alignment: Alignment.centerLeft,
       ),
       TableColumnFactory.build(
+        hoverScale: 1,
         alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'logId',
@@ -20,12 +22,14 @@ class VehicleLogsTableColumns {
         width: 100,
       ),
       TableColumnFactory.build(
+        hoverScale: 1,
         alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'timeIn',
         label: 'TIME IN',
       ),
       TableColumnFactory.build(
+        hoverScale: 1,
         alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'timeOut',
@@ -33,6 +37,7 @@ class VehicleLogsTableColumns {
         label: 'TIME OUT',
       ),
       TableColumnFactory.build(
+        hoverScale: 1,
         alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'durationMinutes',
@@ -40,12 +45,14 @@ class VehicleLogsTableColumns {
         width: 140,
       ),
       TableColumnFactory.build(
+        hoverScale: 1,
         istableHeaderDark: istableHeaderDark,
         name: 'status',
         label: 'STATUS',
         width: 120,
       ),
       TableColumnFactory.build(
+        hoverScale: 1,
         alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'updatedBy',
