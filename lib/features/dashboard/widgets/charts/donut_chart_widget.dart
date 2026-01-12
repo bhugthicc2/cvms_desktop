@@ -90,7 +90,10 @@ class DonutChartWidget extends StatelessWidget {
                               dataLabelSettings: DataLabelSettings(
                                 isVisible: true,
                                 labelPosition: ChartDataLabelPosition.inside,
-                                textStyle: TextStyle(color: AppColors.white),
+                                textStyle: TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: 10,
+                                ),
                               ),
                               radius: '90%',
                               innerRadius: '60%',

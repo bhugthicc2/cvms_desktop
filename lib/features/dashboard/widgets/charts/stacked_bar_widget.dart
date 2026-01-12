@@ -70,6 +70,10 @@ class StackedBarWidget extends StatelessWidget {
                 tooltipBehavior: TooltipBehavior(enable: true),
                 series: <CartesianSeries>[
                   BarSeries<ChartDataModel, String>(
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(5),
+                      topRight: Radius.circular(5),
+                    ),
                     onPointTap: onStackBarPointTapped,
                     dataSource: data,
                     xValueMapper: (d, _) => d.category,
