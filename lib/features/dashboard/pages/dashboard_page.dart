@@ -148,33 +148,10 @@ class _DashboardPageState extends State<DashboardPage> {
                                 duration: const Duration(seconds: 3),
                               );
                             },
-                            title: 'College Vehicle Distribution',
+                            title: 'Vehicle Distribution per College',
                           ),
                         ),
                         Spacing.horizontal(size: AppSpacing.medium),
-                        Expanded(
-                          child: BarChartWidget(
-                            onViewTap: () {},
-                            onBarChartPointTap: (details) {
-                              CustomSnackBar.show(
-                                context: context,
-                                message:
-                                    'Bar Chart Point Clicked: ${details.pointIndex}',
-                                type: SnackBarType.success,
-                                duration: const Duration(seconds: 3),
-                              );
-                            },
-                            data: state.topViolations,
-                            title: 'Top violation',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Spacing.vertical(size: AppSpacing.medium),
-                  Expanded(
-                    child: Row(
-                      children: [
                         Expanded(
                           child: LineChartWidget(
                             customWidget: CustomDropdown(
@@ -208,6 +185,30 @@ class _DashboardPageState extends State<DashboardPage> {
                             title: 'Vehicle Logs for the last',
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                  Spacing.vertical(size: AppSpacing.medium),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: BarChartWidget(
+                            onViewTap: () {},
+                            onBarChartPointTap: (details) {
+                              CustomSnackBar.show(
+                                context: context,
+                                message:
+                                    'Bar Chart Point Clicked: ${details.pointIndex}',
+                                type: SnackBarType.success,
+                                duration: const Duration(seconds: 3),
+                              );
+                            },
+                            data: state.topViolations,
+                            title: 'Top violation',
+                          ),
+                        ),
+
                         Spacing.horizontal(size: AppSpacing.medium),
                         Expanded(
                           child: StackedBarWidget(
