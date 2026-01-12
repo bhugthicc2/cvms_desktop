@@ -132,7 +132,7 @@ class VehicleLogsCubit extends Cubit<VehicleLogsState> {
                 (vehicle?['ownerName'] ?? '').toString().toLowerCase().contains(
                   q,
                 ) ||
-                (user?['fullName'] ?? '').toString().toLowerCase().contains(
+                (user?['fullname'] ?? '').toString().toLowerCase().contains(
                   q,
                 ) ||
                 log.status.toLowerCase().contains(q);
