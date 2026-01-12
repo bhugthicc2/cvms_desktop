@@ -102,6 +102,7 @@ auth_complete_structure_with_code_files.md
 FIREBASE_ERROR_HANDLING.md
 VEHICLE_MONITORING_STRUCTURE.md
 VEHICLE_LOGGING_DOCUMENTATION.md
+helpers/
 # Android related
 **/android/**/gradle-wrapper.jar
 .gradle/

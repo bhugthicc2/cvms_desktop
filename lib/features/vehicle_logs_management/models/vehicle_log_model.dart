@@ -70,20 +70,4 @@ class VehicleLogModel {
               : null,
     );
   }
-
-  static VehicleLogModel sample() {
-    final now = Timestamp.now();
-    return VehicleLogModel(
-      logID: 'sample-log-id',
-      vehicleID: 'sample-vehicle-id',
-      ownerName: 'Sample Owner',
-      plateNumber: 'ABC-123',
-      vehicleModel: 'Sample Model',
-      timeIn: now,
-      timeOut: null,
-      updatedBy: 'Sample User',
-      status: 'onsite',
-      durationMinutes: null,
-    );
-  }
 }

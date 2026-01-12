@@ -5,7 +5,6 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../bloc/vehicle_logs_cubit.dart';
 import '../bloc/vehicle_logs_state.dart';
-import '../models/vehicle_log_model.dart';
 import '../widgets/tables/vehicle_logs_table.dart';
 import '../widgets/dialogs/vehicle_logs_info_dialog.dart';
 

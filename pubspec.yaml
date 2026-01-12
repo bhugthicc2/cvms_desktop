@@ -35,7 +35,7 @@ dependencies:
   #Icons used through-out the app
   phosphor_flutter: ^2.1.0
   #font used in the whole app
-  google_fonts: ^6.3.1
+  google_fonts: ^7.0.0
   #package for supporting svg files
   flutter_svg: ^2.2.0
   #package for managing windows
@@ -46,9 +46,9 @@ dependencies:
   #syncfusion main package
   collection: ^1.19.1
   #charting library
-  syncfusion_flutter_charts: 29.2.11
-  syncfusion_flutter_core: 29.2.11
-  syncfusion_flutter_datagrid: 29.2.11
+  syncfusion_flutter_charts: ^32.1.22
+  syncfusion_flutter_core: ^32.1.22
+  syncfusion_flutter_datagrid: ^32.1.22
   equatable: ^2.0.7
   intl: ^0.20.2
   path_provider: ^2.1.5
@@ -57,18 +57,21 @@ dependencies:
   csv: ^6.0.0
   #filepicker
   file_picker: ^10.3.3
-  skeletonizer: ^1.4.3
+  skeletonizer: ^2.1.2
   # fl_chart: ^0.71.0
   desktop_drop: ^0.7.0
+  pdfrx: ^2.2.24
+  pdfrx_engine: ^0.3.9
 
   #pdf
   pdf: ^3.11.3
-  pdfx: ^2.9.2
+  #printing
+  printing: ^5.14.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true
