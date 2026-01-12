@@ -1,7 +1,8 @@
+//REFACTORED DB REFERENCE
+
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
-import 'package:cvms_desktop/features/auth/data/user_repository.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/bloc/vehicle_logs_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/models/vehicle_log_model.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/widgets/dialogs/custom_delete_dialog.dart';
@@ -71,9 +72,10 @@ class VehicleLogsActionsMenu extends StatelessWidget {
     switch (action) {
       case 'edit':
         _editVehicle(context);
+        break;
 
       case 'update':
-        _updateVehicle(context, vehicleLog.vehicleID, vehicleLog.toMap());
+        _updateVehicle(context, vehicleLog.vehicleId);
         break;
 
       case 'delete':
@@ -91,30 +93,28 @@ class VehicleLogsActionsMenu extends StatelessWidget {
     );
   }
 
-  void _updateVehicle(
-    BuildContext context,
-    String vehicleID,
-    Map<String, dynamic> vehicleInfo,
-  ) {
+  void _updateVehicle(BuildContext context, String vehicleId) {
     final cubit = context.read<VehicleLogsCubit>();
+    final authRepo = AuthRepository();
+    final uid = authRepo.uid;
+
+    if (uid == null) return;
 
     showDialog(
       context: context,
       builder:
           (_) => CustomUpdateDialog(
             onUpdate: (status) async {
-              final authRepo = AuthRepository();
-              final userRepo = UserRepository();
-              final uid = authRepo.uid;
-              final updatedBy =
-                  uid != null
-                      ? (await userRepo.getUserFullname(uid)) ?? "Unknown"
-                      : "Unknown";
-
               if (status == "onsite") {
-                await cubit.startSession(vehicleID, updatedBy, vehicleInfo);
+                await cubit.startSession(
+                  vehicleId: vehicleId,
+                  updatedByUserId: uid,
+                );
               } else if (status == "offsite") {
-                await cubit.endSession(vehicleID, updatedBy);
+                await cubit.endSession(
+                  vehicleId: vehicleId,
+                  updatedByUserId: uid,
+                );
               }
 
               if (context.mounted) {

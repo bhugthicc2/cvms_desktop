@@ -83,7 +83,8 @@ class _VehicleLogsManagementState extends State<VehicleLogsTable> {
                   deleteValue: state.selectedEntries.length.toString(),
                   updateValue: state.selectedEntries.length.toString(),
                   onExport: () {
-                    context.read<VehicleLogsCubit>().bulkExportLogs();
+                    //todo create a cubit for bulk export
+                    //DB REFACTOR MARKED
                   },
                   onUpdate: () {
                     _showUpdateStatusDialog(context);

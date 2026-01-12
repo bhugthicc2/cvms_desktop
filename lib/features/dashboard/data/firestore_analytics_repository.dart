@@ -12,7 +12,8 @@ class FirestoreAnalyticsRepository implements AnalyticsRepository {
     // Group vehicles by department/college field
     final Map<String, int> counts = {};
     for (final doc in snapshot.docs) {
-      final dept = doc['department'] ?? 'Unknown';
+      final data = doc.data();
+      final dept = data['department'] ?? 'Unknown';
       counts[dept] = (counts[dept] ?? 0) + 1;
     }
 
@@ -27,7 +28,8 @@ class FirestoreAnalyticsRepository implements AnalyticsRepository {
 
     final Map<String, int> counts = {};
     for (final doc in snapshot.docs) {
-      final type = doc['violation'] ?? 'Unknown';
+      final data = doc.data();
+      final type = data['violationType'] ?? 'Unknown';
       counts[type] = (counts[type] ?? 0) + 1;
     }
 
@@ -67,7 +69,9 @@ class FirestoreAnalyticsRepository implements AnalyticsRepository {
     // Track number of logs per day
     final Map<DateTime, int> dayCounts = {};
     for (final doc in snapshot.docs) {
-      final ts = doc['timeIn'] as Timestamp;
+      final data = doc.data();
+      final ts = data['timeIn'] as Timestamp?;
+      if (ts == null) continue;
       final dt = ts.toDate();
       final dayKey = DateTime(dt.year, dt.month, dt.day);
       // Only consider days within our last7Days window
@@ -114,7 +118,9 @@ class FirestoreAnalyticsRepository implements AnalyticsRepository {
 
     final Map<DateTime, int> dayCounts = {};
     for (final doc in snapshot.docs) {
-      final ts = doc['timeIn'] as Timestamp;
+      final data = doc.data();
+      final ts = data['timeIn'] as Timestamp?;
+      if (ts == null) continue;
       final dt = ts.toDate();
       final dayKey = DateTime(dt.year, dt.month, dt.day);
       if (!dayKey.isBefore(startDate) && !dayKey.isAfter(last30Days.last)) {
@@ -158,7 +164,9 @@ class FirestoreAnalyticsRepository implements AnalyticsRepository {
 
     final Map<DateTime, int> monthCounts = {};
     for (final doc in snapshot.docs) {
-      final ts = doc['timeIn'] as Timestamp;
+      final data = doc.data();
+      final ts = data['timeIn'] as Timestamp?;
+      if (ts == null) continue;
       final dt = ts.toDate();
       final monthKey = DateTime(dt.year, dt.month, 1);
       if (!monthKey.isBefore(startDate) &&
@@ -196,13 +204,33 @@ class FirestoreAnalyticsRepository implements AnalyticsRepository {
 
   @override
   Future<List<ChartDataModel>> fetchTopViolators() async {
-    final snapshot = await _firestore.collection('violations').get();
+    final violationsSnapshot = await _firestore.collection('violations').get();
 
-    final Map<String, int> counts = {};
-    for (final doc in snapshot.docs) {
-      final owner = doc['owner'] ?? 'Unknown';
-      counts[owner] = (counts[owner] ?? 0) + 1;
+    final Map<String, Set<String>> vehicleCountsByOwner = {};
+
+    for (final violationDoc in violationsSnapshot.docs) {
+      final violationData = violationDoc.data();
+      final vehicleId = violationData['vehicleId'] as String?;
+
+      if (vehicleId != null && vehicleId.isNotEmpty) {
+        // Get vehicle document to retrieve owner name
+        final vehicleDoc =
+            await _firestore.collection('vehicles').doc(vehicleId).get();
+        if (vehicleDoc.exists) {
+          final vehicleData = vehicleDoc.data();
+          final ownerName = vehicleData?['ownerName'] as String? ?? 'Unknown';
+
+          // Count unique vehicles per owner
+          vehicleCountsByOwner.putIfAbsent(ownerName, () => <String>{});
+          vehicleCountsByOwner[ownerName]!.add(vehicleId);
+        }
+      }
     }
+
+    // Convert to chart data (count of unique vehicles per owner)
+    final counts = vehicleCountsByOwner.map(
+      (owner, vehicles) => MapEntry(owner, vehicles.length),
+    );
 
     final sorted =
         counts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));

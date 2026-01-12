@@ -65,17 +65,18 @@ class _VehicleLogsPageState extends State<VehicleLogsPage> {
                     searchController: onsiteSearchController,
                     hasSearchQuery: onsiteSearchController.text.isNotEmpty,
                     onCellTap: (details) {
-                      if (details.rowColumnIndex.rowIndex > 0) {
-                        final log =
-                            state.filteredEntries[details
-                                    .rowColumnIndex
-                                    .rowIndex -
-                                1];
-                        showDialog(
-                          context: context,
-                          builder: (_) => VehicleLogsInfoDialog(log: log),
-                        );
-                      }
+                      //TEMPORARILY DISABLED DUE TO REFACTORED CHANGES OF VEHICLE LOG MODEL
+                      // if (details.rowColumnIndex.rowIndex > 0) {
+                      //   final log =
+                      //       state.filteredEntries[details
+                      //               .rowColumnIndex
+                      //               .rowIndex -
+                      //           1];
+                      //   showDialog(
+                      //     context: context,
+                      //     builder: (_) => VehicleLogsInfoDialog(log: log),
+                      //   );
+                      // }
                     },
                   ),
                 ),

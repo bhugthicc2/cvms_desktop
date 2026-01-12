@@ -1,3 +1,5 @@
+//REFACTORED DB REFERENCE
+
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/utils/date_time_formatter.dart';
@@ -14,7 +16,9 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 class VehicleLogsDataSource extends DataGridSource {
   final List<VehicleLogModel> _originalEntries;
   final bool _showCheckbox;
+
   late List<DataGridRow> _vehicleLogEntries;
+
   VehicleLogsDataSource({
     required List<VehicleLogModel> vehicleLogEntries,
     bool showCheckbox = false,
@@ -26,50 +30,57 @@ class VehicleLogsDataSource extends DataGridSource {
   void _buildRows() {
     _vehicleLogEntries =
         _originalEntries
-            .map<DataGridRow>((e) => DataGridRow(cells: _buildCells(e)))
+            .map<DataGridRow>(
+              (e) => DataGridRow(
+                cells: [
+                  if (_showCheckbox)
+                    const DataGridCell<bool>(
+                      columnName: 'checkbox',
+                      value: false,
+                    ),
+                  DataGridCell<int>(
+                    columnName: 'index',
+                    value: _originalEntries.indexOf(e) + 1,
+                  ),
+                  const DataGridCell<String>(
+                    columnName: 'ownerName',
+                    value: '',
+                  ),
+                  const DataGridCell<String>(columnName: 'vehicle', value: ''),
+                  const DataGridCell<String>(
+                    columnName: 'plateNumber',
+                    value: '',
+                  ),
+                  const DataGridCell<String>(
+                    columnName: 'updatedBy',
+                    value: '',
+                  ),
+                  DataGridCell<String>(columnName: 'status', value: e.status),
+                  DataGridCell<String>(
+                    columnName: 'timeIn',
+                    value: DateTimeFormatter.formatNumeric(e.timeIn.toDate()),
+                  ),
+                  DataGridCell<String>(
+                    columnName: 'timeOut',
+                    value:
+                        e.timeOut != null
+                            ? DateTimeFormatter.formatNumeric(
+                              e.timeOut!.toDate(),
+                            )
+                            : "Still onsite",
+                  ),
+                  DataGridCell<String>(
+                    columnName: 'duration',
+                    value:
+                        e.timeOut != null && e.durationMinutes != null
+                            ? e.formattedDuration
+                            : 'N/A',
+                  ),
+                  const DataGridCell<String>(columnName: 'actions', value: ''),
+                ],
+              ),
+            )
             .toList();
-  }
-
-  List<DataGridCell> _buildCells(VehicleLogModel entry) {
-    final cells = <DataGridCell>[];
-
-    if (_showCheckbox) {
-      cells.add(DataGridCell<bool>(columnName: 'checkbox', value: false));
-    }
-
-    cells.addAll([
-      DataGridCell<int>(
-        columnName: 'index',
-        value: _originalEntries.indexOf(entry) + 1,
-      ),
-      DataGridCell<String>(columnName: 'ownerName', value: entry.ownerName),
-      DataGridCell<String>(columnName: 'vehicle', value: entry.vehicleModel),
-      DataGridCell<String>(columnName: 'plateNumber', value: entry.plateNumber),
-      DataGridCell<String>(columnName: 'updatedBy', value: entry.updatedBy),
-      DataGridCell<String>(columnName: 'status', value: entry.status),
-      DataGridCell<String>(
-        columnName: 'timeIn',
-        value: DateTimeFormatter.formatNumeric(entry.timeIn.toDate()),
-      ),
-      DataGridCell<String>(
-        columnName: 'timeOut',
-        value:
-            entry.timeOut != null
-                ? DateTimeFormatter.formatNumeric(entry.timeOut!.toDate())
-                : "Still onsite",
-      ),
-      DataGridCell<String>(
-        columnName: 'duration',
-        value:
-            entry.timeOut != null && entry.durationMinutes != null
-                ? entry.formattedDuration
-                : 'N/A',
-      ),
-
-      DataGridCell<String>(columnName: 'actions', value: ''),
-    ]);
-
-    return cells;
   }
 
   @override
@@ -77,12 +88,13 @@ class VehicleLogsDataSource extends DataGridSource {
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
-    final int rowIndex = _vehicleLogEntries.indexOf(row);
+    final rowIndex = _vehicleLogEntries.indexOf(row);
     if (rowIndex < 0 || rowIndex >= _originalEntries.length) {
       return null;
     }
-    final bool isEven = rowIndex % 2 == 0;
-    final VehicleLogModel entry = _originalEntries[rowIndex];
+
+    final entry = _originalEntries[rowIndex];
+    final isEven = rowIndex.isEven;
 
     return DataGridRowAdapter(
       color:
@@ -97,115 +109,81 @@ class VehicleLogsDataSource extends DataGridSource {
   }
 
   Widget _buildCellWidget(DataGridCell cell, VehicleLogModel entry) {
-    switch (cell.columnName) {
-      case 'checkbox':
-        return BlocBuilder<VehicleLogsCubit, VehicleLogsState>(
-          builder: (context, state) {
+    return BlocBuilder<VehicleLogsCubit, VehicleLogsState>(
+      builder: (context, state) {
+        final cubit = context.read<VehicleLogsCubit>();
+
+        switch (cell.columnName) {
+          case 'checkbox':
             final isSelected = state.selectedEntries.contains(entry);
-            return Container(
-              alignment: Alignment.center,
+            return Center(
               child: CustomCheckbox(
                 value: isSelected,
-                onChanged: (value) {
-                  context.read<VehicleLogsCubit>().selectEntry(entry);
-                },
+                onChanged: (_) => cubit.selectEntry(entry),
               ),
             );
-          },
-        );
 
-      case 'actions':
-        return BlocBuilder<VehicleLogsCubit, VehicleLogsState>(
-          builder: (context, state) {
+          case 'ownerName':
+            return _text(cubit.resolveOwnerName(entry));
+
+          case 'vehicle':
+            return _text(
+              cubit.vehiclesById[entry.vehicleId]?['vehicleModel']
+                      ?.toString() ??
+                  '—',
+            );
+
+          case 'plateNumber':
+            return _text(cubit.resolvePlateNumber(entry));
+
+          case 'updatedBy':
+            return _text(cubit.resolveUpdatedBy(entry));
+
+          case 'status':
+            final status = entry.status.toLowerCase();
+            final isOnsite = status == 'onsite';
+
+            return CellBadge(
+              badgeBg: isOnsite ? AppColors.successLight : AppColors.errorLight,
+              textColor:
+                  isOnsite
+                      ? const Color.fromARGB(255, 31, 144, 11)
+                      : AppColors.error,
+              statusStr: entry.status,
+              fontSize: AppFontSizes.small,
+            );
+
+          case 'actions':
             if (!state.isBulkModeEnabled) {
-              final rowIndex = _originalEntries.indexOf(entry);
-              return Container(
-                alignment: Alignment.center,
-                child: VehicleLogsActionsMenu(
-                  vehicleLog: entry,
-                  rowIndex: rowIndex,
-                  context: context,
-                ),
-              );
-            } else {
-              return Container(
-                alignment: Alignment.center,
-                child: const Icon(Icons.more_horiz, size: 20),
+              return VehicleLogsActionsMenu(
+                vehicleLog: entry,
+                rowIndex: _originalEntries.indexOf(entry),
+                context: context,
               );
             }
-          },
-        );
+            return const Icon(Icons.more_horiz, size: 20);
 
-      case 'ownerName':
-        return Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(
-            cell.value.toString(),
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
-            style: const TextStyle(
-              fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
-            ),
-          ),
-        );
-      case 'status':
-        final statusStr = cell.value.toString();
-        final statusLower = statusStr.toLowerCase();
-        final bool isInside = statusLower == 'onsite';
-        final bool isOutside = statusLower == 'offsite';
+          default:
+            return _text(cell.value.toString());
+        }
+      },
+    );
+  }
 
-        final Color badgeBg =
-            isInside
-                ? AppColors.successLight
-                : isOutside
-                ? AppColors.errorLight
-                : AppColors.grey.withValues(alpha: 0.2);
-
-        final Color textColor =
-            isInside
-                ? const Color.fromARGB(255, 31, 144, 11)
-                : isOutside
-                ? AppColors.error
-                : AppColors.black;
-
-        return CellBadge(
-          badgeBg: badgeBg,
-          textColor: textColor,
-          statusStr: statusStr,
+  Widget _text(String value) {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Text(
+        value,
+        textAlign: TextAlign.center,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 2,
+        style: const TextStyle(
           fontSize: AppFontSizes.small,
-        );
-      case 'timeOut':
-        return Container(
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(
-            cell.value.toString(),
-            textAlign: TextAlign.left,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
-            style: const TextStyle(
-              fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
-            ),
-          ),
-        );
-
-      default:
-        return Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(
-            cell.value.toString(),
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
-            ),
-          ),
-        );
-    }
+          fontFamily: 'Poppins',
+        ),
+      ),
+    );
   }
 }
