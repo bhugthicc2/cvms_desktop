@@ -5,6 +5,7 @@ import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/charts/bar_chart_widget.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/charts/donut_chart_widget.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/charts/line_chart_widget.dart';
 import 'package:cvms_desktop/features/reports/pages/pdf_report_page.dart';
 import 'package:cvms_desktop/features/reports/utils/mvp_progress_calculator.dart';
@@ -13,7 +14,9 @@ import 'package:cvms_desktop/features/reports/widgets/sections/report_table_head
 import 'package:cvms_desktop/features/reports/widgets/sections/stats_card_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/vehicle_info_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/tables/violation/violation_history_table.dart';
+import 'package:cvms_desktop/features/reports/widgets/tables/violation/global_violation_history_table.dart';
 import 'package:cvms_desktop/features/reports/widgets/tables/vehicle_logs/vehicle_logs_table.dart';
+import 'package:cvms_desktop/features/reports/widgets/tables/vehicle_logs/global_vehicle_logs_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/reports_cubit.dart';
@@ -54,6 +57,15 @@ class _ReportsPageContent extends StatelessWidget {
     ChartDataModel(category: 'Sun', value: 110, date: DateTime(2026, 1, 7)),
   ];
 
+  final List<ChartDataModel> vehicleLogsCollegeData = [
+    ChartDataModel(category: 'CAF-SOE', value: 245),
+    ChartDataModel(category: 'CTE', value: 189),
+    ChartDataModel(category: 'CCJ', value: 156),
+    ChartDataModel(category: 'CON', value: 134),
+    ChartDataModel(category: 'CME', value: 98),
+    ChartDataModel(category: 'CAS', value: 87),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,13 +96,13 @@ class _ReportsPageContent extends StatelessWidget {
                   },
                 ),
               )
-              : _buildReportsContent(context);
+              : _buildGlobalReportsContent(context);
         },
       ),
     );
   }
 
-  Widget _buildReportsContent(BuildContext context) {
+  Widget _buildIndividualReportsContent(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: AppSpacing.medium),
       child: CustomScrollView(
@@ -299,6 +311,203 @@ class _ReportsPageContent extends StatelessWidget {
                     Spacing.vertical(size: AppSpacing.medium),
                     const Expanded(
                       child: VehicleLogsTable(
+                        istableHeaderDark: false,
+                        allowSorting: true,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Spacing.vertical(size: AppSpacing.medium),
+          ), //space
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGlobalReportsContent(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: AppSpacing.medium),
+      child: CustomScrollView(
+        slivers: [
+          // HEADER
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    0,
+                    AppSpacing.medium,
+                    AppSpacing.medium,
+                    AppSpacing.medium,
+                  ),
+                  child: ReportHeaderSection(
+                    onExportPDF: () {
+                      // Show PDF preview locally
+                      context.read<ReportsCubit>().showPdfPreview();
+                    },
+                    onExportCSV: () {
+                      //todo handle export CSV
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // STAT CARDS + VEHICLE INFO
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(right: AppSpacing.medium),
+              child: SizedBox(
+                height: 255,
+                child: Row(
+                  children: [
+                    // LEFT: 2x2 stat cards
+                    Expanded(
+                      flex: 2,
+                      child: StatsCardSection(
+                        //card1
+                        statsCard1Label: "Total entered vehicles",
+                        statsCard1Value: 150,
+                        //card2
+                        statsCard2Label: "Total exited vehicles",
+                        statsCard2Value: 22,
+                        //card3
+                        statsCard3Label: "Total violations",
+                        statsCard3Value: 230,
+                        //card4
+                        statsCard4Label: "Total Resolved Violations",
+                        statsCard4Value: 540,
+                      ),
+                    ),
+
+                    Spacing.horizontal(size: AppSpacing.medium),
+
+                    // RIGHT: Vehicle Info
+                    Expanded(
+                      flex: 2,
+                      child: DonutChartWidget(
+                        explode: true,
+                        showPercentageInSlice: false,
+                        onViewTap: () {},
+                        onDonutChartPointTap: (details) {},
+                        data: vehicleLogsCollegeData,
+                        title: 'Vehicle Logs Distribution per College',
+                        radius: '100%',
+                        innerRadius: '55%',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          SliverToBoxAdapter(child: Spacing.vertical(size: AppSpacing.medium)),
+
+          // CHARTS SECTION (fixed height)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(right: AppSpacing.medium),
+              child: SizedBox(
+                height: 320,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: BarChartWidget(
+                        onViewTap: () {},
+                        onBarChartPointTap: (details) {},
+                        data:
+                            violationTypeData, //todo add a hardcoded data for now
+                        title: 'Violation by Type',
+                      ),
+                    ), //violation by type bar chart
+                    Spacing.horizontal(size: AppSpacing.medium),
+                    Expanded(
+                      child: LineChartWidget(
+                        customWidget: CustomDropdown(
+                          color: AppColors.donutBlue,
+                          fontSize: 14,
+                          verticalPadding: 0,
+                          items: const ['7 days', 'Month', 'Year'],
+                          initialValue: '7 days',
+                          onChanged: (value) {
+                            //todo
+                          },
+                        ),
+                        onViewTap: () {},
+                        onLineChartPointTap: (details) {},
+                        data:
+                            vehicleLogsData, //todo add a hardcoded data for now
+                        title: 'Vehicle Logs for the last',
+                      ),
+                    ), //vehicle logs line chart (weekly, monthly and yearly)
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          SliverToBoxAdapter(
+            child: Spacing.vertical(size: AppSpacing.medium),
+          ), //space
+          // GLOBAL VIOLATION HISTORY TABLE
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(right: AppSpacing.medium),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.medium,
+                  AppSpacing.medium,
+                  AppSpacing.medium,
+                  0,
+                ),
+                height: 400, // table viewport
+                decoration: cardDecoration(),
+                child: Column(
+                  children: [
+                    ReportTableHeader(
+                      tableTitle: 'Violation History',
+                      onTap: () {},
+                    ),
+                    Spacing.vertical(size: AppSpacing.medium),
+                    const Expanded(
+                      child: GlobalViolationHistoryTable(
+                        istableHeaderDark: false,
+                        allowSorting: true,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          SliverToBoxAdapter(child: Spacing.vertical(size: AppSpacing.medium)),
+
+          //GLOBAL VEHICLE LOGS TABLE
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(right: AppSpacing.medium),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.medium,
+                  AppSpacing.medium,
+                  AppSpacing.medium,
+                  0,
+                ),
+                height: 400, // table viewport
+                decoration: cardDecoration(),
+                child: Column(
+                  children: [
+                    ReportTableHeader(tableTitle: 'Vehicle Logs', onTap: () {}),
+                    Spacing.vertical(size: AppSpacing.medium),
+                    const Expanded(
+                      child: GlobalVehicleLogsTable(
                         istableHeaderDark: false,
                         allowSorting: true,
                       ),

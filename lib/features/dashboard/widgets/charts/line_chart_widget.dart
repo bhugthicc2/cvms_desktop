@@ -91,7 +91,7 @@ class LineChartWidget extends StatelessWidget {
                     xValueMapper: (d, _) => d.date!,
                     yValueMapper: (d, _) => d.value,
                     markerSettings: const MarkerSettings(isVisible: true),
-                    color: AppColors.chartGreen,
+                    color: AppColors.primary,
                   ),
                 ],
               ),

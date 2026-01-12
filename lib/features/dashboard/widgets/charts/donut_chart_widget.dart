@@ -7,8 +7,12 @@ import '../../models/chart_data_model.dart';
 
 class DonutChartWidget extends StatelessWidget {
   final VoidCallback onViewTap;
+  final String radius;
+  final String innerRadius;
   final List<ChartDataModel> data;
   final String title;
+  final bool explode;
+  final bool showPercentageInSlice;
   final Function(ChartPointDetails)? onDonutChartPointTap;
 
   const DonutChartWidget({
@@ -17,6 +21,10 @@ class DonutChartWidget extends StatelessWidget {
     this.title = '',
     this.onDonutChartPointTap,
     required this.onViewTap,
+    this.radius = '90%',
+    this.innerRadius = '55%',
+    this.explode = false,
+    this.showPercentageInSlice = true,
   });
 
   @override
@@ -77,26 +85,30 @@ class DonutChartWidget extends StatelessWidget {
                           tooltipBehavior: TooltipBehavior(enable: true),
                           series: <CircularSeries>[
                             DoughnutSeries<ChartDataModel, String>(
+                              explode: explode,
                               onPointTap: onDonutChartPointTap,
                               dataSource: data,
                               xValueMapper: (d, _) => d.category,
                               yValueMapper: (d, _) => d.value,
-                              dataLabelMapper: (d, _) {
-                                final v = d.value;
-                                if (total == 0) return '0%';
-                                final pct = (v / total) * 100;
-                                return '${pct.toStringAsFixed(1)}%';
-                              },
+                              dataLabelMapper:
+                                  showPercentageInSlice
+                                      ? (d, _) {
+                                        final v = d.value;
+                                        if (total == 0) return '0%';
+                                        final pct = (v / total) * 100;
+                                        return '${pct.toStringAsFixed(1)}%';
+                                      }
+                                      : null,
                               dataLabelSettings: DataLabelSettings(
-                                isVisible: true,
+                                isVisible: showPercentageInSlice,
                                 labelPosition: ChartDataLabelPosition.inside,
                                 textStyle: TextStyle(
                                   color: AppColors.white,
                                   fontSize: 10,
                                 ),
                               ),
-                              radius: '90%',
-                              innerRadius: '60%',
+                              radius: radius,
+                              innerRadius: innerRadius,
                               strokeWidth: 2,
                               strokeColor: AppColors.white,
                               pointColorMapper: (data, index) {
@@ -196,6 +208,16 @@ class DonutChartWidget extends StatelessWidget {
                                       textAlign: TextAlign.left,
                                     ),
                                   ),
+                                  //percentage
+                                  if (!showPercentageInSlice)
+                                    Expanded(
+                                      child: Text(() {
+                                        final v = data[i].value;
+                                        if (total == 0) return '0%';
+                                        final pct = (v / total) * 100;
+                                        return '${pct.toStringAsFixed(1)}%';
+                                      }(), textAlign: TextAlign.left),
+                                    ),
                                 ],
                               ),
                             ),
