@@ -42,12 +42,38 @@ class ViolationTableColumns {
     }
 
     columns.addAll([
-      TableColumnFactory.build(name: 'index', label: '#', width: 50),
-      TableColumnFactory.build(name: 'dateTime', label: 'Date Time'),
-      TableColumnFactory.build(name: 'reportedBy', label: 'Reported By'),
-      TableColumnFactory.build(name: 'plateNumber', label: 'Plate Number'),
-      TableColumnFactory.build(name: 'owner', label: 'Owner'),
-      TableColumnFactory.build(name: 'violation', label: 'Violation'),
+      TableColumnFactory.build(
+        name: 'index',
+        label: '#',
+        width: 50,
+        alignment: Alignment.centerLeft,
+      ),
+      TableColumnFactory.build(
+        width: 200,
+        name: 'dateTime',
+        label: 'Date Time',
+        alignment: Alignment.centerLeft,
+      ),
+      TableColumnFactory.build(
+        name: 'reportedBy',
+        label: 'Reported By',
+        alignment: Alignment.centerLeft,
+      ),
+      TableColumnFactory.build(
+        name: 'plateNumber',
+        label: 'Plate Number',
+        alignment: Alignment.centerLeft,
+      ),
+      TableColumnFactory.build(
+        name: 'owner',
+        label: 'Owner',
+        alignment: Alignment.centerLeft,
+      ),
+      TableColumnFactory.build(
+        name: 'violation',
+        label: 'Violation',
+        alignment: Alignment.centerLeft,
+      ),
       TableColumnFactory.build(name: 'status', label: 'Status'),
       // Custom actions column without sorting
       GridColumn(

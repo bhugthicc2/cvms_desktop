@@ -1,3 +1,4 @@
+// VEHICLE ID REFERENCE UPDATE MARKER
 import 'dart:async';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
@@ -13,18 +14,11 @@ class ViolationCubit extends Cubit<ViolationState> {
 
   ViolationCubit() : super(ViolationState.initial());
 
-  void loadEntries(List<ViolationEntry> entries) {
-    emit(state.copyWith(allEntries: entries));
-    _applyFilters();
-  }
-
-  Future<void> loadViolations() async {
-    try {
-      final violations = await _repository.fetchViolations();
-      emit(state.copyWith(allEntries: violations));
+  Future<void> loadEntries(List<ViolationEntry> entries) async {
+    final enriched = await _repository.enrichViolationsWithRelatedInfo(entries);
+    if (!isClosed) {
+      emit(state.copyWith(allEntries: enriched));
       _applyFilters();
-    } catch (e) {
-      debugPrint('Error loading violations: $e');
     }
   }
 
@@ -47,32 +41,6 @@ class ViolationCubit extends Cubit<ViolationState> {
     );
   }
 
-  Future<void> addViolationReport({
-    required String plateNumber,
-    required String owner,
-    required String violation,
-    required String reportedBy,
-    required String vehicleID,
-    String? reportReason,
-  }) async {
-    try {
-      await _repository.createViolationReport(
-        plateNumber: plateNumber,
-        owner: owner,
-        violation: violation,
-        reportedBy: reportedBy,
-        additionalData: {
-          'vehicleID': vehicleID,
-          if (reportReason != null) 'reportReason': reportReason,
-        },
-      );
-      await loadViolations();
-    } catch (e) {
-      debugPrint('Error adding violation report: $e');
-      rethrow;
-    }
-  }
-
   void toggleBulkMode() {
     final newBulkMode = !state.isBulkModeEnabled;
     emit(
@@ -85,27 +53,22 @@ class ViolationCubit extends Cubit<ViolationState> {
 
   void selectEntry(ViolationEntry entry) {
     if (!state.isBulkModeEnabled) return;
-
     final currentSelected = List<ViolationEntry>.from(state.selectedEntries);
     if (currentSelected.contains(entry)) {
       currentSelected.remove(entry);
     } else {
       currentSelected.add(entry);
     }
-
     emit(state.copyWith(selectedEntries: currentSelected));
   }
 
   void selectAllEntries() {
     if (!state.isBulkModeEnabled) return;
-
     final allFiltered = state.filteredEntries;
     final currentSelected = List<ViolationEntry>.from(state.selectedEntries);
-
     final allSelected = allFiltered.every(
       (entry) => currentSelected.contains(entry),
     );
-
     if (allSelected) {
       currentSelected.removeWhere((entry) => allFiltered.contains(entry));
     } else {
@@ -115,7 +78,6 @@ class ViolationCubit extends Cubit<ViolationState> {
         }
       }
     }
-
     emit(state.copyWith(selectedEntries: currentSelected));
   }
 
@@ -127,34 +89,21 @@ class ViolationCubit extends Cubit<ViolationState> {
     emit(state.copyWith(message: null, messageType: null));
   }
 
-  //todo fix the problem and freezing issue
+  // todo: The freezing issue may be related to rapid state emissions or unoptimized filtering. Consider debouncing filters if needed.
   Future<void> toggleViolationStatus(ViolationEntry entry) async {
     try {
       final newStatus =
           entry.status.toLowerCase() == 'resolved' ? 'pending' : 'resolved';
-
-      await _repository.updateViolationStatus(entry.violationID, newStatus);
-
+      await _repository.updateViolationStatus(entry.id, newStatus);
       final updatedEntries =
           state.allEntries.map((e) {
             if (e == entry) {
-              return ViolationEntry(
-                violationID: e.violationID,
-                dateTime: e.dateTime,
-                reportedBy: e.reportedBy,
-                plateNumber: e.plateNumber,
-                vehicleID: e.vehicleID,
-                owner: e.owner,
-                violation: e.violation,
-                status: newStatus,
-              );
+              return e.copyWith(status: newStatus);
             }
             return e;
           }).toList();
-
       emit(state.copyWith(allEntries: updatedEntries));
       _applyFilters();
-
       emit(
         state.copyWith(
           allEntries: updatedEntries,
@@ -172,8 +121,7 @@ class ViolationCubit extends Cubit<ViolationState> {
     }
   }
 
-  //todo fix the problem and freezing issue
-
+  // todo: The freezing issue may be related to rapid state emissions or unoptimized filtering. Consider debouncing filters if needed.
   void filterEntries(String query) {
     emit(state.copyWith(searchQuery: query, isLoading: false));
     _applyFilters();
@@ -186,31 +134,30 @@ class ViolationCubit extends Cubit<ViolationState> {
 
   void _applyFilters() {
     var filtered = state.allEntries;
-
     if (state.searchQuery.isNotEmpty) {
       final q = state.searchQuery.toLowerCase();
       filtered =
           filtered.where((e) {
-            return e.dateTime.toDate().toString().toLowerCase().contains(q) ||
-                e.reportedBy.toLowerCase().contains(q) ||
+            return e.reportedByUserId.toLowerCase().contains(q) ||
+                e.violationType.toLowerCase().contains(q) ||
+                e.status.toLowerCase().contains(q) ||
+                e.ownerName.toLowerCase().contains(q) ||
                 e.plateNumber.toLowerCase().contains(q) ||
-                e.owner.toLowerCase().contains(q) ||
-                e.violation.toLowerCase().contains(q) ||
-                e.status.toLowerCase().contains(q);
+                e.fullname.toLowerCase().contains(q);
           }).toList();
     }
-
     if (state.dateFilter != 'All') {
+      // todo: Implement proper date filtering (e.g., compare dates parsed to 'Today', 'Yesterday', etc.)
+      // Current implementation is placeholder and may not work as expected
       filtered =
           filtered
               .where(
                 (e) =>
-                    e.dateTime.toDate().toString().toLowerCase() ==
+                    e.reportedAt.toDate().toString().toLowerCase() ==
                     state.dateFilter.toLowerCase(),
               )
               .toList();
     }
-
     emit(state.copyWith(filteredEntries: filtered));
   }
 

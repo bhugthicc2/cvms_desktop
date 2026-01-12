@@ -1,85 +1,85 @@
+// VEHICLE ID REFERENCE UPDATE MARKER
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ViolationEntry {
-  final String violationID;
-  final Timestamp dateTime;
-  final String reportedBy;
-  final String plateNumber;
-  final String vehicleID;
-  final String owner;
-  final String violation;
+  final String id;
+  final String vehicleId;
+  final String reportedByUserId;
+  final String violationType;
   final String status;
+  final Timestamp reportedAt;
+  final Timestamp? createdAt;
+  final String ownerName;
+  final String plateNumber;
+  final String fullname;
 
   ViolationEntry({
-    required this.violationID,
-    required this.dateTime,
-    required this.reportedBy,
-    required this.plateNumber,
-    required this.vehicleID,
-    required this.owner,
-    required this.violation,
+    required this.id,
+    required this.vehicleId,
+    required this.reportedByUserId,
+    required this.violationType,
     required this.status,
+    required this.reportedAt,
+    this.createdAt,
+    this.ownerName = '',
+    this.plateNumber = '',
+    this.fullname = '',
   });
 
   factory ViolationEntry.fromMap(Map<String, dynamic> map, String id) {
     return ViolationEntry(
-      violationID: id,
-      dateTime: map['dateTime'] ?? Timestamp.now(),
-      reportedBy: map['reportedBy'] ?? '',
-      plateNumber: map['plateNumber'] ?? '',
-      vehicleID: map['vehicleID'] ?? '',
-      owner: map['owner'] ?? '',
-      violation: map['violation'] ?? '',
+      id: id,
+      vehicleId: map['vehicleId'] ?? '',
+      reportedByUserId: map['reportedByUserId'] ?? '',
+      violationType: map['violationType'] ?? '',
       status: map['status'] ?? 'pending',
+      reportedAt: map['reportedAt'] ?? Timestamp.now(),
+      createdAt: map['createdAt'],
+      ownerName: map['ownerName'] ?? '',
+      plateNumber: map['plateNumber'] ?? '',
+      fullname: map['fullname'] ?? '',
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'dateTime': dateTime,
-      'reportedBy': reportedBy,
-      'plateNumber': plateNumber,
-      'vehicleID': vehicleID,
-      'owner': owner,
-      'violation': violation,
+      'vehicleId': vehicleId,
+      'reportedByUserId': reportedByUserId,
+      'violationType': violationType,
       'status': status,
+      'reportedAt': reportedAt,
       'createdAt': FieldValue.serverTimestamp(),
     };
   }
 
   ViolationEntry copyWith({
-    String? violationID,
-    Timestamp? dateTime,
-    String? reportedBy,
-    String? plateNumber,
-    String? vehicleID,
-    String? owner,
-    String? violation,
     String? status,
-    String? reportReason,
+    String? ownerName,
+    String? plateNumber,
+    String? fullname,
   }) {
     return ViolationEntry(
-      violationID: violationID ?? this.violationID,
-      dateTime: dateTime ?? this.dateTime,
-      reportedBy: reportedBy ?? this.reportedBy,
-      plateNumber: plateNumber ?? this.plateNumber,
-      vehicleID: vehicleID ?? this.vehicleID,
-      owner: owner ?? this.owner,
-      violation: violation ?? this.violation,
+      id: id,
+      vehicleId: vehicleId,
+      reportedByUserId: reportedByUserId,
+      violationType: violationType,
       status: status ?? this.status,
+      reportedAt: reportedAt,
+      createdAt: createdAt,
+      ownerName: ownerName ?? this.ownerName,
+      plateNumber: plateNumber ?? this.plateNumber,
+      fullname: fullname ?? this.fullname,
     );
   }
 
-  static ViolationEntry sample() {
-    return ViolationEntry(
-      violationID: 'sample-violation-id',
-      dateTime: Timestamp.now(),
-      reportedBy: 'Sample Reporter',
-      plateNumber: 'ABC-123',
-      vehicleID: 'sample-vehicle-id',
-      owner: 'Sample Owner',
-      violation: 'Parking Violation',
-      status: 'pending',
-    );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is ViolationEntry &&
+        runtimeType == other.runtimeType &&
+        id == other.id;
   }
+
+  @override
+  int get hashCode => id.hashCode;
 }

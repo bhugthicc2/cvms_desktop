@@ -1,3 +1,4 @@
+// VEHICLE ID REFERENCE UPDATE MARKER
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/utils/date_time_formatter.dart';
@@ -38,11 +39,9 @@ class ViolationDataSource extends DataGridSource {
 
   List<DataGridCell> _buildCells(ViolationEntry entry) {
     final cells = <DataGridCell>[];
-
     if (_showCheckbox) {
       cells.add(DataGridCell<bool>(columnName: 'checkbox', value: false));
     }
-
     cells.addAll([
       DataGridCell<int>(
         columnName: 'index',
@@ -50,19 +49,17 @@ class ViolationDataSource extends DataGridSource {
       ),
       DataGridCell<String>(
         columnName: 'dateTime',
-        value: DateTimeFormatter.formatFull(entry.dateTime.toDate()),
+        value: DateTimeFormatter.formatFull(entry.reportedAt.toDate()),
       ),
-      DataGridCell<String>(columnName: 'reportedBy', value: entry.reportedBy),
+      DataGridCell<String>(columnName: 'reportedBy', value: entry.fullname),
       DataGridCell<String>(columnName: 'plateNumber', value: entry.plateNumber),
-      DataGridCell<String>(columnName: 'owner', value: entry.owner),
-      DataGridCell<String>(columnName: 'violation', value: entry.violation),
+      DataGridCell<String>(columnName: 'owner', value: entry.ownerName),
+      DataGridCell<String>(columnName: 'violation', value: entry.violationType),
       DataGridCell<String>(columnName: 'status', value: entry.status),
     ]);
-
     if (_showActions) {
       cells.add(DataGridCell<String>(columnName: 'actions', value: ''));
     }
-
     return cells;
   }
 
@@ -76,7 +73,6 @@ class ViolationDataSource extends DataGridSource {
     final int rowIndex = _violationEntries.indexOf(row);
     final bool isEven = rowIndex % 2 == 0;
     final ViolationEntry entry = _originalEntries[rowIndex];
-
     return DataGridRowAdapter(
       color:
           isEven
@@ -122,7 +118,36 @@ class ViolationDataSource extends DataGridSource {
             );
           },
         );
-
+      case 'dateTime':
+        return Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            cell.value.toString(),
+            textAlign: TextAlign.left,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: const TextStyle(
+              fontSize: AppFontSizes.small,
+              fontFamily: 'Poppins',
+            ),
+          ),
+        );
+      case 'reportedBy':
+        return Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            cell.value.toString(),
+            textAlign: TextAlign.left,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: const TextStyle(
+              fontSize: AppFontSizes.small,
+              fontFamily: 'Poppins',
+            ),
+          ),
+        );
       case 'violation':
         return Container(
           alignment: Alignment.centerLeft,
@@ -138,7 +163,6 @@ class ViolationDataSource extends DataGridSource {
             ),
           ),
         );
-
       case 'owner':
         return Container(
           alignment: Alignment.centerLeft,
@@ -154,27 +178,38 @@ class ViolationDataSource extends DataGridSource {
             ),
           ),
         );
-
+      case 'plateNumber':
+        return Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            cell.value.toString(),
+            textAlign: TextAlign.left,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: const TextStyle(
+              fontSize: AppFontSizes.small,
+              fontFamily: 'Poppins',
+            ),
+          ),
+        );
       case 'status':
         final statusStr = cell.value.toString();
         final statusLower = statusStr.toLowerCase();
         final bool isResolved = statusLower == 'resolved';
         final bool isPending = statusLower == 'pending';
-
         final Color badgeBg =
             isResolved
                 ? AppColors.successLight
                 : isPending
                 ? AppColors.chartOrange.withValues(alpha: 0.3)
                 : AppColors.grey.withValues(alpha: 0.2);
-
         final Color textColor =
             isResolved
                 ? const Color.fromARGB(255, 31, 144, 11)
                 : isPending
                 ? AppColors.chartOrange
                 : AppColors.black;
-
         return CellBadge(
           horizontalPadding: 30,
           badgeBg: badgeBg,
@@ -182,7 +217,6 @@ class ViolationDataSource extends DataGridSource {
           statusStr: statusStr,
           fontSize: AppFontSizes.small,
         );
-
       default:
         return Container(
           alignment: Alignment.center,

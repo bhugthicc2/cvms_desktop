@@ -96,6 +96,17 @@ class VehicleRepository {
     }
   }
 
+  Future<VehicleEntry?> getVehicleById(String vehicleId) async {
+    try {
+      final doc = await _firestore.collection(_collection).doc(vehicleId).get();
+      if (!doc.exists) return null;
+
+      return VehicleEntry.fromMap(doc.data()!, doc.id);
+    } catch (e) {
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
+    }
+  }
+
   Future<void> bulkUpdateStatus(List<String> vehicleIds, String status) async {
     if (vehicleIds.isEmpty) return;
 
