@@ -11,10 +11,20 @@ class DashboardRepository {
 
   //  Vehicle logs (entry/exit history)
   Stream<List<VehicleEntry>> streamVehicleLogs() {
-    return _firestore.collection('vehicle_logs').snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return VehicleEntry.fromDoc(doc);
-      }).toList();
+    return _firestore.collection('vehicle_logs').snapshots().asyncMap((
+      snapshot,
+    ) async {
+      final entries =
+          snapshot.docs.map((doc) => VehicleEntry.fromDoc(doc)).toList();
+
+      // Fetch vehicle details for all entries
+      final entriesWithDetails = <VehicleEntry>[];
+      for (final entry in entries) {
+        final entryWithDetails = await VehicleEntry.withVehicleDetails(entry);
+        entriesWithDetails.add(entryWithDetails);
+      }
+
+      return entriesWithDetails;
     });
   }
 
@@ -92,7 +102,6 @@ class DashboardRepository {
       if (!vehicleSnap.exists) {
         throw Exception("Vehicle not found: $vehicleId");
       }
-      final vehicleData = vehicleSnap.data() as Map<String, dynamic>;
 
       // Query active log (timeOut == null)
       final activeQuery =
@@ -115,9 +124,6 @@ class DashboardRepository {
           batch.set(newLogRef, {
             'logID': newLogRef.id,
             'vehicleId': vehicleId,
-            'ownerName': (vehicleData['ownerName'] ?? '').toString(),
-            'plateNumber': (vehicleData['plateNumber'] ?? '').toString(),
-            'vehicleModel': (vehicleData['vehicleModel'] ?? '').toString(),
             'timeIn': now,
             'timeOut': null,
             'updatedBy': updatedBy,
