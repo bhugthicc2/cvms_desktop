@@ -120,6 +120,34 @@ class VehicleLogsRepository {
     }
   }
 
+  /// Get all vehicles for reference data
+  Future<Map<String, Map<String, dynamic>>> getAllVehicles() async {
+    try {
+      final snapshot = await _firestore.collection('vehicles').get();
+      final Map<String, Map<String, dynamic>> vehicles = {};
+      for (final doc in snapshot.docs) {
+        vehicles[doc.id] = doc.data();
+      }
+      return vehicles;
+    } catch (e) {
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
+    }
+  }
+
+  /// Get all users for reference data
+  Future<Map<String, Map<String, dynamic>>> getAllUsers() async {
+    try {
+      final snapshot = await _firestore.collection('users').get();
+      final Map<String, Map<String, dynamic>> users = {};
+      for (final doc in snapshot.docs) {
+        users[doc.id] = doc.data();
+      }
+      return users;
+    } catch (e) {
+      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
+    }
+  }
+
   /// Get all vehicle IDs that have logs
   Future<Set<String>> getVehiclesWithLogs() async {
     try {

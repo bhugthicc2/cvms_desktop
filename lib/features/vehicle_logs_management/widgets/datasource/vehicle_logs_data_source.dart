@@ -42,18 +42,21 @@ class VehicleLogsDataSource extends DataGridSource {
                     columnName: 'index',
                     value: _originalEntries.indexOf(e) + 1,
                   ),
-                  const DataGridCell<String>(
+                  DataGridCell<String>(
                     columnName: 'ownerName',
-                    value: '',
+                    value: e.vehicleId, // Will be resolved by cubit
                   ),
-                  const DataGridCell<String>(columnName: 'vehicle', value: ''),
-                  const DataGridCell<String>(
+                  DataGridCell<String>(
+                    columnName: 'vehicle',
+                    value: e.vehicleId,
+                  ), // Will be resolved by cubit
+                  DataGridCell<String>(
                     columnName: 'plateNumber',
-                    value: '',
+                    value: e.vehicleId, // Will be resolved by cubit
                   ),
-                  const DataGridCell<String>(
+                  DataGridCell<String>(
                     columnName: 'updatedBy',
-                    value: '',
+                    value: e.updatedByUserId, // Will be resolved by cubit
                   ),
                   DataGridCell<String>(columnName: 'status', value: e.status),
                   DataGridCell<String>(

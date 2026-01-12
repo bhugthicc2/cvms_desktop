@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:cvms_desktop/features/vehicle_logs_management/data/vehicle_logs_repository.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/models/vehicle_log_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'vehicle_logs_state.dart';
 
 class VehicleLogsCubit extends Cubit<VehicleLogsState> {
@@ -16,7 +17,27 @@ class VehicleLogsCubit extends Cubit<VehicleLogsState> {
   final Map<String, Map<String, dynamic>> vehiclesById = {};
   final Map<String, Map<String, dynamic>> usersById = {};
 
-  VehicleLogsCubit(this.repository) : super(VehicleLogsState.initial());
+  VehicleLogsCubit(this.repository) : super(VehicleLogsState.initial()) {
+    _loadReferenceData();
+  }
+
+  // -----------------------------
+  // Reference Data Loading
+  // -----------------------------
+  Future<void> _loadReferenceData() async {
+    try {
+      // Load all vehicles from repository
+      final vehicles = await repository.getAllVehicles();
+      vehiclesById.addAll(vehicles);
+
+      // Load all users from repository
+      final users = await repository.getAllUsers();
+      usersById.addAll(users);
+    } catch (e) {
+      // Continue without reference data if loading fails
+      debugPrint('Error loading reference data: $e');
+    }
+  }
 
   // -----------------------------
   // Loading Logs
@@ -181,7 +202,7 @@ class VehicleLogsCubit extends Cubit<VehicleLogsState> {
       vehiclesById[log.vehicleId]?['ownerName'] ?? '—';
 
   String resolveUpdatedBy(VehicleLogModel log) =>
-      usersById[log.updatedByUserId]?['fullName'] ?? 'System';
+      usersById[log.updatedByUserId]?['fullname'] ?? 'System';
 
   // -----------------------------
   // State helpers
