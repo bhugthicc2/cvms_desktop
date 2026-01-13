@@ -7,6 +7,7 @@ import 'package:cvms_desktop/core/widgets/navigation/custom_breadcrumb.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:lottie/lottie.dart';
 
 class PdfReportPage extends StatefulWidget {
   final VoidCallback? onBackPressed;
@@ -18,13 +19,8 @@ class PdfReportPage extends StatefulWidget {
 }
 
 class _PdfReportPageState extends State<PdfReportPage> {
-  void _navigateToDashboard() {
-    // TODO: Implement navigation to dashboard
-    widget.onBackPressed?.call();
-  }
-
   void _navigateToReports() {
-    // TODO: Implement navigation to reports section
+    // todo Implement navigation to reports section
     widget.onBackPressed?.call();
   }
 
@@ -100,7 +96,14 @@ class _PdfReportPageState extends State<PdfReportPage> {
 
   Widget _buildBody(PdfEditorState state) {
     if (state is PdfLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return Center(
+        child: Lottie.asset(
+          renderCache: RenderCache.raster,
+          'assets/anim/loading_anim.json',
+          width: 200,
+          height: 200,
+        ),
+      );
     }
 
     if (state is PdfSaving) {

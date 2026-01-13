@@ -1,6 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/utils/card_decor.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/dashboard/data/firestore_analytics_repository.dart';
 import 'package:cvms_desktop/features/reports/pages/pdf_report_page.dart';
@@ -13,8 +14,10 @@ import 'package:cvms_desktop/features/reports/widgets/sections/table/violations_
 import 'package:cvms_desktop/features/reports/widgets/sections/table/vehicle_logs_table_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import '../bloc/reports/reports_cubit.dart';
 import '../bloc/reports/reports_state.dart';
+import '../widgets/content/date_filter_content.dart';
 
 class ReportsPage extends StatelessWidget {
   const ReportsPage({super.key});
@@ -33,6 +36,37 @@ class ReportsPage extends StatelessWidget {
 class _ReportsPageContent extends StatelessWidget {
   const _ReportsPageContent();
 
+  void _showDateFilterDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: AppColors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Container(
+            width: 600,
+            height: 500,
+            padding: const EdgeInsets.all(24),
+            child: DateFilterContent(
+              onApply: (DatePeriod? period) {
+                Navigator.of(context).pop();
+                if (period != null) {
+                  // TODO: Apply date filter to reports
+                  CustomSnackBar.showSuccess(
+                    context,
+                    'Date filter applied: ${period.start} to ${period.end}',
+                  );
+                }
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,8 +74,13 @@ class _ReportsPageContent extends StatelessWidget {
       body: BlocBuilder<ReportsCubit, ReportsState>(
         builder: (context, state) {
           if (state.loading) {
-            return const Center(
-              child: CircularProgressIndicator(color: AppColors.primary),
+            return Center(
+              child: Lottie.asset(
+                renderCache: RenderCache.raster,
+                'assets/anim/loading_anim.json',
+                width: 200,
+                height: 200,
+              ),
             );
           }
 
@@ -96,9 +135,13 @@ class _ReportsPageContent extends StatelessWidget {
                 AppSpacing.medium,
               ),
               child: ReportHeaderSection(
+                dateSelected: 'DATE FILTER', //todo
+                onDateFilter: () {
+                  _showDateFilterDialog(context);
+                },
                 onExportPDF:
                     () => context.read<ReportsCubit>().showPdfPreview(),
-                onExportCSV: () {}, // TODO
+                onExportCSV: () {}, // todo
               ),
             ),
           ),

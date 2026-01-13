@@ -11,10 +11,14 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 class ReportHeaderSection extends StatefulWidget {
   final VoidCallback onExportPDF;
   final VoidCallback onExportCSV;
+  final VoidCallback onDateFilter;
+  final String dateSelected;
   const ReportHeaderSection({
     super.key,
     required this.onExportPDF,
     required this.onExportCSV,
+    required this.onDateFilter,
+    required this.dateSelected,
   });
 
   @override
@@ -75,7 +79,7 @@ class _ReportHeaderSectionState extends State<ReportHeaderSection> {
           //report date filter
           HoverGrow(
             cursor: SystemMouseCursors.click,
-            onTap: widget.onExportPDF,
+            onTap: widget.onDateFilter,
             child: Container(
               height: 40,
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -92,7 +96,7 @@ class _ReportHeaderSectionState extends State<ReportHeaderSection> {
                   ),
                   Spacing.horizontal(size: AppSpacing.small),
                   Text(
-                    'DATE FILTER',
+                    widget.dateSelected,
                     style: TextStyle(
                       color: AppColors.white,
                       fontSize: 12,
