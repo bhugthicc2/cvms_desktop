@@ -11,6 +11,10 @@ class ReportsState extends Equatable {
   final bool isGlobalMode;
   final List<ChartDataModel> logsData;
   final TimeRange selectedTimeRange;
+  final List<ChartDataModel>? vehicleDistribution;
+  final List<ChartDataModel>? yearLevelBreakdown;
+  final List<ChartDataModel>? cityBreakdown;
+  final List<ChartDataModel>? studentWithMostViolations;
   const ReportsState({
     this.showPdfPreview = false,
     this.loading = false,
@@ -19,6 +23,10 @@ class ReportsState extends Equatable {
     this.isGlobalMode = true,
     this.logsData = const [],
     this.selectedTimeRange = TimeRange.days7,
+    this.vehicleDistribution,
+    this.yearLevelBreakdown,
+    this.cityBreakdown,
+    this.studentWithMostViolations,
   });
 
   ReportsState copyWith({
@@ -29,6 +37,10 @@ class ReportsState extends Equatable {
     bool? isGlobalMode,
     List<ChartDataModel>? logsData,
     TimeRange? selectedTimeRange,
+    List<ChartDataModel>? vehicleDistribution,
+    List<ChartDataModel>? yearLevelBreakdown,
+    List<ChartDataModel>? cityBreakdown,
+    List<ChartDataModel>? studentWithMostViolations,
   }) {
     return ReportsState(
       showPdfPreview: showPdfPreview ?? this.showPdfPreview,
@@ -38,6 +50,11 @@ class ReportsState extends Equatable {
       isGlobalMode: isGlobalMode ?? this.isGlobalMode,
       logsData: logsData ?? this.logsData,
       selectedTimeRange: selectedTimeRange ?? this.selectedTimeRange,
+      vehicleDistribution: vehicleDistribution ?? this.vehicleDistribution,
+      yearLevelBreakdown: yearLevelBreakdown ?? this.yearLevelBreakdown,
+      cityBreakdown: cityBreakdown ?? this.cityBreakdown,
+      studentWithMostViolations:
+          studentWithMostViolations ?? this.studentWithMostViolations,
     );
   }
 
@@ -50,5 +67,9 @@ class ReportsState extends Equatable {
     isGlobalMode,
     logsData,
     selectedTimeRange,
+    vehicleDistribution,
+    yearLevelBreakdown,
+    cityBreakdown,
+    studentWithMostViolations,
   ];
 }

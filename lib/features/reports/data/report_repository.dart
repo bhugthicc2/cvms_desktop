@@ -127,7 +127,117 @@ class ReportRepository {
     return ((currentCount.length - priorCount) / priorCount * 100);
   }
 
-  // VEHICLE LOGS PER COLLEGE CHART
+  // VEHICLE DISTRIBUTION PER COLLEGE CHART
+
+  /// Fetches vehicle distribution data grouped by department/college
+  Future<List<ChartDataModel>> fetchVehicleDistributionByCollege({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      // For now, get all vehicles without date filtering to ensure data is available
+      final vehiclesSnapshot = await _firestore.collection('vehicles').get();
+
+      // Group vehicles by department
+      final Map<String, int> departmentCounts = {};
+
+      for (final doc in vehiclesSnapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>?;
+        final department = data?['department'] as String? ?? 'Unknown';
+        departmentCounts[department] = (departmentCounts[department] ?? 0) + 1;
+      }
+
+      return _createChartDataFromCounts(departmentCounts);
+    } catch (e) {
+      throw Exception('Failed to fetch vehicle distribution: $e');
+    }
+  }
+
+  /// Fetches year level breakdown data for students/vehicles
+  Future<List<ChartDataModel>> fetchYearLevelBreakdown({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      // For now, get all vehicles without date filtering to ensure data is available
+      final vehiclesSnapshot = await _firestore.collection('vehicles').get();
+
+      // Group by year level
+      final Map<String, int> yearLevelCounts = {};
+
+      for (final doc in vehiclesSnapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>?;
+        final yearLevel = data?['yearLevel'] as String? ?? 'Unknown';
+        yearLevelCounts[yearLevel] = (yearLevelCounts[yearLevel] ?? 0) + 1;
+      }
+
+      return _createChartDataFromCounts(yearLevelCounts);
+    } catch (e) {
+      throw Exception('Failed to fetch year level breakdown: $e');
+    }
+  }
+
+  /// Fetches student with most violations data
+  Future<List<ChartDataModel>> fetchStudentWithMostViolations({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      // Get all violations
+      final violationsSnapshot =
+          await _firestore.collection('violations').get();
+
+      // Group violations by vehicle owner
+      final Map<String, int> studentViolationCounts = {};
+
+      for (final violationDoc in violationsSnapshot.docs) {
+        final violationData = violationDoc.data() as Map<String, dynamic>?;
+        final vehicleId = violationData?['vehicleId'] as String?;
+
+        if (vehicleId == null) continue;
+
+        // Get vehicle details to find owner
+        final vehicleDoc =
+            await _firestore.collection('vehicles').doc(vehicleId).get();
+        if (!vehicleDoc.exists) continue;
+
+        final vehicleData = vehicleDoc.data();
+        final ownerName = vehicleData?['ownerName'] as String? ?? 'Unknown';
+
+        // Increment violation count for this owner
+        studentViolationCounts[ownerName] =
+            (studentViolationCounts[ownerName] ?? 0) + 1;
+      }
+
+      return _createChartDataFromCounts(studentViolationCounts);
+    } catch (e) {
+      throw Exception('Failed to fetch student violation data: $e');
+    }
+  }
+
+  /// Fetches city/municipality breakdown data
+  Future<List<ChartDataModel>> fetchCityBreakdown({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      // For now, get all vehicles without date filtering to ensure data is available
+      final vehiclesSnapshot = await _firestore.collection('vehicles').get();
+
+      // Group by city
+      final Map<String, int> cityCounts = {};
+
+      for (final doc in vehiclesSnapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>?;
+        final city = data?['city'] as String? ?? 'Unknown';
+        cityCounts[city] = (cityCounts[city] ?? 0) + 1;
+      }
+
+      return _createChartDataFromCounts(cityCounts);
+    } catch (e) {
+      throw Exception('Failed to fetch city breakdown: $e');
+    }
+  }
 
   Future<List<ChartDataModel>> _groupLogsByDepartment(
     List<QueryDocumentSnapshot> logs,
@@ -174,9 +284,9 @@ class ReportRepository {
     final sortedEntries =
         counts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
 
+    // Return ALL departments, not just top 5
     final chartData =
         sortedEntries
-            .take(5)
             .map(
               (entry) => ChartDataModel(
                 category: entry.key,
@@ -184,16 +294,6 @@ class ReportRepository {
               ),
             )
             .toList();
-
-    final otherCount = sortedEntries
-        .skip(5)
-        .fold(0, (sum, entry) => sum + entry.value);
-
-    if (otherCount > 0) {
-      chartData.add(
-        ChartDataModel(category: 'Other', value: otherCount.toDouble()),
-      );
-    }
 
     return chartData;
   }

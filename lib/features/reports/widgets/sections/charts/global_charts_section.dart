@@ -8,6 +8,7 @@ import 'package:cvms_desktop/features/dashboard/widgets/charts/bar_chart_widget.
 import 'package:cvms_desktop/features/dashboard/widgets/charts/donut_chart_widget.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/charts/line_chart_widget.dart';
 import 'package:cvms_desktop/features/dashboard/extensions/time_range_extensions.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/charts/stacked_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../bloc/reports/reports_cubit.dart';
@@ -16,10 +17,6 @@ import '../../../models/fleet_summary.dart';
 import '../../../data/mock_data.dart';
 
 /// Global Charts Section - Displays fleet-wide charts including:
-/// - Vehicle distribution by college (donut chart)
-/// - Violation distribution by college (donut chart)
-/// - Top violations by type (bar chart)
-/// - Fleet logs over time (line chart with time range selector)
 class GlobalChartsSection extends StatefulWidget {
   const GlobalChartsSection({super.key, required this.summary});
 
@@ -51,6 +48,79 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
             Expanded(
               child: Row(
                 children: [
+                  //Todo Vehicle Distribution per College
+                  Expanded(
+                    child: DonutChartWidget(
+                      explode: true,
+                      showPercentageInSlice: false,
+                      onViewTap: () {},
+                      onDonutChartPointTap: (details) {},
+                      data:
+                          state.vehicleDistribution ??
+                          ReportMockData
+                              .vehicleLogsCollegeData, // Use real data with fallback
+                      title: 'Vehicle Distribution per College',
+                      radius: '90%',
+                      innerRadius: '60%',
+                    ),
+                  ),
+                  Spacing.horizontal(size: AppSpacing.medium),
+                  //todo year level breakdown
+                  Expanded(
+                    child: DonutChartWidget(
+                      explode: true,
+                      showPercentageInSlice: false,
+                      onViewTap: () {},
+                      onDonutChartPointTap: (details) {},
+                      data:
+                          state.yearLevelBreakdown ??
+                          ReportMockData
+                              .yearLevelBreakdownData, // Use real data with fallback
+                      title: 'Year Level Breakdown',
+                      radius: '90%',
+                      innerRadius: '60%',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Spacing.vertical(size: AppSpacing.medium),
+
+            Expanded(
+              child: Row(
+                children: [
+                  //todo year level breakdown
+
+                  //Todo Student with Most violation
+                  Expanded(
+                    child: StackedBarWidget(
+                      title: 'Student with most violation',
+                      data:
+                          state.studentWithMostViolations ??
+                          ReportMockData
+                              .studentViolationData, // Use real data with fallback
+                      onViewTap: () {},
+                    ),
+                  ),
+                  Spacing.horizontal(size: AppSpacing.medium),
+                  //todo City/Municipality Breakdown
+                  Expanded(
+                    child: StackedBarWidget(
+                      title: 'City/Municipality Breakdown',
+                      data:
+                          state.cityBreakdown ??
+                          ReportMockData
+                              .cityBreakdownData, // Use real data with fallback
+                      onViewTap: () {},
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Spacing.vertical(size: AppSpacing.medium),
+            Expanded(
+              child: Row(
+                children: [
                   //Vehicle Logs Distribution per College
                   Expanded(
                     child: DonutChartWidget(
@@ -58,10 +128,10 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                       showPercentageInSlice: false,
                       onViewTap: () {},
                       onDonutChartPointTap: (details) {},
-                      data: deptData,
+                      data: deptData, //MOCK
                       title: 'Vehicle Logs Distribution per College',
-                      radius: '100%',
-                      innerRadius: '55%',
+                      radius: '90%',
+                      innerRadius: '60%',
                     ),
                   ),
                   Spacing.horizontal(size: AppSpacing.medium),
@@ -76,11 +146,10 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                       data:
                           widget.summary.deptViolationData.isNotEmpty
                               ? widget.summary.deptViolationData
-                              : ReportMockData
-                                  .vehicleLogsCollegeData, // Fallback if no data.
+                              : ReportMockData.vehicleLogsCollegeData,
                       title: 'Violation Distribution per College',
-                      radius: '100%',
-                      innerRadius: '55%',
+                      radius: '90%',
+                      innerRadius: '60%',
                     ),
                   ),
                 ],

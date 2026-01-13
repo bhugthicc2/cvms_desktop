@@ -40,7 +40,7 @@ class GlobalStatsCardSection extends StatelessWidget {
             label: statsCard1Label,
             value: statsCard1Value,
             gradient: AppColors.blueViolet,
-            iconColor: AppColors.chartGreenv2,
+            iconColor: AppColors.donutPink,
           ),
         ),
         Spacing.horizontal(size: AppSpacing.medium),

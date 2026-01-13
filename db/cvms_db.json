@@ -1,0 +1,1034 @@
+{
+  "vehicles": {
+    "3o4VZ2zgq2DqlPXqIz2K": {
+      "barangay": "Miputak",
+      "block": "E",
+      "city": "Dipolog City",
+      "contact": "9176543210",
+      "crNumber": "CR-2024-0003",
+      "department": "LHS",
+      "gender": "Male",
+      "licenseNumber": "D05-111222",
+      "orNumber": "OR-2024-0003",
+      "ownerName": "Luis Garcia",
+      "plateNumber": "JKL-6789",
+      "province": "Zamboanga del Norte",
+      "purok": "4",
+      "schoolID": "KC-22-A-Z1QC",
+      "vehicleColor": "Green",
+      "vehicleModel": "Suzuki Raider",
+      "vehicleType": "two-wheeled",
+      "yearLevel": "4th",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      },
+      "status": "offsite"
+    },
+    "5snInkrHIFiarnY7dXCQ": {
+      "barangay": "Santa Isabel",
+      "block": "H",
+      "city": "Dipolog City",
+      "contact": "9173456789",
+      "crNumber": "CR-2024-0103",
+      "department": "CBA",
+      "gender": "Female",
+      "licenseNumber": "D08-999000",
+      "orNumber": "OR-2024-0103",
+      "ownerName": "Sofia Cruz",
+      "plateNumber": "STU-9012",
+      "province": "Zamboanga del Norte",
+      "purok": "3",
+      "schoolID": "KC-22-A-A34E",
+      "vehicleColor": "Red",
+      "vehicleModel": "Mitsubishi Mirage",
+      "vehicleType": "four-wheeled",
+      "yearLevel": "1st",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      },
+      "status": "offsite"
+    },
+    "7njpb1hz0wQd7IvAKmCW": {
+      "barangay": "Barra",
+      "block": "G",
+      "city": "Dipolog City",
+      "contact": "9192345678",
+      "crNumber": "CR-2024-0004",
+      "department": "CTED",
+      "gender": "Male",
+      "licenseNumber": "D07-777888",
+      "orNumber": "OR-2024-0004",
+      "ownerName": "Miguel Torres",
+      "plateNumber": "PQR-5678",
+      "province": "Zamboanga del Norte",
+      "purok": "6",
+      "schoolID": "KC-22-A-8KEY",
+      "vehicleColor": "Yellow",
+      "vehicleModel": "Honda Wave",
+      "vehicleType": "two-wheeled",
+      "yearLevel": "2nd",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      },
+      "status": "offsite"
+    },
+    "8PXyqi7lpireSFeN57GG": {
+      "barangay": "Sulangon",
+      "block": "F",
+      "city": "Dipolog City",
+      "contact": "9197890123",
+      "crNumber": "CR-2024-0110",
+      "department": "SCJE",
+      "gender": "Female",
+      "licenseNumber": "D22-234567",
+      "orNumber": "OR-2024-0110",
+      "ownerName": "Lina Perez",
+      "plateNumber": "IJK-5678",
+      "province": "Zamboanga del Norte",
+      "purok": "6",
+      "schoolID": "KC-22-A-6C2F",
+      "status": "offsite",
+      "vehicleColor": "Blue",
+      "vehicleModel": "Toyota Hilux",
+      "vehicleType": "four-wheeled",
+      "yearLevel": "4th",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "CPgiAgyawVFc86vIC0tL": {
+      "barangay": "Matam",
+      "block": "G",
+      "city": "Katipunan",
+      "contact": "9178901234",
+      "crNumber": "CR-2024-0012",
+      "department": "LHS",
+      "gender": "Male",
+      "licenseNumber": "D23-456789",
+      "orNumber": "OR-2024-0012",
+      "ownerName": "Carlos Vega",
+      "plateNumber": "LMN-9012",
+      "province": "Zamboanga del Norte",
+      "purok": "1",
+      "schoolID": "KC-22-A-CGOF",
+      "status": "offsite",
+      "vehicleColor": "Black",
+      "vehicleModel": "Honda PCX",
+      "vehicleType": "two-wheeled",
+      "yearLevel": "2nd",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "CvIOnVkGd4LPcMhEhirm": {
+      "barangay": "Sinuyak",
+      "block": "B",
+      "city": "Katipunan",
+      "contact": "9195678901",
+      "crNumber": "CR-2024-0104",
+      "department": "SCJE",
+      "gender": "Female",
+      "licenseNumber": "D10-666777",
+      "orNumber": "OR-2024-0104",
+      "ownerName": "Luz Mendoza",
+      "plateNumber": "YZA-7890",
+      "province": "Zamboanga del Norte",
+      "purok": "5",
+      "schoolID": "KC-22-A-EXAT",
+      "status": "offsite",
+      "vehicleColor": "Blue",
+      "vehicleModel": "Toyota Corolla",
+      "vehicleType": "four-wheeled",
+      "yearLevel": "4th",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "E3VA3BPltpwpHiWtk9Ne": {
+      "barangay": "Dicayas",
+      "block": "C",
+      "city": "Dipolog City",
+      "contact": "9194567890",
+      "crNumber": "CR-2024-0010",
+      "department": "CTED",
+      "gender": "Male",
+      "licenseNumber": "D19-678901",
+      "orNumber": "OR-2024-0010",
+      "ownerName": "Rafael Ortiz",
+      "plateNumber": "ZAB-3456",
+      "province": "Zamboanga del Norte",
+      "purok": "3",
+      "schoolID": "KC-22-A-J7M4",
+      "status": "offsite",
+      "vehicleColor": "Silver",
+      "vehicleModel": "Yamaha NMAX",
+      "vehicleType": "two-wheeled",
+      "yearLevel": "2nd",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "HDJdavt1TDVAxOPf4FtA": {
+      "barangay": "Sipac",
+      "block": "A",
+      "city": "Katipunan",
+      "contact": "9190123456",
+      "crNumber": "CR-2024-0013",
+      "department": "CTED",
+      "gender": "Male",
+      "licenseNumber": "D25-890123",
+      "orNumber": "OR-2024-0013",
+      "ownerName": "Felix Tan",
+      "plateNumber": "RST-7890",
+      "province": "Zamboanga del Norte",
+      "purok": "3",
+      "schoolID": "KC-22-A-GY03",
+      "status": "offsite",
+      "vehicleColor": "Green",
+      "vehicleModel": "Yamaha Vega",
+      "vehicleType": "two-wheeled",
+      "yearLevel": "3rd",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "HRknAedJPiuzdDX01uZ3": {
+      "barangay": "Diwan",
+      "block": "E",
+      "city": "Dipolog City",
+      "contact": "9174567890",
+      "crNumber": "CR-2024-0015",
+      "department": "LHS",
+      "gender": "Male",
+      "licenseNumber": "D29-678901",
+      "orNumber": "OR-2024-0015",
+      "ownerName": "Oscar Wong",
+      "plateNumber": "DEF-3456",
+      "province": "Zamboanga del Norte",
+      "purok": "6",
+      "schoolID": "KC-22-A-M472",
+      "status": "offsite",
+      "vehicleColor": "Blue",
+      "vehicleModel": "Honda CBR",
+      "vehicleType": "two-wheeled",
+      "yearLevel": "3rd",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "J8UbkokcN0td75bJHleW": {
+      "barangay": "Estaka",
+      "block": "F",
+      "city": "Dipolog City",
+      "contact": "9181234567",
+      "crNumber": "CR-2024-0102",
+      "department": "CAF-SOE",
+      "gender": "Female",
+      "licenseNumber": "D06-333444",
+      "orNumber": "OR-2024-0102",
+      "ownerName": "Clara Gomez",
+      "plateNumber": "MNO-1234",
+      "province": "Zamboanga del Norte",
+      "purok": "2",
+      "schoolID": "KC-22-A-C1B7",
+      "status": "offsite",
+      "vehicleColor": "White",
+      "vehicleModel": "Toyota Innova",
+      "vehicleType": "four-wheeled",
+      "yearLevel": "3rd",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "PxTWWOi79D4YSbCvGNKB": {
+      "barangay": "Biasong",
+      "block": "A",
+      "city": "Dipolog City",
+      "contact": "9172345678",
+      "crNumber": "CR-2024-0009",
+      "department": "LHS",
+      "gender": "Male",
+      "licenseNumber": "D17-234567",
+      "orNumber": "OR-2024-0009",
+      "ownerName": "Jose Navarro",
+      "plateNumber": "TUV-5678",
+      "province": "Zamboanga del Norte",
+      "purok": "5",
+      "schoolID": "KC-22-A-6EYG",
+      "vehicleColor": "Yellow",
+      "vehicleModel": "Honda XRM",
+      "vehicleType": "two-wheeled",
+      "yearLevel": "3rd",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      },
+      "status": "offsite"
+    },
+    "SksWedb0RqVKYAIuDKUm": {
+      "barangay": "Turno",
+      "block": "C",
+      "city": "Dipolog City",
+      "contact": "9176789012",
+      "crNumber": "CR-2024-0006",
+      "department": "LHS",
+      "gender": "Male",
+      "licenseNumber": "D11-444555",
+      "orNumber": "OR-2024-0006",
+      "ownerName": "Ramon Diaz",
+      "plateNumber": "BCD-1234",
+      "province": "Zamboanga del Norte",
+      "purok": "2",
+      "schoolID": "KC-22-A-1JD1",
+      "status": "offsite",
+      "vehicleColor": "Green",
+      "vehicleModel": "Honda Beat",
+      "vehicleType": "two-wheeled",
+      "yearLevel": "2nd",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "TP0hCanKdCLoBOOl4Mb0": {
+      "barangay": "Macleodes",
+      "block": "C",
+      "city": "Polanco",
+      "contact": "9182345678",
+      "crNumber": "CR-2024-0014",
+      "department": "CCS",
+      "gender": "Male",
+      "licenseNumber": "D27-234567",
+      "orNumber": "OR-2024-0014",
+      "ownerName": "Hector Lim",
+      "plateNumber": "XYZ-5678",
+      "province": "Zamboanga del Norte",
+      "purok": "4",
+      "schoolID": "KC-22-A-C4WW",
+      "status": "offsite",
+      "vehicleColor": "White",
+      "vehicleModel": "Suzuki Address",
+      "vehicleType": "two-wheeled",
+      "yearLevel": "2nd",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "U5IypYcAw373Re0NDxLc": {
+      "barangay": "New Tambo",
+      "block": "D",
+      "city": "Katipunan",
+      "contact": "9175678901",
+      "crNumber": "CR-2024-0109",
+      "department": "CBA",
+      "gender": "Female",
+      "licenseNumber": "D20-890123",
+      "orNumber": "OR-2024-0109",
+      "ownerName": "Rosa Alvarez",
+      "plateNumber": "CDE-7890",
+      "province": "Zamboanga del Norte",
+      "purok": "4",
+      "schoolID": "KC-22-A-BEV5",
+      "status": "offsite",
+      "vehicleColor": "White",
+      "vehicleModel": "Honda CR-V",
+      "vehicleType": "four-wheeled",
+      "yearLevel": "1st",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "ZRbnjEPzJjjz0VtvqGM8": {
+      "barangay": "Patik",
+      "block": "H",
+      "city": "Katipunan",
+      "contact": "9191234567",
+      "crNumber": "CR-2024-0107",
+      "department": "SCJE",
+      "gender": "Female",
+      "licenseNumber": "D16-789012",
+      "orNumber": "OR-2024-0107",
+      "ownerName": "Elena Morales",
+      "plateNumber": "QRS-1234",
+      "province": "Zamboanga del Norte",
+      "purok": "2",
+      "schoolID": "KC-22-A-EHLU",
+      "status": "offsite",
+      "vehicleColor": "Black",
+      "vehicleModel": "Mitsubishi Pajero",
+      "vehicleType": "four-wheeled",
+      "yearLevel": "1st",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "a8W927rjmxslZmoKuYM6": {
+      "barangay": "Punta",
+      "block": "B",
+      "city": "Dipolog City",
+      "contact": "9183456789",
+      "crNumber": "CR-2024-0108",
+      "department": "CAF-SOE",
+      "gender": "Female",
+      "licenseNumber": "D18-456789",
+      "orNumber": "OR-2024-0108",
+      "ownerName": "Mila Hernandez",
+      "plateNumber": "WXY-9012",
+      "province": "Zamboanga del Norte",
+      "purok": "1",
+      "schoolID": "KC-22-A-D26J",
+      "status": "offsite",
+      "vehicleColor": "Green",
+      "vehicleModel": "Toyota Avanza",
+      "vehicleType": "four-wheeled",
+      "yearLevel": "4th",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "ab4GSsbAySGOGZyf8BdX": {
+      "barangay": "New Tambo",
+      "block": "D",
+      "city": "Katipunan",
+      "contact": "9193456789",
+      "crNumber": "CR-2024-0113",
+      "department": "SCJE",
+      "gender": "Female",
+      "licenseNumber": "D28-456789",
+      "orNumber": "OR-2024-0113",
+      "ownerName": "Tina Chan",
+      "plateNumber": "ABC-9012",
+      "province": "Zamboanga del Norte",
+      "purok": "1",
+      "schoolID": "KC-22-A-9LDZ",
+      "status": "offsite",
+      "vehicleColor": "Red",
+      "vehicleModel": "Toyota Rush",
+      "vehicleType": "four-wheeled",
+      "yearLevel": "1st",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "bMpsoIDLgYYK1dYXTwUK": {
+      "barangay": "Galas",
+      "block": "B",
+      "city": "Dipolog City",
+      "contact": "9179876543",
+      "crNumber": "CR-2024-0100",
+      "department": "CBA",
+      "gender": "Female",
+      "licenseNumber": "D02-987654",
+      "orNumber": "OR-2024-0100",
+      "ownerName": "Maria Santos",
+      "plateNumber": "XYZ-5678",
+      "province": "Zamboanga del Norte",
+      "purok": "5",
+      "schoolID": "KC-22-A-3DVL",
+      "vehicleColor": "Black",
+      "vehicleModel": "Toyota Vios",
+      "vehicleType": "four-wheeled",
+      "yearLevel": "4th",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      },
+      "status": "offsite"
+    },
+    "bRWZIc5SRwQaF2ENBIHL": {
+      "barangay": "Sinaman",
+      "block": "G",
+      "city": "Dipolog City",
+      "contact": "9180123456",
+      "crNumber": "CR-2024-0008",
+      "department": "CCS",
+      "gender": "Male",
+      "licenseNumber": "D15-567890",
+      "orNumber": "OR-2024-0008",
+      "ownerName": "Gabriel Santos",
+      "plateNumber": "NOP-7890",
+      "province": "Zamboanga del Norte",
+      "purok": "6",
+      "schoolID": "KC-22-A-I549",
+      "status": "offsite",
+      "vehicleColor": "Blue",
+      "vehicleModel": "Yamaha Aerox",
+      "vehicleType": "two-wheeled",
+      "yearLevel": "2nd",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "cip6gbx1MMWNvVQLZL91": {
+      "barangay": "Obay",
+      "block": "F",
+      "city": "Polanco",
+      "contact": "9185678901",
+      "crNumber": "CR-2024-0114",
+      "department": "CAF-SOE",
+      "gender": "Female",
+      "licenseNumber": "D30-890123",
+      "orNumber": "OR-2024-0114",
+      "ownerName": "Vera Yap",
+      "plateNumber": "GHI-7890",
+      "province": "Zamboanga del Norte",
+      "purok": "3",
+      "schoolID": "KC-22-A-OF4J",
+      "status": "offsite",
+      "vehicleColor": "Black",
+      "vehicleModel": "Toyota Camry",
+      "vehicleType": "four-wheeled",
+      "yearLevel": "4th",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "k7CAllINI0BkldcKBn3s": {
+      "barangay": "Minaog",
+      "block": "E",
+      "city": "Dipolog City",
+      "contact": "9198901234",
+      "crNumber": "CR-2024-0007",
+      "department": "CTED",
+      "gender": "Male",
+      "licenseNumber": "D13-123123",
+      "orNumber": "OR-2024-0007",
+      "ownerName": "Andres Castillo",
+      "plateNumber": "HIJ-9012",
+      "province": "Zamboanga del Norte",
+      "purok": "1",
+      "schoolID": "KC-22-A-ZC8L",
+      "status": "offsite",
+      "vehicleColor": "White",
+      "vehicleModel": "Suzuki Smash",
+      "vehicleType": "two-wheeled",
+      "yearLevel": "3rd",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "mt5wWtm4dVfcn378SrHq": {
+      "barangay": "Gulayon",
+      "block": "F",
+      "city": "Polanco",
+      "contact": "9179012345",
+      "crNumber": "CR-2024-0106",
+      "department": "CBA",
+      "gender": "Female",
+      "licenseNumber": "D14-345678",
+      "orNumber": "OR-2024-0106",
+      "ownerName": "Carmen Rivera",
+      "plateNumber": "KLM-3456",
+      "province": "Zamboanga del Norte",
+      "purok": "3",
+      "schoolID": "KC-22-A-RS0R",
+      "status": "offsite",
+      "vehicleColor": "Red",
+      "vehicleModel": "Toyota Fortuner",
+      "vehicleType": "four-wheeled",
+      "yearLevel": "4th",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "qlGDYS5DINHaGdkAaftU": {
+      "barangay": "Diwan",
+      "block": "E",
+      "city": "Dipolog City",
+      "contact": "9186789012",
+      "crNumber": "CR-2024-0011",
+      "department": "CCS",
+      "gender": "Male",
+      "licenseNumber": "D21-012345",
+      "orNumber": "OR-2024-0011",
+      "ownerName": "Victor Ramos",
+      "plateNumber": "FGH-1234",
+      "province": "Zamboanga del Norte",
+      "purok": "2",
+      "schoolID": "KC-22-A-8Q1Z",
+      "status": "offsite",
+      "vehicleColor": "Red",
+      "vehicleModel": "Suzuki Skydrive",
+      "vehicleType": "two-wheeled",
+      "yearLevel": "3rd",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "rDbtPO2T6VbA1tbSTVTd": {
+      "barangay": "Guinles",
+      "block": "H",
+      "city": "Polanco",
+      "contact": "9189012345",
+      "crNumber": "CR-2024-0111",
+      "department": "CAF-SOE",
+      "gender": "Female",
+      "licenseNumber": "D24-678901",
+      "orNumber": "OR-2024-0111",
+      "ownerName": "Nora Flores",
+      "plateNumber": "OPQ-3456",
+      "province": "Zamboanga del Norte",
+      "purok": "5",
+      "schoolID": "KC-22-A-2II3",
+      "status": "offsite",
+      "vehicleColor": "Yellow",
+      "vehicleModel": "Mitsubishi Montero",
+      "vehicleType": "four-wheeled",
+      "yearLevel": "1st",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "uIjdzozkH92eOjfhV6hA": {
+      "barangay": "Pian",
+      "block": "A",
+      "city": "Polanco",
+      "contact": "9184567890",
+      "crNumber": "CR-2024-0005",
+      "department": "CCS",
+      "gender": "Male",
+      "licenseNumber": "D09-222333",
+      "orNumber": "OR-2024-0005",
+      "ownerName": "Diego Fernandez",
+      "plateNumber": "VWX-3456",
+      "province": "Zamboanga del Norte",
+      "purok": "1",
+      "schoolID": "KC-22-A-UBCN",
+      "status": "offsite",
+      "vehicleColor": "Black",
+      "vehicleModel": "Yamaha Sniper",
+      "vehicleType": "two-wheeled",
+      "yearLevel": "3rd",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "v4sBe2qQRsGiomjQpEZR": {
+      "barangay": "Sicayab",
+      "block": "C",
+      "city": "Dipolog City",
+      "contact": "9182345678",
+      "crNumber": "CR-2024-0002",
+      "department": "CCS",
+      "gender": "Male",
+      "licenseNumber": "D03-456789",
+      "orNumber": "OR-2024-0002",
+      "ownerName": "Pedro Reyes",
+      "plateNumber": "DEF-7890",
+      "province": "Zamboanga del Norte",
+      "purok": "3",
+      "schoolID": "KC-22-A-BYAD",
+      "status": "offsite",
+      "vehicleColor": "Blue",
+      "vehicleModel": "Yamaha Mio",
+      "vehicleType": "two-wheeled",
+      "yearLevel": "2nd",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "vERVLz13Q3jUwGzr0y6E": {
+      "barangay": "Olingan",
+      "block": "D",
+      "city": "Dipolog City",
+      "contact": "9187890123",
+      "crNumber": "CR-2024-0105",
+      "department": "CAF-SOE",
+      "gender": "Female",
+      "licenseNumber": "D12-888999",
+      "orNumber": "OR-2024-0105",
+      "ownerName": "Teresa Lim",
+      "plateNumber": "EFG-5678",
+      "province": "Zamboanga del Norte",
+      "purok": "4",
+      "schoolID": "KC-22-A-R7MN",
+      "status": "offsite",
+      "vehicleColor": "Silver",
+      "vehicleModel": "Honda Civic",
+      "vehicleType": "four-wheeled",
+      "yearLevel": "1st",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "w4Qi86T1Ly2NvWF7VAtN": {
+      "barangay": "San Vicente",
+      "block": "B",
+      "city": "Dipolog City",
+      "contact": "9171234567",
+      "crNumber": "CR-2024-0112",
+      "department": "CBA",
+      "gender": "Female",
+      "licenseNumber": "D26-012345",
+      "orNumber": "OR-2024-0112",
+      "ownerName": "Glenda Ruiz",
+      "plateNumber": "UVW-1234",
+      "province": "Zamboanga del Norte",
+      "purok": "2",
+      "schoolID": "KC-22-A-16K4",
+      "status": "offsite",
+      "vehicleColor": "Silver",
+      "vehicleModel": "Honda BR-V",
+      "vehicleType": "four-wheeled",
+      "yearLevel": "4th",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    },
+    "ys6DMgJvyDEQlDChndXZ": {
+      "barangay": "Santa Filomena",
+      "block": "D",
+      "city": "Dipolog City",
+      "contact": "9198765432",
+      "crNumber": "CR-2024-0101",
+      "department": "SCJE",
+      "gender": "Female",
+      "licenseNumber": "D04-543210",
+      "orNumber": "OR-2024-0101",
+      "ownerName": "Ana Lopez",
+      "plateNumber": "GHI-2345",
+      "province": "Zamboanga del Norte",
+      "purok": "1",
+      "schoolID": "KC-22-A-9QV4",
+      "status": "offsite",
+      "vehicleColor": "Silver",
+      "vehicleModel": "Honda City",
+      "vehicleType": "four-wheeled",
+      "yearLevel": "1st",
+      "createdAt": {
+        "_seconds": 1766979350,
+        "_nanoseconds": 840000000
+      }
+    }
+  },
+  "violations": {
+    "7uIC5ruGClCfxeYyzO7H": {
+      "reportedAt": {
+        "_seconds": 1768206299,
+        "_nanoseconds": 182434000
+      },
+      "violationType": "Reckless Driving",
+      "vehicleId": "PxTWWOi79D4YSbCvGNKB",
+      "reportedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "status": "pending",
+      "createdAt": {
+        "_seconds": 1768206299,
+        "_nanoseconds": 71000000
+      }
+    },
+    "QJUbpHC2CkvsXBMKLdMN": {
+      "reportedAt": {
+        "_seconds": 1768204945,
+        "_nanoseconds": 589477000
+      },
+      "violationType": "Vehicle Modification",
+      "vehicleId": "3o4VZ2zgq2DqlPXqIz2K",
+      "reportedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "status": "pending",
+      "createdAt": {
+        "_seconds": 1768204945,
+        "_nanoseconds": 311000000
+      }
+    },
+    "W2jm6ADWUSDVdLxyiLs8": {
+      "reportedAt": {
+        "_seconds": 1768205920,
+        "_nanoseconds": 973898000
+      },
+      "violationType": "Vehicle Modification",
+      "vehicleId": "PxTWWOi79D4YSbCvGNKB",
+      "reportedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "status": "pending",
+      "createdAt": {
+        "_seconds": 1768205920,
+        "_nanoseconds": 900000000
+      }
+    },
+    "X1ya6vWTYMJUfrt4zoSa": {
+      "reportedAt": {
+        "_seconds": 1768219312,
+        "_nanoseconds": 596858000
+      },
+      "violationType": "Improper Parking",
+      "vehicleId": "CPgiAgyawVFc86vIC0tL",
+      "reportedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "status": "pending",
+      "createdAt": {
+        "_seconds": 1768219312,
+        "_nanoseconds": 82000000
+      }
+    },
+    "cUsmKtjq4gssL00oyhd6": {
+      "reportedAt": {
+        "_seconds": 1768219374,
+        "_nanoseconds": 946675000
+      },
+      "violationType": "Vehicle Modification",
+      "vehicleId": "CPgiAgyawVFc86vIC0tL",
+      "reportedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "status": "pending",
+      "createdAt": {
+        "_seconds": 1768219374,
+        "_nanoseconds": 618000000
+      }
+    },
+    "oezs9TUpYz7AM7Vy7HbD": {
+      "reportedAt": {
+        "_seconds": 1768219308,
+        "_nanoseconds": 3537000
+      },
+      "violationType": "Reckless Driving",
+      "vehicleId": "CPgiAgyawVFc86vIC0tL",
+      "reportedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "status": "pending",
+      "createdAt": {
+        "_seconds": 1768219307,
+        "_nanoseconds": 491000000
+      }
+    },
+    "rDoww45CexdzzlcyBN2X": {
+      "reportedAt": {
+        "_seconds": 1768219301,
+        "_nanoseconds": 190742000
+      },
+      "violationType": "Over Speeding",
+      "vehicleId": "CPgiAgyawVFc86vIC0tL",
+      "reportedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "status": "pending",
+      "createdAt": {
+        "_seconds": 1768219300,
+        "_nanoseconds": 907000000
+      }
+    }
+  },
+  "users": {
+    "cGvhYIM32rdA3YBVuSFHgNDnpDF2": {
+      "email": "jay@gmail.com",
+      "fullname": "Jay Lumacad",
+      "password": "123123",
+      "role": "cdrrmsu admin",
+      "createdAt": {
+        "_seconds": 1760927690,
+        "_nanoseconds": 572000000
+      },
+      "lastLogin": {
+        "_seconds": 1760927706,
+        "_nanoseconds": 260000000
+      },
+      "status": "active"
+    },
+    "fAzog9EDFmX15SdhQfvbJfw8OE12": {
+      "email": "juan.delacruz@gmail.com",
+      "fullname": "Juan Dela Cruz",
+      "password": "123123",
+      "role": "cdrrmsu admin",
+      "createdAt": {
+        "_seconds": 1763868026,
+        "_nanoseconds": 789000000
+      },
+      "lastUpdated": {
+        "_seconds": 1763868128,
+        "_nanoseconds": 344000000
+      },
+      "lastLogin": {
+        "_seconds": 1763868188,
+        "_nanoseconds": 868000000
+      },
+      "status": "active"
+    },
+    "jKLSr4LdwFWZqcV2Vv55XPTxOZF3": {
+      "email": "gapoljesie23@gmail.com",
+      "fullname": "Jesie Peras Gapol",
+      "password": "123123",
+      "role": "cdrrmsu admin",
+      "createdAt": {
+        "_seconds": 1760173017,
+        "_nanoseconds": 648000000
+      },
+      "lastUpdated": {
+        "_seconds": 1767331502,
+        "_nanoseconds": 250000000
+      },
+      "status": "active",
+      "lastLogin": {
+        "_seconds": 1767411108,
+        "_nanoseconds": 899000000
+      }
+    },
+    "vjgz23mK17XBjoaBoR36G0I1MUz1": {
+      "email": "juan@gmail.com",
+      "fullname": "Juan Pamag",
+      "password": "123123",
+      "role": "security personnel",
+      "createdAt": {
+        "_seconds": 1760928408,
+        "_nanoseconds": 138000000
+      },
+      "status": "active",
+      "lastLogin": {
+        "_seconds": 1768203518,
+        "_nanoseconds": 896000000
+      }
+    },
+    "waDOckx8UfXbYvfa2TzHj9ORHKD3": {
+      "email": "cj@gmail.com",
+      "fullname": "Cj Cruz",
+      "password": "123123",
+      "role": "security personnel",
+      "createdAt": {
+        "_seconds": 1760919333,
+        "_nanoseconds": 432000000
+      },
+      "lastLogin": {
+        "_seconds": 1760919377,
+        "_nanoseconds": 248000000
+      },
+      "lastUpdated": {
+        "_seconds": 1760919807,
+        "_nanoseconds": 743000000
+      },
+      "status": "inactive"
+    }
+  },
+  "vehicle_logs": {
+    "8dgPUuSXW3iWJpE1RbMM": {
+      "vehicleId": "7njpb1hz0wQd7IvAKmCW",
+      "updatedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "timeIn": {
+        "_seconds": 1768217592,
+        "_nanoseconds": 902099000
+      },
+      "durationMinutes": 0,
+      "status": "offsite",
+      "timeOut": {
+        "_seconds": 1768217627,
+        "_nanoseconds": 294000000
+      }
+    },
+    "K5kwkOMFHXYZEpGY1u7W": {
+      "vehicleId": "PxTWWOi79D4YSbCvGNKB",
+      "updatedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "timeIn": {
+        "_seconds": 1768205825,
+        "_nanoseconds": 427723000
+      },
+      "durationMinutes": 194,
+      "timeOut": {
+        "_seconds": 1768217509,
+        "_nanoseconds": 33000000
+      },
+      "status": "offsite"
+    },
+    "aIao8haWoyDNM2kuTaVw": {
+      "vehicleId": "3o4VZ2zgq2DqlPXqIz2K",
+      "updatedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "timeIn": {
+        "_seconds": 1768204605,
+        "_nanoseconds": 790734000
+      },
+      "durationMinutes": 1,
+      "status": "offsite",
+      "timeOut": {
+        "_seconds": 1768204694,
+        "_nanoseconds": 402000000
+      }
+    }
+  },
+  "activities": {
+    "K0CAqy3OqWITbV3SNPz4": {
+      "action": "Violation Report",
+      "vehicleId": "PxTWWOi79D4YSbCvGNKB",
+      "updatedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "timestamp": "2026-01-12T08:18:41.475530",
+      "violationId": "W2jm6ADWUSDVdLxyiLs8"
+    },
+    "LQ5cV4RXURuBEAYm7CZz": {
+      "action": "Violation Report",
+      "vehicleId": "CPgiAgyawVFc86vIC0tL",
+      "updatedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "timestamp": "2026-01-12T12:01:52.846243",
+      "violationId": "X1ya6vWTYMJUfrt4zoSa"
+    },
+    "RG0S3S8gVNJrxPetqvGf": {
+      "action": "Exit Scan",
+      "vehicleId": "PxTWWOi79D4YSbCvGNKB",
+      "updatedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "timestamp": "2026-01-12T11:31:53.383029",
+      "violationId": null
+    },
+    "UlHbLXyt46jEn23vrVT8": {
+      "action": "Entry Scan",
+      "vehicleId": "PxTWWOi79D4YSbCvGNKB",
+      "updatedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "timestamp": "2026-01-12T08:17:07.004741",
+      "violationId": null
+    },
+    "bgQvn5opnlcY6XdLiz59": {
+      "action": "Violation Report",
+      "vehicleId": "CPgiAgyawVFc86vIC0tL",
+      "updatedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "timestamp": "2026-01-12T12:01:48.266908",
+      "violationId": "oezs9TUpYz7AM7Vy7HbD"
+    },
+    "cwDiwg64Fa6O9MaKcmU4": {
+      "action": "Violation Report",
+      "vehicleId": "CPgiAgyawVFc86vIC0tL",
+      "updatedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "timestamp": "2026-01-12T12:02:55.420581",
+      "violationId": "cUsmKtjq4gssL00oyhd6"
+    },
+    "eouoODu5Z8GQks1IuJFM": {
+      "action": "Exit Scan",
+      "vehicleId": "7njpb1hz0wQd7IvAKmCW",
+      "updatedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "timestamp": "2026-01-12T11:33:48.793747",
+      "violationId": null
+    },
+    "u4Ni1KaaNVlK6kVWDXzZ": {
+      "action": "Violation Report",
+      "vehicleId": "CPgiAgyawVFc86vIC0tL",
+      "updatedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "timestamp": "2026-01-12T12:01:41.692881",
+      "violationId": "rDoww45CexdzzlcyBN2X"
+    },
+    "ukasKQ6L7KX0rkxpVqwk": {
+      "action": "Violation Report",
+      "vehicleId": "PxTWWOi79D4YSbCvGNKB",
+      "updatedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "timestamp": "2026-01-12T08:24:59.623226",
+      "violationId": "7uIC5ruGClCfxeYyzO7H"
+    },
+    "xVGaXdtvcd0zk1i8Pdmm": {
+      "action": "Entry Scan",
+      "vehicleId": "7njpb1hz0wQd7IvAKmCW",
+      "updatedByUserId": "vjgz23mK17XBjoaBoR36G0I1MUz1",
+      "timestamp": "2026-01-12T11:33:15.708701",
+      "violationId": null
+    }
+  }
+}

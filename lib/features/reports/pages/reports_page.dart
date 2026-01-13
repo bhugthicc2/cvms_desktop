@@ -108,7 +108,7 @@ class _ReportsPageContent extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: AppSpacing.medium),
               child: SizedBox(
-                height: isGlobal ? 90 : 255,
+                height: isGlobal ? 80 : 255,
                 child:
                     isGlobal && summary != null
                         ? GlobalStatsSection(summary: summary)
@@ -124,7 +124,7 @@ class _ReportsPageContent extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: AppSpacing.medium),
               child: SizedBox(
-                height: isGlobal ? 530 : 320,
+                height: isGlobal ? 1080 : 320,
                 child:
                     isGlobal && summary != null
                         ? GlobalChartsSection(summary: summary)
@@ -132,14 +132,15 @@ class _ReportsPageContent extends StatelessWidget {
               ),
             ),
           ),
-          const SliverToBoxAdapter(
-            child: Spacing.vertical(size: AppSpacing.medium),
-          ),
+
           // Violations Table Sliver (branch)
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.only(right: AppSpacing.medium),
-              child: ViolationsTableSection(isGlobal: isGlobal),
+              child: ViolationsTableSection(
+                // isGlobal: isGlobal,
+                isGlobal: false,
+              ), //partially removed the global table
             ),
           ),
           const SliverToBoxAdapter(
@@ -149,11 +150,11 @@ class _ReportsPageContent extends StatelessWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.only(right: AppSpacing.medium),
-              child: VehicleLogsTableSection(isGlobal: isGlobal),
+              child: VehicleLogsTableSection(
+                // isGlobal: isGlobal,
+                isGlobal: false,
+              ), //partially removed the global table
             ),
-          ),
-          const SliverToBoxAdapter(
-            child: Spacing.vertical(size: AppSpacing.medium),
           ),
         ],
       ),

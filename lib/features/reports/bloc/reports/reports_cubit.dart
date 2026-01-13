@@ -20,6 +20,15 @@ class ReportsCubit extends Cubit<ReportsState> {
     emit(state.copyWith(loading: true, error: null));
     try {
       final summary = await _repo.fetchFleetSummary();
+
+      // Fetch real data for charts
+      final vehicleDistribution =
+          await _repo.fetchVehicleDistributionByCollege();
+      final yearLevelBreakdown = await _repo.fetchYearLevelBreakdown();
+      final cityBreakdown = await _repo.fetchCityBreakdown();
+      final studentWithMostViolations =
+          await _repo.fetchStudentWithMostViolations();
+
       final trendData = await _fetchTrendData(state.selectedTimeRange);
 
       emit(
@@ -28,6 +37,10 @@ class ReportsCubit extends Cubit<ReportsState> {
           logsData: trendData,
           loading: false,
           isGlobalMode: true, // Ensure global on load
+          vehicleDistribution: vehicleDistribution,
+          yearLevelBreakdown: yearLevelBreakdown,
+          cityBreakdown: cityBreakdown,
+          studentWithMostViolations: studentWithMostViolations,
         ),
       );
     } catch (e) {

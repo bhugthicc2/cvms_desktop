@@ -9,12 +9,15 @@ import '../widgets/pdf_doc/letter_head/doc_signatory.dart';
 import '../widgets/pdf_doc/templates/pdf_page_template.dart';
 
 class PdfReportBuilder {
-  static Future<Uint8List> buildVehicleReport() async {
+  static Future<Uint8List> buildVehicleReport({
+    bool isGlobal = false,
+    Map<String, dynamic>? vehicleData,
+    Map<String, dynamic>? globalData,
+  }) async {
     final pdf = pw.Document();
-    // Instantiate the template with defaults (matches your current values)
     final template = const PdfPageTemplate();
 
-    // Page 1: Title, Summary Metrics, Vehicle Identification, Legal Details, MVP Status
+    // Page 1: Summary Metrics, Vehicle Identification
     final page1Content = pw.Column(
       children: [
         PdfReportTitle(titleTxt: 'Vehicle Monitoring & Violation Report'),
@@ -32,17 +35,46 @@ class PdfReportBuilder {
             PdfSectionText(
               title: '1. Summary Metrics',
               subTitle:
-                  "This section provides a high-level overview of the vehicle's activity and compliance status during the reporting period.",
+                  "This section provides a high-level overview of vehicle's activity and compliance status during the reporting period.",
             ),
             pw.SizedBox(height: 5),
             PdfTable(
               headers: ['Metric', 'Value'],
-              rows: [
-                ['Days Until MVP Expiration', '150 days'],
-                ['Active Violations', '22'],
-                ['Total Recorded Violations', '230'],
-                ['Total Vehicle Entries / Exits', '540'],
-              ],
+              rows:
+                  isGlobal
+                      ? [
+                        [
+                          'Total Fleet Violations',
+                          globalData?['totalViolations'] ?? '0',
+                        ],
+                        [
+                          'Active Fleet Violations',
+                          globalData?['activeViolations'] ?? '0',
+                        ],
+                        ['Total Vehicles', globalData?['totalVehicles'] ?? '0'],
+                        [
+                          'Total Entries/Exits',
+                          globalData?['totalEntriesExits'] ?? '0',
+                        ],
+                      ]
+                      : [
+                        [
+                          'Days Until MVP Expiration',
+                          vehicleData?['daysUntilExpiration'] ?? '150 days',
+                        ],
+                        [
+                          'Active Violations',
+                          vehicleData?['activeViolations'] ?? '22',
+                        ],
+                        [
+                          'Total Recorded Violations',
+                          vehicleData?['totalViolations'] ?? '230',
+                        ],
+                        [
+                          'Total Vehicle Entries / Exits',
+                          vehicleData?['totalEntriesExits'] ?? '540',
+                        ],
+                      ],
               columnWidths: {
                 0: pw.FlexColumnWidth(2),
                 1: pw.FlexColumnWidth(2),
@@ -59,11 +91,11 @@ class PdfReportBuilder {
             PdfTable(
               headers: ['Field', 'Details'],
               rows: [
-                ['Owner Name', 'Jesie P. Gapol'],
-                ['Vehicle Model', 'XRM'],
-                ['Vehicle Type', 'Four-Wheeled'],
-                ['Vehicle Color', 'Red'],
-                ['Plate Number', 'ABC-1234'],
+                ['Owner Name', vehicleData?['ownerName'] ?? 'Jesie P. Gapol'],
+                ['Vehicle Model', vehicleData?['vehicleModel'] ?? 'XRM'],
+                ['Vehicle Type', vehicleData?['vehicleType'] ?? 'Four-Wheeled'],
+                ['Vehicle Color', vehicleData?['vehicleColor'] ?? 'Red'],
+                ['Plate Number', vehicleData?['plateNumber'] ?? 'ABC-1234'],
               ],
               columnWidths: {
                 0: pw.FlexColumnWidth(2),
@@ -81,9 +113,15 @@ class PdfReportBuilder {
             PdfTable(
               headers: ['Field', 'Value'],
               rows: [
-                ['License Number', '0890775'],
-                ['Official Receipt (OR) Number', 'OR-5638'],
-                ['Certificate of Registration (CR) Number', 'CR-5779'],
+                ['License Number', vehicleData?['licenseNumber'] ?? '0890775'],
+                [
+                  'Official Receipt (OR) Number',
+                  vehicleData?['orNumber'] ?? 'OR-5638',
+                ],
+                [
+                  'Certificate of Registration (CR) Number',
+                  vehicleData?['crNumber'] ?? 'CR-5779',
+                ],
               ],
               columnWidths: {
                 0: pw.FlexColumnWidth(2),
@@ -91,7 +129,7 @@ class PdfReportBuilder {
               },
             ),
             pw.SizedBox(height: 20),
-            // Section 4: MVP Status
+            // Section 4: Motor Vehicle Pass (MVP) Status
             PdfSectionText(
               title: '4. Motor Vehicle Pass (MVP) Status',
               hasSubtitle: false,
@@ -100,9 +138,15 @@ class PdfReportBuilder {
             PdfTable(
               headers: ['Field', 'Value'],
               rows: [
-                ['MVP Validity Status', 'Valid'],
-                ['Date Registered', 'January 5, 2025'],
-                ['Expiration Date', 'December 2, 2026'],
+                ['MVP Validity Status', vehicleData?['mvpStatus'] ?? 'Valid'],
+                [
+                  'Date Registered',
+                  vehicleData?['dateRegistered'] ?? 'January 5, 2025',
+                ],
+                [
+                  'Expiration Date',
+                  vehicleData?['expirationDate'] ?? 'December 2, 2026',
+                ],
               ],
               columnWidths: {
                 0: pw.FlexColumnWidth(2),
@@ -121,7 +165,7 @@ class PdfReportBuilder {
     );
     pdf.addPage(template.build(child: page1Content));
 
-    // Page 2: Violation Summary, Activity Summary, Recent Violations
+    // Page 2: Activity Summary, Recent Violations
     final page2Content = pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
@@ -135,25 +179,72 @@ class PdfReportBuilder {
         pw.SizedBox(height: 5),
         PdfTable(
           headers: ['Violation Type', 'Number of Violations', 'Percentage'],
-          rows: [
-            ['Horn', '200', '34.7%'],
-            ['Illegal Parking', '140', '24.3%'],
-            ['Speeding', '100', '17.1%'],
-            ['Muffler', '100', '15.9%'],
-            ['Over Speeding', '30', '5.2%'],
-            ['No License', '15', '2.6%'],
-          ],
+          rows:
+              isGlobal
+                  ? [
+                    ['Horn', globalData?['hornViolations'] ?? '200', '34.7%'],
+                    [
+                      'Illegal Parking',
+                      globalData?['illegalParkingViolations'] ?? '140',
+                      '24.3%',
+                    ],
+                    [
+                      'Speeding',
+                      globalData?['speedingViolations'] ?? '100',
+                      '17.1%',
+                    ],
+                    [
+                      'Muffler',
+                      globalData?['mufflerViolations'] ?? '100',
+                      '15.9%',
+                    ],
+                    [
+                      'Over Speeding',
+                      globalData?['overSpeedingViolations'] ?? '30',
+                      '5.2%',
+                    ],
+                    [
+                      'No License',
+                      globalData?['noLicenseViolations'] ?? '15',
+                      '2.6%',
+                    ],
+                  ]
+                  : [
+                    ['Horn', vehicleData?['hornViolations'] ?? '200', '34.7%'],
+                    [
+                      'No Helmet',
+                      vehicleData?['noHelmetViolations'] ?? '150',
+                      '26.0%',
+                    ],
+                    [
+                      'No Driver\'s License',
+                      vehicleData?['noDriverLicenseViolations'] ?? '100',
+                      '17.3%',
+                    ],
+                    [
+                      'Overloading',
+                      vehicleData?['overloadingViolations'] ?? '80',
+                      '13.9%',
+                    ],
+                    [
+                      'No Reflectors',
+                      vehicleData?['noReflectorsViolations'] ?? '43',
+                      '7.5%',
+                    ],
+                  ],
           columnWidths: {
             0: pw.FlexColumnWidth(2),
             1: pw.FlexColumnWidth(1.5),
             2: pw.FlexColumnWidth(1),
           },
         ),
-        pw.SizedBox(height: 5),
+        pw.SizedBox(height: 20),
         PdfSectionFooterText(
           footerTitle: 'Analysis: ',
           footerSubTitle:
-              "Horn-related violations account for the highest proportion of total violations, indicating a recurring behavioral concern that may require stricter enforcement or awareness measures.",
+              isGlobal
+                  ? "Horn-related violations account for the highest proportion of total violations, indicating a recurring behavioral concern that may require stricter enforcement or awareness measures."
+                  : "Horn-related violations account for the highest proportion of total violations, indicating a recurring behavioral concern that may require stricter enforcement or awareness measures.",
         ),
         pw.SizedBox(height: 20),
         // Section 6: Vehicle Activity Summary
@@ -167,22 +258,35 @@ class PdfReportBuilder {
         pw.SizedBox(height: 5),
         PdfTable(
           headers: ['Day', 'Number of Logs'],
-          rows: [
-            ['January 1', '120'],
-            ['January 2', '50'],
-            ['January 3', '68'],
-            ['January 4', '90'],
-            ['January 5', '200'],
-            ['January 6', '80'],
-            ['January 7', '136'],
-          ],
+          rows:
+              isGlobal
+                  ? [
+                    ['January 1', globalData?['jan1Logs'] ?? '120'],
+                    ['January 2', globalData?['jan2Logs'] ?? '50'],
+                    ['January 3', globalData?['jan3Logs'] ?? '68'],
+                    ['January 4', globalData?['jan4Logs'] ?? '90'],
+                    ['January 5', globalData?['jan5Logs'] ?? '200'],
+                    ['January 6', globalData?['jan6Logs'] ?? '80'],
+                    ['January 7', globalData?['jan7Logs'] ?? '136'],
+                  ]
+                  : [
+                    ['January 1', vehicleData?['jan1Logs'] ?? '120'],
+                    ['January 2', vehicleData?['jan2Logs'] ?? '50'],
+                    ['January 3', vehicleData?['jan3Logs'] ?? '68'],
+                    ['January 4', vehicleData?['jan4Logs'] ?? '90'],
+                    ['January 5', vehicleData?['jan5Logs'] ?? '200'],
+                    ['January 6', vehicleData?['jan6Logs'] ?? '80'],
+                    ['January 7', vehicleData?['jan7Logs'] ?? '136'],
+                  ],
           columnWidths: {0: pw.FlexColumnWidth(2), 1: pw.FlexColumnWidth(1)},
         ),
         pw.SizedBox(height: 5),
         PdfSectionFooterText(
           footerTitle: 'Observation: ',
           footerSubTitle:
-              "Vehicle activity peaked on January 5, 2026, indicating increased campus traffic on that day.",
+              isGlobal
+                  ? "Vehicle activity peaked on January 5, 2026, indicating increased campus traffic on that day."
+                  : "Vehicle activity peaked on January 5, 2026, indicating increased campus traffic on that day.",
         ),
         pw.SizedBox(height: 20),
         // Section 7: Recent Violation Records
@@ -200,45 +304,110 @@ class PdfReportBuilder {
             'Reported By',
             'Status',
           ],
-          rows: [
-            ['V001', 'Jan 11, 2025', 'Over Speeding', 'John Doe', 'Pending'],
-            ['V002', 'Jan 12, 2025', 'No Parking', 'Jessa Pagat', 'Resolved'],
-            [
-              'V003',
-              'Jan 25, 2025',
-              'Invalid License',
-              'Jesie Gapol',
-              'Pending',
-            ],
-            [
-              'V004',
-              'Feb 4, 2025',
-              'No Helmet',
-              'Jelly Mae Panlimutan',
-              'Resolved',
-            ],
-            [
-              'V005',
-              'Feb 10, 2025',
-              'Wrong Overtaking',
-              'Joven Ondog',
-              'In Progress',
-            ],
-            [
-              'V006',
-              'May 3, 2025',
-              'Traffic Signal Violation',
-              'Carl Pusoy',
-              'Resolved',
-            ],
-            [
-              'V007',
-              'Jan 1, 2026',
-              'Overloading',
-              'Camelle Prats',
-              'In Progress',
-            ],
-          ],
+          rows:
+              isGlobal
+                  ? [
+                    [
+                      'V001',
+                      'Jan 11, 2025',
+                      'Over Speeding',
+                      'John Doe',
+                      'Pending',
+                    ],
+                    [
+                      'V002',
+                      'Jan 12, 2025',
+                      'No Parking',
+                      'Jessa Pagat',
+                      'Resolved',
+                    ],
+                    [
+                      'V003',
+                      'Jan 25, 2025',
+                      'Invalid License',
+                      'Jesie Gapol',
+                      'Pending',
+                    ],
+                    [
+                      'V004',
+                      'Feb 4, 2025',
+                      'No Helmet',
+                      'Jelly Mae Panlimutan',
+                      'Resolved',
+                    ],
+                    [
+                      'V005',
+                      'Feb 10, 2025',
+                      'Wrong Overtaking',
+                      'Joven Ondog',
+                      'In Progress',
+                    ],
+                    [
+                      'V006',
+                      'May 3, 2025',
+                      'Traffic Signal Violation',
+                      'Carl Pusoy',
+                      'Resolved',
+                    ],
+                    [
+                      'V007',
+                      'Jan 1, 2026',
+                      'Overloading',
+                      'Camille Prats',
+                      'In Progress',
+                    ],
+                  ]
+                  : [
+                    [
+                      'V001',
+                      'Jan 11, 2025',
+                      'Over Speeding',
+                      'John Doe',
+                      'Pending',
+                    ],
+                    [
+                      'V002',
+                      'Jan 12, 2025',
+                      'No Parking',
+                      'Jessa Pagat',
+                      'Resolved',
+                    ],
+                    [
+                      'V003',
+                      'Jan 25, 2025',
+                      'Invalid License',
+                      'Jesie Gapol',
+                      'Pending',
+                    ],
+                    [
+                      'V004',
+                      'Feb 4, 2025',
+                      'No Helmet',
+                      'Jelly Mae Panlimutan',
+                      'Resolved',
+                    ],
+                    [
+                      'V005',
+                      'Feb 10, 2025',
+                      'Wrong Overtaking',
+                      'Joven Ondog',
+                      'In Progress',
+                    ],
+                    [
+                      'V006',
+                      'May 3, 2025',
+                      'Traffic Signal Violation',
+                      'Carl Pusoy',
+                      'Resolved',
+                    ],
+                    [
+                      'V007',
+                      'Jan 1, 2026',
+                      'Overloading',
+                      'Camille Prats',
+                      'In Progress',
+                    ],
+                  ],
           columnWidths: {
             0: pw.FlexColumnWidth(1),
             1: pw.FlexColumnWidth(1.5),
@@ -257,7 +426,7 @@ class PdfReportBuilder {
     );
     pdf.addPage(template.build(child: page2Content));
 
-    // Page 3: Recent Vehicle Logs, Disclaimer, Signatory
+    // Page 3: Disclaimer, Signatory
     final page3Content = pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
@@ -266,7 +435,7 @@ class PdfReportBuilder {
         PdfSectionText(
           title: '8. Recent Vehicle Log Entries',
           subTitle:
-              "This section presents most recent vehicle entry and exit records.",
+              "This section presents the most recent vehicle entry and exit records.",
         ),
         pw.SizedBox(height: 5),
         PdfTable(
@@ -278,57 +447,124 @@ class PdfReportBuilder {
             'Duration',
             'Status',
           ],
-          rows: [
-            [
-              'L001',
-              'Jan 2, 2026',
-              '8:11 AM',
-              '5:00 PM',
-              '120 mins',
-              'Completed',
-            ],
-            [
-              'L002',
-              'Jan 3, 2026',
-              '9:00 AM',
-              '5:00 PM',
-              '120 mins',
-              'Completed',
-            ],
-            [
-              'L003',
-              'Jan 4, 2026',
-              '8:00 AM',
-              '5:00 PM',
-              '120 mins',
-              'Completed',
-            ],
-            [
-              'L004',
-              'Jan 5, 2026',
-              '10:30 AM',
-              '5:00 PM',
-              '120 mins',
-              'Completed',
-            ],
-            ['L005', 'Feb 9, 2026', '8:30 AM', '11:00 AM', '60 mins', 'Active'],
-            [
-              'L006',
-              'Feb 10, 2026',
-              '8:00 AM',
-              '12:00 PM',
-              '60 mins',
-              'Completed',
-            ],
-            [
-              'L007',
-              'Mar 1, 2026',
-              '9:00 AM',
-              '12:30 PM',
-              '60 mins',
-              'Completed',
-            ],
-          ],
+          rows:
+              isGlobal
+                  ? [
+                    [
+                      'L001',
+                      'Jan 2, 2026',
+                      '8:11 AM',
+                      '5:30 PM',
+                      '9h 19m',
+                      'Completed',
+                    ],
+                    [
+                      'L002',
+                      'Jan 3, 2026',
+                      '9:15 AM',
+                      '6:45 PM',
+                      '9h 30m',
+                      'Completed',
+                    ],
+                    [
+                      'L003',
+                      'Jan 4, 2026',
+                      '7:30 AM',
+                      '4:15 PM',
+                      '8h 45m',
+                      'Completed',
+                    ],
+                    [
+                      'L004',
+                      'Jan 5, 2026',
+                      '8:45 AM',
+                      '5:20 PM',
+                      '8h 35m',
+                      'Completed',
+                    ],
+                    [
+                      'L005',
+                      'Feb 9, 2026',
+                      '8:30 AM',
+                      '11:00 AM',
+                      '60 mins',
+                      'Active',
+                    ],
+                    [
+                      'L006',
+                      'Feb 10, 2026',
+                      '8:00 AM',
+                      '12:00 PM',
+                      '60 mins',
+                      'Completed',
+                    ],
+                    [
+                      'L007',
+                      'Mar 1, 2026',
+                      '9:00 AM',
+                      '12:30 PM',
+                      '60 mins',
+                      'Completed',
+                    ],
+                  ]
+                  : [
+                    [
+                      'L001',
+                      'Jan 2, 2026',
+                      '8:11 AM',
+                      '5:00 PM',
+                      '120 mins',
+                      'Completed',
+                    ],
+                    [
+                      'L002',
+                      'Jan 3, 2026',
+                      '9:00 AM',
+                      '5:00 PM',
+                      '120 mins',
+                      'Completed',
+                    ],
+                    [
+                      'L003',
+                      'Jan 4, 2026',
+                      '8:00 AM',
+                      '5:00 PM',
+                      '120 mins',
+                      'Completed',
+                    ],
+                    [
+                      'L004',
+                      'Jan 5, 2026',
+                      '10:30 AM',
+                      '5:00 PM',
+                      '120 mins',
+                      'Completed',
+                    ],
+                    [
+                      'L005',
+                      'Feb 9, 2026',
+                      '8:30 AM',
+                      '11:00 AM',
+                      '60 mins',
+                      'Active',
+                    ],
+                    [
+                      'L006',
+                      'Feb 10, 2026',
+                      '8:00 AM',
+                      '12:00 PM',
+                      '60 mins',
+                      'Completed',
+                    ],
+                    [
+                      'L007',
+                      'Mar 1, 2026',
+                      '9:00 AM',
+                      '12:30 PM',
+                      '60 mins',
+                      'Completed',
+                    ],
+                  ],
           columnWidths: {
             0: pw.FlexColumnWidth(1),
             1: pw.FlexColumnWidth(1.5),
@@ -342,14 +578,18 @@ class PdfReportBuilder {
         PdfSectionFooterText(
           footerTitle: 'Report Disclaimer',
           footerSubTitle:
-              "This report is system-generated and intended for official documentation, monitoring, and record-keeping purposes. Any detailed or historical data not shown in this report may be accessed through Vehicle Monitoring System.",
+              "This report is system-generated and intended for official documentation, monitoring, and record-keeping purposes. Any detailed or historical data not shown in this report may be accessed through the Vehicle Monitoring System.",
         ),
         pw.SizedBox(height: 20),
         DocSignatory(
-          preparer: 'Joven Ondog',
-          preparerDesignation: 'CDRRMSU Office In-Charge',
-          approver: 'Leonel Hidalgo, Ph.D.',
-          approverDesignation: 'CDRRMSU Head',
+          preparer: isGlobal ? 'Joven Ondog' : 'Joven Ondog',
+          preparerDesignation:
+              isGlobal
+                  ? 'CDRRMSU Office In-Charge'
+                  : 'CDRRMSU Office In-Charge',
+          approver:
+              isGlobal ? 'Leonel Hidalgo, Ph.D.' : 'Leonel Hidalgo, Ph.D.',
+          approverDesignation: isGlobal ? 'CDRRMSU Head' : 'CDRRMSU Head',
         ),
       ],
     );

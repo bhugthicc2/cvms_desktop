@@ -4,7 +4,9 @@ import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/app/typeahead_search_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+import 'package:cvms_desktop/features/reports/data/mock_data.dart';
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class ReportHeaderSection extends StatefulWidget {
   final VoidCallback onExportPDF;
@@ -26,22 +28,8 @@ class _ReportHeaderSectionState extends State<ReportHeaderSection> {
   Future<List<String>> _getSuggestions(String query) async {
     if (query.isEmpty) return [];
 
-    // Mock vehicle data
-    final mockData = [
-      'WXY-9012 - Toyota Avanza - Mila Hernandez',
-      'ABC-1234 - Honda Civic - John Doe',
-      'XYZ-5678 - Mitsubishi Montero - Jane Smith',
-      'DEF-9012 - Ford Ranger - Robert Johnson',
-      'GHI-3456 - Toyota Vios - Maria Santos',
-      'JKL-7890 - Nissan Sentra - Carlos Reyes',
-      'MNO-2345 - Isuzu D-Max - Anna Cruz',
-      'PQR-6789 - Hyundai Accent - David Lee',
-      'STU-0123 - Kia Picanto - Sarah Kim',
-      'VWX-4567 - Mazda 3 - Michael Brown',
-    ];
-
     final suggestions =
-        mockData
+        ReportMockData.searchMockData
             .where((item) => item.toLowerCase().contains(query.toLowerCase()))
             .toList();
 
@@ -55,7 +43,7 @@ class _ReportHeaderSectionState extends State<ReportHeaderSection> {
 
   void _onSuggestionSelected(String suggestion) {
     _searchController.text = suggestion;
-    // TODO: Implement search functionality with selected suggestion
+    // todo Implement search functionality with selected suggestion
     CustomSnackBar.showSuccess(context, 'Selected: $suggestion');
     //todo change the report content
   }
@@ -97,6 +85,12 @@ class _ReportHeaderSectionState extends State<ReportHeaderSection> {
               ),
               child: Row(
                 children: [
+                  Icon(
+                    PhosphorIconsRegular.calendar,
+                    color: AppColors.white,
+                    size: 22,
+                  ),
+                  Spacing.horizontal(size: AppSpacing.small),
                   Text(
                     'DATE FILTER',
                     style: TextStyle(
