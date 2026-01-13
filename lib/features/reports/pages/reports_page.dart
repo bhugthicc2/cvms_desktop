@@ -5,13 +5,13 @@ import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/dashboard/data/firestore_analytics_repository.dart';
 import 'package:cvms_desktop/features/reports/pages/pdf_report_page.dart';
-import 'package:cvms_desktop/features/reports/widgets/app/report_header_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/stats/global_stats_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/stats/individual_stats_and_info_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/charts/global_charts_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/charts/individual_charts_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/table/violations_table_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/table/vehicle_logs_table_section.dart';
+import 'package:cvms_desktop/features/reports/widgets/app/report_header_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
@@ -56,6 +56,9 @@ class _ReportsPageContent extends StatelessWidget {
                   // TODO: Apply date filter to reports
                   CustomSnackBar.showSuccess(
                     context,
+                    'Date filter applied: ${period.start} to ${period.end}',
+                  );
+                  debugPrint(
                     'Date filter applied: ${period.start} to ${period.end}',
                   );
                 }
@@ -135,7 +138,8 @@ class _ReportsPageContent extends StatelessWidget {
                 AppSpacing.medium,
               ),
               child: ReportHeaderSection(
-                dateSelected: 'DATE FILTER', //todo
+                dateSelected:
+                    'DATE FILTER', //todo display the current selected date range show date filter text by default
                 onDateFilter: () {
                   _showDateFilterDialog(context);
                 },
