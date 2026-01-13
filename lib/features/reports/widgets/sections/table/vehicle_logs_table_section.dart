@@ -1,0 +1,52 @@
+import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/utils/card_decor.dart';
+import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+import 'package:flutter/material.dart';
+import 'report_table_header.dart';
+import '../../tables/vehicle_logs/global_vehicle_logs_table.dart';
+import '../../tables/vehicle_logs/vehicle_logs_table.dart';
+
+/// Vehicle Logs Table Section - Displays vehicle logs table with header including:
+/// - Global vehicle logs (when isGlobal = true)
+/// - Individual vehicle logs (when isGlobal = false)
+/// - Sortable table with dark/light header options
+class VehicleLogsTableSection extends StatelessWidget {
+  const VehicleLogsTableSection({super.key, required this.isGlobal});
+
+  final bool isGlobal;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.medium,
+        AppSpacing.medium,
+        AppSpacing.medium,
+        0,
+      ),
+      height: 400,
+      decoration: cardDecoration(),
+      child: Column(
+        children: [
+          ReportTableHeader(
+            tableTitle: isGlobal ? 'Global Vehicle Logs' : 'Vehicle Logs',
+            onTap: () {},
+          ),
+          Spacing.vertical(size: AppSpacing.medium),
+          Expanded(
+            child:
+                isGlobal
+                    ? const GlobalVehicleLogsTable(
+                      istableHeaderDark: false,
+                      allowSorting: true,
+                    )
+                    : const VehicleLogsTable(
+                      istableHeaderDark: false,
+                      allowSorting: true,
+                    ),
+          ),
+        ],
+      ),
+    );
+  }
+}
