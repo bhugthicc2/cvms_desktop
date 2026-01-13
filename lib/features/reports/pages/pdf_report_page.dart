@@ -1,6 +1,6 @@
 import 'package:cvms_desktop/features/reports/widgets/sections/pdf_preview_app_bar.dart';
 import 'package:cvms_desktop/features/reports/widgets/editor/pdf_editor_widget.dart';
-import 'package:cvms_desktop/features/reports/bloc/pdf_editor_cubit.dart';
+import 'package:cvms_desktop/features/reports/bloc/pdf/pdf_editor_cubit.dart';
 import 'package:cvms_desktop/features/reports/widgets/viewer/pdf_viewer_widget.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/navigation/custom_breadcrumb.dart';

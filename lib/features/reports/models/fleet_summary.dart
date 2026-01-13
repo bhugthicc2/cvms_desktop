@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
 
 class FleetSummary extends Equatable {
   final int totalViolations;
@@ -7,7 +8,8 @@ class FleetSummary extends Equatable {
   final int totalEntriesExits;
   final double violationTrendPercent;
   final List<ViolationTypeCount> topViolationTypes;
-  final List<TopVehicle> topWorstVehicles;
+  final List<ChartDataModel> departmentLogData;
+  final List<ChartDataModel> deptViolationData;
 
   const FleetSummary({
     required this.totalViolations,
@@ -16,7 +18,8 @@ class FleetSummary extends Equatable {
     required this.totalEntriesExits,
     this.violationTrendPercent = 0.0,
     this.topViolationTypes = const [],
-    this.topWorstVehicles = const [],
+    this.departmentLogData = const [],
+    this.deptViolationData = const [],
   });
 
   @override
@@ -27,7 +30,8 @@ class FleetSummary extends Equatable {
     totalEntriesExits,
     violationTrendPercent,
     topViolationTypes,
-    topWorstVehicles,
+    departmentLogData,
+    deptViolationData,
   ];
 }
 
@@ -37,19 +41,4 @@ class ViolationTypeCount extends Equatable {
   const ViolationTypeCount({required this.type, required this.count});
   @override
   List<Object?> get props => [type, count];
-}
-
-class TopVehicle extends Equatable {
-  final String plate;
-  final String ownerName;
-  final int violations;
-  final double trendPercent;
-  const TopVehicle({
-    required this.plate,
-    required this.ownerName,
-    required this.violations,
-    this.trendPercent = 0.0,
-  });
-  @override
-  List<Object?> get props => [plate, ownerName, violations, trendPercent];
 }

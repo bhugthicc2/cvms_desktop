@@ -17,6 +17,7 @@ import 'package:cvms_desktop/features/dashboard/widgets/charts/bar_chart_widget.
 import 'package:cvms_desktop/features/dashboard/widgets/charts/donut_chart_widget.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/charts/line_chart_widget.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/charts/stacked_bar_widget.dart';
+import 'package:cvms_desktop/features/dashboard/extensions/time_range_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -30,30 +31,6 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  String _getInitialValue(TimeRange timeRange) {
-    switch (timeRange) {
-      case TimeRange.days7:
-        return '7 days';
-      case TimeRange.month:
-        return 'Month';
-      case TimeRange.year:
-        return 'Year';
-    }
-  }
-
-  TimeRange? _mapStringToTimeRange(String? value) {
-    switch (value) {
-      case '7 days':
-        return TimeRange.days7;
-      case 'Month':
-        return TimeRange.month;
-      case 'Year':
-        return TimeRange.year;
-      default:
-        return null;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -159,11 +136,9 @@ class _DashboardPageState extends State<DashboardPage> {
                               fontSize: 14,
                               verticalPadding: 0,
                               items: const ['7 days', 'Month', 'Year'],
-                              initialValue: _getInitialValue(
-                                state.selectedTimeRange,
-                              ),
+                              initialValue: state.selectedTimeRange.displayName,
                               onChanged: (value) {
-                                final timeRange = _mapStringToTimeRange(value);
+                                final timeRange = value.toTimeRange();
                                 if (timeRange != null) {
                                   context
                                       .read<DashboardCubit>()

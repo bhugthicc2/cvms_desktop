@@ -1,12 +1,10 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:cvms_desktop/core/utils/card_decor.dart';
 import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/app/typeahead_search_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class ReportHeaderSection extends StatefulWidget {
   final VoidCallback onExportPDF;
@@ -82,6 +80,34 @@ class _ReportHeaderSectionState extends State<ReportHeaderSection> {
               controller: _searchController,
               suggestionsCallback: _getSuggestions,
               onSuggestionSelected: _onSuggestionSelected,
+            ),
+          ),
+
+          Spacing.horizontal(size: AppSpacing.medium),
+          //report date filter
+          HoverGrow(
+            cursor: SystemMouseCursors.click,
+            onTap: widget.onExportPDF,
+            child: Container(
+              height: 40,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    'DATE FILTER',
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontSize: 12,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           Spacing.horizontal(size: AppSpacing.medium),
