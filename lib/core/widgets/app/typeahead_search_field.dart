@@ -1,6 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_slide.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -61,7 +62,7 @@ class TypeaheadSearchField extends StatelessWidget {
               cursorColor: AppColors.primary,
               onChanged: onChanged,
               decoration: InputDecoration(
-                maintainHintHeight: true,
+                maintainHintSize: true,
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: AppColors.grey.withValues(alpha: 0.5),
@@ -163,16 +164,21 @@ class TypeaheadSearchField extends StatelessWidget {
               }
             }
 
-            return ListTile(
-              title: RichText(
-                text: TextSpan(style: baseStyle, children: spans),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              leading: Icon(
-                PhosphorIconsRegular.magnifyingGlass,
-                size: 16,
-                color: AppColors.grey,
+            return HoverSlide(
+              cursor: SystemMouseCursors.click,
+              dx: 0.04,
+              dy: 0,
+              child: ListTile(
+                title: RichText(
+                  text: TextSpan(style: baseStyle, children: spans),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                leading: Icon(
+                  PhosphorIconsRegular.magnifyingGlass,
+                  size: 16,
+                  color: AppColors.grey,
+                ),
               ),
             );
           },

@@ -38,18 +38,18 @@ class CustomDialog extends StatelessWidget {
     return Dialog(
       backgroundColor: AppColors.white,
       insetPadding: const EdgeInsets.all(40),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       child: SizedBox(
         width: width,
         height: height,
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: headerColor ?? AppColors.primary,
+                color: headerColor ?? AppColors.tableHeaderColor,
                 borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(6),
+                  top: Radius.circular(4),
                 ),
               ),
               child: Row(
@@ -68,7 +68,11 @@ class CustomDialog extends StatelessWidget {
                   Spacer(),
                   InkWell(
                     onTap: () => Navigator.of(context).pop(),
-                    child: Icon(PhosphorIconsBold.x, color: AppColors.white),
+                    child: Icon(
+                      PhosphorIconsBold.x,
+                      color: AppColors.white,
+                      size: 20,
+                    ),
                   ),
                 ],
               ),

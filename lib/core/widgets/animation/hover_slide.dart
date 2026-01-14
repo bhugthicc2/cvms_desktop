@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 
 class HoverSlide extends StatefulWidget {
   final Widget child;
-  final double hoverScale;
   final Duration duration;
   final VoidCallback? onTap;
   final MouseCursor? cursor;
+  final double dx;
+  final double dy;
 
   const HoverSlide({
     super.key,
     required this.child,
-    this.hoverScale = 1.05,
     this.duration = const Duration(milliseconds: 200),
     this.onTap,
     this.cursor,
+    this.dx = 0.1,
+    this.dy = 0.0,
   });
 
   @override
@@ -37,7 +39,7 @@ class _HoverSlideState extends State<HoverSlide> {
       child: GestureDetector(
         onTap: widget.onTap,
         child: AnimatedSlide(
-          offset: _isHovered ? Offset(0.1, 0) : Offset(0, 0),
+          offset: _isHovered ? Offset(widget.dx, widget.dy) : Offset(0, 0),
           duration: widget.duration,
           curve: Curves.easeOut,
           child: widget.child,

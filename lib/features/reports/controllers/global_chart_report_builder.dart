@@ -83,7 +83,7 @@ class GlobalChartReportBuilder {
         pw.SizedBox(height: 10),
         PdfSubtitleText(
           label: 'Reporting period',
-          value: 'January 1 - 7, 2026',
+          value: 'January 1 - 7, 2026 (STATIC)',
         ),
         PdfSubtitleText(label: 'Generated On', value: 'January 11, 2026'),
         pw.SizedBox(height: 20),
