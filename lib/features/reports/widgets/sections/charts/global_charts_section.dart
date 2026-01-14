@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
@@ -17,7 +15,6 @@ import 'package:screenshot/screenshot.dart';
 import '../../../bloc/reports/reports_cubit.dart';
 import '../../../bloc/reports/reports_state.dart';
 import '../../../models/fleet_summary.dart';
-import '../../../data/mock_data.dart';
 
 /// Global Charts Section - Displays fleet-wide charts including:
 class GlobalChartsSection extends StatefulWidget {
@@ -51,10 +48,7 @@ class GlobalChartsSection extends StatefulWidget {
 class _GlobalChartsSectionState extends State<GlobalChartsSection> {
   @override
   Widget build(BuildContext context) {
-    final deptData =
-        widget.summary.departmentLogData.isNotEmpty
-            ? widget.summary.departmentLogData
-            : ReportMockData.vehicleLogsCollegeData; // Fallback mock if null
+    final deptData = widget.summary.departmentLogData;
     final typesData =
         widget.summary.topViolationTypes
             .map(
@@ -77,10 +71,7 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                       showPercentageInSlice: false,
                       onViewTap: () {},
                       onDonutChartPointTap: (details) {},
-                      data:
-                          state.vehicleDistribution ??
-                          ReportMockData
-                              .vehicleLogsCollegeData, // Use real data with fallback
+                      data: state.vehicleDistribution ?? [],
                       title: 'Vehicle Distribution per College',
                       radius: '90%',
                       innerRadius: '60%',
@@ -96,10 +87,7 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                       showPercentageInSlice: false,
                       onViewTap: () {},
                       onDonutChartPointTap: (details) {},
-                      data:
-                          state.yearLevelBreakdown ??
-                          ReportMockData
-                              .yearLevelBreakdownData, // Use real data with fallback
+                      data: state.yearLevelBreakdown ?? [],
                       title: 'Year Level Breakdown',
                       radius: '90%',
                       innerRadius: '60%',
@@ -120,10 +108,7 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                   Expanded(
                     child: StackedBarWidget(
                       title: 'Student with most violation',
-                      data:
-                          state.studentWithMostViolations ??
-                          ReportMockData
-                              .studentViolationData, // Use real data with fallback
+                      data: state.studentWithMostViolations ?? [],
                       onViewTap: () {},
                       screenshotController:
                           widget.studentWithMostViolationsController,
@@ -136,8 +121,7 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                       title: 'City/Municipality Breakdown',
                       data:
                           state.cityBreakdown ??
-                          ReportMockData
-                              .cityBreakdownData, // Use real data with fallback
+                          [], // Use real data with fallback
                       onViewTap: () {},
                       screenshotController: widget.cityBreakdownController,
                     ),
@@ -156,7 +140,7 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                       showPercentageInSlice: false,
                       onViewTap: () {},
                       onDonutChartPointTap: (details) {},
-                      data: deptData, //MOCK
+                      data: deptData,
                       title: 'Vehicle Logs Distribution per College',
                       radius: '90%',
                       innerRadius: '60%',
@@ -176,7 +160,7 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                       data:
                           widget.summary.deptViolationData.isNotEmpty
                               ? widget.summary.deptViolationData
-                              : ReportMockData.vehicleLogsCollegeData,
+                              : [],
                       title: 'Violation Distribution per College',
                       radius: '90%',
                       innerRadius: '60%',
@@ -234,8 +218,7 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                       data:
                           state.logsData.isNotEmpty
                               ? state.logsData
-                              : ReportMockData
-                                  .vehicleLogsData, // fallback to mock
+                              : [], // fallback to mock
                       title: 'Fleet Logs for the last',
                       screenshotController: widget.fleetLogsController,
                     ),

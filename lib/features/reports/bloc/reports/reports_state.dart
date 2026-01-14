@@ -1,8 +1,11 @@
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard_state.dart';
+import 'package:cvms_desktop/features/reports/models/vehicle_logs_model.dart';
 import 'dart:typed_data';
 import 'package:equatable/equatable.dart';
 import '../../models/fleet_summary.dart';
+import '../../models/vehicle_profile.dart';
+import '../../models/violation_history_model.dart';
 
 class ReportsState extends Equatable {
   final bool showPdfPreview;
@@ -24,6 +27,13 @@ class ReportsState extends Equatable {
   final Uint8List? violationDistributionPerCollegeChartBytes;
   final Uint8List? top5ViolationByTypeChartBytes;
   final Uint8List? fleetLogsChartBytes;
+  final VehicleProfile? selectedVehicleProfile;
+  final List<ViolationHistoryEntry> pendingViolations;
+  final List<ChartDataModel>? violationsByType;
+  final List<ChartDataModel>? vehicleLogsForLast7Days;
+  final List<ViolationHistoryEntry>? violationHistory;
+  final List<VehicleLogsEntry>? vehicleLogs;
+
   const ReportsState({
     this.showPdfPreview = false,
     this.loading = false,
@@ -44,6 +54,12 @@ class ReportsState extends Equatable {
     this.violationDistributionPerCollegeChartBytes,
     this.top5ViolationByTypeChartBytes,
     this.fleetLogsChartBytes,
+    this.selectedVehicleProfile,
+    this.pendingViolations = const [],
+    this.violationsByType,
+    this.vehicleLogsForLast7Days,
+    this.violationHistory,
+    this.vehicleLogs,
   });
 
   ReportsState copyWith({
@@ -66,6 +82,12 @@ class ReportsState extends Equatable {
     Uint8List? violationDistributionPerCollegeChartBytes,
     Uint8List? top5ViolationByTypeChartBytes,
     Uint8List? fleetLogsChartBytes,
+    VehicleProfile? selectedVehicleProfile,
+    List<ViolationHistoryEntry>? pendingViolations,
+    List<ChartDataModel>? violationsByType,
+    List<ChartDataModel>? vehicleLogsForLast7Days,
+    List<ViolationHistoryEntry>? violationHistory,
+    List<VehicleLogsEntry>? vehicleLogs,
   }) {
     return ReportsState(
       showPdfPreview: showPdfPreview ?? this.showPdfPreview,
@@ -98,6 +120,14 @@ class ReportsState extends Equatable {
       top5ViolationByTypeChartBytes:
           top5ViolationByTypeChartBytes ?? this.top5ViolationByTypeChartBytes,
       fleetLogsChartBytes: fleetLogsChartBytes ?? this.fleetLogsChartBytes,
+      selectedVehicleProfile:
+          selectedVehicleProfile ?? this.selectedVehicleProfile,
+      pendingViolations: pendingViolations ?? this.pendingViolations,
+      violationsByType: violationsByType ?? this.violationsByType,
+      vehicleLogsForLast7Days:
+          vehicleLogsForLast7Days ?? this.vehicleLogsForLast7Days,
+      violationHistory: violationHistory ?? this.violationHistory,
+      vehicleLogs: vehicleLogs ?? this.vehicleLogs,
     );
   }
 
@@ -122,5 +152,11 @@ class ReportsState extends Equatable {
     violationDistributionPerCollegeChartBytes,
     top5ViolationByTypeChartBytes,
     fleetLogsChartBytes,
+    selectedVehicleProfile,
+    pendingViolations,
+    violationsByType,
+    vehicleLogsForLast7Days,
+    violationHistory,
+    vehicleLogs,
   ];
 }

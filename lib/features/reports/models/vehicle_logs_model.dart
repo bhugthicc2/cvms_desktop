@@ -24,7 +24,7 @@ class VehicleLogsEntry {
         timeIn: now.subtract(const Duration(hours: 4)),
         timeOut: now.subtract(const Duration(hours: 2)),
         durationMinutes: 120,
-        status: 'Completed',
+        status: 'offsite',
         updatedBy: 'John Doe',
       ),
       VehicleLogsEntry(
@@ -32,7 +32,7 @@ class VehicleLogsEntry {
         timeIn: now.subtract(const Duration(days: 1, hours: 3)),
         timeOut: now.subtract(const Duration(days: 1, hours: 1)),
         durationMinutes: 120,
-        status: 'Completed',
+        status: 'offsite',
         updatedBy: 'Jane Smith',
       ),
       VehicleLogsEntry(
@@ -40,7 +40,7 @@ class VehicleLogsEntry {
         timeIn: now.subtract(const Duration(days: 2, hours: 5)),
         timeOut: now.subtract(const Duration(days: 2, hours: 3)),
         durationMinutes: 120,
-        status: 'Completed',
+        status: 'offsite',
         updatedBy: 'Mike Johnson',
       ),
       VehicleLogsEntry(
@@ -48,7 +48,7 @@ class VehicleLogsEntry {
         timeIn: now.subtract(const Duration(days: 3, hours: 2)),
         timeOut: now.subtract(const Duration(days: 3, hours: 1)),
         durationMinutes: 60,
-        status: 'Completed',
+        status: 'offsite',
         updatedBy: 'Sarah Wilson',
       ),
       VehicleLogsEntry(
@@ -56,7 +56,7 @@ class VehicleLogsEntry {
         timeIn: now.subtract(const Duration(hours: 1)),
         timeOut: DateTime.now(), // Still active
         durationMinutes: 60,
-        status: 'Active',
+        status: 'onsite',
         updatedBy: 'Tom Brown',
       ),
       VehicleLogsEntry(
@@ -64,7 +64,7 @@ class VehicleLogsEntry {
         timeIn: now.subtract(const Duration(days: 4, hours: 6)),
         timeOut: now.subtract(const Duration(days: 4, hours: 4)),
         durationMinutes: 120,
-        status: 'Completed',
+        status: 'offsite',
         updatedBy: 'Emily Davis',
       ),
       VehicleLogsEntry(
@@ -72,7 +72,7 @@ class VehicleLogsEntry {
         timeIn: now.subtract(const Duration(days: 5, hours: 3)),
         timeOut: now.subtract(const Duration(days: 5, hours: 2)),
         durationMinutes: 60,
-        status: 'Completed',
+        status: 'offsite',
         updatedBy: 'Chris Martinez',
       ),
       VehicleLogsEntry(
@@ -80,7 +80,7 @@ class VehicleLogsEntry {
         timeIn: now.subtract(const Duration(days: 6, hours: 4)),
         timeOut: now.subtract(const Duration(days: 6, hours: 2)),
         durationMinutes: 120,
-        status: 'Completed',
+        status: 'offsite',
         updatedBy: 'Lisa Anderson',
       ),
     ];

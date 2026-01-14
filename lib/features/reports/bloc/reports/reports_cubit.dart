@@ -2,6 +2,7 @@ import 'package:cvms_desktop/features/reports/data/report_repository.dart';
 import 'package:cvms_desktop/features/dashboard/data/analytics_repository.dart';
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard_state.dart';
+import 'package:cvms_desktop/features/reports/models/vehicle_profile.dart';
 import 'dart:typed_data';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'reports_state.dart';
@@ -139,9 +140,71 @@ class ReportsCubit extends Cubit<ReportsState> {
     final vehicleId = _vehicleSuggestionToId[suggestion];
     if (vehicleId == null || vehicleId.isEmpty) return;
 
-    // Switch the UI to individual mode.
-    // Individual report loading can be added later without touching widgets.
-    setGlobalMode(false);
+    // Switch the UI to individual mode and set loading
+    emit(state.copyWith(isGlobalMode: false, loading: true, error: null));
+
+    try {
+      final profile = await _repo.fetchVehicleBySearchKey(vehicleId);
+      if (profile == null) {
+        emit(state.copyWith(loading: false, error: 'Vehicle not found'));
+        return;
+      }
+
+      final pendingViolations = await _repo.fetchPendingViolationsByVehicleId(
+        vehicleId,
+      );
+
+      final totalViolations = await _repo.fetchTotalViolationsByVehicleId(
+        vehicleId,
+      );
+
+      final totalEntriesExits = await _repo.fetchVehicleLogsByVehicleId(
+        vehicleId,
+      );
+
+      final vehicleLogsForLast7Days = await _repo
+          .fetchVehicleLogsByVehicleIdForLast7Days(vehicleId);
+
+      final vehicleLogs = await _repo.fetchVehicleLogsByVehicleId(vehicleId);
+
+      final violationsByType = await _repo.fetchViolationsByTypeByVehicleId(
+        vehicleId,
+      );
+
+      final violationHistory = await _repo.fetchViolationHistoryByVehicleId(
+        vehicleId,
+      );
+
+      final updatedProfile = VehicleProfile(
+        vehicleId: profile.vehicleId,
+        plateNumber: profile.plateNumber,
+        ownerName: profile.ownerName,
+        model: profile.model,
+        vehicleType: profile.vehicleType,
+        department: profile.department,
+        status: profile.status,
+        registeredDate: profile.registeredDate,
+        createdAt: profile.createdAt,
+        expiryDate: profile.expiryDate,
+        activeViolations: pendingViolations.length,
+        totalViolations: totalViolations,
+        totalEntriesExits: totalEntriesExits.length,
+      );
+
+      emit(
+        state.copyWith(
+          loading: false,
+          selectedVehicleProfile: updatedProfile,
+          pendingViolations: pendingViolations,
+          violationsByType: violationsByType,
+          vehicleLogsForLast7Days: vehicleLogsForLast7Days,
+          violationHistory: violationHistory,
+          vehicleLogs: vehicleLogs,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(loading: false, error: e.toString()));
+    }
   }
 
   Future<void> changeTimeRange(TimeRange timeRange) async {

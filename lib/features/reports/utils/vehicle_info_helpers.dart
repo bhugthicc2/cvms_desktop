@@ -18,9 +18,9 @@ class VehicleInfoHelpers {
       case 'red':
         return Colors.redAccent;
       case 'orange':
-        return Colors.orangeAccent;
+        return Colors.green;
       case 'blue':
-        return Colors.blueAccent;
+        return Colors.orangeAccent;
       default:
         return Colors.blueAccent;
     }

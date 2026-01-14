@@ -42,7 +42,6 @@ class _ReportHeaderSectionState extends State<ReportHeaderSection> {
   void _onSuggestionSelected(String suggestion) {
     _searchController.text = suggestion;
     context.read<ReportsCubit>().selectVehicleFromSearch(suggestion);
-    CustomSnackBar.showSuccess(context, 'Selected: $suggestion');
   }
 
   @override

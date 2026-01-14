@@ -3,6 +3,9 @@ import 'package:cvms_desktop/features/reports/widgets/datasource/vehicle_logs/ve
 import 'package:cvms_desktop/features/reports/widgets/tables/vehicle_logs/vehicle_logs_table_columns.dart';
 import 'package:cvms_desktop/core/widgets/table/custom_table.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cvms_desktop/features/reports/bloc/reports/reports_cubit.dart';
+import 'package:cvms_desktop/features/reports/bloc/reports/reports_state.dart';
 
 class VehicleLogsTable extends StatelessWidget {
   final bool istableHeaderDark;
@@ -15,16 +18,21 @@ class VehicleLogsTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get mock data
-    final vehicleLogsEntries = VehicleLogsEntry.getMockData();
+    return BlocBuilder<ReportsCubit, ReportsState>(
+      builder: (context, state) {
+        final vehicleLogsEntries = state.vehicleLogs ?? [];
 
-    return CustomTable(
-      isTableHeaderDark: istableHeaderDark,
-      allowSorting: allowSorting,
-      dataSource: VehicleLogsDataSource(vehicleLogsEntries: vehicleLogsEntries),
-      columns: VehicleLogsTableColumns.getColumns(
-        istableHeaderDark: istableHeaderDark,
-      ),
+        return CustomTable(
+          isTableHeaderDark: istableHeaderDark,
+          allowSorting: allowSorting,
+          dataSource: VehicleLogsDataSource(
+            vehicleLogsEntries: vehicleLogsEntries,
+          ),
+          columns: VehicleLogsTableColumns.getColumns(
+            istableHeaderDark: istableHeaderDark,
+          ),
+        );
+      },
     );
   }
 }

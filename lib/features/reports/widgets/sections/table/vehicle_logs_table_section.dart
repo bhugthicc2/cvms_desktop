@@ -21,7 +21,7 @@ class VehicleLogsTableSection extends StatelessWidget {
             AppSpacing.medium,
             0,
           ),
-          height: 400,
+          constraints: BoxConstraints(maxHeight: 400),
           decoration: cardDecoration(),
           child: Column(
             children: [

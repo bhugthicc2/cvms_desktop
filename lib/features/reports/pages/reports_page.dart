@@ -342,6 +342,10 @@ class _ReportsPageContentState extends State<_ReportsPageContent> {
                 child: VehicleLogsTableSection(isGlobal: isGlobal),
               ),
             ),
+          if (!isGlobal)
+            const SliverToBoxAdapter(
+              child: Spacing.vertical(size: AppSpacing.medium),
+            ),
         ],
       ),
     );

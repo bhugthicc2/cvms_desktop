@@ -146,8 +146,8 @@ class VehicleLogsDataSource extends DataGridSource {
       case 'status':
         final statusStr = cell.value.toString();
         final statusLower = statusStr.toLowerCase();
-        final bool isActive = statusLower == 'active';
-        final bool isCompleted = statusLower == 'completed';
+        final bool isActive = statusLower == 'onsite';
+        final bool isCompleted = statusLower == 'offsite';
 
         final Color badgeBg =
             isActive

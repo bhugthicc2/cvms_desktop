@@ -18,8 +18,8 @@ class VehicleLogsTableColumns {
         alignment: Alignment.centerLeft,
         istableHeaderDark: istableHeaderDark,
         name: 'logId',
-        label: 'ID',
-        width: 100,
+        label: 'LOG ID',
+        width: 200,
       ),
       TableColumnFactory.build(
         hoverScale: 1,

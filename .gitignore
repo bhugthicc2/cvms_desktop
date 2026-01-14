@@ -87,6 +87,7 @@ lib/firebase_options.dart
 firebase.json
 
 #structure related
+backup/
 keep_me_logged_docs.md
 app_structure.md
 lib/features/dashboard/feature-dashboard.md

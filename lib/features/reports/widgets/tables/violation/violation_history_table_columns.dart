@@ -18,7 +18,7 @@ class ViolationHistoryTableColumns {
         istableHeaderDark: istableHeaderDark,
         name: 'violationId',
         label: 'VIOLATION ID',
-        width: 120,
+        width: 200,
       ),
       TableColumnFactory.build(
         hoverScale: 1,

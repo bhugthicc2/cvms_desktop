@@ -1,61 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+import 'package:cvms_desktop/features/reports/bloc/reports/reports_cubit.dart';
+import 'package:cvms_desktop/features/reports/bloc/reports/reports_state.dart';
 import '../../../utils/mvp_progress_calculator.dart';
 import 'stats_card_section.dart';
 import '../vehicle_info_section.dart';
 
 /// Individual Stats and Info Section - Displays individual vehicle statistics and information including:
-/// - Days until expiration
-/// - Active violations
-/// - Total violations
-/// - Total entries/exits
-/// - Vehicle information panel with MVP progress
 class IndividualStatsAndInfoSection extends StatelessWidget {
   const IndividualStatsAndInfoSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final registeredDate = DateTime(2025, 5, 23);
-    final expiryDate = DateTime(2026, 12, 2);
-    final mvpProgress = MvpProgressCalculator.calculateProgress(
-      registeredDate: registeredDate,
-      expiryDate: expiryDate,
-    );
+    return BlocBuilder<ReportsCubit, ReportsState>(
+      builder: (context, state) {
+        final profile = state.selectedVehicleProfile;
+        final registeredDate = profile?.createdAt;
+        final expiryDate = profile?.expiryDate;
+        final mvpProgress = MvpProgressCalculator.calculateProgress(
+          registeredDate: registeredDate,
+          expiryDate: expiryDate,
+        );
 
-    return Row(
-      children: [
-        Expanded(
-          flex: 2,
-          child: const StatsCardSection(
-            statsCard1Label: 'Days Until Expiration',
-            statsCard1Value: 150,
-            statsCard2Label: 'Active Violations',
-            statsCard2Value: 22,
-            statsCard3Label: 'Total Violations',
-            statsCard3Value: 230,
-            statsCard4Label: 'Total Entries/Exits',
-            statsCard4Value: 540,
-          ),
-        ),
-        Spacing.horizontal(size: AppSpacing.medium),
-        Expanded(
-          flex: 2,
-          child: VehicleInfoSection(
-            title: 'Vehicle Information',
-            onViewTap: () {},
-            vehicleModel: 'Toyota Avanza',
-            plateNumber: 'WXY-9012',
-            vehicleType: 'Four-wheeled',
-            ownerName: 'Mila Hernandez',
-            department: 'CAF-SOE',
-            status: 'Offsite',
-            mvpProgress: mvpProgress,
-            mvpRegisteredDate: registeredDate,
-            mvpExpiryDate: expiryDate,
-          ),
-        ),
-      ],
+        return Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: StatsCardSection(
+                statsCard1Label: 'Days Until Expiration',
+                statsCard1Value:
+                    expiryDate != null
+                        ? expiryDate.difference(DateTime.now()).inDays
+                        : 0,
+                statsCard2Label: 'Active Violations',
+                statsCard2Value: profile?.activeViolations ?? 0,
+                statsCard3Label: 'Total Violations',
+                statsCard3Value: profile?.totalViolations ?? 0,
+                statsCard4Label: 'Total Entries/Exits',
+                statsCard4Value: profile?.totalEntriesExits ?? 0,
+              ),
+            ),
+            Spacing.horizontal(size: AppSpacing.medium),
+            Expanded(
+              flex: 2,
+              child: VehicleInfoSection(
+                title: 'Vehicle Information',
+                onViewTap: () {},
+                vehicleModel: profile?.model ?? '',
+                plateNumber: profile?.plateNumber ?? '',
+                vehicleType: profile?.vehicleType ?? '',
+                ownerName: profile?.ownerName ?? '',
+                department: profile?.department ?? '',
+                status: profile?.status ?? '',
+                mvpProgress: mvpProgress,
+                mvpRegisteredDate: registeredDate,
+                mvpExpiryDate: expiryDate,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
