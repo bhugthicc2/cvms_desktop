@@ -21,7 +21,7 @@ class VehicleEntry {
   final String licenseNumber;
   final String orNumber;
   final String crNumber;
-  final String status;
+  final String? status;
   final Timestamp? createdAt;
 
   VehicleEntry({
@@ -44,7 +44,7 @@ class VehicleEntry {
     required this.licenseNumber,
     required this.orNumber,
     required this.crNumber,
-    required this.status,
+    this.status,
     this.createdAt,
   });
 
@@ -144,7 +144,7 @@ class VehicleEntry {
       throw Exception('Invalid vehicle color: $vehicleColor');
     }
     // Status validation: allow empty string for new vehicles (status set when first log is created)
-    if (status.isNotEmpty && !inOptions('status', status)) {
+    if (status != null && !inOptions('status', status!)) {
       throw Exception('Invalid status: $status');
     }
     if (!inOptions('gender', gender)) {

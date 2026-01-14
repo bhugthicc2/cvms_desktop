@@ -53,10 +53,10 @@ class VehicleFormConfig {
     ],
     // Status options kept for validation of existing vehicles
     // Status is not shown in form - it's set automatically when vehicle has first log
-    'status': [
-      DropdownItem(value: 'onsite', label: 'Onsite'),
-      DropdownItem(value: 'offsite', label: 'Offsite'),
-    ],
+    // 'status': [
+    //   DropdownItem(value: 'onsite', label: 'Onsite'),
+    //   DropdownItem(value: 'offsite', label: 'Offsite'),
+    // ],
     'gender': [
       DropdownItem(value: 'Male', label: 'Male'),
       DropdownItem(value: 'Female', label: 'Female'),

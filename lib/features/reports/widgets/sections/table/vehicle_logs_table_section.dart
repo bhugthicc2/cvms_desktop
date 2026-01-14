@@ -2,6 +2,9 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/utils/card_decor.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cvms_desktop/features/reports/bloc/reports/reports_cubit.dart';
+import 'package:cvms_desktop/features/reports/bloc/reports/reports_state.dart';
 import 'report_table_header.dart';
 import '../../tables/vehicle_logs/vehicle_logs_table.dart';
 
@@ -21,19 +24,35 @@ class VehicleLogsTableSection extends StatelessWidget {
             AppSpacing.medium,
             0,
           ),
-          constraints: BoxConstraints(maxHeight: 400),
           decoration: cardDecoration(),
-          child: Column(
-            children: [
-              ReportTableHeader(tableTitle: 'Vehicle Logs', onTap: () {}),
-              Spacing.vertical(size: AppSpacing.medium),
-              Expanded(
-                child: const VehicleLogsTable(
-                  istableHeaderDark: false,
-                  allowSorting: true,
+          child: BlocBuilder<ReportsCubit, ReportsState>(
+            builder: (context, state) {
+              final logCount = state.vehicleLogs?.length ?? 0;
+              // Calculate height: header (60) + spacing (16) + rows (45px per row) + bottom padding (20)
+              final calculatedHeight = (96.0 + (logCount * 45.0)).clamp(
+                150.0,
+                600.0,
+              );
+
+              return SizedBox(
+                height:
+                    logCount > 0
+                        ? calculatedHeight
+                        : 400, //handle the height of empty state illustration
+                child: Column(
+                  children: [
+                    ReportTableHeader(tableTitle: 'Vehicle Logs', onTap: () {}),
+                    Spacing.vertical(size: AppSpacing.medium),
+                    Expanded(
+                      child: VehicleLogsTable(
+                        istableHeaderDark: false,
+                        allowSorting: true,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+              );
+            },
           ),
         )
         : SizedBox.shrink();

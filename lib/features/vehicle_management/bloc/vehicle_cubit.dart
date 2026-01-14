@@ -204,7 +204,7 @@ class VehicleCubit extends Cubit<VehicleState> {
                 e.licenseNumber.toLowerCase().contains(qLower) ||
                 e.orNumber.toLowerCase().contains(qLower) ||
                 e.crNumber.toLowerCase().contains(qLower) ||
-                e.status.toLowerCase().contains(qLower);
+                e.status!.toLowerCase().contains(qLower);
           }).toList();
     }
 

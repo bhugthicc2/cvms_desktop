@@ -345,9 +345,7 @@ class VehicleFormDialogState<T extends VehicleFormDialog> extends State<T> {
       licenseNumber: _controllers["licenseNumber"]!.text,
       orNumber: _controllers["orNumber"]!.text,
       crNumber: _controllers["crNumber"]!.text,
-      status:
-          widget.initialEntry?.status ??
-          '', // Empty for new vehicles, keep existing for edits
+
       gender: _dropdownValues["gender"] ?? '',
       yearLevel: _dropdownValues["yearLevel"] ?? '',
       block: _dropdownValues["block"] ?? '',
@@ -394,7 +392,13 @@ class VehicleFormDialogState<T extends VehicleFormDialog> extends State<T> {
     return CustomDialog(
       icon: PhosphorIconsBold.motorcycle,
       btnTxt: widget.initialEntry == null ? 'Save' : 'Update',
-      onSubmit: _isFormValid && _hasChanges ? () => _handleSave(context) : null,
+      onSubmit:
+          //_hasChanges ? () => _handleSave(context) : null,
+          //_isFormValid ? () => _handleSave(context) : null,
+          _isFormValid && _hasChanges ? () => _handleSave(context) : null,
+      // () {
+      //   _handleSave(context);
+      // },
       title: widget.title,
       height: screenHeight * 0.9,
       width: screenWidth * 0.6,
