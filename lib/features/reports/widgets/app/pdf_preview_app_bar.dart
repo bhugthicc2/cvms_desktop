@@ -11,7 +11,9 @@ class PdfPreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onPrintPressed;
   final VoidCallback onEditPressed;
   final VoidCallback toggleFitMode;
+  final VoidCallback? toggleChartTableMode;
   final bool isFitToWidth;
+  final bool isChart;
   final double kToolbarHeight;
   final String title;
   final List<BreadcrumbItem> breadcrumbs;
@@ -25,8 +27,10 @@ class PdfPreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.kToolbarHeight = 35,
     required this.onEditPressed,
     required this.toggleFitMode,
+    this.toggleChartTableMode,
     this.breadcrumbs = const [],
     required this.isFitToWidth,
+    required this.isChart,
   });
 
   @override
@@ -53,6 +57,46 @@ class PdfPreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: CustomIconButton(onTap: onBackPressed, icon: Icons.chevron_left),
 
       actions: [
+        if (toggleChartTableMode != null) ...[
+          Tooltip(
+            message: isChart ? 'Switch to Table View' : 'Switch to Chart View',
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    PhosphorIconsRegular.chartBar,
+                    size: 20,
+                    color: isChart ? AppColors.primary : AppColors.grey,
+                  ),
+                  const SizedBox(width: 4),
+                  Transform.scale(
+                    scaleY: 0.7, // reduce height
+                    scaleX: 0.7, // optional: keep proportions
+                    child: Switch(
+                      trackColor: WidgetStatePropertyAll(AppColors.greySurface),
+                      thumbColor: WidgetStatePropertyAll(AppColors.primary),
+                      trackOutlineColor: WidgetStatePropertyAll(
+                        Colors.transparent,
+                      ),
+                      value: isChart,
+                      onChanged: (_) => toggleChartTableMode!(),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    PhosphorIconsRegular.table,
+                    size: 20,
+                    color: !isChart ? AppColors.primary : AppColors.grey,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.medium),
+        ],
         CustomIconButton(
           onTap: toggleFitMode,
           icon:

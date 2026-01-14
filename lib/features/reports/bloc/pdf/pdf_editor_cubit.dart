@@ -29,6 +29,9 @@ class PdfEditorCubit extends Cubit<PdfEditorState> {
   final Uint8List? _top5ViolationByTypeChartBytes;
   final Uint8List? _fleetLogsChartBytes;
 
+  bool _isChart = true;
+  bool _isFitToWidth = true;
+
   PdfEditorCubit({
     FleetSummary? fleetSummary,
     List<ChartDataModel>? vehicleDistribution,
@@ -74,10 +77,23 @@ class PdfEditorCubit extends Cubit<PdfEditorState> {
     }
   }
 
+  void toggleChartTableMode() {
+    _isChart = !_isChart;
+    generatePdf();
+  }
+
+  void toggleFitMode() {
+    _isFitToWidth = !_isFitToWidth;
+  }
+
+  bool get isChart => _isChart;
+  bool get isFitToWidth => _isFitToWidth;
+
   Future<void> generatePdf() async {
     emit(PdfLoading());
     try {
       final bytes = await PdfReportBuilder.buildVehicleReport(
+        isChart: _isChart,
         globalData: {
           'fleetSummary': _fleetSummary,
           'vehicleDistribution': _vehicleDistribution,

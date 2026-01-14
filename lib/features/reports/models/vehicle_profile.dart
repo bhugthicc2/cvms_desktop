@@ -28,4 +28,6 @@ class VehicleProfile {
     this.totalViolations = 0,
     this.totalEntriesExits = 0,
   });
+
+  Null get schoolId => null;
 }

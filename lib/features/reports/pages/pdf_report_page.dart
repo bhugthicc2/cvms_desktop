@@ -129,19 +129,21 @@ class _PdfReportPageState extends State<PdfReportPage> {
                       onBackPressed: () {
                         widget.onBackPressed?.call();
                       },
-                      isFitToWidth: true, //todo
-                      toggleFitMode: () {
-                        //todo
-                      },
-                      onDownLoadPressed: () {
-                        context.read<PdfEditorCubit>().savePdfToFile();
-                      },
-                      onPrintPressed: () {
-                        context.read<PdfEditorCubit>().printPdf();
-                      },
-                      onEditPressed: () {
-                        context.read<PdfEditorCubit>().toggleEditMode();
-                      },
+                      onDownLoadPressed:
+                          () => context.read<PdfEditorCubit>().savePdfToFile(),
+                      onPrintPressed:
+                          () => context.read<PdfEditorCubit>().printPdf(),
+                      onEditPressed:
+                          () => context.read<PdfEditorCubit>().toggleEditMode(),
+                      toggleFitMode:
+                          () => context.read<PdfEditorCubit>().toggleFitMode(),
+                      toggleChartTableMode:
+                          () =>
+                              context
+                                  .read<PdfEditorCubit>()
+                                  .toggleChartTableMode(),
+                      isFitToWidth: context.read<PdfEditorCubit>().isFitToWidth,
+                      isChart: context.read<PdfEditorCubit>().isChart,
                     );
                   },
                 ),
