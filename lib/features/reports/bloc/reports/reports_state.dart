@@ -7,8 +7,10 @@ import '../../models/fleet_summary.dart';
 import '../../models/vehicle_profile.dart';
 import '../../models/violation_history_model.dart';
 
+enum ReportViewMode { global, individual, pdfPreview }
+
 class ReportsState extends Equatable {
-  final bool showPdfPreview;
+  final ReportViewMode viewMode;
   final bool loading;
   final String? error;
   final FleetSummary? fleetSummary;
@@ -35,7 +37,7 @@ class ReportsState extends Equatable {
   final List<VehicleLogsEntry>? vehicleLogs;
 
   const ReportsState({
-    this.showPdfPreview = false,
+    this.viewMode = ReportViewMode.global,
     this.loading = false,
     this.error,
     this.fleetSummary,
@@ -63,7 +65,7 @@ class ReportsState extends Equatable {
   });
 
   ReportsState copyWith({
-    bool? showPdfPreview,
+    ReportViewMode? viewMode,
     bool? loading,
     String? error,
     FleetSummary? fleetSummary,
@@ -90,7 +92,7 @@ class ReportsState extends Equatable {
     List<VehicleLogsEntry>? vehicleLogs,
   }) {
     return ReportsState(
-      showPdfPreview: showPdfPreview ?? this.showPdfPreview,
+      viewMode: viewMode ?? this.viewMode,
       loading: loading ?? this.loading,
       error: error ?? this.error,
       fleetSummary: fleetSummary ?? this.fleetSummary,
@@ -133,7 +135,7 @@ class ReportsState extends Equatable {
 
   @override
   List<Object?> get props => [
-    showPdfPreview,
+    viewMode,
     loading,
     error,
     fleetSummary,

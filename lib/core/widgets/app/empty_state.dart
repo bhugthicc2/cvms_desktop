@@ -49,7 +49,6 @@ class EmptyState extends StatelessWidget {
               renderCache: RenderCache.raster,
               lottieAnimation!,
               width: 280,
-              height: 280,
             ),
           ] else ...[
             SizedBox(

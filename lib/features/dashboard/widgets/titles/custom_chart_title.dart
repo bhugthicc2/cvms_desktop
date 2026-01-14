@@ -3,12 +3,14 @@ import 'package:cvms_desktop/features/dashboard/widgets/button/custom_view_butto
 import 'package:flutter/material.dart';
 
 class CustomChartTitle extends StatelessWidget {
-  final VoidCallback onViewTap;
+  final VoidCallback? onViewTap;
   final String title;
+  final bool showViewBtn;
   const CustomChartTitle({
     super.key,
     required this.title,
-    required this.onViewTap,
+    this.onViewTap,
+    this.showViewBtn = true,
   });
 
   @override
@@ -24,7 +26,7 @@ class CustomChartTitle extends StatelessWidget {
           ),
         ),
         Spacer(),
-        CustomViewButton(onTap: onViewTap),
+        showViewBtn ? CustomViewButton(onTap: onViewTap!) : SizedBox.shrink(),
       ],
     );
   }

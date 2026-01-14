@@ -10,8 +10,8 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const CVMSApp());
   initializeWindowProperties(
-    initialSize: const Size(1280, 720),
-    minSize: const Size(1280, 720),
+    initialSize: const Size(1440, 720),
+    minSize: const Size(1440, 720),
     alignment: Alignment.center,
   );
 }

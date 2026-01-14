@@ -1,3 +1,6 @@
+import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/reports/widgets/app/pdf_preview_app_bar.dart';
 import 'package:cvms_desktop/features/reports/widgets/editor/pdf_editor_widget.dart';
 import 'package:cvms_desktop/features/reports/bloc/pdf/pdf_editor_cubit.dart';
@@ -153,13 +156,34 @@ class _PdfReportPageState extends State<PdfReportPage> {
 
   Widget _buildBody(PdfEditorState state) {
     if (state is PdfLoading) {
-      return Center(
-        child: Lottie.asset(
-          renderCache: RenderCache.raster,
-          'assets/anim/loading_anim.json',
-          width: 200,
-          height: 200,
-        ),
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: Lottie.asset(
+              renderCache: RenderCache.raster,
+              'assets/anim/report_loadin_anim.json',
+              width: 280,
+            ),
+          ),
+          Spacing.vertical(size: AppSpacing.small),
+          Text(
+            'Loading...',
+            style: TextStyle(
+              color: AppColors.black,
+              fontWeight: FontWeight.w600,
+              fontSize: AppFontSizes.large,
+            ),
+          ),
+          Text(
+            'Please wait while we generate you report.',
+            style: TextStyle(
+              color: AppColors.black,
+              fontSize: AppFontSizes.medium,
+            ),
+          ),
+        ],
       );
     }
 

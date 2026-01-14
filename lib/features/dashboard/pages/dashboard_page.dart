@@ -13,10 +13,10 @@ import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring
 import 'package:cvms_desktop/features/vehicle_monitoring/data/vehicle_monitoring_repository.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard_state.dart';
 import 'package:cvms_desktop/features/dashboard/data/firestore_analytics_repository.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/charts/bar_chart_widget.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/charts/donut_chart_widget.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/charts/line_chart_widget.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/charts/stacked_bar_widget.dart';
+import 'package:cvms_desktop/core/widgets/charts/bar_chart_widget.dart';
+import 'package:cvms_desktop/core/widgets/charts/donut_chart_widget.dart';
+import 'package:cvms_desktop/core/widgets/charts/line_chart_widget.dart';
+import 'package:cvms_desktop/core/widgets/charts/stacked_bar_widget.dart';
 import 'package:cvms_desktop/features/dashboard/extensions/time_range_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

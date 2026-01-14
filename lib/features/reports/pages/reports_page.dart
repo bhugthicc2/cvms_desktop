@@ -1,4 +1,9 @@
+//ISSUE:
+// StateError (Bad state: Cannot emit new states after calling close)
+// happens during switching screens when the reports page is on loading state
+
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/utils/card_decor.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
@@ -174,13 +179,34 @@ class _ReportsPageContentState extends State<_ReportsPageContent> {
       body: BlocBuilder<ReportsCubit, ReportsState>(
         builder: (context, state) {
           if (state.loading) {
-            return Center(
-              child: Lottie.asset(
-                renderCache: RenderCache.raster,
-                'assets/anim/loading_anim.json',
-                width: 200,
-                height: 200,
-              ),
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Center(
+                  child: Lottie.asset(
+                    renderCache: RenderCache.raster,
+                    'assets/anim/report_loadin_anim.json',
+                    width: 280,
+                  ),
+                ),
+                Spacing.vertical(size: AppSpacing.small),
+                Text(
+                  'Loading...',
+                  style: TextStyle(
+                    color: AppColors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: AppFontSizes.large,
+                  ),
+                ),
+                Text(
+                  'Please wait while we prepare your report data.',
+                  style: TextStyle(
+                    color: AppColors.black,
+                    fontSize: AppFontSizes.medium,
+                  ),
+                ),
+              ],
             );
           }
 
@@ -203,7 +229,7 @@ class _ReportsPageContentState extends State<_ReportsPageContent> {
             );
           }
 
-          return state.showPdfPreview
+          return state.viewMode == ReportViewMode.pdfPreview
               ? Container(
                 decoration: cardDecoration(),
                 child: PdfReportPage(
@@ -239,7 +265,7 @@ class _ReportsPageContentState extends State<_ReportsPageContent> {
   }
 
   Widget _buildMainLayout(BuildContext context, ReportsState state) {
-    final isGlobal = state.isGlobalMode;
+    final isGlobal = state.viewMode == ReportViewMode.global;
     final summary = state.fleetSummary;
 
     return Padding(
@@ -262,8 +288,7 @@ class _ReportsPageContentState extends State<_ReportsPageContent> {
                   _showDateFilterDialog(context);
                 },
                 onBackButtonClicked: () {
-                  context.read<ReportsCubit>().setGlobalMode(true);
-
+                  context.read<ReportsCubit>().navigateToGlobal();
                   debugPrint('Back button clicked');
                 },
                 onExportPDF: () => _handleExportPdf(context),

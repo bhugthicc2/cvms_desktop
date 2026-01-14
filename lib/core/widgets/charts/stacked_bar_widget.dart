@@ -1,9 +1,13 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/app/empty_state.dart';
+import 'package:cvms_desktop/core/widgets/charts/chart_empty_state.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/titles/custom_chart_title.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import '../../models/chart_data_model.dart';
+import '../../../features/dashboard/models/chart_data_model.dart';
 
 class StackedBarWidget extends StatelessWidget {
   final List<ChartDataModel> data;
@@ -27,6 +31,7 @@ class StackedBarWidget extends StatelessWidget {
     if (data.isEmpty) {
       return Container(
         margin: EdgeInsets.zero,
+        padding: EdgeInsets.all(AppSpacing.medium),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(10),
@@ -38,7 +43,15 @@ class StackedBarWidget extends StatelessWidget {
             ),
           ],
         ),
-        child: const Center(child: Text('No data available')),
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: CustomChartTitle(title: title, showViewBtn: false),
+            ),
+            ChartEmptyState(),
+          ],
+        ),
       );
     }
 

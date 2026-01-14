@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:cvms_desktop/features/reports/data/report_repository.dart';
 import 'package:cvms_desktop/features/dashboard/data/analytics_repository.dart';
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard_state.dart';
 import 'package:cvms_desktop/features/reports/models/vehicle_profile.dart';
+import 'package:cvms_desktop/features/reports/models/violation_history_model.dart';
+import 'package:cvms_desktop/features/reports/models/vehicle_logs_model.dart';
+import 'package:cvms_desktop/features/reports/models/fleet_summary.dart';
 import 'dart:typed_data';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'reports_state.dart';
@@ -13,34 +18,86 @@ class ReportsCubit extends Cubit<ReportsState> {
 
   final Map<String, String> _vehicleSuggestionToId = {};
 
+  // Cache management to prevent unnecessary reloads
+  FleetSummary? _cachedGlobalSummary;
+  List<ChartDataModel>? _cachedVehicleDistribution;
+  List<ChartDataModel>? _cachedYearLevelBreakdown;
+  List<ChartDataModel>? _cachedCityBreakdown;
+  List<ChartDataModel>? _cachedStudentWithMostViolations;
+
+  // Operation cancellation to prevent StateError
+  StreamSubscription? _currentOperation;
+
   ReportsCubit({required AnalyticsRepository analyticsRepo})
     : _analyticsRepo = analyticsRepo,
-      super(const ReportsState(isGlobalMode: true)) {
-    loadGlobalReport(); // Auto-load on init
+      super(const ReportsState(viewMode: ReportViewMode.global)) {
+    _loadGlobalReportIfNeeded(); // Smart load - only if not cached
   }
 
-  Future<void> loadGlobalReport() async {
+  // Smart loading - only fetch if not cached
+  Future<void> _loadGlobalReportIfNeeded() async {
+    if (_cachedGlobalSummary != null && _cachedVehicleDistribution != null) {
+      // Data already cached, just update view mode
+      emit(
+        state.copyWith(
+          fleetSummary: _cachedGlobalSummary,
+          vehicleDistribution: _cachedVehicleDistribution,
+          yearLevelBreakdown: _cachedYearLevelBreakdown,
+          cityBreakdown: _cachedCityBreakdown,
+          studentWithMostViolations: _cachedStudentWithMostViolations,
+        ),
+      );
+      return;
+    }
+
+    await _loadGlobalReport();
+  }
+
+  // Internal loading method with cancellation support
+  Future<void> _loadGlobalReport() async {
     if (isClosed) return;
+
+    // Cancel any ongoing operation
+    await _currentOperation?.cancel();
+
     emit(state.copyWith(loading: true, error: null));
+
     try {
       final summary = await _repo.fetchFleetSummary();
+
+      // Check if closed after async operation
+      if (isClosed) return;
 
       // Fetch real data for charts
       final vehicleDistribution =
           await _repo.fetchVehicleDistributionByCollege();
+      if (isClosed) return;
+
       final yearLevelBreakdown = await _repo.fetchYearLevelBreakdown();
+      if (isClosed) return;
+
       final cityBreakdown = await _repo.fetchCityBreakdown();
+      if (isClosed) return;
+
       final studentWithMostViolations =
           await _repo.fetchStudentWithMostViolations();
+      if (isClosed) return;
 
       final trendData = await _fetchTrendData(state.selectedTimeRange);
+      if (isClosed) return;
+
+      // Cache the data
+      _cachedGlobalSummary = summary;
+      _cachedVehicleDistribution = vehicleDistribution;
+      _cachedYearLevelBreakdown = yearLevelBreakdown;
+      _cachedCityBreakdown = cityBreakdown;
+      _cachedStudentWithMostViolations = studentWithMostViolations;
 
       emit(
         state.copyWith(
           fleetSummary: summary,
           logsData: trendData,
           loading: false,
-          isGlobalMode: true, // Ensure global on load
           vehicleDistribution: vehicleDistribution,
           yearLevelBreakdown: yearLevelBreakdown,
           cityBreakdown: cityBreakdown,
@@ -48,14 +105,35 @@ class ReportsCubit extends Cubit<ReportsState> {
         ),
       );
     } catch (e) {
+      if (isClosed) return;
       emit(state.copyWith(loading: false, error: e.toString()));
     }
   }
 
-  void setGlobalMode(bool mode) {
+  // Public method for external calls (backward compatibility)
+  Future<void> loadGlobalReport() async {
+    await _loadGlobalReport();
+  }
+
+  void setViewMode(ReportViewMode mode) {
     if (isClosed) return;
-    emit(state.copyWith(isGlobalMode: mode));
-    if (mode) loadGlobalReport(); // Reload data on global enter
+    emit(state.copyWith(viewMode: mode));
+  }
+
+  // Backward compatibility method
+  void setGlobalMode(bool mode) {
+    if (mode) {
+      navigateToGlobal();
+    } else {
+      setViewMode(ReportViewMode.individual);
+    }
+  }
+
+  // Backward compatibility getter
+  //bool get showPdfPreview => state.viewMode == ReportViewMode.pdfPreview;
+
+  void navigateToGlobal() {
+    setViewMode(ReportViewMode.global);
   }
 
   void showPdfPreview({
@@ -68,10 +146,33 @@ class ReportsCubit extends Cubit<ReportsState> {
     Uint8List? top5ViolationByTypeChartBytes,
     Uint8List? fleetLogsChartBytes,
   }) {
+    enterPdfPreview(
+      vehicleDistributionChartBytes: vehicleDistributionChartBytes,
+      yearLevelBreakdownChartBytes: yearLevelBreakdownChartBytes,
+      studentwithMostViolationChartBytes: studentwithMostViolationChartBytes,
+      cityBreakdownChartBytes: cityBreakdownChartBytes,
+      vehicleLogsDistributionChartBytes: vehicleLogsDistributionChartBytes,
+      violationDistributionPerCollegeChartBytes:
+          violationDistributionPerCollegeChartBytes,
+      top5ViolationByTypeChartBytes: top5ViolationByTypeChartBytes,
+      fleetLogsChartBytes: fleetLogsChartBytes,
+    );
+  }
+
+  void enterPdfPreview({
+    Uint8List? vehicleDistributionChartBytes,
+    Uint8List? yearLevelBreakdownChartBytes,
+    Uint8List? studentwithMostViolationChartBytes,
+    Uint8List? cityBreakdownChartBytes,
+    Uint8List? vehicleLogsDistributionChartBytes,
+    Uint8List? violationDistributionPerCollegeChartBytes,
+    Uint8List? top5ViolationByTypeChartBytes,
+    Uint8List? fleetLogsChartBytes,
+  }) {
     if (isClosed) return;
     emit(
       state.copyWith(
-        showPdfPreview: true,
+        viewMode: ReportViewMode.pdfPreview,
         vehicleDistributionChartBytes: vehicleDistributionChartBytes,
         yearLevelBreakdownChartBytes: yearLevelBreakdownChartBytes,
         studentwithMostViolationChartBytes: studentwithMostViolationChartBytes,
@@ -87,12 +188,16 @@ class ReportsCubit extends Cubit<ReportsState> {
 
   void hidePdfPreview() {
     if (isClosed) return;
-    emit(state.copyWith(showPdfPreview: false));
+    emit(state.copyWith(viewMode: ReportViewMode.global));
   }
 
   void togglePdfPreview() {
     if (isClosed) return;
-    emit(state.copyWith(showPdfPreview: !state.showPdfPreview));
+    final newMode =
+        state.viewMode == ReportViewMode.pdfPreview
+            ? ReportViewMode.global
+            : ReportViewMode.pdfPreview;
+    emit(state.copyWith(viewMode: newMode));
   }
 
   void setLoading(bool loading) {
@@ -140,40 +245,45 @@ class ReportsCubit extends Cubit<ReportsState> {
     final vehicleId = _vehicleSuggestionToId[suggestion];
     if (vehicleId == null || vehicleId.isEmpty) return;
 
-    // Switch the UI to individual mode and set loading
-    emit(state.copyWith(isGlobalMode: false, loading: true, error: null));
+    // Cancel any ongoing operation
+    await _currentOperation?.cancel();
+
+    // Switch to individual mode and set loading
+    emit(
+      state.copyWith(
+        viewMode: ReportViewMode.individual,
+        loading: true,
+        error: null,
+      ),
+    );
 
     try {
       final profile = await _repo.fetchVehicleBySearchKey(vehicleId);
+      if (isClosed) return;
+
       if (profile == null) {
         emit(state.copyWith(loading: false, error: 'Vehicle not found'));
         return;
       }
 
-      final pendingViolations = await _repo.fetchPendingViolationsByVehicleId(
-        vehicleId,
-      );
+      // Batch fetch all vehicle data with proper cancellation checks
+      final results = await Future.wait([
+        _repo.fetchPendingViolationsByVehicleId(vehicleId),
+        _repo.fetchTotalViolationsByVehicleId(vehicleId),
+        _repo.fetchVehicleLogsByVehicleId(vehicleId),
+        _repo.fetchVehicleLogsByVehicleIdForLast7Days(vehicleId),
+        _repo.fetchViolationsByTypeByVehicleId(vehicleId),
+        _repo.fetchViolationHistoryByVehicleId(vehicleId),
+      ]);
 
-      final totalViolations = await _repo.fetchTotalViolationsByVehicleId(
-        vehicleId,
-      );
+      if (isClosed) return;
 
-      final totalEntriesExits = await _repo.fetchVehicleLogsByVehicleId(
-        vehicleId,
-      );
-
-      final vehicleLogsForLast7Days = await _repo
-          .fetchVehicleLogsByVehicleIdForLast7Days(vehicleId);
-
-      final vehicleLogs = await _repo.fetchVehicleLogsByVehicleId(vehicleId);
-
-      final violationsByType = await _repo.fetchViolationsByTypeByVehicleId(
-        vehicleId,
-      );
-
-      final violationHistory = await _repo.fetchViolationHistoryByVehicleId(
-        vehicleId,
-      );
+      final pendingViolations = results[0] as List<ViolationHistoryEntry>;
+      final totalViolations = results[1] as int;
+      final totalEntriesExits = results[2] as List<VehicleLogsEntry>;
+      final vehicleLogsForLast7Days = results[3] as List<ChartDataModel>;
+      final violationsByType = results[4] as List<ChartDataModel>;
+      final violationHistory = results[5] as List<ViolationHistoryEntry>;
 
       final updatedProfile = VehicleProfile(
         vehicleId: profile.vehicleId,
@@ -199,10 +309,11 @@ class ReportsCubit extends Cubit<ReportsState> {
           violationsByType: violationsByType,
           vehicleLogsForLast7Days: vehicleLogsForLast7Days,
           violationHistory: violationHistory,
-          vehicleLogs: vehicleLogs,
+          vehicleLogs: totalEntriesExits,
         ),
       );
     } catch (e) {
+      if (isClosed) return;
       emit(state.copyWith(loading: false, error: e.toString()));
     }
   }
@@ -231,5 +342,21 @@ class ReportsCubit extends Cubit<ReportsState> {
       case TimeRange.year:
         return await _analyticsRepo.fetchYearlyTrend();
     }
+  }
+
+  @override
+  Future<void> close() {
+    // Cancel any ongoing operations
+    _currentOperation?.cancel();
+
+    // Clear caches
+    _vehicleSuggestionToId.clear();
+    _cachedGlobalSummary = null;
+    _cachedVehicleDistribution = null;
+    _cachedYearLevelBreakdown = null;
+    _cachedCityBreakdown = null;
+    _cachedStudentWithMostViolations = null;
+
+    return super.close();
   }
 }

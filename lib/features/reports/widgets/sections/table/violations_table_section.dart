@@ -38,7 +38,7 @@ class ViolationsTableSection extends StatelessWidget {
                 height:
                     violationCount > 0
                         ? calculatedHeight
-                        : 400, //handle the height of empty state illustration
+                        : 450, //handle the height of empty state illustration
                 child: Column(
                   children: [
                     ReportTableHeader(

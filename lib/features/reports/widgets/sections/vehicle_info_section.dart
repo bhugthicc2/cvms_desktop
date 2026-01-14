@@ -275,7 +275,10 @@ class _VehicleInfoSectionState extends State<VehicleInfoSection>
                                     borderRadius: BorderRadius.circular(999),
                                   ),
                                   child: CustomText(
-                                    text: widget.status,
+                                    text:
+                                        widget.status.isEmpty
+                                            ? 'No logs yet.'
+                                            : widget.status,
                                     fontSize: 12,
                                     color: AppColors.white,
                                     fontWeight: FontWeight.bold,

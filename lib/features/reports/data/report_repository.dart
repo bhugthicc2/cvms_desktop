@@ -10,6 +10,44 @@ import '../models/violation_history_model.dart';
 class ReportRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  // Cache for vehicle data during request lifecycle to avoid duplicate fetches
+  Map<String, Map<String, dynamic>>? _vehicleCache;
+
+  // Initialize vehicle cache for batch operations
+  Future<void> _initializeVehicleCache(Set<String> vehicleIds) async {
+    if (vehicleIds.isEmpty) return;
+
+    _vehicleCache = {};
+
+    // Batch fetch vehicles in chunks of 10 (Firestore limit)
+    final chunks = <List<String>>[];
+    for (int i = 0; i < vehicleIds.length; i += 10) {
+      final end = (i + 10 < vehicleIds.length) ? i + 10 : vehicleIds.length;
+      chunks.add(vehicleIds.skip(i).take(end - i).toList());
+    }
+
+    for (final chunk in chunks) {
+      try {
+        final snapshot =
+            await _firestore
+                .collection('vehicles')
+                .where(FieldPath.documentId, whereIn: chunk)
+                .get();
+
+        for (final doc in snapshot.docs) {
+          _vehicleCache![doc.id] = doc.data();
+        }
+      } catch (e) {
+        // Continue with other chunks if one fails
+      }
+    }
+  }
+
+  // Get vehicle data from cache or fetch individually
+  Map<String, dynamic>? _getVehicleData(String vehicleId) {
+    return _vehicleCache?[vehicleId];
+  }
+
   Future<List<VehicleSearchResult>> searchVehicles({
     required String query,
     int limit = 10,
@@ -103,29 +141,34 @@ class ReportRepository {
     final end = endDate ?? now;
     final start = startDate ?? now.subtract(const Duration(days: 7));
 
-    // Total Fleet Violations & Active Fleet Violations
-    final violations = await _getViolationsInRange(start, end);
+    // PARALLELIZE independent Firestore calls to reduce total wait time
+    final futures = await Future.wait([
+      _getViolationsInRange(start, end),
+      _getTotalVehicles(),
+      _getLogsInRange(start, end),
+      _calculateViolationTrend(start),
+    ]);
+
+    final violations = futures[0] as List<QueryDocumentSnapshot>;
+    final totalVehicles = futures[1] as int;
+    final logs = futures[2] as List<QueryDocumentSnapshot>;
+    final violationTrendPercent = futures[3] as double;
+
     final totalViolations = violations.length;
     final activeViolations = totalViolations;
-
-    // Top 5 Violations by Type
-    final topViolationTypes = _calculateTopViolationTypes(violations);
-
-    // Total Vehicles in Fleet
-    final totalVehicles = await _getTotalVehicles();
-
-    // Total Entries/Exits (Vehicle Logs)
-    final logs = await _getLogsInRange(start, end);
     final totalEntriesExits = logs.length * 2;
 
-    // Violation Trend Calculation
-    final violationTrendPercent = await _calculateViolationTrend(start);
+    // Top 5 Violations by Type (synchronous calculation)
+    final topViolationTypes = _calculateTopViolationTypes(violations);
 
-    // Vehicle Logs per College Chart
-    final departmentLogData = await _groupLogsByDepartment(logs);
+    // PARALLELIZE department grouping operations
+    final departmentFutures = await Future.wait([
+      _groupLogsByDepartment(logs),
+      _groupViolationsByDepartment(violations),
+    ]);
 
-    // Violation Distribution per College Chart
-    final deptViolationData = await _groupViolationsByDepartment(violations);
+    final departmentLogData = departmentFutures[0];
+    final deptViolationData = departmentFutures[1];
 
     return FleetSummary(
       totalViolations: totalViolations,
@@ -276,26 +319,34 @@ class ReportRepository {
       final violationsSnapshot =
           await _firestore.collection('violations').get();
 
-      // Group violations by vehicle owner
-      final Map<String, int> studentViolationCounts = {};
+      // Collect all unique vehicle IDs
+      final Set<String> vehicleIds = {};
+      final Map<String, int> violationCountsByVehicle = {};
 
       for (final violationDoc in violationsSnapshot.docs) {
         final violationData = violationDoc.data() as Map<String, dynamic>?;
         final vehicleId = violationData?['vehicleId'] as String?;
 
-        if (vehicleId == null) continue;
+        if (vehicleId != null) {
+          vehicleIds.add(vehicleId);
+          violationCountsByVehicle[vehicleId] =
+              (violationCountsByVehicle[vehicleId] ?? 0) + 1;
+        }
+      }
 
-        // Get vehicle details to find owner
-        final vehicleDoc =
-            await _firestore.collection('vehicles').doc(vehicleId).get();
-        if (!vehicleDoc.exists) continue;
+      // BATCH FETCH all vehicles at once to eliminate N+1 queries
+      await _initializeVehicleCache(vehicleIds);
 
-        final vehicleData = vehicleDoc.data();
-        final ownerName = vehicleData?['ownerName'] as String? ?? 'Unknown';
+      // Group violations by vehicle owner using cached data
+      final Map<String, int> studentViolationCounts = {};
 
-        // Increment violation count for this owner
-        studentViolationCounts[ownerName] =
-            (studentViolationCounts[ownerName] ?? 0) + 1;
+      for (final entry in violationCountsByVehicle.entries) {
+        final vehicleData = _getVehicleData(entry.key);
+        if (vehicleData != null) {
+          final ownerName = vehicleData['ownerName'] as String? ?? 'Unknown';
+          studentViolationCounts[ownerName] =
+              (studentViolationCounts[ownerName] ?? 0) + entry.value;
+        }
       }
 
       return _createChartDataFromCounts(studentViolationCounts);
@@ -343,24 +394,36 @@ class ReportRepository {
   }
 
   // SHARED HELPER - Groups items by department for charts
-
+  // OPTIMIZED: Uses batch fetching to eliminate N+1 queries
   Future<List<ChartDataModel>> _groupItemsByDepartment(
     List<QueryDocumentSnapshot> items,
   ) async {
     final Map<String, int> deptCounts = {};
 
+    // Collect all unique vehicle IDs
+    final Set<String> vehicleIds = {};
+    final Map<String, int> itemCountsByVehicle = {};
+
     for (final itemDoc in items) {
       final data = itemDoc.data() as Map<String, dynamic>?;
       final vehicleId = data?['vehicleId'] as String?;
 
-      if (vehicleId == null) continue;
+      if (vehicleId != null) {
+        vehicleIds.add(vehicleId);
+        itemCountsByVehicle[vehicleId] =
+            (itemCountsByVehicle[vehicleId] ?? 0) + 1;
+      }
+    }
 
-      final vehicleDoc =
-          await _firestore.collection('vehicles').doc(vehicleId).get();
-      if (vehicleDoc.exists) {
-        final vehicleData = vehicleDoc.data();
-        final dept = vehicleData?['department'] as String? ?? 'Unknown';
-        deptCounts[dept] = (deptCounts[dept] ?? 0) + 1;
+    // BATCH FETCH all vehicles at once
+    await _initializeVehicleCache(vehicleIds);
+
+    // Group by department using cached vehicle data
+    for (final entry in itemCountsByVehicle.entries) {
+      final vehicleData = _getVehicleData(entry.key);
+      if (vehicleData != null) {
+        final dept = vehicleData['department'] as String? ?? 'Unknown';
+        deptCounts[dept] = (deptCounts[dept] ?? 0) + entry.value;
       }
     }
 
