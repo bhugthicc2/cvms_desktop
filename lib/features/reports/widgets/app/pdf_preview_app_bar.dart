@@ -97,28 +97,40 @@ class PdfPreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           const SizedBox(width: AppSpacing.medium),
         ],
-        CustomIconButton(
-          onTap: toggleFitMode,
-          icon:
-              isFitToWidth
-                  ? PhosphorIconsRegular.arrowsOut
-                  : PhosphorIconsRegular.arrowsIn,
+        Tooltip(
+          message: 'Toggle fit to width',
+          child: CustomIconButton(
+            onTap: toggleFitMode,
+            icon:
+                isFitToWidth
+                    ? PhosphorIconsRegular.arrowsOut
+                    : PhosphorIconsRegular.arrowsIn,
+          ),
         ),
         const SizedBox(width: AppSpacing.medium),
-        CustomIconButton(
-          onTap: onEditPressed,
-          icon: PhosphorIconsRegular.penNib,
+        Tooltip(
+          message: 'Edit PDF Report Templte',
+          child: CustomIconButton(
+            onTap: onEditPressed,
+            icon: PhosphorIconsRegular.penNib,
+          ),
         ),
         const SizedBox(width: AppSpacing.medium),
-        CustomIconButton(
-          onTap: onDownLoadPressed,
-          icon: PhosphorIconsRegular.download,
+        Tooltip(
+          message: 'Save/Download report',
+          child: CustomIconButton(
+            onTap: onDownLoadPressed,
+            icon: PhosphorIconsRegular.download,
+          ),
         ),
 
         const SizedBox(width: AppSpacing.medium),
-        CustomIconButton(
-          onTap: onPrintPressed,
-          icon: PhosphorIconsRegular.printer,
+        Tooltip(
+          message: 'Print report',
+          child: CustomIconButton(
+            onTap: onPrintPressed,
+            icon: PhosphorIconsRegular.printer,
+          ),
         ),
         const SizedBox(width: AppSpacing.medium),
       ],
