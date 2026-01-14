@@ -92,6 +92,7 @@ class ReportRepository {
 
     return resultsById.values.take(limit).toList();
   }
+  // -----------GLOBAL----------------
 
   // MAIN FLEET SUMMARY - Orchestrates all data
   Future<FleetSummary> fetchFleetSummary({
@@ -367,6 +368,8 @@ class ReportRepository {
   }
 
   // CHART DATA HELPER - Creates chart data from department counts
+
+  // -----------INDIVIDUAL----------------
 
   List<ChartDataModel> _createChartDataFromCounts(Map<String, int> counts) {
     final sortedEntries =

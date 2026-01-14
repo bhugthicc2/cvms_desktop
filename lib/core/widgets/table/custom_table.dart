@@ -157,6 +157,7 @@ class _CustomTableState extends State<CustomTable> {
                       ),
                     )
                     : EmptyState(
+                      lottieAnimation: 'assets/anim/empty_state_anim.json',
                       type:
                           widget.hasSearchQuery
                               ? EmptyStateType.noSearchResults

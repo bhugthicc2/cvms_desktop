@@ -3,6 +3,7 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lottie/lottie.dart';
 import '../../theme/app_colors.dart';
 
 enum EmptyStateType {
@@ -21,6 +22,7 @@ class EmptyState extends StatelessWidget {
   final String? actionText;
   final VoidCallback? onActionPressed;
   final String? customIllustration;
+  final String? lottieAnimation;
 
   const EmptyState({
     super.key,
@@ -30,6 +32,7 @@ class EmptyState extends StatelessWidget {
     this.actionText,
     this.onActionPressed,
     this.customIllustration,
+    this.lottieAnimation,
   });
 
   @override
@@ -41,13 +44,22 @@ class EmptyState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            width: 210,
-            height: 210,
-            child: SvgPicture.asset(
-              customIllustration ?? config.customIllustration,
+          if (lottieAnimation != null) ...[
+            Lottie.asset(
+              renderCache: RenderCache.raster,
+              lottieAnimation!,
+              width: 280,
+              height: 280,
             ),
-          ),
+          ] else ...[
+            SizedBox(
+              width: 210,
+              height: 210,
+              child: SvgPicture.asset(
+                customIllustration ?? config.customIllustration,
+              ),
+            ),
+          ],
 
           Spacing.horizontal(size: AppSpacing.large),
           Text(
@@ -125,9 +137,9 @@ class EmptyState extends StatelessWidget {
       case EmptyStateType.loading:
         return _EmptyStateConfig(
           customIllustration: 'assets/images/loading.svg',
-
           title: 'Loading...',
           subtitle: 'Please wait while we fetch the data.',
+          lottieAnimation: 'assets/anim/loading_anim.json',
         );
 
       case EmptyStateType.noVehicles:
@@ -150,10 +162,12 @@ class _EmptyStateConfig {
   final String customIllustration;
   final String title;
   final String subtitle;
+  final String? lottieAnimation;
 
   _EmptyStateConfig({
     required this.customIllustration,
     required this.title,
     required this.subtitle,
+    this.lottieAnimation,
   });
 }
