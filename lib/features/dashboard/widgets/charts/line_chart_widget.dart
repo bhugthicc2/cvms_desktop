@@ -2,6 +2,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/button/custom_view_button.dart';
 import 'package:flutter/material.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../models/chart_data_model.dart';
 
@@ -11,6 +12,7 @@ class LineChartWidget extends StatelessWidget {
   final Function(ChartPointDetails)? onLineChartPointTap;
   final VoidCallback onViewTap;
   final Widget? customWidget;
+  final ScreenshotController? screenshotController;
 
   const LineChartWidget({
     super.key,
@@ -19,6 +21,7 @@ class LineChartWidget extends StatelessWidget {
     this.onLineChartPointTap,
     required this.onViewTap,
     this.customWidget,
+    this.screenshotController,
   });
 
   @override
@@ -43,6 +46,21 @@ class LineChartWidget extends StatelessWidget {
         child: const Center(child: Text('No data available')),
       );
     }
+
+    final body = SfCartesianChart(
+      primaryXAxis: DateTimeAxis(),
+      tooltipBehavior: TooltipBehavior(enable: true),
+      series: <CartesianSeries>[
+        LineSeries<ChartDataModel, DateTime>(
+          onPointTap: onLineChartPointTap,
+          dataSource: points,
+          xValueMapper: (d, _) => d.date!,
+          yValueMapper: (d, _) => d.value,
+          markerSettings: const MarkerSettings(isVisible: true),
+          color: AppColors.primary,
+        ),
+      ],
+    );
 
     return Container(
       margin: EdgeInsets.zero,
@@ -80,20 +98,13 @@ class LineChartWidget extends StatelessWidget {
                 ],
               ),
             Expanded(
-              child: SfCartesianChart(
-                primaryXAxis: DateTimeAxis(),
-                tooltipBehavior: TooltipBehavior(enable: true),
-                series: <CartesianSeries>[
-                  LineSeries<ChartDataModel, DateTime>(
-                    onPointTap: onLineChartPointTap,
-                    dataSource: points,
-                    xValueMapper: (d, _) => d.date!,
-                    yValueMapper: (d, _) => d.value,
-                    markerSettings: const MarkerSettings(isVisible: true),
-                    color: AppColors.primary,
-                  ),
-                ],
-              ),
+              child:
+                  screenshotController == null
+                      ? body
+                      : Screenshot(
+                        controller: screenshotController!,
+                        child: body,
+                      ),
             ),
           ],
         ),

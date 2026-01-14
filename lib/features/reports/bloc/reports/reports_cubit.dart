@@ -2,6 +2,7 @@ import 'package:cvms_desktop/features/reports/data/report_repository.dart';
 import 'package:cvms_desktop/features/dashboard/data/analytics_repository.dart';
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard_state.dart';
+import 'dart:typed_data';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'reports_state.dart';
 
@@ -54,9 +55,31 @@ class ReportsCubit extends Cubit<ReportsState> {
     if (mode) loadGlobalReport(); // Reload data on global enter
   }
 
-  void showPdfPreview() {
+  void showPdfPreview({
+    Uint8List? vehicleDistributionChartBytes,
+    Uint8List? yearLevelBreakdownChartBytes,
+    Uint8List? studentwithMostViolationChartBytes,
+    Uint8List? cityBreakdownChartBytes,
+    Uint8List? vehicleLogsDistributionChartBytes,
+    Uint8List? violationDistributionPerCollegeChartBytes,
+    Uint8List? top5ViolationByTypeChartBytes,
+    Uint8List? fleetLogsChartBytes,
+  }) {
     if (isClosed) return;
-    emit(state.copyWith(showPdfPreview: true));
+    emit(
+      state.copyWith(
+        showPdfPreview: true,
+        vehicleDistributionChartBytes: vehicleDistributionChartBytes,
+        yearLevelBreakdownChartBytes: yearLevelBreakdownChartBytes,
+        studentwithMostViolationChartBytes: studentwithMostViolationChartBytes,
+        cityBreakdownChartBytes: cityBreakdownChartBytes,
+        vehicleLogsDistributionChartBytes: vehicleLogsDistributionChartBytes,
+        violationDistributionPerCollegeChartBytes:
+            violationDistributionPerCollegeChartBytes,
+        top5ViolationByTypeChartBytes: top5ViolationByTypeChartBytes,
+        fleetLogsChartBytes: fleetLogsChartBytes,
+      ),
+    );
   }
 
   void hidePdfPreview() {

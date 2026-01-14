@@ -1,6 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/titles/custom_chart_title.dart';
 import 'package:flutter/material.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../models/chart_data_model.dart';
 
@@ -9,6 +10,7 @@ class StackedBarWidget extends StatelessWidget {
   final VoidCallback onViewTap;
   final String title;
   final Function(ChartPointDetails)? onStackBarPointTapped;
+  final ScreenshotController? screenshotController;
 
   const StackedBarWidget({
     super.key,
@@ -16,6 +18,7 @@ class StackedBarWidget extends StatelessWidget {
     this.title = '',
     this.onStackBarPointTapped,
     required this.onViewTap,
+    this.screenshotController,
   });
 
   @override
@@ -42,6 +45,57 @@ class StackedBarWidget extends StatelessWidget {
     // Calculate total for percentage
     final total = data.fold<double>(0, (sum, item) => sum + item.value);
 
+    final body = SfCartesianChart(
+      primaryXAxis: CategoryAxis(),
+      tooltipBehavior: TooltipBehavior(enable: true),
+      series: <CartesianSeries>[
+        BarSeries<ChartDataModel, String>(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(5),
+            topRight: Radius.circular(5),
+          ),
+          onPointTap: onStackBarPointTapped,
+          dataSource: data,
+          xValueMapper: (d, _) => d.category,
+          yValueMapper: (d, _) => d.value,
+          dataLabelSettings: DataLabelSettings(
+            isVisible: true,
+            labelPosition: ChartDataLabelPosition.outside,
+            connectorLineSettings: const ConnectorLineSettings(
+              type: ConnectorType.line,
+              length: '15%',
+            ),
+            builder: (
+              dynamic data,
+              dynamic point,
+              dynamic series,
+              int pointIndex,
+              int seriesIndex,
+            ) {
+              final value = (data as ChartDataModel).value;
+              final percentage = total > 0 ? (value / total * 100) : 0;
+              return Text(
+                '${percentage.toStringAsFixed(1)}%',
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+              );
+            },
+          ),
+          pointColorMapper: (data, index) {
+            final colors = [
+              AppColors.donutBlue,
+              AppColors.donutPurple,
+              AppColors.chartOrange,
+              AppColors.chartGreen,
+            ];
+            return colors[index % colors.length];
+          },
+        ),
+      ],
+    );
+
     return Container(
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
@@ -65,57 +119,13 @@ class StackedBarWidget extends StatelessWidget {
                 child: CustomChartTitle(title: title, onViewTap: onViewTap),
               ),
             Expanded(
-              child: SfCartesianChart(
-                primaryXAxis: CategoryAxis(),
-                tooltipBehavior: TooltipBehavior(enable: true),
-                series: <CartesianSeries>[
-                  BarSeries<ChartDataModel, String>(
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(5),
-                      topRight: Radius.circular(5),
-                    ),
-                    onPointTap: onStackBarPointTapped,
-                    dataSource: data,
-                    xValueMapper: (d, _) => d.category,
-                    yValueMapper: (d, _) => d.value,
-                    dataLabelSettings: DataLabelSettings(
-                      isVisible: true,
-                      labelPosition: ChartDataLabelPosition.outside,
-                      connectorLineSettings: const ConnectorLineSettings(
-                        type: ConnectorType.line,
-                        length: '15%',
+              child:
+                  screenshotController == null
+                      ? body
+                      : Screenshot(
+                        controller: screenshotController!,
+                        child: body,
                       ),
-                      builder: (
-                        dynamic data,
-                        dynamic point,
-                        dynamic series,
-                        int pointIndex,
-                        int seriesIndex,
-                      ) {
-                        final value = (data as ChartDataModel).value;
-                        final percentage =
-                            total > 0 ? (value / total * 100) : 0;
-                        return Text(
-                          '${percentage.toStringAsFixed(1)}%',
-                          style: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        );
-                      },
-                    ),
-                    pointColorMapper: (data, index) {
-                      final colors = [
-                        AppColors.donutBlue,
-                        AppColors.donutPurple,
-                        AppColors.chartOrange,
-                        AppColors.chartGreen,
-                      ];
-                      return colors[index % colors.length];
-                    },
-                  ),
-                ],
-              ),
             ),
           ],
         ),

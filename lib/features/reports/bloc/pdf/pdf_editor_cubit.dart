@@ -9,7 +9,35 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'pdf_editor_state.dart';
 
 class PdfEditorCubit extends Cubit<PdfEditorState> {
-  PdfEditorCubit() : super(const PdfEditorInitial());
+  final Uint8List? _vehicleDistributionChartBytes;
+  final Uint8List? _yearLevelBreakdownChartBytes;
+  final Uint8List? _studentwithMostViolationChartBytes;
+  final Uint8List? _cityBreakdownChartBytes;
+  final Uint8List? _vehicleLogsDistributionChartBytes;
+  final Uint8List? _violationDistributionPerCollegeChartBytes;
+  final Uint8List? _top5ViolationByTypeChartBytes;
+  final Uint8List? _fleetLogsChartBytes;
+
+  PdfEditorCubit({
+    Uint8List? vehicleDistributionChartBytes,
+    Uint8List? yearLevelBreakdownChartBytes,
+    Uint8List? studentwithMostViolationChartBytes,
+    Uint8List? cityBreakdownChartBytes,
+    Uint8List? vehicleLogsDistributionChartBytes,
+    Uint8List? violationDistributionPerCollegeChartBytes,
+    Uint8List? top5ViolationByTypeChartBytes,
+    Uint8List? fleetLogsChartBytes,
+  }) : _vehicleDistributionChartBytes = vehicleDistributionChartBytes,
+       _yearLevelBreakdownChartBytes = yearLevelBreakdownChartBytes,
+       _studentwithMostViolationChartBytes = studentwithMostViolationChartBytes,
+       _cityBreakdownChartBytes = cityBreakdownChartBytes,
+       _vehicleLogsDistributionChartBytes = vehicleLogsDistributionChartBytes,
+       _violationDistributionPerCollegeChartBytes =
+           violationDistributionPerCollegeChartBytes,
+       _top5ViolationByTypeChartBytes = top5ViolationByTypeChartBytes,
+       _fleetLogsChartBytes = fleetLogsChartBytes,
+
+       super(const PdfEditorInitial());
 
   void toggleEditMode() {
     if (state is PdfEditorPreviewMode) {
@@ -24,7 +52,21 @@ class PdfEditorCubit extends Cubit<PdfEditorState> {
   Future<void> generatePdf() async {
     emit(PdfLoading());
     try {
-      final bytes = await PdfReportBuilder.buildVehicleReport();
+      final bytes = await PdfReportBuilder.buildVehicleReport(
+        globalData: {
+          'vehicleDistributionChartBytes': _vehicleDistributionChartBytes,
+          'yearLevelBreakdownChartBytes': _yearLevelBreakdownChartBytes,
+          'studentwithMostViolationChartBytes':
+              _studentwithMostViolationChartBytes,
+          'cityBreakdownChartBytes': _cityBreakdownChartBytes,
+          'vehicleLogsDistributionChartBytes':
+              _vehicleLogsDistributionChartBytes,
+          'violationDistributionPerCollegeChartBytes':
+              _violationDistributionPerCollegeChartBytes,
+          'top5ViolationByTypeChartBytes': _top5ViolationByTypeChartBytes,
+          'fleetLogsChartBytes': _fleetLogsChartBytes,
+        },
+      );
       emit(PdfEditorPreviewMode(bytes));
     } catch (e) {
       emit(PdfError(e.toString()));

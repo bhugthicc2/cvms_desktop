@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
@@ -11,6 +13,7 @@ import 'package:cvms_desktop/features/dashboard/extensions/time_range_extensions
 import 'package:cvms_desktop/features/dashboard/widgets/charts/stacked_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:screenshot/screenshot.dart';
 import '../../../bloc/reports/reports_cubit.dart';
 import '../../../bloc/reports/reports_state.dart';
 import '../../../models/fleet_summary.dart';
@@ -18,9 +21,28 @@ import '../../../data/mock_data.dart';
 
 /// Global Charts Section - Displays fleet-wide charts including:
 class GlobalChartsSection extends StatefulWidget {
-  const GlobalChartsSection({super.key, required this.summary});
+  const GlobalChartsSection({
+    super.key,
+    required this.summary,
+    required this.vehicleDistributionController,
+    required this.yearLevelBreakdownController,
+    required this.studentWithMostViolationsController,
+    required this.cityBreakdownController,
+    required this.vehicleLogsDistributionController,
+    required this.violationDistributionPerCollegeController,
+    required this.top5ViolationByTypeController,
+    required this.fleetLogsController,
+  });
 
   final FleetSummary summary;
+  final ScreenshotController vehicleDistributionController;
+  final ScreenshotController yearLevelBreakdownController;
+  final ScreenshotController studentWithMostViolationsController;
+  final ScreenshotController cityBreakdownController;
+  final ScreenshotController vehicleLogsDistributionController;
+  final ScreenshotController violationDistributionPerCollegeController;
+  final ScreenshotController top5ViolationByTypeController;
+  final ScreenshotController fleetLogsController;
 
   @override
   State<GlobalChartsSection> createState() => _GlobalChartsSectionState();
@@ -62,6 +84,8 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                       title: 'Vehicle Distribution per College',
                       radius: '90%',
                       innerRadius: '60%',
+                      screenshotController:
+                          widget.vehicleDistributionController,
                     ),
                   ),
                   Spacing.horizontal(size: AppSpacing.medium),
@@ -79,6 +103,7 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                       title: 'Year Level Breakdown',
                       radius: '90%',
                       innerRadius: '60%',
+                      screenshotController: widget.yearLevelBreakdownController,
                     ),
                   ),
                 ],
@@ -100,6 +125,8 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                           ReportMockData
                               .studentViolationData, // Use real data with fallback
                       onViewTap: () {},
+                      screenshotController:
+                          widget.studentWithMostViolationsController,
                     ),
                   ),
                   Spacing.horizontal(size: AppSpacing.medium),
@@ -112,6 +139,7 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                           ReportMockData
                               .cityBreakdownData, // Use real data with fallback
                       onViewTap: () {},
+                      screenshotController: widget.cityBreakdownController,
                     ),
                   ),
                 ],
@@ -132,6 +160,8 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                       title: 'Vehicle Logs Distribution per College',
                       radius: '90%',
                       innerRadius: '60%',
+                      screenshotController:
+                          widget.vehicleLogsDistributionController,
                     ),
                   ),
                   Spacing.horizontal(size: AppSpacing.medium),
@@ -150,6 +180,8 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                       title: 'Violation Distribution per College',
                       radius: '90%',
                       innerRadius: '60%',
+                      screenshotController:
+                          widget.violationDistributionPerCollegeController,
                     ),
                   ),
                 ],
@@ -166,6 +198,8 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                       onBarChartPointTap: (details) {},
                       data: typesData,
                       title: 'Top 5 Violations by Type',
+                      screenshotController:
+                          widget.top5ViolationByTypeController,
                     ),
                   ),
                   Spacing.horizontal(size: AppSpacing.medium),
@@ -203,6 +237,7 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                               : ReportMockData
                                   .vehicleLogsData, // fallback to mock
                       title: 'Fleet Logs for the last',
+                      screenshotController: widget.fleetLogsController,
                     ),
                   ),
                 ],

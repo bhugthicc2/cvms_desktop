@@ -11,10 +11,13 @@ import 'package:cvms_desktop/features/reports/widgets/sections/charts/global_cha
 import 'package:cvms_desktop/features/reports/widgets/sections/charts/individual_charts_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/table/violations_table_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/table/vehicle_logs_table_section.dart';
+import 'dart:typed_data';
+
 import 'package:cvms_desktop/features/reports/widgets/app/report_header_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:screenshot/screenshot.dart';
 import '../bloc/reports/reports_cubit.dart';
 import '../bloc/reports/reports_state.dart';
 import '../widgets/content/date_filter_content.dart';
@@ -33,8 +36,105 @@ class ReportsPage extends StatelessWidget {
   }
 }
 
-class _ReportsPageContent extends StatelessWidget {
+class _ReportsPageContent extends StatefulWidget {
   const _ReportsPageContent();
+
+  @override
+  State<_ReportsPageContent> createState() => _ReportsPageContentState();
+}
+
+class _ReportsPageContentState extends State<_ReportsPageContent> {
+  final ScreenshotController _vehicleDistributionController =
+      ScreenshotController();
+  final ScreenshotController _yearLevelBreakdownController =
+      ScreenshotController();
+  final ScreenshotController _studentWithMostViolationsController =
+      ScreenshotController();
+  final ScreenshotController _cityBreakdownController = ScreenshotController();
+  final ScreenshotController _vehicleLogsDistributionController =
+      ScreenshotController();
+  final ScreenshotController _violationDistributionPerCollegeController =
+      ScreenshotController();
+  final ScreenshotController _top5ViolationByTypeController =
+      ScreenshotController();
+  final ScreenshotController _fleetLogsController = ScreenshotController();
+
+  Future<void> _handleExportPdf(BuildContext context) async {
+    Uint8List? vehicleDistributionChartBytes;
+    Uint8List? yearLevelBreakdownChartBytes;
+    Uint8List? studentwithMostViolationChartBytes;
+    Uint8List? cityBreakdownChartBytes;
+    Uint8List? vehicleLogsDistributionChartBytes;
+    Uint8List? violationDistributionPerCollegeChartBytes;
+    Uint8List? top5ViolationByTypeChartBytes;
+    Uint8List? fleetLogsChartBytes;
+    try {
+      vehicleDistributionChartBytes =
+          await _vehicleDistributionController.capture();
+    } catch (_) {
+      vehicleDistributionChartBytes = null;
+    }
+
+    try {
+      yearLevelBreakdownChartBytes =
+          await _yearLevelBreakdownController.capture();
+    } catch (_) {
+      yearLevelBreakdownChartBytes = null;
+    }
+
+    try {
+      studentwithMostViolationChartBytes =
+          await _studentWithMostViolationsController.capture();
+    } catch (_) {
+      studentwithMostViolationChartBytes = null;
+    }
+
+    try {
+      cityBreakdownChartBytes = await _cityBreakdownController.capture();
+    } catch (_) {
+      cityBreakdownChartBytes = null;
+    }
+
+    try {
+      vehicleLogsDistributionChartBytes =
+          await _vehicleLogsDistributionController.capture();
+    } catch (_) {
+      vehicleLogsDistributionChartBytes = null;
+    }
+
+    try {
+      violationDistributionPerCollegeChartBytes =
+          await _violationDistributionPerCollegeController.capture();
+    } catch (_) {
+      violationDistributionPerCollegeChartBytes = null;
+    }
+
+    try {
+      top5ViolationByTypeChartBytes =
+          await _top5ViolationByTypeController.capture();
+    } catch (_) {
+      top5ViolationByTypeChartBytes = null;
+    }
+
+    try {
+      fleetLogsChartBytes = await _fleetLogsController.capture();
+    } catch (_) {
+      fleetLogsChartBytes = null;
+    }
+
+    if (!context.mounted) return;
+    context.read<ReportsCubit>().showPdfPreview(
+      vehicleDistributionChartBytes: vehicleDistributionChartBytes,
+      yearLevelBreakdownChartBytes: yearLevelBreakdownChartBytes,
+      studentwithMostViolationChartBytes: studentwithMostViolationChartBytes,
+      cityBreakdownChartBytes: cityBreakdownChartBytes,
+      vehicleLogsDistributionChartBytes: vehicleLogsDistributionChartBytes,
+      violationDistributionPerCollegeChartBytes:
+          violationDistributionPerCollegeChartBytes,
+      top5ViolationByTypeChartBytes: top5ViolationByTypeChartBytes,
+      fleetLogsChartBytes: fleetLogsChartBytes,
+    );
+  }
 
   void _showDateFilterDialog(BuildContext context) {
     showDialog(
@@ -107,6 +207,20 @@ class _ReportsPageContent extends StatelessWidget {
               ? Container(
                 decoration: cardDecoration(),
                 child: PdfReportPage(
+                  vehicleDistributionChartBytes:
+                      state.vehicleDistributionChartBytes,
+                  yearLevelBreakdownChartBytes:
+                      state.yearLevelBreakdownChartBytes,
+                  studentwithMostViolationChartBytes:
+                      state.studentwithMostViolationChartBytes,
+                  cityBreakdownChartBytes: state.cityBreakdownChartBytes,
+                  vehicleLogsDistributionChartBytes:
+                      state.vehicleLogsDistributionChartBytes,
+                  violationDistributionPerCollegeChartBytes:
+                      state.violationDistributionPerCollegeChartBytes,
+                  top5ViolationByTypeChartBytes:
+                      state.top5ViolationByTypeChartBytes,
+                  fleetLogsChartBytes: state.fleetLogsChartBytes,
                   onBackPressed:
                       () => context.read<ReportsCubit>().hidePdfPreview(),
                 ),
@@ -140,8 +254,7 @@ class _ReportsPageContent extends StatelessWidget {
                 onDateFilter: () {
                   _showDateFilterDialog(context);
                 },
-                onExportPDF:
-                    () => context.read<ReportsCubit>().showPdfPreview(),
+                onExportPDF: () => _handleExportPdf(context),
                 onExportCSV: () {}, // todo
               ),
             ),
@@ -171,7 +284,23 @@ class _ReportsPageContent extends StatelessWidget {
                 height: isGlobal ? 1080 : 320,
                 child:
                     isGlobal && summary != null
-                        ? GlobalChartsSection(summary: summary)
+                        ? GlobalChartsSection(
+                          summary: summary,
+                          vehicleDistributionController:
+                              _vehicleDistributionController,
+                          yearLevelBreakdownController:
+                              _yearLevelBreakdownController,
+                          studentWithMostViolationsController:
+                              _studentWithMostViolationsController,
+                          cityBreakdownController: _cityBreakdownController,
+                          vehicleLogsDistributionController:
+                              _vehicleLogsDistributionController,
+                          violationDistributionPerCollegeController:
+                              _violationDistributionPerCollegeController,
+                          top5ViolationByTypeController:
+                              _top5ViolationByTypeController,
+                          fleetLogsController: _fleetLogsController,
+                        )
                         : const IndividualChartsSection(),
               ),
             ),

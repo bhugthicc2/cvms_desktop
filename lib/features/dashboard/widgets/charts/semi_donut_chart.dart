@@ -2,6 +2,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/titles/custom_chart_title.dart';
 import 'package:flutter/material.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../models/chart_data_model.dart';
 
@@ -16,6 +17,7 @@ class SemiDonutChart extends StatelessWidget {
   final Function(ChartPointDetails)? onDonutChartPointTap;
   final double startAngle;
   final double endAngle;
+  final ScreenshotController? screenshotController;
 
   const SemiDonutChart({
     super.key,
@@ -23,6 +25,7 @@ class SemiDonutChart extends StatelessWidget {
     this.title = '',
     this.onDonutChartPointTap,
     required this.onViewTap,
+    this.screenshotController,
     this.radius = '90%',
     this.innerRadius = '55%',
     this.explode = false,
@@ -53,6 +56,157 @@ class SemiDonutChart extends StatelessWidget {
     }
 
     final double total = data.fold<double>(0, (sum, d) => sum + d.value);
+
+    final body = Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: Stack(
+            children: [
+              SfCircularChart(
+                legend: const Legend(isVisible: false),
+                tooltipBehavior: TooltipBehavior(enable: true),
+                series: <CircularSeries>[
+                  DoughnutSeries<ChartDataModel, String>(
+                    explode: explode,
+                    onPointTap: onDonutChartPointTap,
+                    dataSource: data,
+                    xValueMapper: (d, _) => d.category,
+                    yValueMapper: (d, _) => d.value,
+                    dataLabelMapper:
+                        showPercentageInSlice
+                            ? (d, _) {
+                              final v = d.value;
+                              if (total == 0) return '0%';
+                              final pct = (v / total) * 100;
+                              return '${pct.toStringAsFixed(1)}%';
+                            }
+                            : null,
+                    dataLabelSettings: DataLabelSettings(
+                      isVisible: showPercentageInSlice,
+                      labelPosition: ChartDataLabelPosition.inside,
+                      textStyle: TextStyle(
+                        color: AppColors.white,
+                        fontSize: 10,
+                      ),
+                    ),
+                    radius: radius,
+                    innerRadius: innerRadius,
+                    startAngle: startAngle.toInt(),
+                    endAngle: endAngle.toInt(),
+                    strokeWidth: 2,
+                    strokeColor: AppColors.white,
+                    pointColorMapper: (data, index) {
+                      final colors = [
+                        AppColors.donutBlue,
+                        AppColors.donutPurple,
+                        AppColors.chartOrange,
+                        AppColors.chartGreen,
+                        AppColors.chartGreenv2,
+                        AppColors.donutPink,
+                      ];
+                      return colors[index % colors.length];
+                    },
+                  ),
+                ],
+              ),
+              // Center total value
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Total',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      total % 1 == 0
+                          ? total.toInt().toString()
+                          : total.toString(),
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: AppColors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Container(
+            width: 180,
+            padding: const EdgeInsets.only(right: AppSpacing.medium),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                for (int i = 0; i < data.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        //dot color
+                        Container(
+                          width: 15,
+                          height: 15,
+                          decoration: BoxDecoration(
+                            color: () {
+                              final colors = [
+                                AppColors.donutBlue,
+                                AppColors.donutPurple,
+                                AppColors.chartOrange,
+                                AppColors.chartGreen,
+                                AppColors.chartGreenv2,
+                                AppColors.donutPink,
+                              ];
+                              return colors[i % colors.length];
+                            }(),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        //category label
+                        Expanded(
+                          child: Text(
+                            data[i].category,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.black,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        //value
+                        Text(
+                          data[i].value % 1 == 0
+                              ? data[i].value.toInt().toString()
+                              : data[i].value.toString(),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColors.grey,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+
     return Container(
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
@@ -76,155 +230,13 @@ class SemiDonutChart extends StatelessWidget {
                 child: CustomChartTitle(title: title, onViewTap: onViewTap),
               ),
             Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    child: Stack(
-                      children: [
-                        SfCircularChart(
-                          legend: const Legend(isVisible: false),
-                          tooltipBehavior: TooltipBehavior(enable: true),
-                          series: <CircularSeries>[
-                            DoughnutSeries<ChartDataModel, String>(
-                              explode: explode,
-                              onPointTap: onDonutChartPointTap,
-                              dataSource: data,
-                              xValueMapper: (d, _) => d.category,
-                              yValueMapper: (d, _) => d.value,
-                              dataLabelMapper:
-                                  showPercentageInSlice
-                                      ? (d, _) {
-                                        final v = d.value;
-                                        if (total == 0) return '0%';
-                                        final pct = (v / total) * 100;
-                                        return '${pct.toStringAsFixed(1)}%';
-                                      }
-                                      : null,
-                              dataLabelSettings: DataLabelSettings(
-                                isVisible: showPercentageInSlice,
-                                labelPosition: ChartDataLabelPosition.inside,
-                                textStyle: TextStyle(
-                                  color: AppColors.white,
-                                  fontSize: 10,
-                                ),
-                              ),
-                              radius: radius,
-                              innerRadius: innerRadius,
-                              startAngle: startAngle.toInt(),
-                              endAngle: endAngle.toInt(),
-                              strokeWidth: 2,
-                              strokeColor: AppColors.white,
-                              pointColorMapper: (data, index) {
-                                final colors = [
-                                  AppColors.donutBlue,
-                                  AppColors.donutPurple,
-                                  AppColors.chartOrange,
-                                  AppColors.chartGreen,
-                                  AppColors.chartGreenv2,
-                                  AppColors.donutPink,
-                                ];
-                                return colors[index % colors.length];
-                              },
-                            ),
-                          ],
-                        ),
-                        // Center total value
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Total',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: AppColors.grey,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                total % 1 == 0
-                                    ? total.toInt().toString()
-                                    : total.toString(),
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      width: 180,
-                      padding: const EdgeInsets.only(right: AppSpacing.medium),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          for (int i = 0; i < data.length; i++)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 6),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  //dot color
-                                  Container(
-                                    width: 15,
-                                    height: 15,
-                                    decoration: BoxDecoration(
-                                      color: () {
-                                        final colors = [
-                                          AppColors.donutBlue,
-                                          AppColors.donutPurple,
-                                          AppColors.chartOrange,
-                                          AppColors.chartGreen,
-                                          AppColors.chartGreenv2,
-                                          AppColors.donutPink,
-                                        ];
-                                        return colors[i % colors.length];
-                                      }(),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  //category label
-                                  Expanded(
-                                    child: Text(
-                                      data[i].category,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: AppColors.black,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  //value
-                                  Text(
-                                    data[i].value % 1 == 0
-                                        ? data[i].value.toInt().toString()
-                                        : data[i].value.toString(),
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: AppColors.grey,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                        ],
+              child:
+                  screenshotController == null
+                      ? body
+                      : Screenshot(
+                        controller: screenshotController!,
+                        child: body,
                       ),
-                    ),
-                  ),
-                ],
-              ),
             ),
           ],
         ),

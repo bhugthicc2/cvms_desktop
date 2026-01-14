@@ -4,6 +4,7 @@ import 'package:cvms_desktop/features/reports/bloc/pdf/pdf_editor_cubit.dart';
 import 'package:cvms_desktop/features/reports/widgets/viewer/pdf_viewer_widget.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/navigation/custom_breadcrumb.dart';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
@@ -11,8 +12,27 @@ import 'package:lottie/lottie.dart';
 
 class PdfReportPage extends StatefulWidget {
   final VoidCallback? onBackPressed;
+  final Uint8List? vehicleDistributionChartBytes;
+  final Uint8List? yearLevelBreakdownChartBytes;
+  final Uint8List? studentwithMostViolationChartBytes;
+  final Uint8List? cityBreakdownChartBytes;
+  final Uint8List? vehicleLogsDistributionChartBytes;
+  final Uint8List? violationDistributionPerCollegeChartBytes;
+  final Uint8List? top5ViolationByTypeChartBytes;
+  final Uint8List? fleetLogsChartBytes;
 
-  const PdfReportPage({super.key, this.onBackPressed});
+  const PdfReportPage({
+    super.key,
+    this.onBackPressed,
+    this.vehicleDistributionChartBytes,
+    this.yearLevelBreakdownChartBytes,
+    this.studentwithMostViolationChartBytes,
+    this.cityBreakdownChartBytes,
+    this.vehicleLogsDistributionChartBytes,
+    this.violationDistributionPerCollegeChartBytes,
+    this.top5ViolationByTypeChartBytes,
+    this.fleetLogsChartBytes,
+  });
 
   @override
   State<PdfReportPage> createState() => _PdfReportPageState();
@@ -27,7 +47,20 @@ class _PdfReportPageState extends State<PdfReportPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => PdfEditorCubit()..generatePdf(),
+      create:
+          (_) => PdfEditorCubit(
+            vehicleDistributionChartBytes: widget.vehicleDistributionChartBytes,
+            yearLevelBreakdownChartBytes: widget.yearLevelBreakdownChartBytes,
+            studentwithMostViolationChartBytes:
+                widget.studentwithMostViolationChartBytes,
+            cityBreakdownChartBytes: widget.cityBreakdownChartBytes,
+            vehicleLogsDistributionChartBytes:
+                widget.vehicleLogsDistributionChartBytes,
+            violationDistributionPerCollegeChartBytes:
+                widget.violationDistributionPerCollegeChartBytes,
+            top5ViolationByTypeChartBytes: widget.top5ViolationByTypeChartBytes,
+            fleetLogsChartBytes: widget.fleetLogsChartBytes,
+          )..generatePdf(),
       child: BlocListener<PdfEditorCubit, PdfEditorState>(
         listener: (context, state) {
           if (state is PdfSaveSuccess) {

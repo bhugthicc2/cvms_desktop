@@ -2,6 +2,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/titles/custom_chart_title.dart';
 import 'package:flutter/material.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../models/chart_data_model.dart';
 
@@ -10,6 +11,7 @@ class BarChartWidget extends StatelessWidget {
   final VoidCallback onViewTap;
   final String title;
   final Function(ChartPointDetails)? onBarChartPointTap;
+  final ScreenshotController? screenshotController;
 
   const BarChartWidget({
     super.key,
@@ -17,6 +19,7 @@ class BarChartWidget extends StatelessWidget {
     this.title = '',
     this.onBarChartPointTap,
     required this.onViewTap,
+    this.screenshotController,
   });
 
   @override
@@ -43,6 +46,73 @@ class BarChartWidget extends StatelessWidget {
     // Calculate total for percentage
     final total = data.fold<double>(0, (sum, item) => sum + item.value);
 
+    final body = MouseRegion(
+      cursor:
+          onBarChartPointTap != null
+              ? SystemMouseCursors.click
+              : SystemMouseCursors.basic,
+      child: SfCartesianChart(
+        primaryXAxis: CategoryAxis(
+          // labelRotation: -45,
+          labelIntersectAction: AxisLabelIntersectAction.wrap, // Allow wrapping
+          labelStyle: const TextStyle(
+            fontSize:
+                AppFontSizes.small - 2, // Slightly smaller text to fit better
+          ),
+        ),
+        tooltipBehavior: TooltipBehavior(enable: true),
+        series: <CartesianSeries>[
+          ColumnSeries<ChartDataModel, String>(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(5),
+              topRight: Radius.circular(5),
+            ),
+            onPointTap:
+                onBarChartPointTap != null
+                    ? (details) => onBarChartPointTap!(details)
+                    : null,
+            dataSource: data,
+            xValueMapper: (d, _) => d.category,
+            yValueMapper: (d, _) => d.value,
+            dataLabelSettings: DataLabelSettings(
+              isVisible: true,
+              labelPosition: ChartDataLabelPosition.outside,
+              connectorLineSettings: const ConnectorLineSettings(
+                type: ConnectorType.line,
+                length: '15%',
+              ),
+              builder: (
+                dynamic data,
+                dynamic point,
+                dynamic series,
+                int pointIndex,
+                int seriesIndex,
+              ) {
+                final value = (data as ChartDataModel).value;
+                final percentage = total > 0 ? (value / total * 100) : 0;
+                return Text(
+                  '${percentage.toStringAsFixed(1)}%',
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              },
+            ),
+            pointColorMapper: (data, index) {
+              final colors = [
+                AppColors.donutBlue,
+                AppColors.donutPurple,
+                AppColors.chartOrange,
+                AppColors.chartGreen,
+              ];
+              return colors[index % colors.length];
+            },
+          ),
+        ],
+      ),
+    );
+
     return Container(
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
@@ -66,75 +136,13 @@ class BarChartWidget extends StatelessWidget {
                 child: CustomChartTitle(title: title, onViewTap: onViewTap),
               ),
             Expanded(
-              child: MouseRegion(
-                cursor:
-                    onBarChartPointTap != null
-                        ? SystemMouseCursors.click
-                        : SystemMouseCursors.basic,
-                child: SfCartesianChart(
-                  primaryXAxis: CategoryAxis(
-                    // labelRotation: -45,
-                    labelIntersectAction:
-                        AxisLabelIntersectAction.wrap, // Allow wrapping
-                    labelStyle: const TextStyle(
-                      fontSize:
-                          AppFontSizes.small -
-                          2, // Slightly smaller text to fit better
-                    ),
-                  ),
-                  tooltipBehavior: TooltipBehavior(enable: true),
-                  series: <CartesianSeries>[
-                    ColumnSeries<ChartDataModel, String>(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        topRight: Radius.circular(5),
+              child:
+                  screenshotController == null
+                      ? body
+                      : Screenshot(
+                        controller: screenshotController!,
+                        child: body,
                       ),
-                      onPointTap:
-                          onBarChartPointTap != null
-                              ? (details) => onBarChartPointTap!(details)
-                              : null,
-                      dataSource: data,
-                      xValueMapper: (d, _) => d.category,
-                      yValueMapper: (d, _) => d.value,
-                      dataLabelSettings: DataLabelSettings(
-                        isVisible: true,
-                        labelPosition: ChartDataLabelPosition.outside,
-                        connectorLineSettings: const ConnectorLineSettings(
-                          type: ConnectorType.line,
-                          length: '15%',
-                        ),
-                        builder: (
-                          dynamic data,
-                          dynamic point,
-                          dynamic series,
-                          int pointIndex,
-                          int seriesIndex,
-                        ) {
-                          final value = (data as ChartDataModel).value;
-                          final percentage =
-                              total > 0 ? (value / total * 100) : 0;
-                          return Text(
-                            '${percentage.toStringAsFixed(1)}%',
-                            style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
-                        },
-                      ),
-                      pointColorMapper: (data, index) {
-                        final colors = [
-                          AppColors.donutBlue,
-                          AppColors.donutPurple,
-                          AppColors.chartOrange,
-                          AppColors.chartGreen,
-                        ];
-                        return colors[index % colors.length];
-                      },
-                    ),
-                  ],
-                ),
-              ),
             ),
           ],
         ),

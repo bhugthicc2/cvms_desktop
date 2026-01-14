@@ -97,6 +97,8 @@ VEHICLE_MANAGEMENT_STRUCTURE.md
 VIOLATION_MANAGEMENT_STRUCTURE.md
 BULK_DELETE_IMPLEMENTATION.md
 docs/
+!docs/
+!docs/chart_screenshot_pdf.md
 user_management_with_code.md
 auth_complete_structure_with_code_files.md
 FIREBASE_ERROR_HANDLING.md
