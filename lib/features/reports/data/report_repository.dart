@@ -284,7 +284,7 @@ class ReportRepository {
     final sortedEntries =
         counts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
 
-    // Return ALL departments, not just top 5
+    // Return ALL departments
     final chartData =
         sortedEntries
             .map(

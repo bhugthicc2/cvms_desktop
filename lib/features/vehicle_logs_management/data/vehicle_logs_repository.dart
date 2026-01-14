@@ -12,14 +12,15 @@ class VehicleLogsRepository {
   Future<void> addManualLog(VehicleLogModel entry) async {
     try {
       final active =
-          await _firestore
+          _firestore
               .collection(_collection)
               .where("vehicleId", isEqualTo: entry.vehicleId)
               .where("timeOut", isNull: true)
               .limit(1)
-              .get();
+              .snapshots();
 
-      if (active.docs.isNotEmpty) {
+      final activeSnapshot = await active.first;
+      if (activeSnapshot.docs.isNotEmpty) {
         throw Exception(
           "This vehicle already has an active session. End it first.",
         );

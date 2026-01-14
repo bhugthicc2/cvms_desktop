@@ -58,9 +58,6 @@ class _ReportsPageContent extends StatelessWidget {
                     context,
                     'Date filter applied: ${period.start} to ${period.end}',
                   );
-                  debugPrint(
-                    'Date filter applied: ${period.start} to ${period.end}',
-                  );
                 }
               },
             ),
