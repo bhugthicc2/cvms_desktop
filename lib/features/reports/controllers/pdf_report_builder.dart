@@ -6,8 +6,8 @@ import 'package:cvms_desktop/features/reports/controllers/individual_report_buil
 
 class PdfReportBuilder {
   static Future<Uint8List> buildVehicleReport({
-    bool isGlobal = true,
-    bool isChart = true,
+    bool isGlobal = true, //todo make this dynamic
+    bool isChart = true, //todo make this dynamic
     Map<String, dynamic>? globalData,
     Map<String, dynamic>? individualData,
   }) async {

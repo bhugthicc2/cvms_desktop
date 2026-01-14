@@ -3,7 +3,6 @@ import 'package:cvms_desktop/core/utils/card_decor.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
 import 'report_table_header.dart';
-import '../../tables/vehicle_logs/global_vehicle_logs_table.dart';
 import '../../tables/vehicle_logs/vehicle_logs_table.dart';
 
 /// Vehicle Logs Table Section - Displays vehicle logs table with header including:
@@ -14,7 +13,7 @@ class VehicleLogsTableSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return isGlobal
+    return isGlobal == false
         ? Container(
           padding: const EdgeInsets.fromLTRB(
             AppSpacing.medium,
@@ -26,22 +25,13 @@ class VehicleLogsTableSection extends StatelessWidget {
           decoration: cardDecoration(),
           child: Column(
             children: [
-              ReportTableHeader(
-                tableTitle: isGlobal ? 'Global Vehicle Logs' : 'Vehicle Logs',
-                onTap: () {},
-              ),
+              ReportTableHeader(tableTitle: 'Vehicle Logs', onTap: () {}),
               Spacing.vertical(size: AppSpacing.medium),
               Expanded(
-                child:
-                    isGlobal
-                        ? const GlobalVehicleLogsTable(
-                          istableHeaderDark: false,
-                          allowSorting: true,
-                        )
-                        : const VehicleLogsTable(
-                          istableHeaderDark: false,
-                          allowSorting: true,
-                        ),
+                child: const VehicleLogsTable(
+                  istableHeaderDark: false,
+                  allowSorting: true,
+                ),
               ),
             ],
           ),

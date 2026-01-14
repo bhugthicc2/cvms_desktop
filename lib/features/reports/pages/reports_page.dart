@@ -207,6 +207,13 @@ class _ReportsPageContentState extends State<_ReportsPageContent> {
               ? Container(
                 decoration: cardDecoration(),
                 child: PdfReportPage(
+                  fleetSummary: state.fleetSummary,
+                  vehicleDistribution: state.vehicleDistribution,
+                  yearLevelBreakdown: state.yearLevelBreakdown,
+                  cityBreakdown: state.cityBreakdown,
+                  studentWithMostViolations: state.studentWithMostViolations,
+                  logsData: state.logsData,
+                  selectedTimeRange: state.selectedTimeRange,
                   vehicleDistributionChartBytes:
                       state.vehicleDistributionChartBytes,
                   yearLevelBreakdownChartBytes:
@@ -254,8 +261,14 @@ class _ReportsPageContentState extends State<_ReportsPageContent> {
                 onDateFilter: () {
                   _showDateFilterDialog(context);
                 },
+                onBackButtonClicked: () {
+                  context.read<ReportsCubit>().setGlobalMode(true);
+
+                  debugPrint('Back button clicked');
+                },
                 onExportPDF: () => _handleExportPdf(context),
                 onExportCSV: () {}, // todo
+                isGlobal: isGlobal, //todo
               ),
             ),
           ),
@@ -306,29 +319,29 @@ class _ReportsPageContentState extends State<_ReportsPageContent> {
             ),
           ),
 
-          // Violations Table Sliver (branch)
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(right: AppSpacing.medium),
-              child: ViolationsTableSection(
-                // isGlobal: isGlobal,
-                isGlobal: false,
-              ), //partially removed the global table
-            ),
-          ),
           const SliverToBoxAdapter(
             child: Spacing.vertical(size: AppSpacing.medium),
           ),
-          // Logs Table Sliver (branch)
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(right: AppSpacing.medium),
-              child: VehicleLogsTableSection(
-                // isGlobal: isGlobal,
-                isGlobal: false,
-              ), //partially removed the global table
+          // Violations Table Sliver (individual only)
+          if (!isGlobal)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(right: AppSpacing.medium),
+                child: ViolationsTableSection(isGlobal: isGlobal),
+              ),
             ),
-          ),
+          if (!isGlobal)
+            const SliverToBoxAdapter(
+              child: Spacing.vertical(size: AppSpacing.medium),
+            ),
+          // Logs Table Sliver (individual only)
+          if (!isGlobal)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(right: AppSpacing.medium),
+                child: VehicleLogsTableSection(isGlobal: isGlobal),
+              ),
+            ),
         ],
       ),
     );

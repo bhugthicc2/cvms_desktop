@@ -5,6 +5,9 @@ import 'package:cvms_desktop/features/reports/widgets/viewer/pdf_viewer_widget.d
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/navigation/custom_breadcrumb.dart';
 import 'dart:typed_data';
+import 'package:cvms_desktop/features/dashboard/bloc/dashboard_state.dart';
+import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
+import 'package:cvms_desktop/features/reports/models/fleet_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
@@ -12,6 +15,13 @@ import 'package:lottie/lottie.dart';
 
 class PdfReportPage extends StatefulWidget {
   final VoidCallback? onBackPressed;
+  final FleetSummary? fleetSummary;
+  final List<ChartDataModel>? vehicleDistribution;
+  final List<ChartDataModel>? yearLevelBreakdown;
+  final List<ChartDataModel>? cityBreakdown;
+  final List<ChartDataModel>? studentWithMostViolations;
+  final List<ChartDataModel> logsData;
+  final TimeRange selectedTimeRange;
   final Uint8List? vehicleDistributionChartBytes;
   final Uint8List? yearLevelBreakdownChartBytes;
   final Uint8List? studentwithMostViolationChartBytes;
@@ -24,6 +34,13 @@ class PdfReportPage extends StatefulWidget {
   const PdfReportPage({
     super.key,
     this.onBackPressed,
+    this.fleetSummary,
+    this.vehicleDistribution,
+    this.yearLevelBreakdown,
+    this.cityBreakdown,
+    this.studentWithMostViolations,
+    this.logsData = const [],
+    this.selectedTimeRange = TimeRange.days7,
     this.vehicleDistributionChartBytes,
     this.yearLevelBreakdownChartBytes,
     this.studentwithMostViolationChartBytes,
@@ -49,6 +66,13 @@ class _PdfReportPageState extends State<PdfReportPage> {
     return BlocProvider(
       create:
           (_) => PdfEditorCubit(
+            fleetSummary: widget.fleetSummary,
+            vehicleDistribution: widget.vehicleDistribution,
+            yearLevelBreakdown: widget.yearLevelBreakdown,
+            cityBreakdown: widget.cityBreakdown,
+            studentWithMostViolations: widget.studentWithMostViolations,
+            logsData: widget.logsData,
+            selectedTimeRange: widget.selectedTimeRange,
             vehicleDistributionChartBytes: widget.vehicleDistributionChartBytes,
             yearLevelBreakdownChartBytes: widget.yearLevelBreakdownChartBytes,
             studentwithMostViolationChartBytes:
@@ -140,11 +164,18 @@ class _PdfReportPageState extends State<PdfReportPage> {
     }
 
     if (state is PdfSaving) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(),
+            Center(
+              child: Lottie.asset(
+                renderCache: RenderCache.raster,
+                'assets/anim/loading_anim.json',
+                width: 200,
+                height: 200,
+              ),
+            ),
             SizedBox(height: 16),
             Text('Saving PDF...'),
           ],
@@ -153,11 +184,18 @@ class _PdfReportPageState extends State<PdfReportPage> {
     }
 
     if (state is PdfPrinting) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(),
+            Center(
+              child: Lottie.asset(
+                renderCache: RenderCache.raster,
+                'assets/anim/loading_anim.json',
+                width: 200,
+                height: 200,
+              ),
+            ),
             SizedBox(height: 16),
             Text('Preparing print dialog...'),
           ],

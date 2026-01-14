@@ -5,6 +5,9 @@ import 'package:cvms_desktop/features/reports/widgets/pdf_doc/texts/pdf_section_
 import 'package:cvms_desktop/features/reports/widgets/pdf_doc/texts/pdf_section_text.dart';
 import 'package:cvms_desktop/features/reports/widgets/pdf_doc/texts/pdf_subtitle_text.dart';
 import 'package:cvms_desktop/features/reports/widgets/pdf_doc/tables/pdf_table.dart';
+import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
+import 'package:cvms_desktop/features/reports/controllers/global_report_remarks_builder.dart';
+import 'package:cvms_desktop/features/reports/models/fleet_summary.dart';
 import 'package:pdf/widgets.dart' as pw;
 import '../widgets/pdf_doc/letter_head/doc_signatory.dart';
 import '../widgets/pdf_doc/templates/pdf_page_template.dart';
@@ -13,6 +16,35 @@ class GlobalReportBuilder {
   static Future<Uint8List> build(Map<String, dynamic>? globalData) async {
     final pdf = pw.Document();
     final template = const PdfPageTemplate();
+
+    final fleetSummary = globalData?['fleetSummary'] as FleetSummary?;
+    final vehicleDistribution =
+        globalData?['vehicleDistribution'] as List<ChartDataModel>?;
+    final yearLevelBreakdown =
+        globalData?['yearLevelBreakdown'] as List<ChartDataModel>?;
+    final cityBreakdown = globalData?['cityBreakdown'] as List<ChartDataModel>?;
+    final studentWithMostViolations =
+        globalData?['studentWithMostViolations'] as List<ChartDataModel>?;
+    final logsData =
+        (globalData?['logsData'] as List<ChartDataModel>?) ?? const [];
+
+    double sumValues(List<ChartDataModel>? data) {
+      if (data == null || data.isEmpty) return 0;
+      return data.fold<double>(0, (sum, item) => sum + item.value);
+    }
+
+    List<List<String>> rowsWithPercent(List<ChartDataModel>? data) {
+      if (data == null || data.isEmpty) return const [];
+      final total = sumValues(data);
+      return data.map((d) {
+        final pct = total <= 0 ? 0 : (d.value / total) * 100;
+        return [
+          d.category,
+          d.value.toStringAsFixed(0),
+          '${pct.toStringAsFixed(1)}%',
+        ];
+      }).toList();
+    }
 
     // Page 1: Fleet Summary and Distributions
     final page1Content = pw.Column(
@@ -38,12 +70,33 @@ class GlobalReportBuilder {
             PdfTable(
               headers: ['Metric', 'Value'],
               rows: [
-                ['Total Violations', globalData?['totalViolations'] ?? '150'],
-                ['Pending Violations', globalData?['activeViolations'] ?? '22'],
-                ['Total Vehicles', globalData?['totalVehicles'] ?? '230'],
+                [
+                  'Total Violations',
+                  (fleetSummary?.totalViolations ??
+                          globalData?['totalViolations'] ??
+                          '—')
+                      .toString(),
+                ],
+                [
+                  'Pending Violations',
+                  (fleetSummary?.activeViolations ??
+                          globalData?['activeViolations'] ??
+                          '—')
+                      .toString(),
+                ],
+                [
+                  'Total Vehicles',
+                  (fleetSummary?.totalVehicles ??
+                          globalData?['totalVehicles'] ??
+                          '—')
+                      .toString(),
+                ],
                 [
                   'Total Vehicle Entries / Exits',
-                  globalData?['totalEntriesExits'] ?? '540',
+                  (fleetSummary?.totalEntriesExits ??
+                          globalData?['totalEntriesExits'] ??
+                          '—')
+                      .toString(),
                 ],
               ],
               columnWidths: {
@@ -61,39 +114,7 @@ class GlobalReportBuilder {
             pw.SizedBox(height: 5),
             PdfTable(
               headers: ['College', 'Number of Vehicles', 'Percentage'],
-              rows: [
-                [
-                  'Laboratory High School',
-                  globalData?['labHighSchoolVehicles'] ?? '15',
-                  '15%',
-                ],
-                [
-                  'College of Education',
-                  globalData?['educationVehicles'] ?? '20',
-                  '20%',
-                ],
-                [
-                  'School of Engineering',
-                  globalData?['engineeringVehicles'] ?? '25',
-                  '25%',
-                ],
-                [
-                  'College of Computing Studies',
-                  globalData?['computingVehicles'] ?? '30',
-                  '30%',
-                ],
-                [
-                  'College of Business Administration',
-                  globalData?['businessVehicles'] ?? '10',
-                  '10%',
-                ],
-                [
-                  'College of Agriculture & Forestry',
-                  globalData?['agriForestryVehicles'] ?? '10',
-                  '10%',
-                ],
-                ['School of Criminal Justice Education', '10', '10%'],
-              ],
+              rows: rowsWithPercent(vehicleDistribution),
               columnWidths: {
                 0: pw.FlexColumnWidth(2),
                 1: pw.FlexColumnWidth(1),
@@ -110,30 +131,21 @@ class GlobalReportBuilder {
             pw.SizedBox(height: 5),
             PdfTable(
               headers: ['Year Level', 'Number of Vehicles', 'Percentage'],
-              rows: [
-                [
-                  'Junior High School',
-                  globalData?['juniorHighVehicles'] ?? '15',
-                  '15%',
-                ],
-                ['First Year', globalData?['firstYearVehicles'] ?? '15', '15%'],
-                [
-                  'Second Year',
-                  globalData?['secondYearVehicles'] ?? '20',
-                  '20%',
-                ],
-                ['Third Year', globalData?['thirdYearVehicles'] ?? '25', '25%'],
-                [
-                  'Fourth Year',
-                  globalData?['fourthYearVehicles'] ?? '30',
-                  '30%',
-                ],
-              ],
+              rows: rowsWithPercent(yearLevelBreakdown),
               columnWidths: {
                 0: pw.FlexColumnWidth(2),
                 1: pw.FlexColumnWidth(1),
                 2: pw.FlexColumnWidth(1),
               },
+            ),
+            pw.SizedBox(height: 20),
+            PdfSectionFooterText(
+              footerTitle: 'Remarks: ',
+              footerSubTitle: GlobalReportRemarksBuilder.topCategoryRemark(
+                data: yearLevelBreakdown,
+                fallback:
+                    'Year level breakdown is not available for the selected period.',
+              ),
             ),
             pw.SizedBox(height: 20),
           ],
@@ -156,13 +168,7 @@ class GlobalReportBuilder {
         pw.SizedBox(height: 5),
         PdfTable(
           headers: ['City/Municipality', 'Number of Vehicles', 'Percentage'],
-          rows: [
-            [globalData?['polancoVehicles'] ?? 'Polanco', '10', '10%'],
-            [globalData?['katipunanVehicles'] ?? 'Katipunan', '9', '9%'],
-            [globalData?['dipologVehicles'] ?? 'Dipolog City', '8', '8%'],
-            [globalData?['sindanganVehicles'] ?? 'Sindangan', '7', '7%'],
-            [globalData?['osmeñaVehicles'] ?? 'Sergio Osmeña', '6', '6%'],
-          ],
+          rows: rowsWithPercent(cityBreakdown),
           columnWidths: {
             0: pw.FlexColumnWidth(2),
             1: pw.FlexColumnWidth(1),
@@ -172,8 +178,11 @@ class GlobalReportBuilder {
         pw.SizedBox(height: 20),
         PdfSectionFooterText(
           footerTitle: 'Remarks: ',
-          footerSubTitle:
-              "Polanco has the highest number of registered vehicles with 10 vehicles.",
+          footerSubTitle: GlobalReportRemarksBuilder.topCategoryRemark(
+            data: cityBreakdown,
+            fallback:
+                'City/municipality breakdown is not available for the selected period.',
+          ),
         ),
         pw.SizedBox(height: 20),
         // Section 5: Vehicle Logs Distribution per College
@@ -185,19 +194,21 @@ class GlobalReportBuilder {
         pw.SizedBox(height: 5),
         PdfTable(
           headers: ['College/Department', 'Number of Logs', 'Percentage'],
-          rows: [
-            ['College of Business Administration', '16', '76%'],
-            ['College of Computing Studies', '5', '24%'],
-            ['College of Business Administration', '16', '76%'],
-            ['College of Computing Studies', '5', '24%'],
-            ['College of Business Administration', '16', '76%'],
-            ['College of Computing Studies', '5', '24%'],
-          ],
+          rows: rowsWithPercent(fleetSummary?.departmentLogData),
           columnWidths: {
             0: pw.FlexColumnWidth(2),
             1: pw.FlexColumnWidth(1),
             2: pw.FlexColumnWidth(1),
           },
+        ),
+        pw.SizedBox(height: 20),
+        PdfSectionFooterText(
+          footerTitle: 'Remarks: ',
+          footerSubTitle: GlobalReportRemarksBuilder.topCategoryRemark(
+            data: fleetSummary?.departmentLogData,
+            fallback:
+                'Vehicle logs distribution per college is not available for the selected period.',
+          ),
         ),
         pw.SizedBox(height: 20),
         // Section 6: Violation Distribution per College
@@ -209,13 +220,7 @@ class GlobalReportBuilder {
         pw.SizedBox(height: 5),
         PdfTable(
           headers: ['College/Department', 'Number of Violations', 'Percentage'],
-          rows: [
-            ['College of Business Administration', '16', '76%'],
-            ['College of Computing Studies', '5', '24%'],
-            ['College of Education', '5', '24%'],
-            ['College of Agriculture and Forestry', '5', '24%'],
-            ['College of Arts and Sciences', '5', '24%'],
-          ],
+          rows: rowsWithPercent(fleetSummary?.deptViolationData),
           columnWidths: {
             0: pw.FlexColumnWidth(2),
             1: pw.FlexColumnWidth(1),
@@ -225,8 +230,11 @@ class GlobalReportBuilder {
         pw.SizedBox(height: 10),
         PdfSectionFooterText(
           footerTitle: 'Remarks: ',
-          footerSubTitle:
-              "The College of Business Administration has the highest number of violations with 16 total violations.",
+          footerSubTitle: GlobalReportRemarksBuilder.topCategoryRemark(
+            data: fleetSummary?.deptViolationData,
+            fallback:
+                'Violation distribution per college is not available for the selected period.',
+          ),
         ),
         pw.SizedBox(height: 20),
         PdfSectionFooterText(
@@ -252,17 +260,15 @@ class GlobalReportBuilder {
         pw.SizedBox(height: 5),
         PdfTable(
           headers: ['Violation Type', 'Number of Violations', 'Percentage'],
-          rows: [
-            [
-              globalData?['topViolation1'] ?? 'Vehicle Modification',
-              '10',
-              '10%',
-            ],
-            [globalData?['topViolation2'] ?? 'Reckless Driving', '9', '9%'],
-            [globalData?['topViolation3'] ?? 'Invalid MVP Sticker', '8', '8%'],
-            [globalData?['topViolation4'] ?? 'Improper Parking', '7', '7%'],
-            [globalData?['topViolation5'] ?? 'Other', '66', '66%'],
-          ],
+          rows: () {
+            final types = fleetSummary?.topViolationTypes;
+            if (types == null || types.isEmpty) return const <List<String>>[];
+            final total = types.fold<int>(0, (sum, t) => sum + t.count);
+            return types.map((t) {
+              final pct = total <= 0 ? 0 : (t.count / total) * 100;
+              return [t.type, t.count.toString(), '${pct.toStringAsFixed(1)}%'];
+            }).toList();
+          }(),
           columnWidths: {
             0: pw.FlexColumnWidth(2),
             1: pw.FlexColumnWidth(1),
@@ -272,8 +278,11 @@ class GlobalReportBuilder {
         pw.SizedBox(height: 20),
         PdfSectionFooterText(
           footerTitle: 'Remarks: ',
-          footerSubTitle:
-              "Vehicle Modification is the most common violation type with 10 occurrences.",
+          footerSubTitle: GlobalReportRemarksBuilder.topViolationTypeRemark(
+            fleetSummary: fleetSummary,
+            fallback:
+                'Violation type distribution is not available for the selected period.',
+          ),
         ),
         pw.SizedBox(height: 20),
         // Section 8: Vehicle Logs for the Last 7 Days
@@ -284,22 +293,26 @@ class GlobalReportBuilder {
         pw.SizedBox(height: 5),
         PdfTable(
           headers: ['Date', 'Number of Logs'],
-          rows: [
-            ['January 1, 2026', '16'],
-            ['January 2, 2026', '5'],
-            ['January 3, 2026', '12'],
-            ['January 4, 2026', '8'],
-            ['January 5, 2026', '20'],
-            ['January 6, 2026', '10'],
-            ['January 7, 2026', '14'],
-          ],
+          rows:
+              logsData.map((d) {
+                if (d.date != null) {
+                  final dt = d.date!;
+                  final month = dt.month.toString().padLeft(2, '0');
+                  final day = dt.day.toString().padLeft(2, '0');
+                  return ['${dt.year}-$month-$day', d.value.toStringAsFixed(0)];
+                }
+                return [d.category, d.value.toStringAsFixed(0)];
+              }).toList(),
           columnWidths: {0: pw.FlexColumnWidth(2), 1: pw.FlexColumnWidth(1)},
         ),
         pw.SizedBox(height: 10),
         PdfSectionFooterText(
           footerTitle: 'Remarks: ',
-          footerSubTitle:
-              "Vehicle activity peaked on January 5, 2026, with 20 logs, indicating higher campus traffic on that day.",
+          footerSubTitle: GlobalReportRemarksBuilder.busiestDayRemark(
+            data: logsData,
+            fallback:
+                'Vehicle log trend data is not available for the selected period.',
+          ),
         ),
         pw.SizedBox(height: 20),
         // Section 9: Students with Most Violations
@@ -311,13 +324,7 @@ class GlobalReportBuilder {
         pw.SizedBox(height: 5),
         PdfTable(
           headers: ['Student Name', 'Number of Violations', 'Percentage'],
-          rows: [
-            [globalData?['topViolator1'] ?? 'Jesie Gapol', '10', '10%'],
-            [globalData?['topViolator2'] ?? 'Junjun Gapol', '9', '9%'],
-            [globalData?['topViolator3'] ?? 'Jerry Gapol', '8', '8%'],
-            [globalData?['topViolator4'] ?? 'Joshua Gapol', '7', '7%'],
-            [globalData?['topViolator5'] ?? 'Yow Gapol', '6', '6%'],
-          ],
+          rows: rowsWithPercent(studentWithMostViolations),
           columnWidths: {
             0: pw.FlexColumnWidth(2),
             1: pw.FlexColumnWidth(1),
@@ -326,8 +333,11 @@ class GlobalReportBuilder {
         ),
         PdfSectionFooterText(
           footerTitle: 'Remarks: ',
-          footerSubTitle:
-              "Jesie Gapol has the highest number of violations with 10 occurrences.",
+          footerSubTitle: GlobalReportRemarksBuilder.topCategoryRemark(
+            data: studentWithMostViolations,
+            fallback:
+                'Student violation ranking is not available for the selected period.',
+          ),
         ),
         pw.SizedBox(height: 20),
         DocSignatory(

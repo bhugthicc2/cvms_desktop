@@ -10,6 +10,8 @@ class ReportsCubit extends Cubit<ReportsState> {
   final ReportRepository _repo = ReportRepository();
   final AnalyticsRepository _analyticsRepo;
 
+  final Map<String, String> _vehicleSuggestionToId = {};
+
   ReportsCubit({required AnalyticsRepository analyticsRepo})
     : _analyticsRepo = analyticsRepo,
       super(const ReportsState(isGlobalMode: true)) {
@@ -105,6 +107,41 @@ class ReportsCubit extends Cubit<ReportsState> {
   void clearError() {
     if (isClosed) return;
     emit(state.copyWith(error: null));
+  }
+
+  Future<List<String>> getVehicleSearchSuggestions(String query) async {
+    final results = await _repo.searchVehicles(query: query, limit: 10);
+    _vehicleSuggestionToId.clear();
+
+    final suggestions = <String>[];
+    for (final r in results) {
+      final owner = r.ownerName.trim();
+      final schoolId = r.schoolID.trim();
+      final plate = r.plateNumber.trim();
+      final model = r.model.trim();
+
+      final label = [
+        if (schoolId.isNotEmpty) schoolId,
+        if (owner.isNotEmpty) owner,
+        if (plate.isNotEmpty) plate,
+        if (model.isNotEmpty) model,
+      ].join(' - ');
+
+      if (label.isEmpty) continue;
+      suggestions.add(label);
+      _vehicleSuggestionToId[label] = r.vehicleId;
+    }
+
+    return suggestions;
+  }
+
+  Future<void> selectVehicleFromSearch(String suggestion) async {
+    final vehicleId = _vehicleSuggestionToId[suggestion];
+    if (vehicleId == null || vehicleId.isEmpty) return;
+
+    // Switch the UI to individual mode.
+    // Individual report loading can be added later without touching widgets.
+    setGlobalMode(false);
   }
 
   Future<void> changeTimeRange(TimeRange timeRange) async {

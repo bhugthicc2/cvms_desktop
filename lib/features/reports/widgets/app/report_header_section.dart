@@ -1,11 +1,13 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_icon_button.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/app/typeahead_search_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
-import 'package:cvms_desktop/features/reports/data/mock_data.dart';
+import 'package:cvms_desktop/features/reports/bloc/reports/reports_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class ReportHeaderSection extends StatefulWidget {
@@ -13,12 +15,16 @@ class ReportHeaderSection extends StatefulWidget {
   final VoidCallback onExportCSV;
   final VoidCallback onDateFilter;
   final String dateSelected;
+  final bool isGlobal;
+  final VoidCallback onBackButtonClicked;
   const ReportHeaderSection({
     super.key,
     required this.onExportPDF,
     required this.onExportCSV,
     required this.onDateFilter,
     required this.dateSelected,
+    required this.isGlobal,
+    required this.onBackButtonClicked,
   });
 
   @override
@@ -28,28 +34,15 @@ class ReportHeaderSection extends StatefulWidget {
 class _ReportHeaderSectionState extends State<ReportHeaderSection> {
   final TextEditingController _searchController = TextEditingController();
 
-  // Mock data for suggestions - replace with actual data from your database ---TOBE REMOVED---
   Future<List<String>> _getSuggestions(String query) async {
     if (query.isEmpty) return [];
-
-    final suggestions =
-        ReportMockData.searchMockData
-            .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 300));
-
-    return suggestions;
+    return context.read<ReportsCubit>().getVehicleSearchSuggestions(query);
   }
-
-  // ---TOBE REMOVED---
 
   void _onSuggestionSelected(String suggestion) {
     _searchController.text = suggestion;
-    // todo Implement search functionality with selected suggestion
+    context.read<ReportsCubit>().selectVehicleFromSearch(suggestion);
     CustomSnackBar.showSuccess(context, 'Selected: $suggestion');
-    //todo change the report content
   }
 
   @override
@@ -63,11 +56,24 @@ class _ReportHeaderSectionState extends State<ReportHeaderSection> {
     return SizedBox(
       child: Row(
         children: [
+          widget.isGlobal == false
+              ? Row(
+                children: [
+                  CustomIconButton(
+                    iconSize: 24,
+                    onPressed: widget.onBackButtonClicked,
+                    icon: PhosphorIconsBold.arrowLeft,
+                    iconColor: AppColors.primary,
+                  ),
+                  Spacing.horizontal(size: AppSpacing.small),
+                ],
+              )
+              : SizedBox(),
           Expanded(
             //search bar
             child: TypeaheadSearchField(
               hoverScale: 1,
-              hintText: 'Search by plate no., owner, or model',
+              hintText: 'Search by plate no., owner, school ID or model',
               searchFieldHeight: 40,
               controller: _searchController,
               suggestionsCallback: _getSuggestions,

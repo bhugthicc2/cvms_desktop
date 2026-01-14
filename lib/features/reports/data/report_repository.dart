@@ -5,6 +5,89 @@ import '../models/fleet_summary.dart';
 class ReportRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<List<VehicleSearchResult>> searchVehicles({
+    required String query,
+    int limit = 10,
+  }) async {
+    final q = query.trim();
+    if (q.isEmpty) return [];
+
+    Future<List<QueryDocumentSnapshot>> runPrefixQuery(String field) async {
+      return await _firestore
+          .collection('vehicles')
+          .orderBy(field)
+          .startAt([q])
+          .endAt(['${q}\uf8ff'])
+          .limit(limit)
+          .get()
+          .then((snapshot) => snapshot.docs);
+    }
+
+    final Map<String, VehicleSearchResult> resultsById = {};
+
+    Future<void> mergeFromField(String field) async {
+      try {
+        final docs = await runPrefixQuery(field);
+        for (final doc in docs) {
+          final data = doc.data() as Map<String, dynamic>?;
+          if (data == null) continue;
+          final plateNumber =
+              (data['plateNumber'] ?? data['plateNo'] ?? '') as String;
+          final schoolId = (data['schoolID'] ?? '') as String;
+          final ownerName = (data['ownerName'] ?? '') as String;
+          final model = (data['model'] ?? data['vehicleModel'] ?? '') as String;
+          resultsById[doc.id] = VehicleSearchResult(
+            vehicleId: doc.id,
+            plateNumber: plateNumber,
+            ownerName: ownerName,
+            model: model,
+            schoolID: schoolId,
+          );
+        }
+      } catch (_) {
+        // If a prefix query fails (missing index/field), skip it.
+      }
+    }
+
+    await mergeFromField('plateNumber');
+    await mergeFromField('schoolId');
+    await mergeFromField('ownerName');
+    await mergeFromField('model');
+
+    if (resultsById.isEmpty) {
+      try {
+        final snapshot =
+            await _firestore.collection('vehicles').limit(50).get();
+        for (final doc in snapshot.docs) {
+          final data = doc.data() as Map<String, dynamic>?;
+          if (data == null) continue;
+          final plateNumber =
+              (data['plateNumber'] ?? data['plateNo'] ?? '') as String;
+          final schoolId = (data['schoolID'] ?? '') as String;
+          final ownerName = (data['ownerName'] ?? '') as String;
+          final model = (data['model'] ?? data['vehicleModel'] ?? '') as String;
+
+          final haystack =
+              '$plateNumber $ownerName $model $schoolId'.toLowerCase();
+          if (!haystack.contains(q.toLowerCase())) continue;
+
+          resultsById[doc.id] = VehicleSearchResult(
+            vehicleId: doc.id,
+            plateNumber: plateNumber,
+            ownerName: ownerName,
+            model: model,
+            schoolID: schoolId,
+          );
+          if (resultsById.length >= limit) break;
+        }
+      } catch (_) {
+        // Ignore and return empty list.
+      }
+    }
+
+    return resultsById.values.take(limit).toList();
+  }
+
   // MAIN FLEET SUMMARY - Orchestrates all data
   Future<FleetSummary> fetchFleetSummary({
     DateTime? startDate,
@@ -297,4 +380,20 @@ class ReportRepository {
 
     return chartData;
   }
+}
+
+class VehicleSearchResult {
+  final String vehicleId;
+  final String plateNumber;
+  final String ownerName;
+  final String model;
+  final String schoolID;
+
+  const VehicleSearchResult({
+    required this.vehicleId,
+    required this.plateNumber,
+    required this.ownerName,
+    required this.model,
+    required this.schoolID,
+  });
 }

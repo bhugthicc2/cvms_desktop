@@ -5,6 +5,9 @@ import 'package:cvms_desktop/features/reports/widgets/pdf_doc/texts/pdf_section_
 import 'package:cvms_desktop/features/reports/widgets/pdf_doc/texts/pdf_section_text.dart';
 import 'package:cvms_desktop/features/reports/widgets/pdf_doc/texts/pdf_subtitle_text.dart';
 import 'package:cvms_desktop/features/reports/widgets/pdf_doc/tables/pdf_table.dart';
+import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
+import 'package:cvms_desktop/features/reports/controllers/global_report_remarks_builder.dart';
+import 'package:cvms_desktop/features/reports/models/fleet_summary.dart';
 import 'package:pdf/widgets.dart' as pw;
 import '../widgets/pdf_doc/letter_head/doc_signatory.dart';
 import '../widgets/pdf_doc/templates/pdf_page_template.dart';
@@ -13,6 +16,17 @@ class GlobalChartReportBuilder {
   static Future<Uint8List> build(Map<String, dynamic>? globalData) async {
     final pdf = pw.Document();
     final template = const PdfPageTemplate();
+
+    final fleetSummary = globalData?['fleetSummary'] as FleetSummary?;
+    final vehicleDistribution =
+        globalData?['vehicleDistribution'] as List<ChartDataModel>?;
+    final yearLevelBreakdown =
+        globalData?['yearLevelBreakdown'] as List<ChartDataModel>?;
+    final cityBreakdown = globalData?['cityBreakdown'] as List<ChartDataModel>?;
+    final studentWithMostViolations =
+        globalData?['studentWithMostViolations'] as List<ChartDataModel>?;
+    final logsData =
+        (globalData?['logsData'] as List<ChartDataModel>?) ?? const [];
 
     final vehicleDistributionChartBytes =
         globalData?['vehicleDistributionChartBytes'] as Uint8List?;
@@ -30,6 +44,37 @@ class GlobalChartReportBuilder {
         globalData?['violationDistributionPerCollegeChartBytes'] as Uint8List?;
     final fleetLogsChartBytes =
         globalData?['fleetLogsChartBytes'] as Uint8List?;
+
+    final vehicleDistRemarks = GlobalReportRemarksBuilder.topCategoryRemark(
+      data: vehicleDistribution,
+      fallback:
+          'Vehicle distribution is not available for the selected period.',
+    );
+    final yearLevelRemarks = GlobalReportRemarksBuilder.topCategoryRemark(
+      data: yearLevelBreakdown,
+      fallback:
+          'Year level breakdown is not available for the selected period.',
+    );
+    final cityRemarks = GlobalReportRemarksBuilder.topCategoryRemark(
+      data: cityBreakdown,
+      fallback:
+          'City/municipality breakdown is not available for the selected period.',
+    );
+    final studentRemarks = GlobalReportRemarksBuilder.topCategoryRemark(
+      data: studentWithMostViolations,
+      fallback:
+          'Student violation ranking is not available for the selected period.',
+    );
+    final logsRemarks = GlobalReportRemarksBuilder.busiestDayRemark(
+      data: logsData,
+      fallback:
+          'Vehicle log trend data is not available for the selected period.',
+    );
+    final topViolationRemarks = GlobalReportRemarksBuilder.topViolationTypeRemark(
+      fleetSummary: fleetSummary,
+      fallback:
+          'Violation type distribution is not available for the selected period.',
+    );
 
     // Page 1: Fleet Summary and Distributions
     final page1Content = pw.Column(
@@ -55,12 +100,33 @@ class GlobalChartReportBuilder {
             PdfTable(
               headers: ['Metric', 'Value'],
               rows: [
-                ['Total Violations', globalData?['totalViolations'] ?? '150'],
-                ['Pending Violations', globalData?['activeViolations'] ?? '22'],
-                ['Total Vehicles', globalData?['totalVehicles'] ?? '230'],
+                [
+                  'Total Violations',
+                  (fleetSummary?.totalViolations ??
+                          globalData?['totalViolations'] ??
+                          '—')
+                      .toString(),
+                ],
+                [
+                  'Pending Violations',
+                  (fleetSummary?.activeViolations ??
+                          globalData?['activeViolations'] ??
+                          '—')
+                      .toString(),
+                ],
+                [
+                  'Total Vehicles',
+                  (fleetSummary?.totalVehicles ??
+                          globalData?['totalVehicles'] ??
+                          '—')
+                      .toString(),
+                ],
                 [
                   'Total Vehicle Entries / Exits',
-                  globalData?['totalEntriesExits'] ?? '540',
+                  (fleetSummary?.totalEntriesExits ??
+                          globalData?['totalEntriesExits'] ??
+                          '—')
+                      .toString(),
                 ],
               ],
               columnWidths: {
@@ -90,8 +156,7 @@ class GlobalChartReportBuilder {
             pw.SizedBox(height: 10),
             PdfSectionFooterText(
               footerTitle: 'Remarks: ',
-              footerSubTitle:
-                  "Vehicle activity peaked on January 5, 2026, with 20 logs, indicating higher campus traffic on that day.",
+              footerSubTitle: vehicleDistRemarks,
             ),
             pw.SizedBox(height: 20),
             // Section 3: Year Level Breakdown
@@ -114,8 +179,7 @@ class GlobalChartReportBuilder {
             pw.SizedBox(height: 10),
             PdfSectionFooterText(
               footerTitle: 'Remarks: ',
-              footerSubTitle:
-                  "Vehicle activity peaked on January 5, 2026, with 20 logs, indicating higher campus traffic on that day.",
+              footerSubTitle: yearLevelRemarks,
             ),
             pw.SizedBox(height: 20),
           ],
@@ -149,8 +213,7 @@ class GlobalChartReportBuilder {
 
         PdfSectionFooterText(
           footerTitle: 'Remarks: ',
-          footerSubTitle:
-              "Polanco has the highest number of registered vehicles with 10 vehicles.",
+          footerSubTitle: cityRemarks,
         ),
         pw.SizedBox(height: 10),
         // Section 5: Vehicle Logs Distribution per College
@@ -173,8 +236,7 @@ class GlobalChartReportBuilder {
 
         PdfSectionFooterText(
           footerTitle: 'Remarks: ',
-          footerSubTitle:
-              "Vehicle activity peaked on January 5, 2026, with 20 logs, indicating higher campus traffic on that day.",
+          footerSubTitle: logsRemarks,
         ),
         pw.SizedBox(height: 10),
         // Section 6: Violation Distribution per College
@@ -198,7 +260,11 @@ class GlobalChartReportBuilder {
 
         PdfSectionFooterText(
           footerTitle: 'Remarks',
-          footerSubTitle: "The LHS got all the entry for violations.",
+          footerSubTitle: GlobalReportRemarksBuilder.topCategoryRemark(
+            data: fleetSummary?.deptViolationData,
+            fallback:
+                'Violation distribution per college is not available for the selected period.',
+          ),
         ),
       ],
     );
@@ -230,8 +296,7 @@ class GlobalChartReportBuilder {
 
         PdfSectionFooterText(
           footerTitle: 'Remarks: ',
-          footerSubTitle:
-              "Vehicle Modification is the most common violation type with 10 occurrences.",
+          footerSubTitle: topViolationRemarks,
         ),
         pw.SizedBox(height: 20),
         // Section 8: Vehicle Logs for the Last 7 Days
@@ -253,8 +318,7 @@ class GlobalChartReportBuilder {
 
         PdfSectionFooterText(
           footerTitle: 'Remarks: ',
-          footerSubTitle:
-              "Vehicle Modification is the most common violation type with 10 occurrences.",
+          footerSubTitle: logsRemarks,
         ),
         pw.SizedBox(height: 20),
         // Section 9: Students with Most Violations
@@ -277,8 +341,7 @@ class GlobalChartReportBuilder {
 
         PdfSectionFooterText(
           footerTitle: 'Remarks: ',
-          footerSubTitle:
-              "Jesie Gapol has the highest number of violations with 10 occurrences.",
+          footerSubTitle: studentRemarks,
         ),
         pw.SizedBox(height: 20),
         DocSignatory(
@@ -291,6 +354,21 @@ class GlobalChartReportBuilder {
     );
     pdf.addPage(template.build(child: page3Content));
 
+    // Page 4: Top Violations, Logs, and High-Violation Students
+    final page4Content = pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.SizedBox(height: 10),
+
+        DocSignatory(
+          preparer: 'Joven Ondog',
+          preparerDesignation: 'CDRRMSU Office In-Charge',
+          approver: 'Leonel Hidalgo, Ph.D.',
+          approverDesignation: 'CDRRMSU Head',
+        ),
+      ],
+    );
+    pdf.addPage(template.build(child: page4Content));
     return Uint8List.fromList(await pdf.save());
   }
 }

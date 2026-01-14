@@ -1,4 +1,7 @@
 import 'dart:typed_data';
+import 'package:cvms_desktop/features/dashboard/bloc/dashboard_state.dart';
+import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
+import 'package:cvms_desktop/features/reports/models/fleet_summary.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
@@ -9,6 +12,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'pdf_editor_state.dart';
 
 class PdfEditorCubit extends Cubit<PdfEditorState> {
+  final FleetSummary? _fleetSummary;
+  final List<ChartDataModel>? _vehicleDistribution;
+  final List<ChartDataModel>? _yearLevelBreakdown;
+  final List<ChartDataModel>? _cityBreakdown;
+  final List<ChartDataModel>? _studentWithMostViolations;
+  final List<ChartDataModel> _logsData;
+  final TimeRange _selectedTimeRange;
+
   final Uint8List? _vehicleDistributionChartBytes;
   final Uint8List? _yearLevelBreakdownChartBytes;
   final Uint8List? _studentwithMostViolationChartBytes;
@@ -19,6 +30,13 @@ class PdfEditorCubit extends Cubit<PdfEditorState> {
   final Uint8List? _fleetLogsChartBytes;
 
   PdfEditorCubit({
+    FleetSummary? fleetSummary,
+    List<ChartDataModel>? vehicleDistribution,
+    List<ChartDataModel>? yearLevelBreakdown,
+    List<ChartDataModel>? cityBreakdown,
+    List<ChartDataModel>? studentWithMostViolations,
+    List<ChartDataModel> logsData = const [],
+    TimeRange selectedTimeRange = TimeRange.days7,
     Uint8List? vehicleDistributionChartBytes,
     Uint8List? yearLevelBreakdownChartBytes,
     Uint8List? studentwithMostViolationChartBytes,
@@ -27,7 +45,14 @@ class PdfEditorCubit extends Cubit<PdfEditorState> {
     Uint8List? violationDistributionPerCollegeChartBytes,
     Uint8List? top5ViolationByTypeChartBytes,
     Uint8List? fleetLogsChartBytes,
-  }) : _vehicleDistributionChartBytes = vehicleDistributionChartBytes,
+  }) : _fleetSummary = fleetSummary,
+       _vehicleDistribution = vehicleDistribution,
+       _yearLevelBreakdown = yearLevelBreakdown,
+       _cityBreakdown = cityBreakdown,
+       _studentWithMostViolations = studentWithMostViolations,
+       _logsData = logsData,
+       _selectedTimeRange = selectedTimeRange,
+       _vehicleDistributionChartBytes = vehicleDistributionChartBytes,
        _yearLevelBreakdownChartBytes = yearLevelBreakdownChartBytes,
        _studentwithMostViolationChartBytes = studentwithMostViolationChartBytes,
        _cityBreakdownChartBytes = cityBreakdownChartBytes,
@@ -54,6 +79,13 @@ class PdfEditorCubit extends Cubit<PdfEditorState> {
     try {
       final bytes = await PdfReportBuilder.buildVehicleReport(
         globalData: {
+          'fleetSummary': _fleetSummary,
+          'vehicleDistribution': _vehicleDistribution,
+          'yearLevelBreakdown': _yearLevelBreakdown,
+          'cityBreakdown': _cityBreakdown,
+          'studentWithMostViolations': _studentWithMostViolations,
+          'logsData': _logsData,
+          'selectedTimeRange': _selectedTimeRange,
           'vehicleDistributionChartBytes': _vehicleDistributionChartBytes,
           'yearLevelBreakdownChartBytes': _yearLevelBreakdownChartBytes,
           'studentwithMostViolationChartBytes':

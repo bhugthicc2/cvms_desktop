@@ -3,7 +3,6 @@ import 'package:cvms_desktop/core/utils/card_decor.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
 import 'report_table_header.dart';
-import '../../tables/violation/global_violation_history_table.dart';
 import '../../tables/violation/violation_history_table.dart';
 
 /// Violations Table Section - Displays violation history table with header including:
@@ -14,7 +13,7 @@ class ViolationsTableSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return isGlobal
+    return isGlobal == false
         ? Container(
           padding: const EdgeInsets.fromLTRB(
             AppSpacing.medium,
@@ -26,23 +25,13 @@ class ViolationsTableSection extends StatelessWidget {
           decoration: cardDecoration(),
           child: Column(
             children: [
-              ReportTableHeader(
-                tableTitle:
-                    isGlobal ? 'Global Violation History' : 'Violation History',
-                onTap: () {},
-              ),
+              ReportTableHeader(tableTitle: 'Violation History', onTap: () {}),
               Spacing.vertical(size: AppSpacing.medium),
               Expanded(
-                child:
-                    isGlobal
-                        ? const GlobalViolationHistoryTable(
-                          istableHeaderDark: false,
-                          allowSorting: true,
-                        )
-                        : const ViolationHistoryTable(
-                          istableHeaderDark: false,
-                          allowSorting: true,
-                        ),
+                child: ViolationHistoryTable(
+                  istableHeaderDark: false,
+                  allowSorting: true,
+                ),
               ),
             ],
           ),

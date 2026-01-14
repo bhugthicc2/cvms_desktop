@@ -1,6 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
-import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_slide.dart';
 import 'package:cvms_desktop/features/shell/models/nav_item.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +48,7 @@ class _CustomSidebarTileState extends State<CustomSidebarTile> {
           horizontal: 50 * 0.25,
           vertical: 11,
         ),
-        child: HoverGrow(
+        child: HoverSlide(
           cursor: SystemMouseCursors.click,
           child: Row(
             children: [

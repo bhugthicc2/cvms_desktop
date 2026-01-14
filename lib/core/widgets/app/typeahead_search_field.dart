@@ -113,8 +113,62 @@ class TypeaheadSearchField extends StatelessWidget {
             );
           },
           itemBuilder: (context, suggestion) {
+            final baseStyle = TextStyle(
+              color: AppColors.black,
+              fontSize: 13,
+              fontFamily: 'Poppins',
+            );
+
+            final query = controller.text.trim();
+            final suggestionText = suggestion;
+
+            final spans = <TextSpan>[];
+            if (query.isEmpty) {
+              spans.add(TextSpan(text: suggestionText));
+            } else {
+              final lowerSuggestion = suggestionText.toLowerCase();
+              final lowerQuery = query.toLowerCase();
+
+              var start = 0;
+              while (true) {
+                final matchIndex = lowerSuggestion.indexOf(lowerQuery, start);
+                if (matchIndex < 0) {
+                  if (start < suggestionText.length) {
+                    spans.add(TextSpan(text: suggestionText.substring(start)));
+                  }
+                  break;
+                }
+
+                if (matchIndex > start) {
+                  spans.add(
+                    TextSpan(text: suggestionText.substring(start, matchIndex)),
+                  );
+                }
+
+                spans.add(
+                  TextSpan(
+                    text: suggestionText.substring(
+                      matchIndex,
+                      matchIndex + query.length,
+                    ),
+                    style: baseStyle.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                );
+
+                start = matchIndex + query.length;
+                if (start >= suggestionText.length) break;
+              }
+            }
+
             return ListTile(
-              title: Text(suggestion),
+              title: RichText(
+                text: TextSpan(style: baseStyle, children: spans),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
               leading: Icon(
                 PhosphorIconsRegular.magnifyingGlass,
                 size: 16,
