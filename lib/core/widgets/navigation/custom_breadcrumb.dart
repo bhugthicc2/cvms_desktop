@@ -1,18 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
 import 'package:flutter/material.dart';
-
-class BreadcrumbItem {
-  final String label;
-  final VoidCallback? onTap;
-  final bool isActive;
-
-  const BreadcrumbItem({
-    required this.label,
-    this.onTap,
-    this.isActive = false,
-  });
-}
 
 class CustomBreadcrumb extends StatelessWidget {
   final List<BreadcrumbItem> items;

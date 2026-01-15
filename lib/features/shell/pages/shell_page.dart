@@ -1,6 +1,7 @@
 import 'package:cvms_desktop/features/auth/bloc/current_user_cubit.dart';
 import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
 import 'package:cvms_desktop/features/auth/data/user_repository.dart';
+import 'package:cvms_desktop/features/shell/scope/breadcrumb_scope.dart';
 import 'package:cvms_desktop/features/shell/widgets/logout_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,8 +15,19 @@ import 'package:cvms_desktop/features/shell/config/shell_navigation_config.dart'
 import 'package:cvms_desktop/features/shell/widgets/custom_header.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_sidebar.dart';
 
-class ShellPage extends StatelessWidget {
+class ShellPage extends StatefulWidget {
   const ShellPage({super.key});
+
+  @override
+  State<ShellPage> createState() => _ShellPageState();
+}
+
+class _ShellPageState extends State<ShellPage> {
+  final BreadcrumbController _breadcrumbController = BreadcrumbController();
+  final List<Widget?> _pageCache = List<Widget?>.filled(
+    ShellNavigationConfig.titles.length,
+    null,
+  );
 
   void _handleLogout(BuildContext context) async {
     final confirmed = await LogoutDialog.show(context);
@@ -23,6 +35,12 @@ class ShellPage extends StatelessWidget {
       // ignore: use_build_context_synchronously
       context.read<AuthBloc>().add(SignOutEvent());
     }
+  }
+
+  @override
+  void dispose() {
+    _breadcrumbController.dispose();
+    super.dispose();
   }
 
   void _handleAuthState(BuildContext context, AuthState state) {
@@ -53,52 +71,76 @@ class ShellPage extends StatelessWidget {
       ],
       child: BlocListener<AuthBloc, AuthState>(
         listener: _handleAuthState,
-        child: BlocBuilder<ShellCubit, ShellState>(
-          builder: (context, state) {
-            final titles = ShellNavigationConfig.titles;
-
-            return Scaffold(
-              body: Row(
-                children: [
-                  CustomSidebar(
-                    isExpanded: state.isExpanded,
-                    selectedIndex: state.selectedIndex,
-                    onItemSelected:
-                        (index) => context.read<ShellCubit>().selectPage(index),
-                    onToggle: () => context.read<ShellCubit>().toggleSidebar(),
-                    onLogout: () => _handleLogout(context),
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        BlocBuilder<CurrentUserCubit, CurrentUserState>(
-                          builder: (context, userState) {
-                            return CustomHeader(
-                              currentUser: userState.fullname ?? "Guest",
-                              title: titles[state.selectedIndex],
-
-                              onMenuPressed:
-                                  () =>
-                                      context
-                                          .read<ShellCubit>()
-                                          .toggleSidebar(),
-                            );
-                          },
-                        ),
-                        //body
-                        Expanded(
-                          child: ShellNavigationConfig.getPage(
-                            state.selectedIndex,
-                            context,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
+        child: BlocListener<ShellCubit, ShellState>(
+          listenWhen: (previous, current) {
+            return previous.selectedIndex != current.selectedIndex;
           },
+          listener: (context, state) {
+            _breadcrumbController.setBreadcrumbs(const []);
+          },
+          child: BlocBuilder<ShellCubit, ShellState>(
+            builder: (context, state) {
+              final titles = ShellNavigationConfig.titles;
+
+              _pageCache[state.selectedIndex] ??= ShellNavigationConfig.getPage(
+                state.selectedIndex,
+                context,
+              );
+
+              return BreadcrumbScope(
+                controller: _breadcrumbController,
+                child: Scaffold(
+                  body: Row(
+                    children: [
+                      CustomSidebar(
+                        isExpanded: state.isExpanded,
+                        selectedIndex: state.selectedIndex,
+                        onItemSelected:
+                            (index) =>
+                                context.read<ShellCubit>().selectPage(index),
+                        onToggle:
+                            () => context.read<ShellCubit>().toggleSidebar(),
+                        onLogout: () => _handleLogout(context),
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            BlocBuilder<CurrentUserCubit, CurrentUserState>(
+                              builder: (context, userState) {
+                                final breadcrumbs = BreadcrumbScope.of(context);
+                                return CustomHeader(
+                                  currentUser: userState.fullname ?? "Guest",
+                                  title: titles[state.selectedIndex],
+
+                                  onMenuPressed:
+                                      () =>
+                                          context
+                                              .read<ShellCubit>()
+                                              .toggleSidebar(),
+                                  breadcrumbs: breadcrumbs,
+                                );
+                              },
+                            ),
+                            //body
+                            Expanded(
+                              child: IndexedStack(
+                                index: state.selectedIndex,
+                                children: List.generate(
+                                  titles.length,
+                                  (i) =>
+                                      _pageCache[i] ?? const SizedBox.shrink(),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

@@ -1,6 +1,8 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:cvms_desktop/core/widgets/navigation/custom_breadcrumb.dart';
+import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
+import 'package:cvms_desktop/features/shell/bloc/shell_cubit.dart';
+import 'package:cvms_desktop/features/shell/scope/breadcrumb_scope.dart';
 import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_review.dart';
 import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_step1.dart';
 import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_step2.dart';
@@ -34,23 +36,83 @@ class _VehicleManagementPageState extends State<VehicleManagementPage> {
   @override
   void dispose() {
     vehicleController.dispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.greySurface,
-      body: BlocBuilder<VehicleCubit, VehicleState>(
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ShellCubit, ShellState>(
+          listenWhen: (previous, current) {
+            return previous.selectedIndex != current.selectedIndex;
+          },
+          listener: (context, shellState) {
+            if (shellState.selectedIndex != 3) return;
+            final vehicleState = context.read<VehicleCubit>().state;
+            BreadcrumbScope.controllerOf(
+              context,
+            ).setBreadcrumbs(_buildBreadcrumbs(context, vehicleState));
+          },
+        ),
+        BlocListener<VehicleCubit, VehicleState>(
+          listener: (context, state) {
+            final selectedIndex =
+                context.read<ShellCubit>().state.selectedIndex;
+            if (selectedIndex != 3) return;
+
+            BreadcrumbScope.controllerOf(
+              context,
+            ).setBreadcrumbs(_buildBreadcrumbs(context, state));
+          },
+        ),
+      ],
+      child: BlocBuilder<VehicleCubit, VehicleState>(
         builder: (context, state) {
-          return Padding(
-            padding: const EdgeInsets.all(AppSpacing.medium),
-            child: _buildBody(context, state),
+          return Scaffold(
+            backgroundColor: AppColors.greySurface,
+            body: Padding(
+              padding: const EdgeInsets.all(AppSpacing.medium),
+              child: _buildBody(context, state),
+            ),
           );
         },
       ),
     );
+  }
+
+  List<BreadcrumbItem> _buildBreadcrumbs(
+    BuildContext context,
+    VehicleState state,
+  ) {
+    final cubit = context.read<VehicleCubit>();
+
+    switch (state.viewMode) {
+      case VehicleViewMode.list:
+        return const [];
+
+      case VehicleViewMode.addVehicleStep1:
+        return [BreadcrumbItem(label: 'Add Vehicle')];
+
+      case VehicleViewMode.addVehicleStep2:
+        return [
+          BreadcrumbItem(
+            label: 'Add Vehicle',
+            onTap: cubit.showAddVehicleStep1,
+          ),
+          const BreadcrumbItem(label: 'Step 2'),
+        ];
+
+      case VehicleViewMode.addVehicleReview:
+        return [
+          BreadcrumbItem(
+            label: 'Add Vehicle',
+            onTap: cubit.showAddVehicleStep1,
+          ),
+          BreadcrumbItem(label: 'Step 2', onTap: cubit.goToStep2),
+          const BreadcrumbItem(label: 'Review'),
+        ];
+    }
   }
 
   Widget _buildBody(BuildContext context, VehicleState state) {
@@ -92,37 +154,5 @@ class _VehicleManagementPageState extends State<VehicleManagementPage> {
           onBack: () => context.read<VehicleCubit>().goToStep2(),
         );
     }
-  }
-
-  List<BreadcrumbItem> buildBreadcrumbs(
-    BuildContext context,
-    VehicleState state,
-  ) {
-    final cubit = context.read<VehicleCubit>();
-
-    final items = <BreadcrumbItem>[];
-
-    if (state.viewMode == VehicleViewMode.addVehicleStep1) {
-      items.add(
-        BreadcrumbItem(label: 'Add Vehicle', onTap: cubit.showAddVehicleStep1),
-      );
-    }
-
-    if (state.viewMode == VehicleViewMode.addVehicleStep2) {
-      items.addAll([
-        BreadcrumbItem(label: 'Add Vehicle', onTap: cubit.showAddVehicleStep1),
-        BreadcrumbItem(label: 'Step 2'),
-      ]);
-    }
-
-    if (state.viewMode == VehicleViewMode.addVehicleReview) {
-      items.addAll([
-        BreadcrumbItem(label: 'Add Vehicle', onTap: cubit.showAddVehicleStep1),
-        BreadcrumbItem(label: 'Step 2', onTap: cubit.goToStep2),
-        BreadcrumbItem(label: 'Review'),
-      ]);
-    }
-
-    return items;
   }
 }

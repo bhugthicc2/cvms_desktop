@@ -5,6 +5,8 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_window_buttons.dart';
+import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
+import 'package:cvms_desktop/core/widgets/navigation/custom_breadcrumb.dart';
 import 'package:flutter/material.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -14,6 +16,7 @@ class CustomHeader extends StatelessWidget {
   final String currentUser;
   final List<Widget>? actions;
   final VoidCallback? onMenuPressed;
+  final List<BreadcrumbItem> breadcrumbs;
 
   const CustomHeader({
     super.key,
@@ -21,6 +24,7 @@ class CustomHeader extends StatelessWidget {
     this.actions,
     this.onMenuPressed,
     required this.currentUser,
+    required this.breadcrumbs,
   });
 
   @override
@@ -48,15 +52,42 @@ class CustomHeader extends StatelessWidget {
             ),
           ),
           Spacing.horizontal(size: AppSpacing.medium - 5),
+
+          /// Root (always visible)
           Text(
             title,
             style: TextStyle(
-              color: AppColors.black,
-              fontWeight: FontWeight.bold,
               fontSize: AppFontSizes.medium,
-              height: 1.0,
+              fontWeight:
+                  breadcrumbs.isEmpty ? FontWeight.bold : FontWeight.normal,
+              color: breadcrumbs.isEmpty ? AppColors.black : AppColors.grey,
             ),
           ),
+
+          /// Breadcrumbs
+          for (int i = 0; i < breadcrumbs.length; i++) ...[
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 6),
+              child: Text('>'),
+            ),
+            GestureDetector(
+              onTap: breadcrumbs[i].onTap,
+              child: Text(
+                breadcrumbs[i].label,
+                style: TextStyle(
+                  fontSize: AppFontSizes.medium,
+                  fontWeight:
+                      i == breadcrumbs.length - 1
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                  color:
+                      i == breadcrumbs.length - 1
+                          ? AppColors.primary
+                          : AppColors.grey,
+                ),
+              ),
+            ),
+          ],
           Expanded(child: MoveWindow()),
 
           Padding(

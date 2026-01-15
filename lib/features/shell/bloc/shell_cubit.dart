@@ -39,7 +39,7 @@ class ShellState {
 
 class ShellCubit extends Cubit<ShellState> {
   // Cache BLoC instances to avoid recreating them
-  final Map<int, dynamic> _blocCache = {};
+  final Map<String, dynamic> _blocCache = {};
 
   ShellCubit() : super(ShellState()) {
     // Preload commonly used pages in background
@@ -81,17 +81,28 @@ class ShellCubit extends Cubit<ShellState> {
     }
   }
 
-  dynamic _getOrCreateBloc(int index) {
-    if (_blocCache.containsKey(index)) {
-      return _blocCache[index];
-    }
+  String _cacheKey<T>(int index) => '$index:${T.toString()}';
 
+  T? getCachedBloc<T>(int index) {
+    return _blocCache[_cacheKey<T>(index)] as T?;
+  }
+
+  T getOrCreateCachedBloc<T>(int index, T Function() create) {
+    final key = _cacheKey<T>(index);
+    final cached = _blocCache[key];
+    if (cached is T) return cached;
+    final bloc = create();
+    _blocCache[key] = bloc;
+    return bloc;
+  }
+
+  dynamic _getOrCreateBloc(int index) {
     switch (index) {
       case 1: // Vehicle Monitoring
-        final cubit = VehicleMonitoringCubit(
-          vehicle_repo.DashboardRepository(),
+        final cubit = getOrCreateCachedBloc<VehicleMonitoringCubit>(
+          1,
+          () => VehicleMonitoringCubit(vehicle_repo.DashboardRepository()),
         );
-        _blocCache[index] = cubit;
         // Start listening in background
         Future.delayed(const Duration(milliseconds: 100), () {
           if (!cubit.isClosed) cubit.startListening();
@@ -99,38 +110,46 @@ class ShellCubit extends Cubit<ShellState> {
         return cubit;
 
       case 2: // Vehicle Logs
-        final cubit = VehicleLogsCubit(VehicleLogsRepository());
-        _blocCache[index] = cubit;
+        final cubit = getOrCreateCachedBloc<VehicleLogsCubit>(
+          2,
+          () => VehicleLogsCubit(VehicleLogsRepository()),
+        );
         Future.delayed(const Duration(milliseconds: 100), () {
           if (!cubit.isClosed) cubit.loadVehicleLogs();
         });
         return cubit;
 
       case 3: // Vehicle Management
-        final cubit = VehicleCubit(
-          VehicleRepository(),
-          AuthRepository(),
-          UserRepository(),
-          VehicleViolationRepository(),
-          VehicleLogsRepository(),
+        final cubit = getOrCreateCachedBloc<VehicleCubit>(
+          3,
+          () => VehicleCubit(
+            VehicleRepository(),
+            AuthRepository(),
+            UserRepository(),
+            VehicleViolationRepository(),
+            VehicleLogsRepository(),
+          ),
         );
-        _blocCache[index] = cubit;
         Future.delayed(const Duration(milliseconds: 100), () {
           if (!cubit.isClosed) cubit.listenVehicles();
         });
         return cubit;
 
       case 4: // User Management
-        final userCubit = UserCubit(repository: user_mgmt.UserRepository());
-        _blocCache[index] = userCubit;
+        final userCubit = getOrCreateCachedBloc<UserCubit>(
+          4,
+          () => UserCubit(repository: user_mgmt.UserRepository()),
+        );
         Future.delayed(const Duration(milliseconds: 100), () {
           if (!userCubit.isClosed) userCubit.listenUsers();
         });
         return userCubit;
 
       case 5: // Violation Management
-        final cubit = ViolationCubit();
-        _blocCache[index] = cubit;
+        final cubit = getOrCreateCachedBloc<ViolationCubit>(
+          5,
+          () => ViolationCubit(),
+        );
         Future.delayed(const Duration(milliseconds: 100), () {
           if (!cubit.isClosed) cubit.listenViolations();
         });
@@ -141,16 +160,12 @@ class ShellCubit extends Cubit<ShellState> {
     }
   }
 
-  T? getCachedBloc<T>(int index) {
-    return _blocCache[index] as T?;
-  }
-
   @override
   Future<void> close() {
     // Close all cached BLoCs
     for (final bloc in _blocCache.values) {
       try {
-        if (bloc.hasMethod('close')) {
+        if (bloc is BlocBase) {
           bloc.close();
         }
       } catch (e) {

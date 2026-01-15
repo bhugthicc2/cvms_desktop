@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
 import 'package:cvms_desktop/core/widgets/navigation/custom_breadcrumb.dart';
 import 'package:cvms_desktop/features/reports/widgets/buttons/custom_icon_button.dart';
 import 'package:flutter/material.dart';
