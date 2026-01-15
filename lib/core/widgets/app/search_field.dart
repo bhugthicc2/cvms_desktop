@@ -52,10 +52,10 @@ class SearchField extends StatelessWidget {
           controller: controller,
           onChanged: onChanged,
           decoration: InputDecoration(
-            maintainHintHeight: true,
+            maintainHintSize: true,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: AppColors.grey.withValues(alpha: 0.5),
+                color: AppColors.grey.withValues(alpha: 0.4),
                 width: 1,
               ),
               borderRadius: BorderRadius.circular(8),

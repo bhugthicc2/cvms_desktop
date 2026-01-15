@@ -9,6 +9,7 @@ class CustomButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isLoading;
   final Color? btnSubmitColor;
+  final Color? btnSubmitTxtColor;
 
   const CustomButton({
     super.key,
@@ -16,6 +17,7 @@ class CustomButton extends StatelessWidget {
     this.onPressed,
     this.isLoading = false,
     this.btnSubmitColor,
+    this.btnSubmitTxtColor = AppColors.white,
   });
 
   @override
@@ -53,7 +55,7 @@ class CustomButton extends StatelessWidget {
                       fontSize: AppFontSizes.medium,
                       letterSpacing: 0.8,
 
-                      color: AppColors.white,
+                      color: btnSubmitTxtColor,
                     ),
                   ),
         ),

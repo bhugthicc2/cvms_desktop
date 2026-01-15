@@ -43,11 +43,13 @@ class CustomSidebar extends StatelessWidget {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       width: isExpanded ? 235 : 50,
+
       decoration: BoxDecoration(
         image: DecorationImage(
           image: const AssetImage("assets/images/sidebar_bg.png"),
           fit: BoxFit.cover,
         ),
+
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,

@@ -15,6 +15,7 @@ class StatsCard extends StatelessWidget {
   final Color? iconColor;
   final double angle;
   final bool addSideBorder;
+  final bool lineDesign;
 
   const StatsCard({
     super.key,
@@ -26,7 +27,8 @@ class StatsCard extends StatelessWidget {
     required this.iconColor,
     this.angle = 0.03,
     this.isWhiteTheme = true,
-    this.addSideBorder = false,
+    this.addSideBorder = true,
+    this.lineDesign = false,
   });
 
   @override
@@ -34,7 +36,8 @@ class StatsCard extends StatelessWidget {
     return HoverRotate(
       angle: angle,
       child: Container(
-        padding: const EdgeInsets.all(AppSpacing.medium),
+        clipBehavior: Clip.antiAlias,
+        height: 80,
         decoration: BoxDecoration(
           color: isWhiteTheme ? AppColors.white : null,
           gradient:
@@ -55,59 +58,88 @@ class StatsCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Container(
-              height: 40,
-              width: 40,
-              decoration: BoxDecoration(
-                gradient:
-                    isWhiteTheme
-                        ? gradient
-                        : LinearGradient(
-                          colors: [color.withValues(alpha: 0.9), color],
+            if (addSideBorder)
+              Container(
+                height: 80,
+                width: 4,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: iconColor!.withValues(alpha: 0.5),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                  gradient:
+                      isWhiteTheme
+                          ? gradient
+                          : LinearGradient(
+                            colors: [color.withValues(alpha: 0.9), color],
+                          ),
+                ),
+              ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.medium),
+                child: Row(
+                  children: [
+                    Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        gradient:
+                            isWhiteTheme
+                                ? gradient
+                                : LinearGradient(
+                                  colors: [color.withValues(alpha: 0.9), color],
+                                ),
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: iconColor!.withValues(alpha: 0.5),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        icon,
+                        size: 20,
+                        color:
+                            isWhiteTheme
+                                ? AppColors.white
+                                : iconColor ?? AppColors.white,
+                        weight: 5,
+                      ),
+                    ),
+                    Spacing.horizontal(size: AppSpacing.medium),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "$value",
+                          style: TextStyle(
+                            fontSize: AppFontSizes.xLarge,
+                            fontWeight: FontWeight.bold,
+                            color: isWhiteTheme ? AppColors.black : color,
+                          ),
                         ),
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: iconColor!.withValues(alpha: 0.5),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Icon(
-                icon,
-                size: 20,
-                color:
-                    isWhiteTheme
-                        ? AppColors.white
-                        : iconColor ?? AppColors.white,
-                weight: 5,
-              ),
-            ),
-            Spacing.horizontal(size: AppSpacing.medium),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "$value",
-                  style: TextStyle(
-                    fontSize: AppFontSizes.xLarge,
-                    fontWeight: FontWeight.bold,
-                    color: isWhiteTheme ? AppColors.black : color,
-                  ),
+                        Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: AppFontSizes.small,
+                            color:
+                                isWhiteTheme
+                                    ? AppColors.grey.withValues(alpha: 0.9)
+                                    : AppColors.white.withValues(alpha: 0.8),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: AppFontSizes.small,
-                    color:
-                        isWhiteTheme
-                            ? AppColors.grey.withValues(alpha: 0.9)
-                            : AppColors.white.withValues(alpha: 0.8),
-                  ),
-                ),
-              ],
+              ),
             ),
           ],
         ),

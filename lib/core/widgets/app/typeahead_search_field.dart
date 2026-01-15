@@ -65,7 +65,7 @@ class TypeaheadSearchField extends StatelessWidget {
                 maintainHintSize: true,
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: AppColors.grey.withValues(alpha: 0.5),
+                    color: AppColors.grey.withValues(alpha: 0.0),
                     width: 1,
                   ),
                   borderRadius: BorderRadius.circular(8),

@@ -69,10 +69,7 @@ class _VehicleManagementPageState extends State<VehicleManagementPage> {
         builder: (context, state) {
           return Scaffold(
             backgroundColor: AppColors.greySurface,
-            body: Padding(
-              padding: const EdgeInsets.all(AppSpacing.medium),
-              child: _buildBody(context, state),
-            ),
+            body: _buildBody(context, state),
           );
         },
       ),
@@ -96,19 +93,26 @@ class _VehicleManagementPageState extends State<VehicleManagementPage> {
     if (state.isLoading) {
       return Skeletonizer(
         enabled: state.isLoading,
-        child: buildSkeletonTable(),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.medium),
+
+          child: buildSkeletonTable(),
+        ),
       );
     }
 
     switch (state.viewMode) {
       case VehicleViewMode.list:
-        return VehicleTable(
-          title: "Vehicle Management",
-          entries: state.filteredEntries,
-          searchController: vehicleController,
-          onAddVehicle: () {
-            context.read<VehicleCubit>().startAddVehicle();
-          },
+        return Padding(
+          padding: const EdgeInsets.all(AppSpacing.medium),
+          child: VehicleTable(
+            title: "Vehicle Management",
+            entries: state.filteredEntries,
+            searchController: vehicleController,
+            onAddVehicle: () {
+              context.read<VehicleCubit>().startAddVehicle();
+            },
+          ),
         );
 
       case VehicleViewMode.addVehicle:

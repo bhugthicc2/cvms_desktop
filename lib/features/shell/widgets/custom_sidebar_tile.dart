@@ -58,6 +58,7 @@ class _CustomSidebarTileState extends State<CustomSidebarTile> {
                     : "assets/icons/${widget.item.icon}",
                 height: 20,
                 width: 20,
+
                 color: widget.isSelected ? AppColors.primary : null,
               ),
               AnimatedSize(
