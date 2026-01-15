@@ -29,7 +29,7 @@ class AppTheme {
       trackColor: WidgetStateProperty.all(
         AppColors.grey.withValues(alpha: 0.5),
       ),
-      radius: const Radius.circular(0),
+      radius: const Radius.circular(999),
       thickness: WidgetStateProperty.all(8),
       interactive: true,
     ),

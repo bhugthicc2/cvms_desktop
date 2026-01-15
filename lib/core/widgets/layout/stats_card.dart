@@ -16,6 +16,7 @@ class StatsCard extends StatelessWidget {
   final double angle;
   final bool addSideBorder;
   final bool lineDesign;
+  final double height;
 
   const StatsCard({
     super.key,
@@ -29,6 +30,7 @@ class StatsCard extends StatelessWidget {
     this.isWhiteTheme = true,
     this.addSideBorder = true,
     this.lineDesign = false,
+    this.height = 80,
   });
 
   @override
@@ -37,7 +39,7 @@ class StatsCard extends StatelessWidget {
       angle: angle,
       child: Container(
         clipBehavior: Clip.antiAlias,
-        height: 80,
+        height: height,
         decoration: BoxDecoration(
           color: isWhiteTheme ? AppColors.white : null,
           gradient:
@@ -60,7 +62,7 @@ class StatsCard extends StatelessWidget {
           children: [
             if (addSideBorder)
               Container(
-                height: 80,
+                height: height,
                 width: 4,
                 decoration: BoxDecoration(
                   boxShadow: [

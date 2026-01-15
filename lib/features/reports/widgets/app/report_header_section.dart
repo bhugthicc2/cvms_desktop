@@ -2,7 +2,6 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_icon_button.dart';
-import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/app/typeahead_search_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/reports/bloc/reports/reports_cubit.dart';

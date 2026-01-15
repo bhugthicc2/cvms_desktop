@@ -39,6 +39,7 @@ class StatsCardSection extends StatelessWidget {
               children: [
                 Expanded(
                   child: StatsCard(
+                    height: 110,
                     angle: 0,
                     color: AppColors.white,
                     icon: PhosphorIconsBold.calendarMinus,
@@ -51,6 +52,7 @@ class StatsCardSection extends StatelessWidget {
                 Spacing.horizontal(size: AppSpacing.medium),
                 Expanded(
                   child: StatsCard(
+                    height: 110,
                     angle: 0,
                     color: AppColors.orange,
                     icon: PhosphorIconsBold.calendarMinus,
@@ -70,6 +72,7 @@ class StatsCardSection extends StatelessWidget {
             children: [
               Expanded(
                 child: StatsCard(
+                  height: 110,
                   angle: 0,
                   color: AppColors.white,
                   icon: PhosphorIconsBold.calendarMinus,
@@ -82,6 +85,7 @@ class StatsCardSection extends StatelessWidget {
               Spacing.horizontal(size: AppSpacing.medium),
               Expanded(
                 child: StatsCard(
+                  height: 110,
                   angle: 0,
                   color: AppColors.white,
                   icon: PhosphorIconsBold.calendarMinus,
