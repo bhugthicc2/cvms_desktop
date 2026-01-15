@@ -38,6 +38,7 @@ class ReportsCubit extends Cubit<ReportsState> {
   Future<void> _loadGlobalReportIfNeeded() async {
     if (_cachedGlobalSummary != null && _cachedVehicleDistribution != null) {
       // Data already cached, just update view mode
+      if (isClosed) return;
       emit(
         state.copyWith(
           fleetSummary: _cachedGlobalSummary,

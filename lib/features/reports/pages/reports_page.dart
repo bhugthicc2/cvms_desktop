@@ -3,13 +3,13 @@
 // happens during switching screens when the reports page is on loading state
 
 import 'package:cvms_desktop/core/theme/app_colors.dart';
-import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/utils/card_decor.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/dashboard/data/firestore_analytics_repository.dart';
 import 'package:cvms_desktop/features/reports/pages/pdf_report_page.dart';
+import 'package:cvms_desktop/features/reports/widgets/loader/report_loader.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/stats/global_stats_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/stats/individual_stats_and_info_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/charts/global_charts_section.dart';
@@ -21,7 +21,6 @@ import 'dart:typed_data';
 import 'package:cvms_desktop/features/reports/widgets/app/report_header_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 import 'package:screenshot/screenshot.dart';
 import '../bloc/reports/reports_cubit.dart';
 import '../bloc/reports/reports_state.dart';
@@ -179,35 +178,7 @@ class _ReportsPageContentState extends State<_ReportsPageContent> {
       body: BlocBuilder<ReportsCubit, ReportsState>(
         builder: (context, state) {
           if (state.loading) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Center(
-                  child: Lottie.asset(
-                    renderCache: RenderCache.raster,
-                    'assets/anim/report_loadin_anim.json',
-                    width: 280,
-                  ),
-                ),
-                Spacing.vertical(size: AppSpacing.small),
-                Text(
-                  'Loading...',
-                  style: TextStyle(
-                    color: AppColors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: AppFontSizes.large,
-                  ),
-                ),
-                Text(
-                  'Please wait while we prepare your report data.',
-                  style: TextStyle(
-                    color: AppColors.black,
-                    fontSize: AppFontSizes.medium,
-                  ),
-                ),
-              ],
-            );
+            return const ReportLoader();
           }
 
           if (state.error != null) {
