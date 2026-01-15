@@ -1,6 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
-import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_slide.dart';
 import 'package:flutter/material.dart';
 
 class CustomToggleButtons extends StatelessWidget {
@@ -18,7 +18,9 @@ class CustomToggleButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HoverGrow(
+    return HoverSlide(
+      dx: 0,
+      dy: -0.1,
       child: SizedBox(
         height: 40,
 
@@ -39,7 +41,7 @@ class CustomToggleButtons extends StatelessWidget {
                   style: TextStyle(
                     fontSize: AppFontSizes.small,
                     color: AppColors.white,
- fontFamily: 'Poppins',
+                    fontFamily: 'Poppins',
                     fontWeight: FontWeight.bold,
                   ),
                 ),

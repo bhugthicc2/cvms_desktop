@@ -1,5 +1,5 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
-import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_slide.dart';
 import 'package:flutter/material.dart';
 
 class CustomDropdown extends StatefulWidget {
@@ -59,7 +59,9 @@ class _CustomDropdownState extends State<CustomDropdown> {
 
         final padding = isSmall ? 8.0 : widget.horizontalPadding;
 
-        return HoverGrow(
+        return HoverSlide(
+          dx: 0,
+          dy: -0.1,
           child: Container(
             padding: EdgeInsets.symmetric(
               horizontal: padding - 2,
