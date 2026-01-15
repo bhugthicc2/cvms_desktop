@@ -5,6 +5,7 @@ import 'package:cvms_desktop/core/widgets/app/custom_dropdown2.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_text_field2.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
+import 'package:philippines_rpcmb/philippines_rpcmb.dart';
 
 class AddressStepContent extends StatefulWidget {
   const AddressStepContent({super.key});
@@ -15,6 +16,28 @@ class AddressStepContent extends StatefulWidget {
 
 class _AddressStepContentState extends State<AddressStepContent> {
   late final TextEditingController _purokController;
+
+  // Location state variables (using String for CustDropDown compatibility)
+  String? _selectedRegionId;
+  String? _selectedProvinceName;
+  String? _selectedMunicipalityName;
+  String? _selectedBarangay;
+
+  // Helper objects for data access
+  Region? get _selectedRegion => philippineRegions.firstWhere(
+    (r) => r.id == _selectedRegionId,
+    orElse: () => philippineRegions.first,
+  );
+  Province? get _selectedProvince => _selectedRegion?.provinces.firstWhere(
+    (p) => p.name == _selectedProvinceName,
+    orElse: () => _selectedRegion!.provinces.first,
+  );
+  Municipality? get _selectedMunicipality =>
+      _selectedProvince?.municipalities.firstWhere(
+        (m) => m.name == _selectedMunicipalityName,
+        orElse: () => _selectedProvince!.municipalities.first,
+      );
+
   @override
   void initState() {
     super.initState();
@@ -25,6 +48,36 @@ class _AddressStepContentState extends State<AddressStepContent> {
   void dispose() {
     _purokController.dispose();
     super.dispose();
+  }
+
+  void _onRegionChanged(String? regionId) {
+    setState(() {
+      _selectedRegionId = regionId;
+      _selectedProvinceName = null;
+      _selectedMunicipalityName = null;
+      _selectedBarangay = null;
+    });
+  }
+
+  void _onProvinceChanged(String? provinceName) {
+    setState(() {
+      _selectedProvinceName = provinceName;
+      _selectedMunicipalityName = null;
+      _selectedBarangay = null;
+    });
+  }
+
+  void _onMunicipalityChanged(String? municipalityName) {
+    setState(() {
+      _selectedMunicipalityName = municipalityName;
+      _selectedBarangay = null;
+    });
+  }
+
+  void _onBarangayChanged(String? barangay) {
+    setState(() {
+      _selectedBarangay = barangay;
+    });
   }
 
   @override
@@ -54,154 +107,97 @@ class _AddressStepContentState extends State<AddressStepContent> {
             ),
           ),
           const Spacing.vertical(size: AppSpacing.large),
-          // Row 1: Owner Name & Gender
+          // Row 1: Region & Province
           Row(
             children: [
               Expanded(
-                child: CustDropDown(
+                child: CustDropDown<String>(
                   hintText: "Region",
-                  items: const [
-                    CustDropdownMenuItem(
-                      value: 'Region I',
-                      child: Text(
-                        "Region I",
-                        style: TextStyle(fontSize: AppFontSizes.small),
-                      ),
-                    ),
-                    CustDropdownMenuItem(
-                      value: 'Region II',
-                      child: Text(
-                        "Region II",
-                        style: TextStyle(fontSize: AppFontSizes.small),
-                      ),
-                    ),
-                    CustDropdownMenuItem(
-                      value: 'Region III',
-                      child: Text(
-                        "Region III",
-                        style: TextStyle(fontSize: AppFontSizes.small),
-                      ),
-                    ),
-                  ],
-
-                  borderRadius: 5,
-                  onChanged: (val) {
-                    debugPrint(val.toString()); //to be removed
-                  },
+                  items:
+                      philippineRegions
+                          .map(
+                            (region) => CustDropdownMenuItem<String>(
+                              value: region.id,
+                              child: Text(
+                                region.id,
+                                style: TextStyle(fontSize: AppFontSizes.small),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                  onChanged: _onRegionChanged,
                 ),
               ),
               const Spacing.horizontal(size: AppSpacing.large),
               Expanded(
-                child: CustDropDown(
+                child: CustDropDown<String>(
                   hintText: "Province",
-                  items: const [
-                    CustDropdownMenuItem(
-                      value: 'Zamboanga Peninsula',
-                      child: Text(
-                        "Zamboanga Peninsula",
-                        style: TextStyle(fontSize: AppFontSizes.small),
-                      ),
-                    ),
-                    CustDropdownMenuItem(
-                      value: 'Davao Region',
-                      child: Text(
-                        "Davao Region",
-                        style: TextStyle(fontSize: AppFontSizes.small),
-                      ),
-                    ),
-                    CustDropdownMenuItem(
-                      value: 'Davao Region',
-                      child: Text(
-                        "Davao Region",
-                        style: TextStyle(fontSize: AppFontSizes.small),
-                      ),
-                    ),
-                  ],
-
-                  borderRadius: 5,
-                  onChanged: (val) {
-                    debugPrint(val.toString()); //to be removed
-                  },
+                  items:
+                      _selectedRegion?.provinces
+                          .map(
+                            (province) => CustDropdownMenuItem<String>(
+                              value: province.name,
+                              child: Text(
+                                province.name,
+                                style: TextStyle(fontSize: AppFontSizes.small),
+                              ),
+                            ),
+                          )
+                          .toList() ??
+                      [],
+                  onChanged: _onProvinceChanged,
                 ),
               ),
             ],
           ),
           const Spacing.vertical(size: AppSpacing.medium),
-          // Row 2: Contact & School ID
+          // Row 2: Municipality & Barangay
           Row(
             children: [
               Expanded(
-                child: CustDropDown(
+                child: CustDropDown<String>(
                   hintText: "Municipality",
-                  items: const [
-                    CustDropdownMenuItem(
-                      value: 'Katipunan',
-                      child: Text(
-                        "Katipunan",
-                        style: TextStyle(fontSize: AppFontSizes.small),
-                      ),
-                    ),
-                    CustDropdownMenuItem(
-                      value: 'Dipolog City',
-                      child: Text(
-                        "Dipolog City",
-                        style: TextStyle(fontSize: AppFontSizes.small),
-                      ),
-                    ),
-                    CustDropdownMenuItem(
-                      value: 'Other',
-                      child: Text(
-                        "Other",
-                        style: TextStyle(fontSize: AppFontSizes.small),
-                      ),
-                    ),
-                  ],
-
-                  borderRadius: 5,
-                  onChanged: (val) {
-                    debugPrint(val.toString()); //to be removed
-                  },
+                  items:
+                      _selectedProvince?.municipalities
+                          .map(
+                            (municipality) => CustDropdownMenuItem<String>(
+                              value: municipality.name,
+                              child: Text(
+                                municipality.name,
+                                style: TextStyle(fontSize: AppFontSizes.small),
+                              ),
+                            ),
+                          )
+                          .toList() ??
+                      [],
+                  onChanged: _onMunicipalityChanged,
                 ),
               ),
               const Spacing.horizontal(size: AppSpacing.large),
               Expanded(
-                child: CustDropDown(
+                child: CustDropDown<String>(
                   hintText: "Barangay",
-                  items: const [
-                    CustDropdownMenuItem(
-                      value: 'Dos',
-                      child: Text(
-                        "Dos",
-                        style: TextStyle(fontSize: AppFontSizes.small),
-                      ),
-                    ),
-                    CustDropdownMenuItem(
-                      value: 'San Vicente',
-                      child: Text(
-                        "San Vicente",
-                        style: TextStyle(fontSize: AppFontSizes.small),
-                      ),
-                    ),
-                    CustDropdownMenuItem(
-                      value: 'Other',
-                      child: Text(
-                        "Other",
-                        style: TextStyle(fontSize: AppFontSizes.small),
-                      ),
-                    ),
-                  ],
-
-                  borderRadius: 5,
-                  onChanged: (val) {
-                    debugPrint(val.toString()); //to be removed
-                  },
+                  items:
+                      _selectedMunicipality?.barangays
+                          .map(
+                            (barangay) => CustDropdownMenuItem<String>(
+                              value: barangay,
+                              child: Text(
+                                barangay,
+                                style: TextStyle(fontSize: AppFontSizes.small),
+                              ),
+                            ),
+                          )
+                          .toList() ??
+                      [],
+                  onChanged: _onBarangayChanged,
                 ),
               ),
             ],
           ),
           const Spacing.vertical(size: AppSpacing.medium),
           CustomTextField2(
-            label: 'Purok',
+            label: 'Purok/Street',
             controller: _purokController,
             borderColor: AppColors.primary,
           ),
