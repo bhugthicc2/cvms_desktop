@@ -19,12 +19,7 @@ import 'dart:ui' as ui;
 import 'package:path/path.dart' as path;
 part 'vehicle_state.dart';
 
-enum VehicleViewMode {
-  list,
-  addVehicleStep1,
-  addVehicleStep2,
-  addVehicleReview,
-}
+enum VehicleViewMode { list, addVehicle }
 
 class VehicleCubit extends Cubit<VehicleState> {
   final VehicleRepository repository;
@@ -175,20 +170,27 @@ class VehicleCubit extends Cubit<VehicleState> {
   }
 
   //view mode
-  void showAddVehicleStep1() {
-    emit(state.copyWith(viewMode: VehicleViewMode.addVehicleStep1));
+  void startAddVehicle() {
+    emit(
+      state.copyWith(viewMode: VehicleViewMode.addVehicle, addVehicleStep: 0),
+    );
   }
 
-  void goToStep2() {
-    emit(state.copyWith(viewMode: VehicleViewMode.addVehicleStep2));
+  void setAddVehicleStep(int step) {
+    final safeStep = step.clamp(0, 2);
+    emit(state.copyWith(addVehicleStep: safeStep));
   }
 
-  void goToReview() {
-    emit(state.copyWith(viewMode: VehicleViewMode.addVehicleReview));
+  void nextAddVehicleStep() {
+    setAddVehicleStep(state.addVehicleStep + 1);
+  }
+
+  void previousAddVehicleStep() {
+    setAddVehicleStep(state.addVehicleStep - 1);
   }
 
   void backToList() {
-    emit(state.copyWith(viewMode: VehicleViewMode.list));
+    emit(state.copyWith(viewMode: VehicleViewMode.list, addVehicleStep: 0));
   }
 
   void clearSelection() {

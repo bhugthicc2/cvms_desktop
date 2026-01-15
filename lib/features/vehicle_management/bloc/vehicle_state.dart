@@ -11,6 +11,7 @@ class VehicleState {
   final bool isBulkModeEnabled;
   final String? error;
   final VehicleViewMode viewMode; //view mode
+  final int addVehicleStep;
 
   //Export status
   final bool isExporting;
@@ -34,6 +35,7 @@ class VehicleState {
     this.vehiclesWithLogs = const {},
     this.isLoading = false,
     this.viewMode = VehicleViewMode.list, //default view mode
+    this.addVehicleStep = 0,
   });
 
   factory VehicleState.initial() => VehicleState(
@@ -50,6 +52,7 @@ class VehicleState {
     vehiclesWithLogs: {},
     isLoading: true,
     viewMode: VehicleViewMode.list, //default view mode
+    addVehicleStep: 0,
   );
 
   VehicleState copyWith({
@@ -66,6 +69,7 @@ class VehicleState {
     Set<String>? vehiclesWithLogs,
     bool? isLoading,
     VehicleViewMode? viewMode, //view mode
+    int? addVehicleStep,
   }) {
     return VehicleState(
       allEntries: allEntries ?? this.allEntries,
@@ -81,6 +85,7 @@ class VehicleState {
       vehiclesWithLogs: vehiclesWithLogs ?? this.vehiclesWithLogs,
       isLoading: isLoading ?? this.isLoading,
       viewMode: viewMode ?? this.viewMode, //view mode
+      addVehicleStep: addVehicleStep ?? this.addVehicleStep,
     );
   }
 }

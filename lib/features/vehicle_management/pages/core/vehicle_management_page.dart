@@ -3,9 +3,7 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
 import 'package:cvms_desktop/features/shell/bloc/shell_cubit.dart';
 import 'package:cvms_desktop/features/shell/scope/breadcrumb_scope.dart';
-import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_review.dart';
-import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_step1.dart';
-import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_step2.dart';
+import 'package:cvms_desktop/features/vehicle_management/pages/views/add_vehicle.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/skeletons/table_skeleton.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/tables/vehicle_table.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -85,33 +83,12 @@ class _VehicleManagementPageState extends State<VehicleManagementPage> {
     BuildContext context,
     VehicleState state,
   ) {
-    final cubit = context.read<VehicleCubit>();
-
     switch (state.viewMode) {
       case VehicleViewMode.list:
         return const [];
 
-      case VehicleViewMode.addVehicleStep1:
+      case VehicleViewMode.addVehicle:
         return [BreadcrumbItem(label: 'Add Vehicle')];
-
-      case VehicleViewMode.addVehicleStep2:
-        return [
-          BreadcrumbItem(
-            label: 'Add Vehicle',
-            onTap: cubit.showAddVehicleStep1,
-          ),
-          const BreadcrumbItem(label: 'Step 2'),
-        ];
-
-      case VehicleViewMode.addVehicleReview:
-        return [
-          BreadcrumbItem(
-            label: 'Add Vehicle',
-            onTap: cubit.showAddVehicleStep1,
-          ),
-          BreadcrumbItem(label: 'Step 2', onTap: cubit.goToStep2),
-          const BreadcrumbItem(label: 'Review'),
-        ];
     }
   }
 
@@ -130,28 +107,19 @@ class _VehicleManagementPageState extends State<VehicleManagementPage> {
           entries: state.filteredEntries,
           searchController: vehicleController,
           onAddVehicle: () {
-            context.read<VehicleCubit>().showAddVehicleStep1();
+            context.read<VehicleCubit>().startAddVehicle();
           },
         );
 
-      case VehicleViewMode.addVehicleStep1:
-        return AddVehicleStep1(
-          onNext: () => context.read<VehicleCubit>().goToStep2(),
-          onCancel: () => context.read<VehicleCubit>().backToList(),
-        );
-
-      case VehicleViewMode.addVehicleStep2:
-        return AddVehicleStep2(
-          onNext: () => context.read<VehicleCubit>().goToReview(),
-          onBack: () => context.read<VehicleCubit>().showAddVehicleStep1(),
-        );
-
-      case VehicleViewMode.addVehicleReview:
-        return AddVehicleReview(
-          onSubmit: () {
+      case VehicleViewMode.addVehicle:
+        return AddVehicleView(
+          //view for multi step form
+          onNext: () {
+            context.read<VehicleCubit>().nextAddVehicleStep();
+          },
+          onCancel: () {
             context.read<VehicleCubit>().backToList();
           },
-          onBack: () => context.read<VehicleCubit>().goToStep2(),
         );
     }
   }

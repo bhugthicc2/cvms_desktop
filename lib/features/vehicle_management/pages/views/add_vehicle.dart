@@ -3,24 +3,24 @@ import 'package:cvms_desktop/core/widgets/app/custom_button.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
 
-class AddVehicleStep2 extends StatelessWidget {
+class AddVehicleView extends StatelessWidget {
   final VoidCallback onNext;
-  final VoidCallback onBack;
-  const AddVehicleStep2({
+  final VoidCallback onCancel;
+  const AddVehicleView({
     super.key,
     required this.onNext,
-    required this.onBack,
+    required this.onCancel,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text('Step 2'),
+        Text('Step 1'),
         Spacing.vertical(size: AppFontSizes.medium),
         CustomButton(text: 'Next', onPressed: onNext),
         Spacing.vertical(size: AppFontSizes.medium),
-        CustomButton(text: 'Back', onPressed: onBack),
+        CustomButton(text: 'Back', onPressed: onCancel),
       ],
     ); //todo
   }
