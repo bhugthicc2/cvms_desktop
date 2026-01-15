@@ -18,12 +18,14 @@ class VehicleTable extends StatelessWidget {
   final String title;
   final List<VehicleEntry> entries;
   final TextEditingController searchController;
+  final VoidCallback onAddVehicle;
 
   const VehicleTable({
     super.key,
     required this.title,
     required this.entries,
     required this.searchController,
+    required this.onAddVehicle,
   });
 
   @override
@@ -58,7 +60,10 @@ class VehicleTable extends StatelessWidget {
       builder: (context, state) {
         return Column(
           children: [
-            TableHeader(searchController: searchController),
+            TableHeader(
+              searchController: searchController,
+              onAddVehicle: onAddVehicle,
+            ),
             if (state.isBulkModeEnabled) ...[
               Spacing.vertical(size: AppFontSizes.medium),
               ToggleActions(

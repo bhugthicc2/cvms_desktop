@@ -76,6 +76,7 @@ class ShellPage extends StatelessWidget {
                             return CustomHeader(
                               currentUser: userState.fullname ?? "Guest",
                               title: titles[state.selectedIndex],
+
                               onMenuPressed:
                                   () =>
                                       context

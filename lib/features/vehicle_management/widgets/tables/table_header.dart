@@ -13,12 +13,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../../core/widgets/app/search_field.dart';
-import '../dialogs/custom_add_dialog.dart';
+// import '../dialogs/custom_add_dialog.dart';//to be removed
 
 class TableHeader extends StatelessWidget {
   final TextEditingController? searchController;
+  final VoidCallback onAddVehicle;
 
-  const TableHeader({super.key, this.searchController});
+  const TableHeader({
+    super.key,
+    this.searchController,
+    required this.onAddVehicle,
+  });
 
   // Returns a responsive width for the search field based on current screen width
   double _searchWidthFor(BuildContext context) {
@@ -103,38 +108,40 @@ class TableHeader extends StatelessWidget {
                       child: CustomVehicleButton(
                         icon: PhosphorIconsBold.plus,
                         label: "Add Vehicle",
-                        onPressed: () {
-                          showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder:
-                                (_) => CustomAddDialog(
-                                  title: "Add New Vehicle",
-                                  onSave: (entry) async {
-                                    try {
-                                      context.read<VehicleCubit>().addVehicle(
-                                        entry,
-                                      );
-                                      //SHOW SNACKBAR WHEN SUCCESS
-                                      if (!context.mounted) return;
-                                      CustomSnackBar.show(
-                                        context: context,
-                                        message: "Vehicle added successfully!",
-                                        type: SnackBarType.success,
-                                      );
-                                    } catch (e) {
-                                      //SHOW SNACKBAR WHEN FAIL
-                                      if (!context.mounted) return;
-                                      CustomSnackBar.show(
-                                        context: context,
-                                        message: "Failed to add vehicle: $e",
-                                        type: SnackBarType.error,
-                                      );
-                                    }
-                                  },
-                                ),
-                          );
-                        },
+                        onPressed: onAddVehicle,
+
+                        // () {//to be removed
+                        //   showDialog(
+                        //     barrierDismissible: false,
+                        //     context: context,
+                        //     builder:
+                        //         (_) => CustomAddDialog(
+                        //           title: "Add New Vehicle",
+                        //           onSave: (entry) async {
+                        //             try {
+                        //               context.read<VehicleCubit>().addVehicle(
+                        //                 entry,
+                        //               );
+                        //               //SHOW SNACKBAR WHEN SUCCESS
+                        //               if (!context.mounted) return;
+                        //               CustomSnackBar.show(
+                        //                 context: context,
+                        //                 message: "Vehicle added successfully!",
+                        //                 type: SnackBarType.success,
+                        //               );
+                        //             } catch (e) {
+                        //               //SHOW SNACKBAR WHEN FAIL
+                        //               if (!context.mounted) return;
+                        //               CustomSnackBar.show(
+                        //                 context: context,
+                        //                 message: "Failed to add vehicle: $e",
+                        //                 type: SnackBarType.error,
+                        //               );
+                        //             }
+                        //           },
+                        //         ),
+                        //   );
+                        // },
                       ),
                     ),
                     Spacing.horizontal(size: AppSpacing.medium),

@@ -12,7 +12,7 @@ import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
 import 'package:cvms_desktop/features/auth/data/user_repository.dart';
 import 'package:cvms_desktop/features/vehicle_management/data/vehicle_repository.dart';
 import 'package:cvms_desktop/features/vehicle_management/data/vehicle_violation_repository.dart';
-import 'package:cvms_desktop/features/vehicle_management/pages/vehicle_management_page.dart';
+import 'package:cvms_desktop/features/vehicle_management/pages/core/vehicle_management_page.dart';
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -10,6 +10,7 @@ class VehicleState {
   final String searchQuery;
   final bool isBulkModeEnabled;
   final String? error;
+  final VehicleViewMode viewMode; //view mode
 
   //Export status
   final bool isExporting;
@@ -32,6 +33,7 @@ class VehicleState {
     this.exportedFilePath,
     this.vehiclesWithLogs = const {},
     this.isLoading = false,
+    this.viewMode = VehicleViewMode.list, //default view mode
   });
 
   factory VehicleState.initial() => VehicleState(
@@ -47,6 +49,7 @@ class VehicleState {
     exportedFilePath: null,
     vehiclesWithLogs: {},
     isLoading: true,
+    viewMode: VehicleViewMode.list, //default view mode
   );
 
   VehicleState copyWith({
@@ -62,6 +65,7 @@ class VehicleState {
     String? exportedFilePath,
     Set<String>? vehiclesWithLogs,
     bool? isLoading,
+    VehicleViewMode? viewMode, //view mode
   }) {
     return VehicleState(
       allEntries: allEntries ?? this.allEntries,
@@ -76,6 +80,7 @@ class VehicleState {
       exportedFilePath: exportedFilePath,
       vehiclesWithLogs: vehiclesWithLogs ?? this.vehiclesWithLogs,
       isLoading: isLoading ?? this.isLoading,
+      viewMode: viewMode ?? this.viewMode, //view mode
     );
   }
 }

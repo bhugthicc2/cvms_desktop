@@ -19,6 +19,13 @@ import 'dart:ui' as ui;
 import 'package:path/path.dart' as path;
 part 'vehicle_state.dart';
 
+enum VehicleViewMode {
+  list,
+  addVehicleStep1,
+  addVehicleStep2,
+  addVehicleReview,
+}
+
 class VehicleCubit extends Cubit<VehicleState> {
   final VehicleRepository repository;
   final AuthRepository authRepository;
@@ -165,6 +172,23 @@ class VehicleCubit extends Cubit<VehicleState> {
     }
 
     emit(state.copyWith(selectedEntries: currentSelected));
+  }
+
+  //view mode
+  void showAddVehicleStep1() {
+    emit(state.copyWith(viewMode: VehicleViewMode.addVehicleStep1));
+  }
+
+  void goToStep2() {
+    emit(state.copyWith(viewMode: VehicleViewMode.addVehicleStep2));
+  }
+
+  void goToReview() {
+    emit(state.copyWith(viewMode: VehicleViewMode.addVehicleReview));
+  }
+
+  void backToList() {
+    emit(state.copyWith(viewMode: VehicleViewMode.list));
   }
 
   void clearSelection() {

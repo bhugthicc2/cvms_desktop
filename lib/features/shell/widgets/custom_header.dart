@@ -58,7 +58,7 @@ class CustomHeader extends StatelessWidget {
             ),
           ),
           Expanded(child: MoveWindow()),
-          
+
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Row(

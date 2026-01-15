@@ -6,7 +6,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../bloc/vehicle_logs_cubit.dart';
 import '../bloc/vehicle_logs_state.dart';
 import '../widgets/tables/vehicle_logs_table.dart';
-import '../widgets/dialogs/vehicle_logs_info_dialog.dart';
+// import '../widgets/dialogs/vehicle_logs_info_dialog.dart';
 
 class VehicleLogsPage extends StatefulWidget {
   const VehicleLogsPage({super.key});
