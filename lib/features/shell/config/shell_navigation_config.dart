@@ -36,51 +36,43 @@ class ShellNavigationConfig {
         return const DashboardPage();
 
       case 1:
-        final cubit = shellCubit.getOrCreateCachedBloc<VehicleMonitoringCubit>(
-          1,
-          () => VehicleMonitoringCubit(vehicle_repo.DashboardRepository()),
-        );
+        final cubit =
+            shellCubit.getCachedBloc<VehicleMonitoringCubit>(1) ??
+            VehicleMonitoringCubit(vehicle_repo.DashboardRepository());
         return BlocProvider.value(
           value: cubit,
           child: const VehicleMonitoringPage(),
         );
 
       case 2:
-        final cubit = shellCubit.getOrCreateCachedBloc<VehicleLogsCubit>(
-          2,
-          () => VehicleLogsCubit(VehicleLogsRepository()),
-        );
+        final cubit =
+            shellCubit.getCachedBloc<VehicleLogsCubit>(2) ??
+            VehicleLogsCubit(VehicleLogsRepository());
         return BlocProvider.value(value: cubit, child: const VehicleLogsPage());
 
       case 3:
-        final cubit = shellCubit.getOrCreateCachedBloc<VehicleCubit>(
-          3,
-          () => VehicleCubit(
-            VehicleRepository(),
-            AuthRepository(),
-            UserRepository(),
-            VehicleViolationRepository(),
-            VehicleLogsRepository(),
-          ),
-        );
+        final cubit =
+            shellCubit.getCachedBloc<VehicleCubit>(3) ??
+            VehicleCubit(
+              VehicleRepository(),
+              AuthRepository(),
+              UserRepository(),
+              VehicleViolationRepository(),
+              VehicleLogsRepository(),
+            );
         return BlocProvider.value(
           value: cubit,
           child: const VehicleManagementPage(),
         );
 
       case 4:
-        final userCubit = shellCubit.getOrCreateCachedBloc<UserCubit>(
-          4,
-          () => UserCubit(repository: user_mgmt.UserRepository()),
+        final userCubit =
+            shellCubit.getCachedBloc<UserCubit>(4) ??
+            UserCubit(repository: user_mgmt.UserRepository());
+        final userMgmtBloc = UserManagementBloc(
+          authRepository: AuthRepository(),
+          userRepository: UserRepository(),
         );
-        final userMgmtBloc = shellCubit
-            .getOrCreateCachedBloc<UserManagementBloc>(
-              4,
-              () => UserManagementBloc(
-                authRepository: AuthRepository(),
-                userRepository: UserRepository(),
-              ),
-            );
         return MultiBlocProvider(
           providers: [
             BlocProvider.value(value: userCubit),
@@ -90,10 +82,8 @@ class ShellNavigationConfig {
         );
 
       case 5:
-        final cubit = shellCubit.getOrCreateCachedBloc<ViolationCubit>(
-          5,
-          () => ViolationCubit(),
-        );
+        final cubit =
+            shellCubit.getCachedBloc<ViolationCubit>(5) ?? ViolationCubit();
         return BlocProvider.value(
           value: cubit,
           child: ViolationManagementPage(),
