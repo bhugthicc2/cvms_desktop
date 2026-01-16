@@ -1,4 +1,9 @@
-import 'package:cvms_desktop/features/activity_logs/pages/activity_logs_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../activity_logs/bloc/activity_logs_cubit.dart';
+import '../../activity_logs/data/activity_log_repository.dart';
+import '../../activity_logs/pages/activity_logs_page.dart';
 import 'package:cvms_desktop/features/dashboard/pages/dashboard_page.dart';
 import 'package:cvms_desktop/features/reports/pages/reports_page.dart';
 import 'package:cvms_desktop/features/settings/pages/setttings_page.dart';
@@ -15,7 +20,6 @@ import 'package:cvms_desktop/features/vehicle_management/data/vehicle_violation_
 import 'package:cvms_desktop/features/vehicle_management/pages/core/vehicle_management_page.dart';
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/pages/vehicle_monitoring_page.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/pages/vehicle_logs_page.dart';
@@ -85,7 +89,13 @@ class ShellNavigationConfig {
         return ReportsPage();
 
       case 7:
-        return const ActivityLogsPage();
+        return BlocProvider(
+          create:
+              (_) => ActivityLogsCubit(
+                ActivityLogRepository(FirebaseFirestore.instance),
+              ),
+          child: ActivityLogsPage(),
+        );
 
       case 8:
         return const ProfilePage();

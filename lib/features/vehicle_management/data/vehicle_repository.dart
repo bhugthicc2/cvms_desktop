@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/vehicle_entry.dart';
 import '../../../core/error/firebase_error_handler.dart';
+import '../../../core/services/activity_log_service.dart';
 
 class VehicleRepository {
   final _firestore = FirebaseFirestore.instance;
   final _collection = 'vehicles';
+  final ActivityLogService _logger = ActivityLogService();
 
   Future<List<VehicleEntry>> fetchVehicles() async {
     try {
@@ -21,6 +23,13 @@ class VehicleRepository {
   Future<void> addVehicle(VehicleEntry entry) async {
     try {
       await _firestore.collection(_collection).add(entry.toMap());
+
+      // Log vehicle creation
+      await _logger.logVehicleCreated(
+        entry.vehicleID,
+        entry.plateNumber,
+        null, // Will use current user from service
+      );
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
@@ -29,6 +38,16 @@ class VehicleRepository {
   Future<void> updateVehicle(String id, Map<String, dynamic> updates) async {
     try {
       await _firestore.collection(_collection).doc(id).update(updates);
+
+      // Log vehicle update
+      final vehicleData = await getVehicleById(id);
+      if (vehicleData != null) {
+        await _logger.logVehicleUpdated(
+          id,
+          vehicleData.plateNumber,
+          null, // Will use current user from service
+        );
+      }
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
@@ -36,7 +55,19 @@ class VehicleRepository {
 
   Future<void> deleteVehicle(String id) async {
     try {
+      // Get vehicle data before deletion for logging
+      final vehicleData = await getVehicleById(id);
+
       await _firestore.collection(_collection).doc(id).delete();
+
+      // Log vehicle deletion
+      if (vehicleData != null) {
+        await _logger.logVehicleDeleted(
+          id,
+          vehicleData.plateNumber,
+          null, // Will use current user from service
+        );
+      }
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }

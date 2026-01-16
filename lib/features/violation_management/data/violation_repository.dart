@@ -2,10 +2,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/violation_model.dart';
 import '../../../core/error/firebase_error_handler.dart';
+import '../../../core/services/activity_log_service.dart';
 
 class ViolationRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String _collection = 'violations';
+  final ActivityLogService _logger = ActivityLogService();
 
   Future<void> createViolationReport({
     required String vehicleId,
@@ -14,7 +16,7 @@ class ViolationRepository {
     String status = 'pending',
   }) async {
     try {
-      await _firestore.collection(_collection).add({
+      final violationDoc = await _firestore.collection(_collection).add({
         'vehicleId': vehicleId,
         'reportedByUserId': reportedByUserId,
         'violationType': violationType,
@@ -22,6 +24,13 @@ class ViolationRepository {
         'reportedAt': FieldValue.serverTimestamp(),
         'createdAt': FieldValue.serverTimestamp(),
       });
+
+      // Log violation report
+      await _logger.logViolationReported(
+        violationDoc.id,
+        '$violationType violation reported',
+        reportedByUserId,
+      );
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }

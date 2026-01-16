@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
+import '../../../core/services/activity_log_service.dart';
+import '../../../core/models/activity_type.dart';
 
 class UserRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static const String _collection = 'users';
+  final ActivityLogService _logger = ActivityLogService();
 
   Stream<List<UserEntry>> getUsersStream() {
     return _firestore
@@ -47,6 +50,9 @@ class UserRepository {
           .collection(_collection)
           .doc(user.id)
           .set(user.toFirestore());
+
+      // Log user creation
+      await _logger.logUserCreated(user.id, user.email);
     } catch (e) {
       throw Exception('Failed to create user: $e');
     }
@@ -58,6 +64,15 @@ class UserRepository {
           .collection(_collection)
           .doc(user.id)
           .update(user.toFirestore());
+
+      // Log user update
+      await _logger.logActivity(
+        type: ActivityType.userUpdated,
+        description: 'User ${user.fullname} updated',
+        userId: user.id,
+        targetId: user.id,
+        metadata: {'action': 'update'},
+      );
     } catch (e) {
       throw Exception('Failed to update user: $e');
     }
@@ -65,7 +80,15 @@ class UserRepository {
 
   Future<void> deleteUser(String userId) async {
     try {
+      // Get user data before deletion for logging
+      final userData = await getUserById(userId);
+
       await _firestore.collection(_collection).doc(userId).delete();
+
+      // Log user deletion
+      if (userData != null) {
+        await _logger.logUserDeleted(userId, userData.email);
+      }
     } catch (e) {
       throw Exception('Failed to delete user: $e');
     }
