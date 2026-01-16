@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/services/navigation_guard.dart';
 
 class ShellState {
   final bool isExpanded;
@@ -19,7 +20,12 @@ class ShellCubit extends Cubit<ShellState> {
 
   void toggleSidebar() => emit(state.copyWith(isExpanded: !state.isExpanded));
 
-  void selectPage(int index) {
-    emit(state.copyWith(selectedIndex: index));
+  void selectPage(int index) async {
+    final navigationGuard = NavigationGuard();
+    final canNavigate = await navigationGuard.checkUnsavedChanges();
+
+    if (canNavigate) {
+      emit(state.copyWith(selectedIndex: index));
+    }
   }
 }

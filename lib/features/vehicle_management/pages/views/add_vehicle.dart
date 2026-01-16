@@ -3,6 +3,8 @@ import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/utils/card_decor.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_button.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_dialog.dart';
+import 'package:cvms_desktop/core/services/navigation_guard.dart';
 import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/reports/widgets/buttons/custom_icon_button.dart';
@@ -53,6 +55,10 @@ class _AddVehicleViewState extends State<AddVehicleView> {
   // Loading state for button
   bool _isSaving = false;
 
+  // Track if form has unsaved changes
+  bool _hasUnsavedChanges = false;
+  final NavigationGuard _navigationGuard = NavigationGuard();
+
   @override
   void initState() {
     super.initState();
@@ -67,6 +73,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
   @override
   void dispose() {
     _stepperController.dispose();
+    _navigationGuard.unregisterUnsavedChanges();
     super.dispose();
   }
 
@@ -76,6 +83,18 @@ class _AddVehicleViewState extends State<AddVehicleView> {
       formCubit: context.read<VehicleFormCubit>(),
       vehicleCubit: context.read<VehicleCubit>(),
     );
+
+    // Listen to form changes to track unsaved state
+    context.read<VehicleFormCubit>().stream.listen((_) {
+      if (mounted && !_isSaving) {
+        setState(() {
+          _hasUnsavedChanges = true;
+          _navigationGuard.registerUnsavedChanges(
+            showDialogCallback: () => _showUnsavedChangesDialog(() {}),
+          );
+        });
+      }
+    });
   }
 
   /// Get step keys list for validation
@@ -83,9 +102,18 @@ class _AddVehicleViewState extends State<AddVehicleView> {
 
   /// Handle back navigation through controller
   void _handleBack() {
-    final result = _controller.handleBack();
-    if (result.shouldCancel) {
-      widget.onCancel();
+    if (_hasUnsavedChanges) {
+      _showUnsavedChangesDialog(() {
+        final result = _controller.handleBack();
+        if (result.shouldCancel) {
+          widget.onCancel();
+        }
+      });
+    } else {
+      final result = _controller.handleBack();
+      if (result.shouldCancel) {
+        widget.onCancel();
+      }
     }
   }
 
@@ -113,6 +141,14 @@ class _AddVehicleViewState extends State<AddVehicleView> {
         try {
           // Use service to save vehicle
           await _addVehicleService!.saveVehicle(cubitContext);
+
+          // Mark as saved after successful save
+          if (mounted) {
+            setState(() {
+              _hasUnsavedChanges = false;
+              _navigationGuard.unregisterUnsavedChanges();
+            });
+          }
         } finally {
           // Reset loading state
           if (mounted) {
@@ -137,176 +173,224 @@ class _AddVehicleViewState extends State<AddVehicleView> {
     ];
   }
 
+  /// Show confirmation dialog for unsaved changes
+  void _showUnsavedChangesDialog(VoidCallback onConfirm) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return CustomDialog(
+          title: 'Unsaved Changes',
+          icon: PhosphorIconsBold.warning,
+          headerColor: AppColors.error,
+          isAlert: true,
+          width: 400,
+          height: 200,
+          btnTxt: 'Leave Anyway',
+          onSubmit: () {
+            Navigator.of(context).pop();
+            _navigationGuard.confirmNavigation();
+            onConfirm();
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.medium),
+            child: Text(
+              'Are you sure you want to leave? All entered data will be lost.',
+              style: TextStyle(
+                fontSize: 14,
+                color: AppColors.black.withValues(alpha: 0.6),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Handle will pop scope for navigation protection
+  Future<bool> _onWillPop() async {
+    if (_hasUnsavedChanges) {
+      final canNavigate = await _navigationGuard.checkUnsavedChanges();
+      return canNavigate;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => VehicleFormCubit(),
-      child: Builder(
-        builder: (context) {
-          _builderContext = context; // Store the Builder context
-          _initializeService(context); // Initialize service with cubits
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: BlocProvider(
+        create: (_) => VehicleFormCubit(),
+        child: Builder(
+          builder: (context) {
+            _builderContext = context;
+            _initializeService(context);
 
-          // Calculate 5% of screen width for horizontal padding
-          final screenWidth = MediaQuery.of(context).size.width;
-          final calculatedPadding = screenWidth * 0.05;
+            // Calculate 5% of screen width for horizontal padding
+            final screenWidth = MediaQuery.of(context).size.width;
+            final calculatedPadding = screenWidth * 0.05;
 
-          return GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-            child: Scaffold(
-              backgroundColor: AppColors.greySurface,
-              body: Container(
-                clipBehavior: Clip.antiAlias,
-                margin: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.small,
-                  vertical: AppSpacing.small,
-                ),
-                height: double.infinity,
-                decoration: cardDecoration(radii: 5),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.medium,
-                        vertical: AppSpacing.medium,
-                      ),
-                      child: Row(
-                        children: [
-                          CustomIconButton(
-                            iconSize: 24,
-                            onTap: () {
-                              _handleBack();
-                            },
-                            icon: PhosphorIconsBold.arrowLeft,
-                            iconColor: AppColors.primary,
-                          ),
-                          Spacing.horizontal(size: AppSpacing.medium),
-                          Text(
-                            'Add New Vehicle Record',
-                            style: TextStyle(
-                              fontSize: AppFontSizes.large,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.black.withValues(alpha: 0.7),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    CustomDivider(
-                      color: AppColors.greySurface,
-                      direction: Axis.horizontal,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.medium,
-                        vertical: AppSpacing.medium,
-                      ),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              StepIndicator(
-                                step: 0,
-                                title: 'Owner Information',
-                                supportText: 'Vehicle owner info',
-                                currentStep: _stepperController.currentStep,
-                                onTap: () => _handleStepNavigation(0),
-                              ),
-                              StepIndicator(
-                                step: 1,
-                                title: 'Vehicle Information',
-                                supportText: 'Vehicle details',
-                                currentStep: _stepperController.currentStep,
-                                onTap: () => _handleStepNavigation(1),
-                              ),
-                              StepIndicator(
-                                step: 2,
-                                title: 'Legal Details',
-                                supportText: 'Vehicle legal details',
-                                currentStep: _stepperController.currentStep,
-                                onTap: () => _handleStepNavigation(2),
-                              ),
-                              StepIndicator(
-                                step: 3,
-                                title: 'Address Information',
-                                supportText: 'Owner address',
-                                currentStep: _stepperController.currentStep,
-                                onTap: () => _handleStepNavigation(3),
-                              ),
-                              StepIndicator(
-                                step: 4,
-                                title: 'Review & Confirm',
-                                supportText: 'entry review',
-                                currentStep: _stepperController.currentStep,
-                                onTap: () => _handleStepNavigation(4),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                    CustomDivider(
-                      color: AppColors.greySurface,
-                      direction: Axis.horizontal,
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: MediaQuery.of(context).size.height - 300,
-                          ),
-                          child:
-                              _buildStepContent(
-                                calculatedPadding,
-                              )[_stepperController.currentStep],
+            return GestureDetector(
+              onTap: () {
+                FocusScope.of(context).unfocus();
+              },
+              child: Scaffold(
+                backgroundColor: AppColors.greySurface,
+                body: Container(
+                  clipBehavior: Clip.antiAlias,
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.small,
+                    vertical: AppSpacing.small,
+                  ),
+                  height: double.infinity,
+                  decoration: cardDecoration(radii: 5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.medium,
+                          vertical: AppSpacing.medium,
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: calculatedPadding,
-                        vertical: AppSpacing.small,
-                      ),
-                      child: SizedBox(
-                        height: 40,
                         child: Row(
                           children: [
-                            const Spacer(flex: 4),
-
-                            Expanded(
-                              child: CustomButton(
-                                btnSubmitColor: AppColors.greySurface,
-                                btnSubmitTxtColor: AppColors.grey,
-                                text: 'Back',
-                                onPressed: _handleBack,
-                              ),
+                            CustomIconButton(
+                              iconSize: 24,
+                              onTap: () {
+                                _handleBack();
+                              },
+                              icon: PhosphorIconsBold.arrowLeft,
+                              iconColor: AppColors.primary,
                             ),
-                            Spacing.horizontal(size: AppFontSizes.medium),
-                            Expanded(
-                              child: CustomButton(
-                                text:
-                                    _stepperController.isLastStep
-                                        ? 'Save Vehicle'
-                                        : 'Next',
-                                onPressed: _handleNext,
-                                isLoading:
-                                    _stepperController.isLastStep && _isSaving,
+                            Spacing.horizontal(size: AppSpacing.medium),
+                            Text(
+                              'Add New Vehicle Record',
+                              style: TextStyle(
+                                fontSize: AppFontSizes.large,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.black.withValues(alpha: 0.7),
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                      CustomDivider(
+                        color: AppColors.greySurface,
+                        direction: Axis.horizontal,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: widget.horizontalPadding,
+                          vertical: AppSpacing.medium,
+                        ),
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                StepIndicator(
+                                  step: 0,
+                                  title: 'Owner Information',
+                                  supportText: 'Vehicle owner info',
+                                  currentStep: _stepperController.currentStep,
+                                  onTap: () => _handleStepNavigation(0),
+                                ),
+                                StepIndicator(
+                                  step: 1,
+                                  title: 'Vehicle Information',
+                                  supportText: 'Vehicle details',
+                                  currentStep: _stepperController.currentStep,
+                                  onTap: () => _handleStepNavigation(1),
+                                ),
+                                StepIndicator(
+                                  step: 2,
+                                  title: 'Legal Details',
+                                  supportText: 'Vehicle legal details',
+                                  currentStep: _stepperController.currentStep,
+                                  onTap: () => _handleStepNavigation(2),
+                                ),
+                                StepIndicator(
+                                  step: 3,
+                                  title: 'Address Information',
+                                  supportText: 'Owner address',
+                                  currentStep: _stepperController.currentStep,
+                                  onTap: () => _handleStepNavigation(3),
+                                ),
+                                StepIndicator(
+                                  step: 4,
+                                  title: 'Review & Confirm',
+                                  supportText: 'entry review',
+                                  currentStep: _stepperController.currentStep,
+                                  onTap: () => _handleStepNavigation(4),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                      CustomDivider(
+                        color: AppColors.greySurface,
+                        direction: Axis.horizontal,
+                      ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight:
+                                  MediaQuery.of(context).size.height - 300,
+                            ),
+                            child:
+                                _buildStepContent(
+                                  calculatedPadding,
+                                )[_stepperController.currentStep],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: calculatedPadding,
+                          vertical: AppSpacing.small,
+                        ),
+                        child: SizedBox(
+                          height: 40,
+                          child: Row(
+                            children: [
+                              const Spacer(flex: 4),
+
+                              Expanded(
+                                child: CustomButton(
+                                  btnSubmitColor: AppColors.greySurface,
+                                  btnSubmitTxtColor: AppColors.grey,
+                                  text: 'Back',
+                                  onPressed: _handleBack,
+                                ),
+                              ),
+                              Spacing.horizontal(size: AppFontSizes.medium),
+                              Expanded(
+                                child: CustomButton(
+                                  text:
+                                      _stepperController.isLastStep
+                                          ? 'Save Vehicle'
+                                          : 'Next',
+                                  onPressed: _handleNext,
+                                  isLoading:
+                                      _stepperController.isLastStep &&
+                                      _isSaving,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
