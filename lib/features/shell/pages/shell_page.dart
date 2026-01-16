@@ -24,16 +24,13 @@ class ShellPage extends StatefulWidget {
 
 class _ShellPageState extends State<ShellPage> {
   final BreadcrumbController _breadcrumbController = BreadcrumbController();
-  final List<Widget?> _pageCache = List<Widget?>.filled(
-    ShellNavigationConfig.titles.length,
-    null,
-  );
 
   void _handleLogout(BuildContext context) async {
     final confirmed = await LogoutDialog.show(context);
     if (confirmed) {
-      // ignore: use_build_context_synchronously
-      context.read<AuthBloc>().add(SignOutEvent());
+      if (context.mounted) {
+        context.read<AuthBloc>().add(SignOutEvent());
+      }
     }
   }
 
@@ -82,11 +79,6 @@ class _ShellPageState extends State<ShellPage> {
             builder: (context, state) {
               final titles = ShellNavigationConfig.titles;
 
-              _pageCache[state.selectedIndex] ??= ShellNavigationConfig.getPage(
-                state.selectedIndex,
-                context,
-              );
-
               return BreadcrumbScope(
                 controller: _breadcrumbController,
                 child: Scaffold(
@@ -123,13 +115,9 @@ class _ShellPageState extends State<ShellPage> {
                             ),
                             //body
                             Expanded(
-                              child: IndexedStack(
-                                index: state.selectedIndex,
-                                children: List.generate(
-                                  titles.length,
-                                  (i) =>
-                                      _pageCache[i] ?? const SizedBox.shrink(),
-                                ),
+                              child: ShellNavigationConfig.getPage(
+                                state.selectedIndex,
+                                context,
                               ),
                             ),
                           ],
