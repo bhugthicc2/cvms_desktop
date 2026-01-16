@@ -181,7 +181,13 @@ class VehicleCubit extends Cubit<VehicleState> {
     emit(state.copyWith(addVehicleStep: safeStep));
   }
 
-  void nextAddVehicleStep() {
+  void nextAddVehicleStep({bool Function()? step1Validator}) {
+    if (state.addVehicleStep == 0 && step1Validator != null) {
+      // Validate Step 1 before proceeding
+      if (!step1Validator()) {
+        return; // Don't proceed if validation fails
+      }
+    }
     setAddVehicleStep(state.addVehicleStep + 1);
   }
 

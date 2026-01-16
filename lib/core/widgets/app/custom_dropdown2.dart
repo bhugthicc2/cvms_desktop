@@ -17,6 +17,7 @@ class CustDropDown<T> extends StatefulWidget {
   final double fontSize; // New: Match text field
   final IconData? prefixIcon; // New: Optional prefix like text field
   final Color borderColor; // New: Match text field
+  final String? errorText; // New: For validation errors
 
   const CustDropDown({
     super.key,
@@ -32,6 +33,7 @@ class CustDropDown<T> extends StatefulWidget {
     this.fontSize = AppFontSizes.small, // Match text field
     this.prefixIcon,
     this.borderColor = AppColors.primary, // Match text field
+    this.errorText,
   });
 
   @override
@@ -422,6 +424,17 @@ class CustDropDownState<T> extends State<CustDropDown<T>>
               ),
             ),
           ),
+          if (widget.errorText != null) ...[
+            Spacing.vertical(size: AppSpacing.xSmall),
+            Text(
+              widget.errorText!,
+              style: TextStyle(
+                fontSize: widget.fontSize - 2,
+                fontWeight: FontWeight.bold,
+                color: AppColors.error,
+              ),
+            ),
+          ],
         ],
       ),
     );
