@@ -45,7 +45,7 @@ class ReviewStepContent extends StatelessWidget {
                         _buildSection('Owner Information', [
                           _buildInfoRow('Owner Name', formData.ownerName),
                           _buildInfoRow('Gender', formData.gender),
-                          _buildInfoRow('College', formData.college),
+                          _buildInfoRow('College', formData.department),
                           _buildInfoRow('Contact', formData.contact),
                           _buildInfoRow('Year Level', formData.yearLevel),
                           _buildInfoRow('School ID', formData.schoolId),

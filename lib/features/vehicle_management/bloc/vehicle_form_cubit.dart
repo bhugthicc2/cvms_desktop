@@ -16,7 +16,6 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
     String? department,
     String? yearLevel,
     String? block,
-    String? college,
   }) {
     final updatedData = formData.copyWith(
       ownerName: ownerName,
@@ -26,7 +25,6 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
       department: department,
       yearLevel: yearLevel,
       block: block,
-      college: college,
     );
     emit(VehicleFormUpdated(formData: updatedData));
   }

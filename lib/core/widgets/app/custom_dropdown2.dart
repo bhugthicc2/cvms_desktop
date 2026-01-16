@@ -8,6 +8,7 @@ class CustDropDown<T> extends StatefulWidget {
   final List<CustDropdownMenuItem<T>> items;
   final Function(T?) onChanged;
   final String hintText;
+  final String labelText;
   final double borderRadius;
   final double maxListHeight;
   final double borderWidth;
@@ -24,6 +25,7 @@ class CustDropDown<T> extends StatefulWidget {
     required this.items,
     required this.onChanged,
     this.hintText = "",
+    required this.labelText,
     this.borderRadius = 5.0, // Match text field default
     this.borderWidth = 1,
     this.maxListHeight = 200.0, // Slightly taller for desktop
@@ -303,7 +305,7 @@ class CustDropDownState<T> extends State<CustDropDown<T>>
           Row(
             children: [
               Text(
-                widget.hintText, // Reuse hintText as label for consistency
+                widget.labelText,
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: widget.fontSize,

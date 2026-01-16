@@ -192,30 +192,4 @@ class VehicleEntry {
       throw Exception('Invalid CR number');
     }
   }
-
-  static VehicleEntry sample() {
-    return VehicleEntry(
-      vehicleID: 'sample-vehicle-id',
-      ownerName: 'Sample Owner',
-      schoolID: '2023-12345',
-      department: 'College of Engineering',
-      gender: 'Male',
-      yearLevel: '3rd Year',
-      block: 'Block A',
-      contact: '09123456789',
-      purok: 'Purok 1',
-      barangay: 'Barangay Sample',
-      city: 'Zamboanga City',
-      province: 'Zamboanga del Sur',
-      plateNumber: 'ABC-123',
-      vehicleType: 'Motorcycle',
-      vehicleModel: 'Honda XRM',
-      vehicleColor: 'Black',
-      licenseNumber: '1234567890',
-      orNumber: 'OR-123456',
-      crNumber: 'CR-123456',
-      status: 'active',
-      createdAt: Timestamp.now(),
-    );
-  }
 }

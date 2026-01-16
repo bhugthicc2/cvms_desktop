@@ -159,6 +159,7 @@ class _VehicleStepContentState extends State<VehicleStepContent> {
                 const Spacing.horizontal(size: AppSpacing.large),
                 Expanded(
                   child: CustDropDown(
+                    labelText: 'Vehicle type',
                     hintText: "Vehicle type",
                     defaultSelectedIndex: _getVehicleTypeIndex(
                       _selectedVehicleType,
@@ -169,14 +170,14 @@ class _VehicleStepContentState extends State<VehicleStepContent> {
                             : null,
                     items: const [
                       CustDropdownMenuItem(
-                        value: 'Two-wheeled',
+                        value: 'two-wheeled',
                         child: Text(
                           "Two-wheeled",
                           style: TextStyle(fontSize: AppFontSizes.small),
                         ),
                       ),
                       CustDropdownMenuItem(
-                        value: 'Four-wheeled',
+                        value: 'four-wheeled',
                         child: Text(
                           "Four-wheeled",
                           style: TextStyle(fontSize: AppFontSizes.small),

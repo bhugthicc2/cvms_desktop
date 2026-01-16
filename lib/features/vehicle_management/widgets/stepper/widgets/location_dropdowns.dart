@@ -42,6 +42,7 @@ class LocationDropdowns extends StatelessWidget {
           children: [
             Expanded(
               child: CustDropDown<String>(
+                labelText: 'Region',
                 hintText: "Region",
                 items: regionItems,
                 onChanged: onRegionChanged,
@@ -50,6 +51,7 @@ class LocationDropdowns extends StatelessWidget {
             const Spacing.horizontal(size: AppSpacing.large),
             Expanded(
               child: CustDropDown<String>(
+                labelText: 'Province',
                 hintText: "Province",
                 items: provinceItems,
                 onChanged: onProvinceChanged,
@@ -63,6 +65,7 @@ class LocationDropdowns extends StatelessWidget {
           children: [
             Expanded(
               child: CustDropDown<String>(
+                labelText: 'Municipality',
                 hintText: "Municipality",
                 items: municipalityItems,
                 onChanged: onMunicipalityChanged,
@@ -71,6 +74,7 @@ class LocationDropdowns extends StatelessWidget {
             const Spacing.horizontal(size: AppSpacing.large),
             Expanded(
               child: CustDropDown<String>(
+                labelText: 'Barangay',
                 hintText: "Barangay",
                 items: barangayItems,
                 onChanged: onBarangayChanged,

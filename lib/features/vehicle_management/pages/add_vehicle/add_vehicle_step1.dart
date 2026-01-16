@@ -117,7 +117,7 @@ class _OwnerStepContentState extends State<OwnerStepContent> {
     _contactController.text = formData.contact ?? '';
     _schoolIdController.text = formData.schoolId ?? '';
     _selectedGender = formData.gender;
-    _selectedCollege = formData.college;
+    _selectedCollege = formData.department;
     _selectedYearLevel = formData.yearLevel;
     _selectedBlock = formData.block;
 
@@ -150,7 +150,7 @@ class _OwnerStepContentState extends State<OwnerStepContent> {
       _selectedCollege = value;
       _collegeError = null; // Clear error when user makes selection
     });
-    context.read<VehicleFormCubit>().updateStep1(college: value);
+    context.read<VehicleFormCubit>().updateStep1(department: value);
   }
 
   int _getCollegeIndex(String? value) {
@@ -245,7 +245,8 @@ class _OwnerStepContentState extends State<OwnerStepContent> {
                 const Spacing.horizontal(size: AppSpacing.large),
                 Expanded(
                   child: CustDropDown(
-                    hintText: "College",
+                    labelText: 'College',
+                    hintText: "Select a college",
                     defaultSelectedIndex: _getCollegeIndex(_selectedCollege),
                     errorText: _collegeError,
                     items: const [
@@ -306,7 +307,8 @@ class _OwnerStepContentState extends State<OwnerStepContent> {
                 const Spacing.horizontal(size: AppSpacing.large),
                 Expanded(
                   child: CustDropDown(
-                    hintText: "Year Level",
+                    labelText: 'Year Level',
+                    hintText: "Select year level",
                     defaultSelectedIndex: _getYearLevelIndex(
                       _selectedYearLevel,
                     ),
@@ -368,7 +370,8 @@ class _OwnerStepContentState extends State<OwnerStepContent> {
                 const Spacing.horizontal(size: AppSpacing.large),
                 Expanded(
                   child: CustDropDown(
-                    hintText: "Block",
+                    labelText: 'Block',
+                    hintText: "Select block",
                     defaultSelectedIndex: _getBlockIndex(_selectedBlock),
                     errorText: _blockError,
                     items: const [
@@ -416,6 +419,7 @@ class _OwnerStepContentState extends State<OwnerStepContent> {
 
             // Gender
             CustDropDown(
+              labelText: 'Gender',
               hintText: "Gender",
               defaultSelectedIndex: _getGenderIndex(_selectedGender),
               errorText: _genderError,

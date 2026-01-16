@@ -6,13 +6,16 @@ import 'package:cvms_desktop/core/widgets/app/custom_button.dart';
 import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/reports/widgets/buttons/custom_icon_button.dart';
+import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_form_cubit.dart';
+import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_management/controllers/stepper_controller.dart';
+import 'package:cvms_desktop/features/vehicle_management/controllers/add_vehicle_controller.dart';
+import 'package:cvms_desktop/features/vehicle_management/services/add_vehicle_service.dart';
 import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_step1.dart';
 import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_step2.dart';
 import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_step3.dart';
 import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_step4.dart';
 import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_step5.dart';
-import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_form_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/stepper/indicator/step_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,13 +37,21 @@ class AddVehicleView extends StatefulWidget {
 }
 
 class _AddVehicleViewState extends State<AddVehicleView> {
+  late final AddVehicleController _controller;
   late final StepperController _stepperController;
+  BuildContext? _builderContext;
 
   // GlobalKeys for step content validation
   final GlobalKey step1Key = GlobalKey();
   final GlobalKey step2Key = GlobalKey();
   final GlobalKey step3Key = GlobalKey();
   final GlobalKey step4Key = GlobalKey();
+
+  // Service for external operations
+  AddVehicleService? _addVehicleService;
+
+  // Loading state for button
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -50,6 +61,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
       onStepChanged: () => setState(() {}),
       onCompleted: widget.onNext,
     );
+    _controller = AddVehicleController(stepperController: _stepperController);
   }
 
   @override
@@ -58,106 +70,59 @@ class _AddVehicleViewState extends State<AddVehicleView> {
     super.dispose();
   }
 
+  /// Initialize service with cubit dependencies (called once)
+  void _initializeService(BuildContext context) {
+    _addVehicleService ??= AddVehicleService(
+      formCubit: context.read<VehicleFormCubit>(),
+      vehicleCubit: context.read<VehicleCubit>(),
+    );
+  }
+
+  /// Get step keys list for validation
+  List<GlobalKey> get _stepKeys => [step1Key, step2Key, step3Key, step4Key];
+
+  /// Handle back navigation through controller
   void _handleBack() {
-    if (_stepperController.isFirstStep) {
+    final result = _controller.handleBack();
+    if (result.shouldCancel) {
       widget.onCancel();
-      return;
     }
-    _stepperController.previousStep();
   }
 
-  bool _validateCurrentStep() {
-    bool isValid = false;
-
-    try {
-      switch (_stepperController.currentStep) {
-        case 0:
-          final step1State = step1Key.currentState;
-          if (step1State != null) {
-            isValid = (step1State as dynamic).validate();
-          }
-          break;
-        case 1:
-          final step2State = step2Key.currentState;
-          if (step2State != null) {
-            isValid = (step2State as dynamic).validate();
-          }
-          break;
-        case 2:
-          final step3State = step3Key.currentState;
-          if (step3State != null) {
-            isValid = (step3State as dynamic).validate();
-          }
-          break;
-        case 3:
-          final step4State = step4Key.currentState;
-          if (step4State != null) {
-            isValid = (step4State as dynamic).validate();
-          }
-          break;
-        case 4:
-          // Review step doesn't need validation
-          isValid = true;
-          break;
-      }
-    } catch (e) {
-      // If validation fails, assume valid to not block navigation
-      isValid = true;
-    }
-
-    return isValid;
-  }
-
+  /// Handle step navigation through controller
   void _handleStepNavigation(int targetStep) {
-    // Allow navigation backwards without validation
-    if (targetStep < _stepperController.currentStep) {
-      _stepperController.goToStep(targetStep);
-      return;
-    }
-
-    // For forward navigation, validate all previous steps
-    for (int i = 0; i < targetStep; i++) {
-      bool isValid = false;
-      switch (i) {
-        case 0:
-          final step1State = step1Key.currentState;
-          if (step1State != null) {
-            isValid = (step1State as dynamic).validate();
-          }
-          break;
-        case 1:
-          final step2State = step2Key.currentState;
-          if (step2State != null) {
-            isValid = (step2State as dynamic).validate();
-          }
-          break;
-        case 2:
-          final step3State = step3Key.currentState;
-          if (step3State != null) {
-            isValid = (step3State as dynamic).validate();
-          }
-          break;
-        case 3:
-          final step4State = step4Key.currentState;
-          if (step4State != null) {
-            isValid = (step4State as dynamic).validate();
-          }
-          break;
-      }
-
-      if (!isValid) {
-        // If any step is invalid, go back to that step and stop navigation
-        _stepperController.goToStep(i);
-        return;
-      }
-    }
-
-    // All previous steps are valid, proceed to target step
-    _stepperController.goToStep(targetStep);
+    _controller.navigateToStep(targetStep, _stepKeys);
   }
 
-  void _handleNext() {
-    if (_validateCurrentStep()) {
+  /// Handle next action through controller and service
+  Future<void> _handleNext() async {
+    final canProceed = _controller.canProceedToNext(_stepKeys);
+    if (!canProceed.canProceed) {
+      return; // Validation failed, controller handles feedback
+    }
+
+    // Check if this is the last step (Review & Confirm)
+    if (_stepperController.isLastStep) {
+      final cubitContext = _builderContext;
+      if (cubitContext != null && _addVehicleService != null) {
+        // Set loading state
+        setState(() {
+          _isSaving = true;
+        });
+
+        try {
+          // Use service to save vehicle
+          await _addVehicleService!.saveVehicle(cubitContext);
+        } finally {
+          // Reset loading state
+          if (mounted) {
+            setState(() {
+              _isSaving = false;
+            });
+          }
+        }
+      }
+    } else {
       _stepperController.nextStep();
     }
   }
@@ -178,6 +143,9 @@ class _AddVehicleViewState extends State<AddVehicleView> {
       create: (_) => VehicleFormCubit(),
       child: Builder(
         builder: (context) {
+          _builderContext = context; // Store the Builder context
+          _initializeService(context); // Initialize service with cubits
+
           // Calculate 5% of screen width for horizontal padding
           final screenWidth = MediaQuery.of(context).size.width;
           final calculatedPadding = screenWidth * 0.05;
@@ -322,9 +290,11 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                               child: CustomButton(
                                 text:
                                     _stepperController.isLastStep
-                                        ? 'Save'
+                                        ? 'Save Vehicle'
                                         : 'Next',
                                 onPressed: _handleNext,
+                                isLoading:
+                                    _stepperController.isLastStep && _isSaving,
                               ),
                             ),
                           ],
