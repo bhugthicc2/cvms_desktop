@@ -7,10 +7,10 @@ import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/reports/widgets/buttons/custom_icon_button.dart';
 import 'package:cvms_desktop/features/vehicle_management/controllers/stepper_controller.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/stepper/content/address_step_content.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/stepper/content/owner_step_content.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/stepper/content/vehicle_step_content.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/stepper/content/legal_step_content.dart';
-import 'package:cvms_desktop/features/vehicle_management/widgets/stepper/content/address_step_content.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/stepper/content/review_step_content.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/stepper/indicator/step_indicator.dart';
 import 'package:flutter/material.dart';
@@ -19,39 +19,33 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 class AddVehicleView extends StatefulWidget {
   final VoidCallback onNext;
   final VoidCallback onCancel;
+  final double horizontalPadding;
   const AddVehicleView({
     super.key,
     required this.onNext,
     required this.onCancel,
-  });
+    double? horizontalPadding,
+  }) : horizontalPadding = horizontalPadding ?? 0;
 
   @override
   State<AddVehicleView> createState() => _AddVehicleViewState();
 }
 
-class _AddVehicleViewState extends State<AddVehicleView>
-    with SingleTickerProviderStateMixin {
-  late final TabController _tabController;
+class _AddVehicleViewState extends State<AddVehicleView> {
   late final StepperController _stepperController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 5, vsync: this);
     _stepperController = StepperController(
       totalSteps: 5,
       onStepChanged: () => setState(() {}),
       onCompleted: widget.onNext,
     );
-
-    _tabController.addListener(() {
-      _stepperController.goToStep(_tabController.index);
-    });
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
     _stepperController.dispose();
     super.dispose();
   }
@@ -62,28 +56,28 @@ class _AddVehicleViewState extends State<AddVehicleView>
       return;
     }
     _stepperController.previousStep();
-    _tabController.animateTo(_stepperController.currentStep);
   }
 
   void _handleNext() {
     _stepperController.nextStep();
-    if (!_stepperController.isLastStep) {
-      _tabController.animateTo(_stepperController.currentStep);
-    }
   }
 
-  List<Widget> _buildStepContent() {
+  List<Widget> _buildStepContent(double horizontalPadding) {
     return [
-      const OwnerStepContent(),
-      const VehicleStepContent(),
-      const LegalStepContent(),
-      const AddressStepContent(),
-      const ReviewStepContent(),
+      OwnerStepContent(horizontalPadding: horizontalPadding),
+      VehicleStepContent(horizontalPadding: horizontalPadding),
+      LegalStepContent(horizontalPadding: horizontalPadding),
+      AddressStepContent(horizontalPadding: horizontalPadding),
+      ReviewStepContent(horizontalPadding: horizontalPadding),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
+    // Calculate 5% of screen width for horizontal padding
+    final screenWidth = MediaQuery.of(context).size.width;
+    final calculatedPadding = screenWidth * 0.05;
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -188,35 +182,28 @@ class _AddVehicleViewState extends State<AddVehicleView>
                 direction: Axis.horizontal,
               ),
               Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children:
-                      _buildStepContent().map((stepContent) {
-                        return SingleChildScrollView(
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                              minHeight:
-                                  MediaQuery.of(context).size.height - 300,
-                            ),
-                            child: stepContent,
-                          ),
-                        );
-                      }).toList(),
+                child: SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: MediaQuery.of(context).size.height - 300,
+                    ),
+                    child:
+                        _buildStepContent(calculatedPadding)[_stepperController
+                            .currentStep],
+                  ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.medium,
+                padding: EdgeInsets.symmetric(
+                  horizontal: calculatedPadding,
                   vertical: AppSpacing.small,
                 ),
                 child: SizedBox(
                   height: 40,
                   child: Row(
                     children: [
-                      const Spacer(),
-                      const Spacer(),
-                      const Spacer(),
+                      const Spacer(flex: 4),
+
                       Expanded(
                         child: CustomButton(
                           btnSubmitColor: AppColors.greySurface,

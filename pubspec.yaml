@@ -85,6 +85,8 @@ flutter:
     - assets/fonts/
     - assets/icons/
     - assets/icons/stencil/
+    - assets/icons/windows/
+    - assets/icons/3d_fluency/
     - assets/anim/
 
   fonts:

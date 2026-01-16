@@ -4,11 +4,12 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dropdown2.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_text_field2.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
-import 'package:cvms_desktop/features/vehicle_management/widgets/options/option_widget.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/stepper/texts/content_title.dart';
 import 'package:flutter/material.dart';
 
 class VehicleStepContent extends StatefulWidget {
-  const VehicleStepContent({super.key});
+  final double horizontalPadding;
+  const VehicleStepContent({super.key, required this.horizontalPadding});
 
   @override
   State<VehicleStepContent> createState() => _VehicleStepContentState();
@@ -16,53 +17,38 @@ class VehicleStepContent extends StatefulWidget {
 
 class _VehicleStepContentState extends State<VehicleStepContent> {
   late final TextEditingController _plateNumberController;
+  late final TextEditingController _vehicleModelController;
+  late final TextEditingController _vehicleColorController;
   @override
   void initState() {
     super.initState();
     _plateNumberController = TextEditingController();
+    _vehicleModelController = TextEditingController();
+    _vehicleColorController = TextEditingController();
   }
 
   @override
   void dispose() {
     _plateNumberController.dispose();
+    _vehicleModelController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final vehicleTypeOptions = [
-      OptionItem(label: 'Two-wheeled', icon: Icons.male, value: 'two-wheeled'),
-      OptionItem(
-        label: 'Four-wheeled',
-        icon: Icons.female,
-        value: 'four-wheeled',
-      ),
-      OptionItem(label: 'Other', icon: Icons.more_horiz, value: 'other'),
-    ];
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xxxLarge + 10,
+      padding: EdgeInsets.symmetric(
+        horizontal: widget.horizontalPadding,
         vertical: AppSpacing.large,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Vehicle Information',
-            style: TextStyle(
-              fontSize: AppFontSizes.large,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primary,
-            ),
+          ContentTitle(
+            title: 'Vehicle Information',
+            subtitle: 'Please provide the vehicle specification details',
           ),
 
-          Text(
-            'Please provide the vehicle specification details',
-            style: TextStyle(
-              fontSize: AppFontSizes.small,
-              color: AppColors.grey,
-            ),
-          ),
           const Spacing.vertical(size: AppSpacing.large),
           // Row 1: Owner Name & Gender
           Row(
@@ -78,7 +64,7 @@ class _VehicleStepContentState extends State<VehicleStepContent> {
               Expanded(
                 child: CustomTextField2(
                   label: 'Vehicle Model',
-                  controller: _plateNumberController,
+                  controller: _vehicleModelController,
                   borderColor: AppColors.primary,
                 ),
               ),
@@ -91,7 +77,7 @@ class _VehicleStepContentState extends State<VehicleStepContent> {
               Expanded(
                 child: CustomTextField2(
                   label: 'Vehicle Color',
-                  controller: _plateNumberController,
+                  controller: _vehicleColorController,
                   borderColor: AppColors.primary,
                 ),
               ),

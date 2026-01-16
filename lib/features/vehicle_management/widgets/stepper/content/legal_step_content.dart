@@ -3,10 +3,12 @@ import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_text_field2.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/stepper/texts/content_title.dart';
 import 'package:flutter/material.dart';
 
 class LegalStepContent extends StatefulWidget {
-  const LegalStepContent({super.key});
+  final double horizontalPadding;
+  const LegalStepContent({super.key, required this.horizontalPadding});
 
   @override
   State<LegalStepContent> createState() => _LegalStepContentState();
@@ -35,29 +37,18 @@ class _LegalStepContentState extends State<LegalStepContent> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xxxLarge + 10,
+      padding: EdgeInsets.symmetric(
+        horizontal: widget.horizontalPadding,
         vertical: AppSpacing.large,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Legal Details',
-            style: TextStyle(
-              fontSize: AppFontSizes.large,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primary,
-            ),
+          ContentTitle(
+            title: 'Legal Details',
+            subtitle: 'Please provide the legal vehcicle details',
           ),
 
-          Text(
-            'Please provide the legal vehcicle details',
-            style: TextStyle(
-              fontSize: AppFontSizes.small,
-              color: AppColors.grey,
-            ),
-          ),
           const Spacing.vertical(size: AppSpacing.large),
           // Row 1: Owner Name & Gender
           Row(

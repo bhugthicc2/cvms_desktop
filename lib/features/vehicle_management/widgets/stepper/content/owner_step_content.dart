@@ -4,11 +4,12 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dropdown2.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_text_field2.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
-import 'package:cvms_desktop/features/vehicle_management/widgets/options/option_widget.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/stepper/texts/content_title.dart';
 import 'package:flutter/material.dart';
 
 class OwnerStepContent extends StatefulWidget {
-  const OwnerStepContent({super.key});
+  final double horizontalPadding;
+  const OwnerStepContent({super.key, required this.horizontalPadding});
 
   @override
   State<OwnerStepContent> createState() => _OwnerStepContentState();
@@ -49,35 +50,19 @@ class _OwnerStepContentState extends State<OwnerStepContent> {
 
   @override
   Widget build(BuildContext context) {
-    final genderOptions = [
-      OptionItem(label: 'Male', icon: Icons.male, value: 'male'),
-      OptionItem(label: 'Female', icon: Icons.female, value: 'female'),
-      OptionItem(label: 'Other', icon: Icons.more_horiz, value: 'other'),
-    ];
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xxxLarge + 10,
+      padding: EdgeInsets.symmetric(
+        horizontal: widget.horizontalPadding,
         vertical: AppSpacing.large,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Owner Information',
-            style: TextStyle(
-              fontSize: AppFontSizes.large,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primary,
-            ),
+          ContentTitle(
+            title: 'Owner Information',
+            subtitle: 'Please provide the vehicle owner\'s personal details',
           ),
 
-          Text(
-            'Please provide the vehicle owner\'s personal details',
-            style: TextStyle(
-              fontSize: AppFontSizes.small,
-              color: AppColors.grey,
-            ),
-          ),
           const Spacing.vertical(size: AppSpacing.large),
           // Row 1: Owner Name & Gender
           Row(
@@ -196,7 +181,7 @@ class _OwnerStepContentState extends State<OwnerStepContent> {
             ],
           ),
           const Spacing.vertical(size: AppSpacing.medium),
-          // Row 3: Department & Year Level
+          // Row 3: School ID & Block
           Row(
             children: [
               Expanded(
