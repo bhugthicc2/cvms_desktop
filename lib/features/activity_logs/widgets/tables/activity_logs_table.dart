@@ -1,3 +1,5 @@
+//ACTIVITY LOG 9
+
 import 'package:cvms_desktop/core/models/activity_log.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';

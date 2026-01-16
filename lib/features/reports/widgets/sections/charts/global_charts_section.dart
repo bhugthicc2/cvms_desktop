@@ -107,7 +107,7 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                   //Todo Student with Most violation
                   Expanded(
                     child: StackedBarWidget(
-                      title: 'Student with most violation',
+                      title: 'Top 5 Students with Most Violations',
                       data: state.studentWithMostViolations ?? [],
                       onViewTap: () {},
                       screenshotController:
@@ -118,7 +118,7 @@ class _GlobalChartsSectionState extends State<GlobalChartsSection> {
                   //todo City/Municipality Breakdown
                   Expanded(
                     child: StackedBarWidget(
-                      title: 'City/Municipality Breakdown',
+                      title: 'Top 5 Cities/Municipalities',
                       data:
                           state.cityBreakdown ??
                           [], // Use real data with fallback

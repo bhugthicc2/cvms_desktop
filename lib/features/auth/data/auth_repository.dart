@@ -1,3 +1,5 @@
+//ACTIVITY LOG 2
+
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../core/error/firebase_error_handler.dart';
 import '../../../core/services/activity_log_service.dart';

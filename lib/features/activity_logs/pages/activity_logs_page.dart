@@ -1,7 +1,8 @@
+//ACTIVITY LOG 11
+
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/foundation.dart';
 import '../bloc/activity_logs_cubit.dart';
 import '../bloc/activity_logs_state.dart';
 import '../widgets/tables/activity_logs_table.dart';

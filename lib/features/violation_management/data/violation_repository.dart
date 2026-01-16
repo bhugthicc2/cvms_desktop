@@ -1,3 +1,5 @@
+//ACTIVITY LOG 6
+
 // VEHICLE ID REFERENCE UPDATE MARKER
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/violation_model.dart';

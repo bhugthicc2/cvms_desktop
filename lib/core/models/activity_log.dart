@@ -1,3 +1,5 @@
+//ACTIVITY LOG 1
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'activity_type.dart';
 

@@ -1,3 +1,5 @@
+//ACTIVITY LOG 7
+
 import 'package:flutter/material.dart';
 
 enum ActivityType {

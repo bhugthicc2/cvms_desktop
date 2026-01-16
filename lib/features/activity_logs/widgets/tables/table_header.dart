@@ -1,3 +1,4 @@
+//ACTIVITY LOG 12
 //REFACTORED DB REFERENCE
 
 import 'package:cvms_desktop/core/theme/app_colors.dart';

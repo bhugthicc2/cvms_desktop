@@ -1,3 +1,5 @@
+//ACTIVITY LOG 15
+
 import 'package:cvms_desktop/core/models/activity_log.dart';
 
 class ActivityLogsState {

@@ -349,7 +349,7 @@ class ReportRepository {
         }
       }
 
-      return _createChartDataFromCounts(studentViolationCounts);
+      return _createChartDataFromCounts(studentViolationCounts, limit: 5);
     } catch (e) {
       throw Exception('Failed to fetch student violation data: $e');
     }
@@ -373,7 +373,7 @@ class ReportRepository {
         cityCounts[city] = (cityCounts[city] ?? 0) + 1;
       }
 
-      return _createChartDataFromCounts(cityCounts);
+      return _createChartDataFromCounts(cityCounts, limit: 5);
     } catch (e) {
       throw Exception('Failed to fetch city breakdown: $e');
     }
@@ -434,13 +434,20 @@ class ReportRepository {
 
   // -----------INDIVIDUAL----------------
 
-  List<ChartDataModel> _createChartDataFromCounts(Map<String, int> counts) {
+  List<ChartDataModel> _createChartDataFromCounts(
+    Map<String, int> counts, {
+    int? limit,
+  }) {
     final sortedEntries =
         counts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
 
-    // Return ALL departments
+    // Apply limit if specified
+    final limitedEntries =
+        limit != null ? sortedEntries.take(limit).toList() : sortedEntries;
+
+    // Return limited or all departments
     final chartData =
-        sortedEntries
+        limitedEntries
             .map(
               (entry) => ChartDataModel(
                 category: entry.key,

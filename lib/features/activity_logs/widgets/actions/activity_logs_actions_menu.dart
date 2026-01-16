@@ -1,3 +1,4 @@
+//ACTIVITY LOG 13
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/models/activity_log.dart';
 import 'package:flutter/material.dart';

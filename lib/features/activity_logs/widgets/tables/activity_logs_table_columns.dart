@@ -1,3 +1,5 @@
+//ACTIVITY LOG 10
+
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/features/activity_logs/bloc/activity_logs_cubit.dart';
