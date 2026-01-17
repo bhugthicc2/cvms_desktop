@@ -12,12 +12,12 @@ import 'package:cvms_desktop/features/dashboard/widgets/sections/dashboard_overv
 import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/data/vehicle_monitoring_repository.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard_state.dart';
-import 'package:cvms_desktop/features/dashboard/data/firestore_analytics_repository.dart';
 import 'package:cvms_desktop/core/widgets/charts/bar_chart_widget.dart';
 import 'package:cvms_desktop/core/widgets/charts/donut_chart_widget.dart';
 import 'package:cvms_desktop/core/widgets/charts/line_chart_widget.dart';
 import 'package:cvms_desktop/core/widgets/charts/stacked_bar_widget.dart';
 import 'package:cvms_desktop/features/dashboard/extensions/time_range_extensions.dart';
+import 'package:cvms_desktop/features/shell/bloc/shell_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -37,9 +37,10 @@ class _DashboardPageState extends State<DashboardPage> {
       providers: [
         BlocProvider(
           create:
-              (_) =>
-                  DashboardCubit(dataSource: FirestoreAnalyticsRepository())
-                    ..loadAll(),
+              (_) => DashboardCubit(
+                dataSource:
+                    context.read<ShellCubit>().sharedAnalyticsRepository,
+              )..loadAll(),
         ),
         BlocProvider(
           create:

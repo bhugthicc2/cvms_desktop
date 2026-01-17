@@ -84,7 +84,7 @@ class ReportsCubit extends Cubit<ReportsState> {
           await _repo.fetchStudentWithMostViolations();
       if (isClosed) return;
 
-      final trendData = await _fetchTrendData(state.selectedTimeRange);
+      final trendData = await _fetchTrendData(state.selectedTimeRange).first;
       if (isClosed) return;
 
       // Cache the data
@@ -325,7 +325,7 @@ class ReportsCubit extends Cubit<ReportsState> {
     emit(state.copyWith(selectedTimeRange: timeRange, loading: true));
 
     try {
-      final trendData = await _fetchTrendData(timeRange);
+      final trendData = await _fetchTrendData(timeRange).first;
       if (isClosed) return;
       emit(state.copyWith(loading: false, logsData: trendData));
     } catch (e) {
@@ -334,14 +334,14 @@ class ReportsCubit extends Cubit<ReportsState> {
     }
   }
 
-  Future<List<ChartDataModel>> _fetchTrendData(TimeRange timeRange) async {
+  Stream<List<ChartDataModel>> _fetchTrendData(TimeRange timeRange) {
     switch (timeRange) {
       case TimeRange.days7:
-        return await _analyticsRepo.fetchWeeklyTrend();
+        return _analyticsRepo.fetchWeeklyTrend();
       case TimeRange.month:
-        return await _analyticsRepo.fetchMonthlyTrend();
+        return _analyticsRepo.fetchMonthlyTrend();
       case TimeRange.year:
-        return await _analyticsRepo.fetchYearlyTrend();
+        return _analyticsRepo.fetchYearlyTrend();
     }
   }
 
