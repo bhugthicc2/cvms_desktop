@@ -1,29 +1,30 @@
+import 'package:cvms_desktop/features/dashboard/widgets/titles/custom_view_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:cvms_desktop/features/vehicle_logs_management/bloc/vehicle_logs_cubit.dart';
-import 'package:cvms_desktop/features/vehicle_logs_management/widgets/tables/vehicle_logs_table.dart';
-import 'package:cvms_desktop/features/vehicle_logs_management/widgets/skeletons/table_skeleton.dart';
-import 'package:cvms_desktop/features/vehicle_logs_management/bloc/vehicle_logs_state.dart';
+import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_cubit.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/tables/vehicle_table.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/skeletons/table_skeleton.dart';
+import 'package:cvms_desktop/features/dashboard/bloc/dashboard_cubit.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class EnteredVehiclesView extends StatefulWidget {
-  const EnteredVehiclesView({super.key});
+class AllVehiclesView extends StatefulWidget {
+  const AllVehiclesView({super.key});
 
   @override
-  State<EnteredVehiclesView> createState() => _EnteredVehiclesViewState();
+  State<AllVehiclesView> createState() => _AllVehiclesViewState();
 }
 
-class _EnteredVehiclesViewState extends State<EnteredVehiclesView> {
+class _AllVehiclesViewState extends State<AllVehiclesView> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    // Initialize vehicle logs when the view is created
+    // Initialize vehicles when the view is created
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<VehicleLogsCubit>().loadVehicleLogs();
+      context.read<VehicleCubit>().listenVehicles();
     });
   }
 
@@ -42,16 +43,16 @@ class _EnteredVehiclesViewState extends State<EnteredVehiclesView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Entered Vehicles',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: AppColors.black,
-                fontWeight: FontWeight.bold,
-              ),
+            CustomViewTitle(
+              viewTitle: 'All Vehicles',
+              onBackClick: () {
+                context.read<DashboardCubit>().showOverview();
+              },
             ),
+
             const SizedBox(height: AppSpacing.medium),
             Expanded(
-              child: BlocBuilder<VehicleLogsCubit, VehicleLogsState>(
+              child: BlocBuilder<VehicleCubit, VehicleState>(
                 builder: (context, state) {
                   if (state.isLoading) {
                     return Skeletonizer(
@@ -69,26 +70,22 @@ class _EnteredVehiclesViewState extends State<EnteredVehiclesView> {
                     );
                   }
 
-                  // Filter for entered vehicles only
-                  final enteredVehicles =
-                      state.filteredEntries
-                          .where((log) => log.status.toLowerCase() == 'entered')
-                          .toList();
-
-                  if (enteredVehicles.isEmpty) {
+                  if (state.filteredEntries.isEmpty) {
                     return const Center(
                       child: Text(
-                        'No entered vehicles found',
+                        'No vehicles found',
                         style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                     );
                   }
 
-                  return VehicleLogsTable(
-                    title: 'Entered Vehicles',
-                    logs: enteredVehicles,
+                  return VehicleTable(
+                    title: 'All Vehicles',
+                    entries: state.filteredEntries,
                     searchController: _searchController,
-                    hasSearchQuery: _searchController.text.isNotEmpty,
+                    onAddVehicle: () {
+                      // TODO: Navigate to add vehicle
+                    },
                   );
                 },
               ),

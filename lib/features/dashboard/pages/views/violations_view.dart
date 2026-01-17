@@ -1,29 +1,30 @@
+import 'package:cvms_desktop/features/dashboard/widgets/titles/custom_view_title.dart';
+import 'package:cvms_desktop/features/dashboard/bloc/dashboard_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:cvms_desktop/features/vehicle_logs_management/bloc/vehicle_logs_cubit.dart';
-import 'package:cvms_desktop/features/vehicle_logs_management/widgets/tables/vehicle_logs_table.dart';
-import 'package:cvms_desktop/features/vehicle_logs_management/widgets/skeletons/table_skeleton.dart';
-import 'package:cvms_desktop/features/vehicle_logs_management/bloc/vehicle_logs_state.dart';
+import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
+import 'package:cvms_desktop/features/violation_management/widgets/tables/violation_table.dart';
+import 'package:cvms_desktop/features/violation_management/widgets/skeletons/table_skeleton.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class ExitedVehiclesView extends StatefulWidget {
-  const ExitedVehiclesView({super.key});
+class ViolationsView extends StatefulWidget {
+  const ViolationsView({super.key});
 
   @override
-  State<ExitedVehiclesView> createState() => _ExitedVehiclesViewState();
+  State<ViolationsView> createState() => _ViolationsViewState();
 }
 
-class _ExitedVehiclesViewState extends State<ExitedVehiclesView> {
+class _ViolationsViewState extends State<ViolationsView> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    // Initialize vehicle logs when the view is created
+    // Initialize violations when the view is created
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<VehicleLogsCubit>().loadVehicleLogs();
+      context.read<ViolationCubit>().listenViolations();
     });
   }
 
@@ -42,16 +43,15 @@ class _ExitedVehiclesViewState extends State<ExitedVehiclesView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Exited Vehicles',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: AppColors.black,
-                fontWeight: FontWeight.bold,
-              ),
+            CustomViewTitle(
+              viewTitle: 'Violations',
+              onBackClick: () {
+                context.read<DashboardCubit>().showOverview();
+              },
             ),
             const SizedBox(height: AppSpacing.medium),
             Expanded(
-              child: BlocBuilder<VehicleLogsCubit, VehicleLogsState>(
+              child: BlocBuilder<ViolationCubit, ViolationState>(
                 builder: (context, state) {
                   if (state.isLoading) {
                     return Skeletonizer(
@@ -60,35 +60,28 @@ class _ExitedVehiclesViewState extends State<ExitedVehiclesView> {
                     );
                   }
 
-                  if (state.error != null) {
+                  if (state.message != null) {
                     return Center(
                       child: Text(
-                        'Error: ${state.error}',
+                        'Error: ${state.message}',
                         style: const TextStyle(color: Colors.red),
                       ),
                     );
                   }
 
-                  // Filter for exited vehicles only
-                  final exitedVehicles =
-                      state.filteredEntries
-                          .where((log) => log.status.toLowerCase() == 'exited')
-                          .toList();
-
-                  if (exitedVehicles.isEmpty) {
+                  if (state.filteredEntries.isEmpty) {
                     return const Center(
                       child: Text(
-                        'No exited vehicles found',
+                        'No violations found',
                         style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                     );
                   }
 
-                  return VehicleLogsTable(
-                    title: 'Exited Vehicles',
-                    logs: exitedVehicles,
+                  return ViolationTable(
+                    title: 'Violations',
+                    entries: state.filteredEntries,
                     searchController: _searchController,
-                    hasSearchQuery: _searchController.text.isNotEmpty,
                   );
                 },
               ),

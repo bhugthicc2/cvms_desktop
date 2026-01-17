@@ -226,8 +226,9 @@ class _DashboardPageState extends State<DashboardPage> {
                 return previous.selectedIndex != current.selectedIndex;
               },
               listener: (context, shellState) {
-                if (shellState.selectedIndex != 0)
+                if (shellState.selectedIndex != 0) {
                   return; // Dashboard is index 0
+                }
 
                 final dashboardState = context.read<DashboardCubit>().state;
                 BreadcrumbScope.controllerOf(
@@ -240,8 +241,9 @@ class _DashboardPageState extends State<DashboardPage> {
               listener: (context, dashboardState) {
                 final selectedIndex =
                     context.read<ShellCubit>().state.selectedIndex;
-                if (selectedIndex != 0)
+                if (selectedIndex != 0) {
                   return; // Only update breadcrumbs if on dashboard page
+                }
 
                 BreadcrumbScope.controllerOf(
                   context,
@@ -303,23 +305,31 @@ class _DashboardPageState extends State<DashboardPage> {
                 return Center(child: Text('Error: ${state.error}'));
               }
 
-              // Switch between different views based on viewMode
-              switch (state.viewMode) {
-                case DashboardViewMode.overview:
-                  return _buildOverviewView(context, state);
-                case DashboardViewMode.enteredVehicles:
-                  return const EnteredVehiclesView();
-                case DashboardViewMode.exitedVehicles:
-                  return const ExitedVehiclesView();
-                case DashboardViewMode.violations:
-                  return const ViolationsView();
-                case DashboardViewMode.allVehicles:
-                  return const AllVehiclesView();
-              }
+              // Animated view switching
+              return AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: _buildView(context, state),
+              );
             },
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildView(BuildContext context, DashboardState state) {
+    // Switch between different views based on viewMode
+    switch (state.viewMode) {
+      case DashboardViewMode.overview:
+        return _buildOverviewView(context, state);
+      case DashboardViewMode.enteredVehicles:
+        return const EnteredVehiclesView();
+      case DashboardViewMode.exitedVehicles:
+        return const ExitedVehiclesView();
+      case DashboardViewMode.violations:
+        return const ViolationsView();
+      case DashboardViewMode.allVehicles:
+        return const AllVehiclesView();
+    }
   }
 }

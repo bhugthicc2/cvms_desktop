@@ -101,6 +101,14 @@ class _VehicleManagementPageState extends State<VehicleManagementPage> {
       );
     }
 
+    // Animated view switching
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      child: _buildView(context, state),
+    );
+  }
+
+  Widget _buildView(BuildContext context, VehicleState state) {
     switch (state.viewMode) {
       case VehicleViewMode.list:
         return Padding(
