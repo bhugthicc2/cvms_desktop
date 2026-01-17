@@ -8,6 +8,18 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   DashboardCubit({required this.dataSource}) : super(const DashboardState());
 
+  // View mode methods
+  void showOverview() =>
+      emit(state.copyWith(viewMode: DashboardViewMode.overview));
+  void showEnteredVehicles() =>
+      emit(state.copyWith(viewMode: DashboardViewMode.enteredVehicles));
+  void showExitedVehicles() =>
+      emit(state.copyWith(viewMode: DashboardViewMode.exitedVehicles));
+  void showViolations() =>
+      emit(state.copyWith(viewMode: DashboardViewMode.violations));
+  void showAllVehicles() =>
+      emit(state.copyWith(viewMode: DashboardViewMode.allVehicles));
+
   Future<void> loadAll() async {
     if (isClosed) return;
     emit(state.copyWith(loading: true, error: null));
