@@ -16,6 +16,11 @@ class GlobalStatsCardSection extends StatelessWidget {
   final int statsCard2Value;
   final int statsCard3Value;
   final int statsCard4Value;
+  //callbacks
+  final VoidCallback? onStatCard1Click;
+  final VoidCallback? onStatCard2Click;
+  final VoidCallback? onStatCard3Click;
+  final VoidCallback? onStatCard4Click;
   const GlobalStatsCardSection({
     super.key,
     required this.statsCard1Label,
@@ -26,6 +31,10 @@ class GlobalStatsCardSection extends StatelessWidget {
     required this.statsCard2Value,
     required this.statsCard3Value,
     required this.statsCard4Value,
+    this.onStatCard1Click,
+    this.onStatCard2Click,
+    this.onStatCard3Click,
+    this.onStatCard4Click,
   });
 
   @override
@@ -34,6 +43,7 @@ class GlobalStatsCardSection extends StatelessWidget {
       children: [
         Expanded(
           child: StatsCard(
+            onClick: onStatCard1Click,
             angle: 0,
             color: AppColors.white,
             icon: PhosphorIconsBold.calendarMinus,
@@ -46,6 +56,7 @@ class GlobalStatsCardSection extends StatelessWidget {
         Spacing.horizontal(size: AppSpacing.medium),
         Expanded(
           child: StatsCard(
+            onClick: onStatCard2Click,
             angle: 0,
             color: AppColors.orange,
             icon: PhosphorIconsBold.calendarMinus,
@@ -58,6 +69,7 @@ class GlobalStatsCardSection extends StatelessWidget {
         Spacing.horizontal(size: AppSpacing.medium),
         Expanded(
           child: StatsCard(
+            onClick: onStatCard3Click,
             angle: 0,
             color: AppColors.donutBlue,
             icon: PhosphorIconsBold.car,
@@ -70,6 +82,7 @@ class GlobalStatsCardSection extends StatelessWidget {
         Spacing.horizontal(size: AppSpacing.medium),
         Expanded(
           child: StatsCard(
+            onClick: onStatCard4Click,
             angle: 0,
             color: AppColors.chartGreen,
             icon: PhosphorIconsBold.calendarMinus,

@@ -16,6 +16,12 @@ class StatsCardSection extends StatelessWidget {
   final int statsCard2Value;
   final int statsCard3Value;
   final int statsCard4Value;
+
+  //callbacks
+  final VoidCallback? onStatCard1Click;
+  final VoidCallback? onStatCard2Click;
+  final VoidCallback? onStatCard3Click;
+  final VoidCallback? onStatCard4Click;
   const StatsCardSection({
     super.key,
     required this.statsCard1Label,
@@ -26,6 +32,10 @@ class StatsCardSection extends StatelessWidget {
     required this.statsCard2Value,
     required this.statsCard3Value,
     required this.statsCard4Value,
+    this.onStatCard1Click,
+    this.onStatCard2Click,
+    this.onStatCard3Click,
+    this.onStatCard4Click,
   });
 
   @override
@@ -34,12 +44,12 @@ class StatsCardSection extends StatelessWidget {
       children: [
         Expanded(
           child: SizedBox(
-            height: 110,
             child: Row(
               children: [
                 Expanded(
                   child: StatsCard(
-                    height: 110,
+                    addSideBorder: false,
+
                     angle: 0,
                     color: AppColors.white,
                     icon: PhosphorIconsBold.calendarMinus,
@@ -47,12 +57,14 @@ class StatsCardSection extends StatelessWidget {
                     value: statsCard1Value,
                     gradient: AppColors.greenWhite,
                     iconColor: AppColors.chartGreenv2,
+                    onClick: onStatCard1Click,
                   ),
                 ),
                 Spacing.horizontal(size: AppSpacing.medium),
                 Expanded(
                   child: StatsCard(
-                    height: 110,
+                    addSideBorder: false,
+
                     angle: 0,
                     color: AppColors.orange,
                     icon: PhosphorIconsBold.calendarMinus,
@@ -60,6 +72,7 @@ class StatsCardSection extends StatelessWidget {
                     value: statsCard2Value,
                     gradient: AppColors.yellowOrange,
                     iconColor: AppColors.orange,
+                    onClick: onStatCard2Click,
                   ),
                 ),
               ],
@@ -72,7 +85,8 @@ class StatsCardSection extends StatelessWidget {
             children: [
               Expanded(
                 child: StatsCard(
-                  height: 110,
+                  addSideBorder: false,
+
                   angle: 0,
                   color: AppColors.white,
                   icon: PhosphorIconsBold.calendarMinus,
@@ -80,12 +94,14 @@ class StatsCardSection extends StatelessWidget {
                   value: statsCard3Value,
                   gradient: AppColors.purpleBlue,
                   iconColor: AppColors.primary,
+                  onClick: onStatCard3Click,
                 ),
               ),
               Spacing.horizontal(size: AppSpacing.medium),
               Expanded(
                 child: StatsCard(
-                  height: 110,
+                  addSideBorder: false,
+
                   angle: 0,
                   color: AppColors.white,
                   icon: PhosphorIconsBold.calendarMinus,
@@ -93,6 +109,7 @@ class StatsCardSection extends StatelessWidget {
                   value: statsCard4Value,
                   gradient: AppColors.pinkWhite,
                   iconColor: AppColors.donutPink,
+                  onClick: onStatCard4Click,
                 ),
               ),
             ],

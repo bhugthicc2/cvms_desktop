@@ -37,6 +37,8 @@ import 'package:cvms_desktop/features/dashboard/extensions/time_range_extensions
 import 'package:cvms_desktop/features/shell/bloc/shell_cubit.dart';
 import 'package:cvms_desktop/features/shell/scope/breadcrumb_scope.dart';
 import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
+import 'package:cvms_desktop/core/widgets/animation/animated_switcher.dart'
+    as custom;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -326,7 +328,7 @@ class _DashboardPageState extends State<DashboardPage> {
               }
 
               // Animated view switching
-              return AnimatedSwitcher(
+              return custom.AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),
                 child: _buildView(context, state),
               );

@@ -65,8 +65,8 @@ class StackedBarWidget extends StatelessWidget {
       series: <CartesianSeries>[
         BarSeries<ChartDataModel, String>(
           borderRadius: BorderRadius.only(
-            bottomRight: Radius.circular(5),
-            topRight: Radius.circular(5),
+            bottomRight: Radius.circular(3),
+            topRight: Radius.circular(3),
           ),
           onPointTap: onStackBarPointTapped,
           dataSource: data,
