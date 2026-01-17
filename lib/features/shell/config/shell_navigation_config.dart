@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../activity_logs/bloc/activity_logs_cubit.dart';
 import '../../activity_logs/data/activity_log_repository.dart';
 import '../../activity_logs/pages/activity_logs_page.dart';
-import 'package:cvms_desktop/features/dashboard/pages/dashboard_page.dart';
+import 'package:cvms_desktop/features/dashboard/pages/core/dashboard_page.dart';
 import 'package:cvms_desktop/features/reports/pages/reports_page.dart';
 import 'package:cvms_desktop/features/settings/pages/setttings_page.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_cubit.dart';

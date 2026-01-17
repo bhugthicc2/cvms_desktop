@@ -9,6 +9,10 @@ enum DashboardViewMode {
   exitedVehicles,
   violations,
   allVehicles,
+  vehicleDistribution,
+  vehicleLogsTrend,
+  topViolations,
+  topViolators,
 }
 
 class DashboardState extends Equatable {

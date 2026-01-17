@@ -19,6 +19,14 @@ class DashboardCubit extends Cubit<DashboardState> {
       emit(state.copyWith(viewMode: DashboardViewMode.violations));
   void showAllVehicles() =>
       emit(state.copyWith(viewMode: DashboardViewMode.allVehicles));
+  void showVehicleDistribution() =>
+      emit(state.copyWith(viewMode: DashboardViewMode.vehicleDistribution));
+  void showVehicleLogsTrend() =>
+      emit(state.copyWith(viewMode: DashboardViewMode.vehicleLogsTrend));
+  void showTopViolations() =>
+      emit(state.copyWith(viewMode: DashboardViewMode.topViolations));
+  void showTopViolators() =>
+      emit(state.copyWith(viewMode: DashboardViewMode.topViolators));
 
   Future<void> loadAll() async {
     if (isClosed) return;

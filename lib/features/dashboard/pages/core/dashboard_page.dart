@@ -9,10 +9,14 @@ import 'package:cvms_desktop/features/dashboard/widgets/skeletons/donut_chart_sk
 import 'package:cvms_desktop/features/dashboard/widgets/skeletons/line_chart_skeleton.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/skeletons/stacked_bar_skeleton.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/sections/dashboard_overview.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/views/entered_vehicles_view.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/views/exited_vehicles_view.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/views/violations_view.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/views/all_vehicles_view.dart';
+import 'package:cvms_desktop/features/dashboard/pages/views/entered_vehicles_view.dart';
+import 'package:cvms_desktop/features/dashboard/pages/views/exited_vehicles_view.dart';
+import 'package:cvms_desktop/features/dashboard/pages/views/violations_view.dart';
+import 'package:cvms_desktop/features/dashboard/pages/views/all_vehicles_view.dart';
+import 'package:cvms_desktop/features/dashboard/pages/views/vehicle_distribution_view.dart';
+import 'package:cvms_desktop/features/dashboard/pages/views/vehicle_logs_trend_view.dart';
+import 'package:cvms_desktop/features/dashboard/pages/views/top_violations_view.dart';
+import 'package:cvms_desktop/features/dashboard/pages/views/top_violators_view.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/data/vehicle_monitoring_repository.dart';
 import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_cubit.dart';
@@ -36,7 +40,7 @@ import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import '../bloc/dashboard_cubit.dart';
+import '../../bloc/dashboard_cubit.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -71,7 +75,9 @@ class _DashboardPageState extends State<DashboardPage> {
               children: [
                 Expanded(
                   child: DonutChartWidget(
-                    onViewTap: () {},
+                    onViewTap: () {
+                      context.read<DashboardCubit>().showVehicleDistribution();
+                    },
                     data: state.vehicleDistribution,
                     onDonutChartPointTap: (details) {
                       CustomSnackBar.show(
@@ -103,7 +109,9 @@ class _DashboardPageState extends State<DashboardPage> {
                         }
                       },
                     ),
-                    onViewTap: () {},
+                    onViewTap: () {
+                      context.read<DashboardCubit>().showVehicleLogsTrend();
+                    },
                     onLineChartPointTap: (details) {
                       CustomSnackBar.show(
                         context: context,
@@ -126,7 +134,9 @@ class _DashboardPageState extends State<DashboardPage> {
               children: [
                 Expanded(
                   child: BarChartWidget(
-                    onViewTap: () {},
+                    onViewTap: () {
+                      context.read<DashboardCubit>().showTopViolations();
+                    },
                     onBarChartPointTap: (details) {
                       CustomSnackBar.show(
                         context: context,
@@ -144,7 +154,9 @@ class _DashboardPageState extends State<DashboardPage> {
                 Spacing.horizontal(size: AppSpacing.medium),
                 Expanded(
                   child: StackedBarWidget(
-                    onViewTap: () {},
+                    onViewTap: () {
+                      context.read<DashboardCubit>().showTopViolators();
+                    },
                     onStackBarPointTapped: (details) {
                       CustomSnackBar.show(
                         context: context,
@@ -181,6 +193,14 @@ class _DashboardPageState extends State<DashboardPage> {
         return [const BreadcrumbItem(label: 'Violations')];
       case DashboardViewMode.allVehicles:
         return [const BreadcrumbItem(label: 'All Vehicles')];
+      case DashboardViewMode.vehicleDistribution:
+        return [const BreadcrumbItem(label: 'Vehicle Distribution')];
+      case DashboardViewMode.vehicleLogsTrend:
+        return [const BreadcrumbItem(label: 'Vehicle Logs Trend')];
+      case DashboardViewMode.topViolations:
+        return [const BreadcrumbItem(label: 'Top Violations')];
+      case DashboardViewMode.topViolators:
+        return [const BreadcrumbItem(label: 'Student with Most Violations')];
     }
   }
 
@@ -330,6 +350,14 @@ class _DashboardPageState extends State<DashboardPage> {
         return const ViolationsView();
       case DashboardViewMode.allVehicles:
         return const AllVehiclesView();
+      case DashboardViewMode.vehicleDistribution:
+        return const VehicleDistributionView();
+      case DashboardViewMode.vehicleLogsTrend:
+        return const VehicleLogsTrendView();
+      case DashboardViewMode.topViolations:
+        return const TopViolationsView();
+      case DashboardViewMode.topViolators:
+        return const TopViolatorsView();
     }
   }
 }
