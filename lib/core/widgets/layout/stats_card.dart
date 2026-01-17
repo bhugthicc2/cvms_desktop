@@ -38,6 +38,7 @@ class StatsCard extends StatelessWidget {
     return HoverSlide(
       dx: 0,
       dy: -0.08,
+      cursor: SystemMouseCursors.click,
       child: Container(
         clipBehavior: Clip.antiAlias,
         height: height,
