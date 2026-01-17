@@ -320,7 +320,16 @@ class GlobalChartReportBuilder {
           footerTitle: 'Remarks: ',
           footerSubTitle: logsRemarks,
         ),
-        pw.SizedBox(height: 20),
+        pw.SizedBox(height: 10),
+      ],
+    );
+    pdf.addPage(template.build(child: page3Content));
+
+    // Page 4: Top Violations, Logs, and High-Violation Students
+    final page4Content = pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.SizedBox(height: 10),
         // Section 9: Students with Most Violations
         PdfSectionText(
           title: '9. Students with Most Violations',
@@ -344,22 +353,6 @@ class GlobalChartReportBuilder {
           footerSubTitle: studentRemarks,
         ),
         pw.SizedBox(height: 20),
-        DocSignatory(
-          preparer: 'Joven Ondog',
-          preparerDesignation: 'CDRRMSU Office In-Charge',
-          approver: 'Leonel Hidalgo, Ph.D.',
-          approverDesignation: 'CDRRMSU Head',
-        ),
-      ],
-    );
-    pdf.addPage(template.build(child: page3Content));
-
-    // Page 4: Top Violations, Logs, and High-Violation Students
-    final page4Content = pw.Column(
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      children: [
-        pw.SizedBox(height: 10),
-
         DocSignatory(
           preparer: 'Joven Ondog',
           preparerDesignation: 'CDRRMSU Office In-Charge',

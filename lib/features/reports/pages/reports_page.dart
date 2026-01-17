@@ -1,7 +1,3 @@
-//ISSUE:
-// StateError (Bad state: Cannot emit new states after calling close)
-// happens during switching screens when the reports page is on loading state
-
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/utils/card_decor.dart';
@@ -16,7 +12,6 @@ import 'package:cvms_desktop/features/reports/widgets/sections/charts/global_cha
 import 'package:cvms_desktop/features/reports/widgets/sections/charts/individual_charts_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/table/violations_table_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/table/vehicle_logs_table_section.dart';
-import 'dart:typed_data';
 
 import 'package:cvms_desktop/features/reports/widgets/app/report_header_section.dart';
 import 'package:flutter/material.dart';
@@ -64,79 +59,16 @@ class _ReportsPageContentState extends State<_ReportsPageContent> {
   final ScreenshotController _fleetLogsController = ScreenshotController();
 
   Future<void> _handleExportPdf(BuildContext context) async {
-    Uint8List? vehicleDistributionChartBytes;
-    Uint8List? yearLevelBreakdownChartBytes;
-    Uint8List? studentwithMostViolationChartBytes;
-    Uint8List? cityBreakdownChartBytes;
-    Uint8List? vehicleLogsDistributionChartBytes;
-    Uint8List? violationDistributionPerCollegeChartBytes;
-    Uint8List? top5ViolationByTypeChartBytes;
-    Uint8List? fleetLogsChartBytes;
-    try {
-      vehicleDistributionChartBytes =
-          await _vehicleDistributionController.capture();
-    } catch (_) {
-      vehicleDistributionChartBytes = null;
-    }
-
-    try {
-      yearLevelBreakdownChartBytes =
-          await _yearLevelBreakdownController.capture();
-    } catch (_) {
-      yearLevelBreakdownChartBytes = null;
-    }
-
-    try {
-      studentwithMostViolationChartBytes =
-          await _studentWithMostViolationsController.capture();
-    } catch (_) {
-      studentwithMostViolationChartBytes = null;
-    }
-
-    try {
-      cityBreakdownChartBytes = await _cityBreakdownController.capture();
-    } catch (_) {
-      cityBreakdownChartBytes = null;
-    }
-
-    try {
-      vehicleLogsDistributionChartBytes =
-          await _vehicleLogsDistributionController.capture();
-    } catch (_) {
-      vehicleLogsDistributionChartBytes = null;
-    }
-
-    try {
-      violationDistributionPerCollegeChartBytes =
-          await _violationDistributionPerCollegeController.capture();
-    } catch (_) {
-      violationDistributionPerCollegeChartBytes = null;
-    }
-
-    try {
-      top5ViolationByTypeChartBytes =
-          await _top5ViolationByTypeController.capture();
-    } catch (_) {
-      top5ViolationByTypeChartBytes = null;
-    }
-
-    try {
-      fleetLogsChartBytes = await _fleetLogsController.capture();
-    } catch (_) {
-      fleetLogsChartBytes = null;
-    }
-
-    if (!context.mounted) return;
-    context.read<ReportsCubit>().showPdfPreview(
-      vehicleDistributionChartBytes: vehicleDistributionChartBytes,
-      yearLevelBreakdownChartBytes: yearLevelBreakdownChartBytes,
-      studentwithMostViolationChartBytes: studentwithMostViolationChartBytes,
-      cityBreakdownChartBytes: cityBreakdownChartBytes,
-      vehicleLogsDistributionChartBytes: vehicleLogsDistributionChartBytes,
-      violationDistributionPerCollegeChartBytes:
-          violationDistributionPerCollegeChartBytes,
-      top5ViolationByTypeChartBytes: top5ViolationByTypeChartBytes,
-      fleetLogsChartBytes: fleetLogsChartBytes,
+    await context.read<ReportsCubit>().exportToPdf(
+      vehicleDistributionController: _vehicleDistributionController,
+      yearLevelBreakdownController: _yearLevelBreakdownController,
+      studentWithMostViolationsController: _studentWithMostViolationsController,
+      cityBreakdownController: _cityBreakdownController,
+      vehicleLogsDistributionController: _vehicleLogsDistributionController,
+      violationDistributionPerCollegeController:
+          _violationDistributionPerCollegeController,
+      top5ViolationByTypeController: _top5ViolationByTypeController,
+      fleetLogsController: _fleetLogsController,
     );
   }
 

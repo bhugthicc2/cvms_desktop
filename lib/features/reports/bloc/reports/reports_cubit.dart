@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:cvms_desktop/features/reports/data/report_repository.dart';
 import 'package:cvms_desktop/features/dashboard/data/analytics_repository.dart';
@@ -8,8 +9,8 @@ import 'package:cvms_desktop/features/reports/models/vehicle_profile.dart';
 import 'package:cvms_desktop/features/reports/models/violation_history_model.dart';
 import 'package:cvms_desktop/features/reports/models/vehicle_logs_model.dart';
 import 'package:cvms_desktop/features/reports/models/fleet_summary.dart';
-import 'dart:typed_data';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:screenshot/screenshot.dart';
 import 'reports_state.dart';
 
 class ReportsCubit extends Cubit<ReportsState> {
@@ -190,6 +191,103 @@ class ReportsCubit extends Cubit<ReportsState> {
   void hidePdfPreview() {
     if (isClosed) return;
     emit(state.copyWith(viewMode: ReportViewMode.global));
+  }
+
+  /// Captures chart bytes from controllers and shows PDF preview
+  Future<void> exportToPdf({
+    required ScreenshotController vehicleDistributionController,
+    required ScreenshotController yearLevelBreakdownController,
+    required ScreenshotController studentWithMostViolationsController,
+    required ScreenshotController cityBreakdownController,
+    required ScreenshotController vehicleLogsDistributionController,
+    required ScreenshotController violationDistributionPerCollegeController,
+    required ScreenshotController top5ViolationByTypeController,
+    required ScreenshotController fleetLogsController,
+  }) async {
+    if (isClosed) return;
+
+    try {
+      // Capture all charts with error handling
+      Uint8List? vehicleDistributionChartBytes;
+      Uint8List? yearLevelBreakdownChartBytes;
+      Uint8List? studentwithMostViolationChartBytes;
+      Uint8List? cityBreakdownChartBytes;
+      Uint8List? vehicleLogsDistributionChartBytes;
+      Uint8List? violationDistributionPerCollegeChartBytes;
+      Uint8List? top5ViolationByTypeChartBytes;
+      Uint8List? fleetLogsChartBytes;
+
+      try {
+        vehicleDistributionChartBytes =
+            await vehicleDistributionController.capture();
+      } catch (_) {
+        vehicleDistributionChartBytes = null;
+      }
+
+      try {
+        yearLevelBreakdownChartBytes =
+            await yearLevelBreakdownController.capture();
+      } catch (_) {
+        yearLevelBreakdownChartBytes = null;
+      }
+
+      try {
+        studentwithMostViolationChartBytes =
+            await studentWithMostViolationsController.capture();
+      } catch (_) {
+        studentwithMostViolationChartBytes = null;
+      }
+
+      try {
+        cityBreakdownChartBytes = await cityBreakdownController.capture();
+      } catch (_) {
+        cityBreakdownChartBytes = null;
+      }
+
+      try {
+        vehicleLogsDistributionChartBytes =
+            await vehicleLogsDistributionController.capture();
+      } catch (_) {
+        vehicleLogsDistributionChartBytes = null;
+      }
+
+      try {
+        violationDistributionPerCollegeChartBytes =
+            await violationDistributionPerCollegeController.capture();
+      } catch (_) {
+        violationDistributionPerCollegeChartBytes = null;
+      }
+
+      try {
+        top5ViolationByTypeChartBytes =
+            await top5ViolationByTypeController.capture();
+      } catch (_) {
+        top5ViolationByTypeChartBytes = null;
+      }
+
+      try {
+        fleetLogsChartBytes = await fleetLogsController.capture();
+      } catch (_) {
+        fleetLogsChartBytes = null;
+      }
+
+      if (isClosed) return;
+
+      showPdfPreview(
+        vehicleDistributionChartBytes: vehicleDistributionChartBytes,
+        yearLevelBreakdownChartBytes: yearLevelBreakdownChartBytes,
+        studentwithMostViolationChartBytes: studentwithMostViolationChartBytes,
+        cityBreakdownChartBytes: cityBreakdownChartBytes,
+        vehicleLogsDistributionChartBytes: vehicleLogsDistributionChartBytes,
+        violationDistributionPerCollegeChartBytes:
+            violationDistributionPerCollegeChartBytes,
+        top5ViolationByTypeChartBytes: top5ViolationByTypeChartBytes,
+        fleetLogsChartBytes: fleetLogsChartBytes,
+      );
+    } catch (e) {
+      if (isClosed) return;
+      emit(state.copyWith(error: 'Failed to export PDF: ${e.toString()}'));
+    }
   }
 
   void togglePdfPreview() {
