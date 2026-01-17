@@ -55,7 +55,7 @@ class CustomSidebar extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             AppColors.darkBlue.withValues(alpha: 0.7),
-            AppColors.darkBlue.withValues(alpha: 0.8),
+            AppColors.black.withValues(alpha: 0.8),
           ],
         ),
       ),

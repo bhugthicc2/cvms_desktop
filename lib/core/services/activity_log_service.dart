@@ -33,6 +33,7 @@ class ActivityLogService {
     await _repository.createLog(log);
   }
 
+  //step 1 in creating a logger
   Future<void> logVehicleCreated(
     String vehicleId,
     String plateNumber,
@@ -42,8 +43,27 @@ class ActivityLogService {
       type: ActivityType.vehicleCreated,
       description: 'Vehicle $plateNumber created successfully',
       userId: userId,
-      targetId: vehicleId,
       metadata: {'plateNumber': plateNumber, 'action': 'create'},
+    );
+  }
+
+  Future<void> logVehicleLogCreated(
+    String vehicleId,
+    String status,
+    String? userId,
+  ) async {
+    await logActivity(
+      type: ActivityType.dataImport,
+      description:
+          'Manual vehicle log created for vehicle $vehicleId with status $status',
+      userId: userId,
+      targetId: vehicleId,
+      metadata: {
+        'vehicleId': vehicleId,
+        'status': status,
+        'action': 'manual_log_create',
+        'type': 'vehicle_log',
+      },
     );
   }
 
@@ -107,6 +127,23 @@ class ActivityLogService {
     );
   }
 
+  Future<void> logBulkViolationsReported(
+    List<String> violationIds,
+    String? userId,
+  ) async {
+    await logActivity(
+      type: ActivityType.violationReported,
+      description: 'Bulk report: ${violationIds.length} violations reported',
+      userId: userId,
+      metadata: {
+        'count': violationIds.length,
+        'violationIds': violationIds,
+        'action': 'bulk_report',
+        'type': 'violations',
+      },
+    );
+  }
+
   Future<void> logUserCreated(String userId, String userEmail) async {
     await logActivity(
       type: ActivityType.userCreated,
@@ -117,12 +154,44 @@ class ActivityLogService {
     );
   }
 
-  Future<void> logUserDeleted(String userId, String userEmail) async {
+  Future<void> logUserUpdated(String userId, String? currentUser) async {
+    await logActivity(
+      type: ActivityType.userUpdated,
+      description: 'User profile updated for user $userId',
+      userId: currentUser,
+      targetId: userId,
+      metadata: {'targetUserId': userId, 'action': 'profile_update'},
+    );
+  }
+
+  Future<void> logUserStatusUpdated(
+    String userId,
+    String newStatus,
+    String? currentUser,
+  ) async {
+    await logActivity(
+      type: ActivityType.userUpdated,
+      description: 'User status changed to $newStatus for user $userId',
+      userId: currentUser,
+      targetId: userId,
+      metadata: {
+        'targetUserId': userId,
+        'newStatus': newStatus,
+        'action': 'status_update',
+      },
+    );
+  }
+
+  Future<void> logUserDeleted(
+    String userId,
+    String userEmail,
+    String? currentUser,
+  ) async {
     await logActivity(
       type: ActivityType.userDeleted,
       description: 'User $userEmail deleted',
-      userId: userId,
-      targetId: userId,
+      userId: currentUser, // Current user who performed the deletion
+      targetId: userId, // User who was deleted
       metadata: {'userEmail': userEmail, 'action': 'delete'},
     );
   }
@@ -134,6 +203,100 @@ class ActivityLogService {
       userId: userId,
       targetId: userId,
       metadata: {'userEmail': userEmail, 'action': 'password_reset'},
+    );
+  }
+
+  Future<void> logBulkVehiclesCreated(int count, String? userId) async {
+    await logActivity(
+      type: ActivityType.dataImport,
+      description: 'Bulk import: $count vehicles created via CSV',
+      userId: userId,
+      metadata: {'count': count, 'action': 'bulk_import', 'type': 'vehicles'},
+    );
+  }
+
+  Future<void> logBulkUsersDeleted(List<String> userIds, String? userId) async {
+    await logActivity(
+      type: ActivityType.userDeleted,
+      description: 'Bulk deletion: ${userIds.length} users deleted',
+      userId: userId,
+      metadata: {
+        'count': userIds.length,
+        'userIds': userIds,
+        'action': 'bulk_delete',
+        'type': 'users',
+      },
+    );
+  }
+
+  Future<void> logBulkUserStatusUpdated(
+    List<String> userIds,
+    String newStatus,
+    String? userId,
+  ) async {
+    await logActivity(
+      type: ActivityType.userUpdated,
+      description:
+          'Bulk update: ${userIds.length} users status changed to $newStatus',
+      userId: userId,
+      metadata: {
+        'count': userIds.length,
+        'userIds': userIds,
+        'newStatus': newStatus,
+        'action': 'bulk_status_update',
+        'type': 'users',
+      },
+    );
+  }
+
+  Future<void> logUserLoginUpdated(String userId, String? currentUser) async {
+    await logActivity(
+      type: ActivityType.userLogin,
+      description: 'User login timestamp updated for user $userId',
+      userId: currentUser,
+      targetId: userId,
+      metadata: {
+        'targetUserId': userId,
+        'action': 'login_update',
+        'type': 'user_session',
+      },
+    );
+  }
+
+  Future<void> logBulkVehiclesDeleted(
+    List<String> vehicleIds,
+    String? userId,
+  ) async {
+    await logActivity(
+      type: ActivityType.vehicleDeleted,
+      description: 'Bulk deletion: ${vehicleIds.length} vehicles deleted',
+      userId: userId,
+      metadata: {
+        'count': vehicleIds.length,
+        'vehicleIds': vehicleIds,
+        'action': 'bulk_delete',
+        'type': 'vehicles',
+      },
+    );
+  }
+
+  Future<void> logBulkStatusUpdated(
+    List<String> vehicleIds,
+    String newStatus,
+    String? userId,
+  ) async {
+    await logActivity(
+      type: ActivityType.vehicleUpdated,
+      description:
+          'Bulk update: ${vehicleIds.length} vehicles status changed to $newStatus',
+      userId: userId,
+      metadata: {
+        'count': vehicleIds.length,
+        'vehicleIds': vehicleIds,
+        'newStatus': newStatus,
+        'action': 'bulk_status_update',
+        'type': 'vehicles',
+      },
     );
   }
 

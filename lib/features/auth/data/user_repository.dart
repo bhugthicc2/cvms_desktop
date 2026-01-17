@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../core/error/firebase_error_handler.dart';
+import '../../../core/services/activity_log_service.dart';
 
 /// Repository for handling user data operations in Firestore
 /// Follows single responsibility principle - only user data operations
 class UserRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String _collection = 'users';
+  final ActivityLogService _logger = ActivityLogService();
 
   Future<String?> getUserFullname(String uid) async {
     final doc = await _firestore.collection('users').doc(uid).get();
@@ -33,6 +35,9 @@ class UserRepository {
         'createdAt': FieldValue.serverTimestamp(),
         'lastLogin': FieldValue.serverTimestamp(),
       });
+
+      // Log user profile creation
+      await _logger.logUserCreated(uid, email);
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
@@ -45,6 +50,9 @@ class UserRepository {
         'lastLogin': FieldValue.serverTimestamp(),
         'status': 'active',
       });
+
+      // Log login status update (user session activation)
+      await _logger.logUserLoginUpdated(uid, null);
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
@@ -57,6 +65,9 @@ class UserRepository {
         'status': status,
         'lastUpdated': FieldValue.serverTimestamp(),
       });
+
+      // Log user status change
+      await _logger.logUserStatusUpdated(uid, status, null);
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
@@ -85,6 +96,9 @@ class UserRepository {
     try {
       updates['lastUpdated'] = FieldValue.serverTimestamp();
       await _firestore.collection(_collection).doc(uid).update(updates);
+
+      // Log user profile update
+      await _logger.logUserUpdated(uid, null);
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
@@ -93,7 +107,16 @@ class UserRepository {
   /// Delete user profile
   Future<void> deleteUserProfile(String uid) async {
     try {
+      // Get user data before deletion for logging
+      final userDoc = await _firestore.collection(_collection).doc(uid).get();
+      final userEmail = userDoc.data()?['email'] as String?;
+
       await _firestore.collection(_collection).doc(uid).delete();
+
+      // Log user profile deletion
+      if (userEmail != null) {
+        await _logger.logUserDeleted(uid, userEmail, null);
+      }
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }

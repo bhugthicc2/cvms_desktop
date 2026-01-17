@@ -23,7 +23,9 @@ class _ActivityLogsPageState extends State<ActivityLogsPage> {
 
     // Load activity logs when page initializes
     Future.microtask(() {
-      context.read<ActivityLogsCubit>().loadLogs();
+      if (mounted) {
+        context.read<ActivityLogsCubit>().loadLogs();
+      }
     });
 
     // Add search controller listener
@@ -87,6 +89,7 @@ class _ActivityLogsPageState extends State<ActivityLogsPage> {
                     title: "Activity Logs",
                     logs: state.filteredEntries,
                     userFullnames: state.userFullnames,
+                    userRoles: state.userRoles,
                     searchController: searchController,
                     hasSearchQuery: searchController.text.isNotEmpty,
                     onCellTap: (details) {

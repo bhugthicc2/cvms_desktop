@@ -1,3 +1,5 @@
+//ACTIVITY LOG 8
+
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../core/models/activity_log.dart';
@@ -8,9 +10,7 @@ class ActivityLogRepository {
 
   ActivityLogRepository(this._firestore);
 
-  // -----------------------------
   // User Fullnames Fetching
-  // -----------------------------
   Future<Map<String, String>> fetchUserFullnames(List<ActivityLog> logs) async {
     try {
       // Extract unique user IDs from activity logs
@@ -42,6 +42,42 @@ class ActivityLogRepository {
       return userFullnames;
     } catch (e) {
       // Return empty map on error, fallback to 'System' will be used
+      return {};
+    }
+  }
+
+  // User Roles Fetching
+  Future<Map<String, String>> fetchUserRoles(List<ActivityLog> logs) async {
+    try {
+      // Extract unique user IDs from activity logs
+      final Set<String> userIds = {};
+      for (final log in logs) {
+        if (log.userId != null && log.userId!.isNotEmpty) {
+          userIds.add(log.userId!);
+        }
+      }
+
+      // Batch fetch user roles
+      final Map<String, String> userRoles = {};
+      if (userIds.isNotEmpty) {
+        final usersSnapshot =
+            await _firestore
+                .collection('users')
+                .where(FieldPath.documentId, whereIn: userIds.take(10).toList())
+                .get();
+
+        for (final userDoc in usersSnapshot.docs) {
+          final userData = userDoc.data();
+          final role = userData['role'] as String?;
+          if (role != null && role.isNotEmpty) {
+            userRoles[userDoc.id] = role;
+          }
+        }
+      }
+
+      return userRoles;
+    } catch (e) {
+      // Return empty map on error, fallback to 'Unknown' will be used
       return {};
     }
   }

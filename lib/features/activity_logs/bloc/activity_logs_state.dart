@@ -7,6 +7,7 @@ class ActivityLogsState {
   final List<ActivityLog> filteredEntries; // Search results
   final List<ActivityLog> selectedEntries; // Selected for bulk operations
   final Map<String, String> userFullnames; // User ID to Fullname mapping
+  final Map<String, String> userRoles; // User ID to Role mapping
   final String searchQuery;
   final String statusFilter;
   final String typeFilter;
@@ -22,6 +23,7 @@ class ActivityLogsState {
     required this.filteredEntries,
     required this.selectedEntries,
     this.userFullnames = const {},
+    this.userRoles = const {},
     this.isLoading = false,
     required this.searchQuery,
     required this.statusFilter,
@@ -38,6 +40,7 @@ class ActivityLogsState {
     filteredEntries: [],
     selectedEntries: [],
     userFullnames: {},
+    userRoles: {},
     searchQuery: '',
     statusFilter: 'All',
     typeFilter: 'All',
@@ -50,6 +53,7 @@ class ActivityLogsState {
     List<ActivityLog>? enteredLogs,
     List<ActivityLog>? exitedLogs,
     Map<String, String>? userFullnames,
+    Map<String, String>? userRoles,
     String? searchQuery,
     String? statusFilter,
     String? typeFilter,
@@ -63,6 +67,7 @@ class ActivityLogsState {
       allLogs: allLogs ?? this.allLogs,
       selectedEntries: selectedEntries ?? this.selectedEntries,
       userFullnames: userFullnames ?? this.userFullnames,
+      userRoles: userRoles ?? this.userRoles,
       isLoading: isLoading ?? this.isLoading,
       error: error,
       successMessage: successMessage,

@@ -54,7 +54,7 @@ class ActivityLogsTableColumns {
       TableColumnFactory.build(
         name: 'type',
         label: 'Type',
-        width: 180,
+
         alignment: Alignment.centerLeft,
       ),
       TableColumnFactory.build(
@@ -65,19 +65,25 @@ class ActivityLogsTableColumns {
       TableColumnFactory.build(
         name: 'fullname',
         label: "User's Full Name",
-        width: 200,
+
+        alignment: Alignment.centerLeft,
+      ),
+      TableColumnFactory.build(
+        name: 'role',
+        label: "User role",
+
         alignment: Alignment.centerLeft,
       ),
       TableColumnFactory.build(
         name: 'userId',
         label: 'User ID',
-        width: 200,
+
         alignment: Alignment.centerLeft,
       ),
       TableColumnFactory.build(
         name: 'targetId',
         label: 'Target ID',
-        width: 200,
+
         alignment: Alignment.centerLeft,
       ),
       TableColumnFactory.build(

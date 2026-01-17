@@ -227,6 +227,7 @@ class CustDropDownState<T> extends State<CustDropDown<T>>
                                             Flexible(
                                               child: DefaultTextStyle(
                                                 style: TextStyle(
+                                                  fontFamily: 'Poppins',
                                                   fontSize: widget.fontSize,
                                                   fontWeight: FontWeight.w500,
                                                   color: AppColors.black

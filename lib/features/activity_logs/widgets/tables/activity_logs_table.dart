@@ -18,6 +18,7 @@ class ActivityLogsTable extends StatefulWidget {
   final String title;
   final List<ActivityLog> logs;
   final Map<String, String> userFullnames;
+  final Map<String, String> userRoles;
   final TextEditingController searchController;
   final bool hasSearchQuery;
   final DataGridCellTapCallback? onCellTap;
@@ -28,6 +29,7 @@ class ActivityLogsTable extends StatefulWidget {
     required this.title,
     required this.logs,
     required this.userFullnames,
+    required this.userRoles,
     required this.searchController,
     this.hasSearchQuery = false,
     this.onCellTap,
@@ -48,6 +50,7 @@ class _ActivityLogsTableState extends State<ActivityLogsTable> {
     _dataSource = ActivityLogsDataSource(
       activityLogs: widget.logs,
       userFullnames: widget.userFullnames,
+      userRoles: widget.userRoles,
       showCheckbox: false, // Activity logs are read-only
     );
   }
@@ -61,6 +64,7 @@ class _ActivityLogsTableState extends State<ActivityLogsTable> {
       _dataSource = ActivityLogsDataSource(
         activityLogs: widget.logs,
         userFullnames: widget.userFullnames,
+        userRoles: widget.userRoles,
         showCheckbox: false, // Activity logs are read-only
       );
     }
@@ -74,6 +78,7 @@ class _ActivityLogsTableState extends State<ActivityLogsTable> {
         _dataSource = ActivityLogsDataSource(
           activityLogs: widget.logs,
           userFullnames: widget.userFullnames,
+          userRoles: widget.userRoles, // TODO: Get user roles from API
           showCheckbox: false, // Activity logs are read-only
         );
 

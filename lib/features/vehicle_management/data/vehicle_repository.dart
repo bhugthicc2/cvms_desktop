@@ -1,3 +1,5 @@
+//ACTIVITY LOG 5
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/vehicle_entry.dart';
 import '../../../core/error/firebase_error_handler.dart';
@@ -23,13 +25,9 @@ class VehicleRepository {
   Future<void> addVehicle(VehicleEntry entry) async {
     try {
       await _firestore.collection(_collection).add(entry.toMap());
-
+      //step 2 in creating a logger, done
       // Log vehicle creation
-      await _logger.logVehicleCreated(
-        entry.vehicleID,
-        entry.plateNumber,
-        null, // Will use current user from service
-      );
+      await _logger.logVehicleCreated(entry.vehicleID, entry.plateNumber, null);
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
@@ -90,6 +88,9 @@ class VehicleRepository {
 
         await batch.commit();
       }
+
+      // Log bulk vehicle creation
+      await _logger.logBulkVehiclesCreated(entries.length, null);
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
@@ -122,6 +123,9 @@ class VehicleRepository {
       }
 
       await batch.commit();
+
+      // Log bulk vehicle deletion
+      await _logger.logBulkVehiclesDeleted(vehicleIds, null);
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
@@ -150,6 +154,9 @@ class VehicleRepository {
       }
 
       await batch.commit();
+
+      // Log bulk status update
+      await _logger.logBulkStatusUpdated(vehicleIds, status, null);
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }

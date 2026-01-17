@@ -12,6 +12,7 @@ class ActivityLogsDataSource extends DataGridSource {
   final List<ActivityLog> _originalEntries;
   final bool _showCheckbox;
   final Map<String, String> _userFullnames; // Cache for user fullnames
+  final Map<String, String> _userRoles; // Cache for user fullnames
 
   late List<DataGridRow> _activityLogEntries;
 
@@ -19,9 +20,11 @@ class ActivityLogsDataSource extends DataGridSource {
     required List<ActivityLog> activityLogs,
     bool showCheckbox = false,
     required Map<String, String> userFullnames,
+    required Map<String, String> userRoles,
   }) : _originalEntries = activityLogs,
        _showCheckbox = showCheckbox,
-       _userFullnames = userFullnames {
+       _userFullnames = userFullnames,
+       _userRoles = userRoles {
     _buildRows();
   }
 
@@ -45,6 +48,10 @@ class ActivityLogsDataSource extends DataGridSource {
                   DataGridCell<String>(
                     columnName: 'fullname',
                     value: _userFullnames[e.userId] ?? 'System',
+                  ),
+                  DataGridCell<String>(
+                    columnName: 'role',
+                    value: _userRoles[e.userId] ?? 'User',
                   ),
                   DataGridCell<String>(
                     columnName: 'userId',

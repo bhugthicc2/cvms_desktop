@@ -14,9 +14,7 @@ class ActivityLogsCubit extends Cubit<ActivityLogsState> {
 
   ActivityLogsCubit(this._repository) : super(ActivityLogsState.initial());
 
-  // -----------------------------
   // Loading Logs
-  // -----------------------------
   Future<void> loadLogs({
     DateTime? startDate,
     DateTime? endDate,
@@ -42,12 +40,14 @@ class ActivityLogsCubit extends Cubit<ActivityLogsState> {
 
               // Fetch user fullnames for the logs
               final userFullnames = await _repository.fetchUserFullnames(logs);
+              final userRoles = await _repository.fetchUserRoles(logs);
 
               emit(
                 state.copyWith(
                   allLogs: logs,
                   filteredEntries: logs,
                   userFullnames: userFullnames,
+                  userRoles: userRoles,
                   isLoading: false,
                 ),
               );

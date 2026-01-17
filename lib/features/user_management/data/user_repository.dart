@@ -87,7 +87,7 @@ class UserRepository {
 
       // Log user deletion
       if (userData != null) {
-        await _logger.logUserDeleted(userId, userData.email);
+        await _logger.logUserDeleted(userId, userData?.email ?? '', null);
       }
     } catch (e) {
       throw Exception('Failed to delete user: $e');
@@ -104,6 +104,9 @@ class UserRepository {
       }
 
       await batch.commit();
+
+      // Log bulk user deletion
+      await _logger.logBulkUsersDeleted(userIds, null);
     } catch (e) {
       throw Exception('Failed to bulk delete users: $e');
     }
@@ -119,6 +122,9 @@ class UserRepository {
       }
 
       await batch.commit();
+
+      // Log bulk user status update
+      await _logger.logBulkUserStatusUpdated(userIds, status, null);
     } catch (e) {
       throw Exception('Failed to bulk update user status: $e');
     }
@@ -129,6 +135,9 @@ class UserRepository {
       await _firestore.collection(_collection).doc(userId).update({
         'lastLogin': Timestamp.fromDate(DateTime.now()),
       });
+
+      // Log login timestamp update
+      await _logger.logUserLoginUpdated(userId, null);
     } catch (e) {
       throw Exception('Failed to update last login: $e');
     }
