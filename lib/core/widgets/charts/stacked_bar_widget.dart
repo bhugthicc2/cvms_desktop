@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/utils/text_formatter.dart';
 import 'package:cvms_desktop/core/widgets/charts/chart_empty_state.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/titles/custom_chart_title.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,9 @@ class StackedBarWidget extends StatelessWidget {
     final total = data.fold<double>(0, (sum, item) => sum + item.value);
 
     final body = SfCartesianChart(
-      primaryXAxis: CategoryAxis(),
+      primaryXAxis: CategoryAxis(
+        labelStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+      ),
       tooltipBehavior: TooltipBehavior(enable: true),
       series: <CartesianSeries>[
         BarSeries<ChartDataModel, String>(
@@ -67,7 +70,8 @@ class StackedBarWidget extends StatelessWidget {
           ),
           onPointTap: onStackBarPointTapped,
           dataSource: data,
-          xValueMapper: (d, _) => d.category,
+          xValueMapper:
+              (d, _) => TextFormatter().formatCategoryLabel(d.category),
           yValueMapper: (d, _) => d.value,
           dataLabelSettings: DataLabelSettings(
             isVisible: true,

@@ -1,7 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:cvms_desktop/core/widgets/animation/hover_rotate.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_slide.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
 
@@ -35,8 +35,9 @@ class StatsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HoverRotate(
-      angle: angle,
+    return HoverSlide(
+      dx: 0,
+      dy: -0.08,
       child: Container(
         clipBehavior: Clip.antiAlias,
         height: height,
