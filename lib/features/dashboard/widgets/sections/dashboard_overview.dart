@@ -10,10 +10,18 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 class DashboardOverview extends StatelessWidget {
   final double angle;
   final bool isWhiteTheme;
+  final VoidCallback? onEnteredVehiclesClick;
+  final VoidCallback? onExitedVehiclesClick;
+  final VoidCallback? onViolationsClick;
+  final VoidCallback? onAllVehiclesClick;
   const DashboardOverview({
     super.key,
     this.angle = 0.03,
     this.isWhiteTheme = true,
+    this.onEnteredVehiclesClick,
+    this.onExitedVehiclesClick,
+    this.onViolationsClick,
+    this.onAllVehiclesClick,
   });
 
   @override
@@ -32,6 +40,7 @@ class DashboardOverview extends StatelessWidget {
                 value: state.totalEntered,
                 gradient: AppColors.greenWhite,
                 iconColor: AppColors.chartGreenv2,
+                onClick: onEnteredVehiclesClick,
               ),
             ),
             const Spacing.horizontal(size: AppSpacing.medium),
@@ -45,6 +54,7 @@ class DashboardOverview extends StatelessWidget {
                 value: state.totalExited,
                 gradient: AppColors.yellowOrange,
                 iconColor: AppColors.chartOrange,
+                onClick: onExitedVehiclesClick,
               ),
             ),
             const Spacing.horizontal(size: AppSpacing.medium),
@@ -58,6 +68,7 @@ class DashboardOverview extends StatelessWidget {
                 value: state.totalViolations,
                 gradient: AppColors.purpleBlue,
                 iconColor: AppColors.primary,
+                onClick: onViolationsClick,
               ),
             ),
             const Spacing.horizontal(size: AppSpacing.medium),
@@ -71,6 +82,7 @@ class DashboardOverview extends StatelessWidget {
                 value: state.totalVehicles,
                 gradient: AppColors.pinkWhite,
                 iconColor: AppColors.donutPink,
+                onClick: onAllVehiclesClick,
               ),
             ),
           ],

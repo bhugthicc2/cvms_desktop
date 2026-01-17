@@ -17,6 +17,7 @@ class StatsCard extends StatelessWidget {
   final bool addSideBorder;
   final bool lineDesign;
   final double height;
+  final VoidCallback? onClick;
 
   const StatsCard({
     super.key,
@@ -31,11 +32,13 @@ class StatsCard extends StatelessWidget {
     this.addSideBorder = true,
     this.lineDesign = false,
     this.height = 80,
+    this.onClick,
   });
 
   @override
   Widget build(BuildContext context) {
     return HoverSlide(
+      onTap: onClick,
       dx: 0,
       dy: -0.08,
       cursor: SystemMouseCursors.click,

@@ -8,7 +8,7 @@ import 'package:cvms_desktop/features/dashboard/widgets/skeletons/bar_chart_skel
 import 'package:cvms_desktop/features/dashboard/widgets/skeletons/donut_chart_skeleton.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/skeletons/line_chart_skeleton.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/skeletons/stacked_bar_skeleton.dart';
-import 'package:cvms_desktop/features/vehicle_monitoring/widgets/sections/dashboard_overview.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/sections/dashboard_overview.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/data/vehicle_monitoring_repository.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard_state.dart';
@@ -107,7 +107,20 @@ class _DashboardPageState extends State<DashboardPage> {
               padding: const EdgeInsets.all(AppSpacing.medium),
               child: Column(
                 children: [
-                  const DashboardOverview(),
+                  DashboardOverview(
+                    onEnteredVehiclesClick: () {
+                      // TODO: Navigate to entered vehicles view
+                    },
+                    onExitedVehiclesClick: () {
+                      // TODO: Navigate to exited vehicles view
+                    },
+                    onViolationsClick: () {
+                      // TODO: Navigate to violations view
+                    },
+                    onAllVehiclesClick: () {
+                      // TODO: Navigate to all vehicles view
+                    },
+                  ),
                   Spacing.vertical(size: AppSpacing.medium),
                   Expanded(
                     child: Row(
