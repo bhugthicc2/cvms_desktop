@@ -23,10 +23,15 @@ class DashboardCubit extends Cubit<DashboardState> {
       emit(state.copyWith(viewMode: DashboardViewMode.vehicleDistribution));
   void showVehicleLogsTrend() =>
       emit(state.copyWith(viewMode: DashboardViewMode.vehicleLogsTrend));
-  void showTopViolations() =>
-      emit(state.copyWith(viewMode: DashboardViewMode.topViolations));
-  void showTopViolators() =>
-      emit(state.copyWith(viewMode: DashboardViewMode.topViolators));
+  void showTopViolations() {
+    emit(state.copyWith(viewMode: DashboardViewMode.topViolations));
+    loadAllViolations();
+  }
+
+  void showTopViolators() {
+    emit(state.copyWith(viewMode: DashboardViewMode.topViolators));
+    loadAllViolators();
+  }
 
   Future<void> loadAll() async {
     if (isClosed) return;
@@ -49,6 +54,34 @@ class DashboardCubit extends Cubit<DashboardState> {
           topViolators: results[3],
         ),
       );
+    } catch (e) {
+      if (isClosed) return;
+      emit(state.copyWith(loading: false, error: e.toString()));
+    }
+  }
+
+  Future<void> loadAllViolations() async {
+    if (isClosed) return;
+    emit(state.copyWith(loading: true, error: null));
+
+    try {
+      final allViolations = await dataSource.fetchAllViolations();
+      if (isClosed) return;
+      emit(state.copyWith(loading: false, allViolations: allViolations));
+    } catch (e) {
+      if (isClosed) return;
+      emit(state.copyWith(loading: false, error: e.toString()));
+    }
+  }
+
+  Future<void> loadAllViolators() async {
+    if (isClosed) return;
+    emit(state.copyWith(loading: true, error: null));
+
+    try {
+      final allViolators = await dataSource.fetchAllViolators();
+      if (isClosed) return;
+      emit(state.copyWith(loading: false, allViolators: allViolators));
     } catch (e) {
       if (isClosed) return;
       emit(state.copyWith(loading: false, error: e.toString()));

@@ -22,7 +22,7 @@ class TopViolationsView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomViewTitle(
-              viewTitle: 'Top Violations',
+              viewTitle: 'All Violations',
               onBackClick: () {
                 context.read<DashboardCubit>().showOverview();
               },
@@ -38,7 +38,7 @@ class TopViolationsView extends StatelessWidget {
                         onViewTap: () {},
                         onBarChartPointTap: (details) {},
                         data: [],
-                        title: 'Top violation',
+                        title: 'All Violations',
                       ),
                     );
                   }
@@ -72,8 +72,8 @@ class TopViolationsView extends StatelessWidget {
                         duration: const Duration(seconds: 3),
                       );
                     },
-                    data: state.topViolations,
-                    title: 'Top violation',
+                    data: state.allViolations,
+                    title: 'All Violations',
                   );
                 },
               ),

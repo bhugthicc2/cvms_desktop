@@ -43,6 +43,26 @@ class FirestoreAnalyticsRepository implements AnalyticsRepository {
         .toList();
   }
 
+  @override
+  Future<List<ChartDataModel>> fetchAllViolations() async {
+    final snapshot = await _firestore.collection('violations').get();
+
+    final Map<String, int> counts = {};
+    for (final doc in snapshot.docs) {
+      final data = doc.data();
+      final type = data['violationType'] ?? 'Unknown';
+      counts[type] = (counts[type] ?? 0) + 1;
+    }
+
+    // Sort all violations by count (descending)
+    final sorted =
+        counts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+
+    return sorted
+        .map((e) => ChartDataModel(category: e.key, value: e.value.toDouble()))
+        .toList();
+  }
+
   //--------------------------------vehicle logs for the last 7 days of the year----------------------------------------------
 
   @override
@@ -258,6 +278,65 @@ class FirestoreAnalyticsRepository implements AnalyticsRepository {
 
     return sorted
         .take(5)
+        .map((e) => ChartDataModel(category: e.key, value: e.value.toDouble()))
+        .toList();
+  }
+
+  @override
+  Future<List<ChartDataModel>> fetchAllViolators() async {
+    // Step 1: Fetch all violations
+    final violationsSnapshot = await _firestore.collection('violations').get();
+
+    // Step 2: Collect unique vehicle IDs for batch fetching
+    final Set<String> uniqueVehicleIds = <String>{};
+    for (final violationDoc in violationsSnapshot.docs) {
+      final violationData = violationDoc.data();
+      final vehicleId = violationData['vehicleId'] as String?;
+      if (vehicleId != null && vehicleId.isNotEmpty) {
+        uniqueVehicleIds.add(vehicleId);
+      }
+    }
+
+    // Step 3: Batch fetch vehicle docs for owner names (efficient, avoids N+1 queries)
+    final Map<String, String> vehicleToOwner = <String, String>{};
+    if (uniqueVehicleIds.isNotEmpty) {
+      final futures =
+          uniqueVehicleIds
+              .map((id) => _firestore.collection('vehicles').doc(id).get())
+              .toList();
+      final snapshots = await Future.wait(futures);
+
+      for (int i = 0; i < uniqueVehicleIds.length; i++) {
+        final id = uniqueVehicleIds.elementAt(i);
+        final snap = snapshots[i];
+        if (snap.exists) {
+          final vehicleData = snap.data();
+          final ownerName = vehicleData?['ownerName'] as String? ?? 'Unknown';
+          vehicleToOwner[id] = ownerName;
+        } else {
+          vehicleToOwner[id] = 'Unknown';
+        }
+      }
+    }
+
+    // Step 4: Count total violations per owner (increment per violation, not unique vehicles)
+    final Map<String, int> ownerToViolationCount = <String, int>{};
+    for (final violationDoc in violationsSnapshot.docs) {
+      final violationData = violationDoc.data();
+      final vehicleId = violationData['vehicleId'] as String?;
+      if (vehicleId != null && vehicleId.isNotEmpty) {
+        final ownerName = vehicleToOwner[vehicleId] ?? 'Unknown';
+        ownerToViolationCount[ownerName] =
+            (ownerToViolationCount[ownerName] ?? 0) + 1;
+      }
+    }
+
+    // Step 5: Sort descending by count (all violators, no limit)
+    final sorted =
+        ownerToViolationCount.entries.toList()
+          ..sort((a, b) => b.value.compareTo(a.value));
+
+    return sorted
         .map((e) => ChartDataModel(category: e.key, value: e.value.toDouble()))
         .toList();
   }

@@ -22,7 +22,7 @@ class TopViolatorsView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomViewTitle(
-              viewTitle: 'Student with Most Violations',
+              viewTitle: 'All Violators',
               onBackClick: () {
                 context.read<DashboardCubit>().showOverview();
               },
@@ -38,7 +38,7 @@ class TopViolatorsView extends StatelessWidget {
                         onViewTap: () {},
                         onStackBarPointTapped: (details) {},
                         data: [],
-                        title: 'Student with Most Violations',
+                        title: 'All Violators',
                       ),
                     );
                   }
@@ -72,8 +72,8 @@ class TopViolatorsView extends StatelessWidget {
                         duration: const Duration(seconds: 3),
                       );
                     },
-                    data: state.topViolators,
-                    title: 'Student with Most Violations',
+                    data: state.allViolators,
+                    title: 'All Violators',
                   );
                 },
               ),

@@ -147,7 +147,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       );
                     },
                     data: state.topViolations,
-                    title: 'Top violation',
+                    title: 'Top 5 most violation',
                   ),
                 ),
 
@@ -167,7 +167,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       );
                     },
                     data: state.topViolators,
-                    title: 'Student with Most Violations',
+                    title: 'Top 5 most violators',
                   ),
                 ),
               ],

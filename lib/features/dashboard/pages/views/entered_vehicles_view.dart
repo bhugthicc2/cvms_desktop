@@ -73,7 +73,7 @@ class _EnteredVehiclesViewState extends State<EnteredVehiclesView> {
                   // Filter for entered vehicles only
                   final enteredVehicles =
                       state.filteredEntries
-                          .where((log) => log.status.toLowerCase() == 'entered')
+                          .where((log) => log.status.toLowerCase() == 'onsite')
                           .toList();
 
                   if (enteredVehicles.isEmpty) {

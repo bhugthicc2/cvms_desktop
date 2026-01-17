@@ -73,7 +73,7 @@ class _ExitedVehiclesViewState extends State<ExitedVehiclesView> {
                   // Filter for exited vehicles only
                   final exitedVehicles =
                       state.filteredEntries
-                          .where((log) => log.status.toLowerCase() == 'exited')
+                          .where((log) => log.status.toLowerCase() == 'offsite')
                           .toList();
 
                   if (exitedVehicles.isEmpty) {
