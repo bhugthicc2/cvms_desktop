@@ -1,3 +1,4 @@
+import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
 import 'package:cvms_desktop/features/reports/widgets/app/pdf_preview_app_bar.dart';
 import 'package:cvms_desktop/features/reports/widgets/editor/pdf_editor_widget.dart';
 import 'package:cvms_desktop/features/reports/bloc/pdf/pdf_editor_cubit.dart';
@@ -56,6 +57,11 @@ class PdfReportPage extends StatefulWidget {
 }
 
 class _PdfReportPageState extends State<PdfReportPage> {
+  void _navigateToReports() {
+    // todo Implement navigation to reports section
+    widget.onBackPressed?.call();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -103,12 +109,21 @@ class _PdfReportPageState extends State<PdfReportPage> {
                 preferredSize: const Size.fromHeight(35),
                 child: BlocBuilder<PdfEditorCubit, PdfEditorState>(
                   builder: (context, state) {
-                    return PdfPreviewAppBar(
-                      title:
-                          context.read<PdfEditorCubit>().isChart
-                              ? "Chart Report"
-                              : "Table Report",
+                    final isEditMode = state is PdfEditorEditMode;
+                    final breadcrumbs = [
+                      BreadcrumbItem(
+                        label: 'Vehicle reports',
+                        onTap: _navigateToReports,
+                      ),
+                      BreadcrumbItem(
+                        label: isEditMode ? 'PDF Editor' : 'PDF Report Preview',
+                        isActive: true,
+                      ),
+                    ];
 
+                    return PdfPreviewAppBar(
+                      title: isEditMode ? "PDF Editor" : "PDF Report Preview",
+                      breadcrumbs: breadcrumbs,
                       onBackPressed: () {
                         widget.onBackPressed?.call();
                       },

@@ -1,7 +1,7 @@
 //ACTIVITY LOG 16
 
-import 'package:cvms_desktop/features/reports/pages/core/reports_page.dart';
 import 'package:cvms_desktop/features/reports/bloc/reports/reports_cubit.dart';
+import 'package:cvms_desktop/features/reports/pages/reports_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

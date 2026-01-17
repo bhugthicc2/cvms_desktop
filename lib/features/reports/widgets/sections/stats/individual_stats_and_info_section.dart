@@ -10,18 +10,7 @@ import '../vehicle_info_section.dart';
 
 /// Individual Stats and Info Section - Displays individual vehicle statistics and information including:
 class IndividualStatsAndInfoSection extends StatelessWidget {
-  final VoidCallback? onStatCard1Click;
-  final VoidCallback? onStatCard2Click;
-  final VoidCallback? onStatCard3Click;
-  final VoidCallback? onStatCard4Click;
-
-  const IndividualStatsAndInfoSection({
-    super.key,
-    this.onStatCard1Click,
-    this.onStatCard2Click,
-    this.onStatCard3Click,
-    this.onStatCard4Click,
-  });
+  const IndividualStatsAndInfoSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +29,6 @@ class IndividualStatsAndInfoSection extends StatelessWidget {
             Expanded(
               flex: 2,
               child: StatsCardSection(
-                onStatCard1Click: onStatCard1Click,
-                onStatCard2Click: onStatCard2Click,
-                onStatCard3Click: onStatCard3Click,
-                onStatCard4Click: onStatCard4Click,
                 statsCard1Label: 'Days Until Expiration',
                 statsCard1Value:
                     expiryDate != null

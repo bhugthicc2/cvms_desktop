@@ -276,48 +276,51 @@ class _DashboardPageState extends State<DashboardPage> {
           child: BlocBuilder<DashboardCubit, DashboardState>(
             builder: (context, state) {
               if (state.loading) {
-                return Skeletonizer(
-                  enabled: true,
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.medium),
-                    child: Column(
-                      children: [
-                        buildSkeletonDashOverview(),
-                        Spacing.vertical(size: AppSpacing.medium),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: DonutChartSkeleton(onViewTap: () {}),
-                              ),
-                              Spacing.horizontal(size: AppSpacing.medium),
-                              Expanded(
-                                child: BarChartSkeleton(
-                                  title: 'Top violation',
-                                  onViewTap: () {},
+                return custom.AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: Skeletonizer(
+                    enabled: true,
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.medium),
+                      child: Column(
+                        children: [
+                          buildSkeletonDashOverview(),
+                          Spacing.vertical(size: AppSpacing.medium),
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: DonutChartSkeleton(onViewTap: () {}),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Spacing.vertical(size: AppSpacing.medium),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: LineChartSkeleton(onViewTap: () {}),
-                              ),
-                              Spacing.horizontal(size: AppSpacing.medium),
-                              Expanded(
-                                child: StackedBarSkeleton(
-                                  title: 'Student with Most Violations',
-                                  onViewTap: () {},
+                                Spacing.horizontal(size: AppSpacing.medium),
+                                Expanded(
+                                  child: BarChartSkeleton(
+                                    title: 'Top violation',
+                                    onViewTap: () {},
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                          Spacing.vertical(size: AppSpacing.medium),
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: LineChartSkeleton(onViewTap: () {}),
+                                ),
+                                Spacing.horizontal(size: AppSpacing.medium),
+                                Expanded(
+                                  child: StackedBarSkeleton(
+                                    title: 'Student with Most Violations',
+                                    onViewTap: () {},
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -327,7 +330,11 @@ class _DashboardPageState extends State<DashboardPage> {
                 return Center(child: Text('Error: ${state.error}'));
               }
 
-              // Animated view switching
+              // Animated view switching (exclude overview)
+              if (state.viewMode == DashboardViewMode.overview) {
+                return _buildOverviewView(context, state);
+              }
+
               return custom.AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),
                 child: _buildView(context, state),

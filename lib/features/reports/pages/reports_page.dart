@@ -7,7 +7,8 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/utils/card_decor.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
-import 'package:cvms_desktop/features/reports/pages/views/pdf_report_page.dart';
+import 'package:cvms_desktop/features/dashboard/data/firestore_analytics_repository.dart';
+import 'package:cvms_desktop/features/reports/pages/pdf_report_page.dart';
 import 'package:cvms_desktop/features/reports/widgets/loader/report_loader.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/stats/global_stats_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/stats/individual_stats_and_info_section.dart';
@@ -15,27 +16,27 @@ import 'package:cvms_desktop/features/reports/widgets/sections/charts/global_cha
 import 'package:cvms_desktop/features/reports/widgets/sections/charts/individual_charts_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/table/violations_table_section.dart';
 import 'package:cvms_desktop/features/reports/widgets/sections/table/vehicle_logs_table_section.dart';
+import 'dart:typed_data';
 
 import 'package:cvms_desktop/features/reports/widgets/app/report_header_section.dart';
-import 'package:cvms_desktop/features/shell/scope/breadcrumb_scope.dart';
-import 'package:cvms_desktop/features/shell/bloc/shell_cubit.dart';
-import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
-import 'package:cvms_desktop/core/widgets/animation/animated_switcher.dart'
-    as custom;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:screenshot/screenshot.dart';
-import '../../bloc/reports/reports_cubit.dart';
-import '../../bloc/reports/reports_state.dart';
-import '../../widgets/content/date_filter_content.dart';
+import '../bloc/reports/reports_cubit.dart';
+import '../bloc/reports/reports_state.dart';
+import '../widgets/content/date_filter_content.dart';
 
 class ReportsPage extends StatelessWidget {
-  static const int reportsPageIndex = 6;
   const ReportsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const _ReportsPageContent();
+    return BlocProvider(
+      create:
+          (context) =>
+              ReportsCubit(analyticsRepo: FirestoreAnalyticsRepository()),
+      child: const _ReportsPageContent(),
+    );
   }
 }
 
@@ -63,20 +64,79 @@ class _ReportsPageContentState extends State<_ReportsPageContent> {
   final ScreenshotController _fleetLogsController = ScreenshotController();
 
   Future<void> _handleExportPdf(BuildContext context) async {
-    await context.read<ReportsCubit>().captureChartsAndShowPdfPreview(
-      vehicleDistributionCapture:
-          () => _vehicleDistributionController.capture(),
-      yearLevelBreakdownCapture: () => _yearLevelBreakdownController.capture(),
-      studentWithMostViolationsCapture:
-          () => _studentWithMostViolationsController.capture(),
-      cityBreakdownCapture: () => _cityBreakdownController.capture(),
-      vehicleLogsDistributionCapture:
-          () => _vehicleLogsDistributionController.capture(),
-      violationDistributionPerCollegeCapture:
-          () => _violationDistributionPerCollegeController.capture(),
-      top5ViolationByTypeCapture:
-          () => _top5ViolationByTypeController.capture(),
-      fleetLogsCapture: () => _fleetLogsController.capture(),
+    Uint8List? vehicleDistributionChartBytes;
+    Uint8List? yearLevelBreakdownChartBytes;
+    Uint8List? studentwithMostViolationChartBytes;
+    Uint8List? cityBreakdownChartBytes;
+    Uint8List? vehicleLogsDistributionChartBytes;
+    Uint8List? violationDistributionPerCollegeChartBytes;
+    Uint8List? top5ViolationByTypeChartBytes;
+    Uint8List? fleetLogsChartBytes;
+    try {
+      vehicleDistributionChartBytes =
+          await _vehicleDistributionController.capture();
+    } catch (_) {
+      vehicleDistributionChartBytes = null;
+    }
+
+    try {
+      yearLevelBreakdownChartBytes =
+          await _yearLevelBreakdownController.capture();
+    } catch (_) {
+      yearLevelBreakdownChartBytes = null;
+    }
+
+    try {
+      studentwithMostViolationChartBytes =
+          await _studentWithMostViolationsController.capture();
+    } catch (_) {
+      studentwithMostViolationChartBytes = null;
+    }
+
+    try {
+      cityBreakdownChartBytes = await _cityBreakdownController.capture();
+    } catch (_) {
+      cityBreakdownChartBytes = null;
+    }
+
+    try {
+      vehicleLogsDistributionChartBytes =
+          await _vehicleLogsDistributionController.capture();
+    } catch (_) {
+      vehicleLogsDistributionChartBytes = null;
+    }
+
+    try {
+      violationDistributionPerCollegeChartBytes =
+          await _violationDistributionPerCollegeController.capture();
+    } catch (_) {
+      violationDistributionPerCollegeChartBytes = null;
+    }
+
+    try {
+      top5ViolationByTypeChartBytes =
+          await _top5ViolationByTypeController.capture();
+    } catch (_) {
+      top5ViolationByTypeChartBytes = null;
+    }
+
+    try {
+      fleetLogsChartBytes = await _fleetLogsController.capture();
+    } catch (_) {
+      fleetLogsChartBytes = null;
+    }
+
+    if (!context.mounted) return;
+    context.read<ReportsCubit>().showPdfPreview(
+      vehicleDistributionChartBytes: vehicleDistributionChartBytes,
+      yearLevelBreakdownChartBytes: yearLevelBreakdownChartBytes,
+      studentwithMostViolationChartBytes: studentwithMostViolationChartBytes,
+      cityBreakdownChartBytes: cityBreakdownChartBytes,
+      vehicleLogsDistributionChartBytes: vehicleLogsDistributionChartBytes,
+      violationDistributionPerCollegeChartBytes:
+          violationDistributionPerCollegeChartBytes,
+      top5ViolationByTypeChartBytes: top5ViolationByTypeChartBytes,
+      fleetLogsChartBytes: fleetLogsChartBytes,
     );
   }
 
@@ -111,117 +171,66 @@ class _ReportsPageContentState extends State<_ReportsPageContent> {
     );
   }
 
-  List<BreadcrumbItem> _buildBreadcrumbs(
-    BuildContext context,
-    ReportsState state,
-  ) {
-    switch (state.viewMode) {
-      case ReportViewMode.global:
-        return []; // Root view - no breadcrumbs
-
-      case ReportViewMode.pdfPreview:
-        return [const BreadcrumbItem(label: 'PDF Preview')];
-      default:
-        return [];
-    }
-  }
-
-  Widget _buildView(BuildContext context, ReportsState state) {
-    switch (state.viewMode) {
-      case ReportViewMode.global:
-      case ReportViewMode.individual:
-        return _buildMainLayout(context, state);
-      case ReportViewMode.pdfPreview:
-        return Container(
-          decoration: cardDecoration(),
-          child: PdfReportPage(
-            fleetSummary: state.fleetSummary,
-            vehicleDistribution: state.vehicleDistribution,
-            yearLevelBreakdown: state.yearLevelBreakdown,
-            cityBreakdown: state.cityBreakdown,
-            studentWithMostViolations: state.studentWithMostViolations,
-            logsData: state.logsData,
-            selectedTimeRange: state.selectedTimeRange,
-            vehicleDistributionChartBytes: state.vehicleDistributionChartBytes,
-            yearLevelBreakdownChartBytes: state.yearLevelBreakdownChartBytes,
-            studentwithMostViolationChartBytes:
-                state.studentwithMostViolationChartBytes,
-            cityBreakdownChartBytes: state.cityBreakdownChartBytes,
-            vehicleLogsDistributionChartBytes:
-                state.vehicleLogsDistributionChartBytes,
-            violationDistributionPerCollegeChartBytes:
-                state.violationDistributionPerCollegeChartBytes,
-            top5ViolationByTypeChartBytes: state.top5ViolationByTypeChartBytes,
-            fleetLogsChartBytes: state.fleetLogsChartBytes,
-            onBackPressed: () => context.read<ReportsCubit>().hidePdfPreview(),
-          ),
-        );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.greySurface,
-      body: BlocListener<ShellCubit, ShellState>(
-        listenWhen: (previous, current) {
-          return previous.selectedIndex != current.selectedIndex;
-        },
-        listener: (context, shellState) {
-          if (shellState.selectedIndex == ReportsPage.reportsPageIndex &&
-              mounted) {
-            // Reports page became active, restore breadcrumbs
-            final reportsState = context.read<ReportsCubit>().state;
-            final breadcrumbs = _buildBreadcrumbs(context, reportsState);
-            BreadcrumbScope.controllerOf(context).setBreadcrumbs(breadcrumbs);
+      body: BlocBuilder<ReportsCubit, ReportsState>(
+        builder: (context, state) {
+          if (state.loading) {
+            return const ReportLoader();
           }
-        },
-        child: BlocListener<ReportsCubit, ReportsState>(
-          listener: (context, state) {
-            // Add navigation gating - only update breadcrumbs if reports page is active
-            if (context.read<ShellCubit>().state.selectedIndex !=
-                ReportsPage.reportsPageIndex) {
-              return;
-            }
 
-            // Build breadcrumbs based on view mode
-            final breadcrumbs = _buildBreadcrumbs(context, state);
-            BreadcrumbScope.controllerOf(context).setBreadcrumbs(breadcrumbs);
-          },
-          child: BlocBuilder<ReportsCubit, ReportsState>(
-            builder: (context, state) {
-              if (state.loading) {
-                return const ReportLoader();
-              }
-
-              if (state.error != null) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Error: ${state.error}',
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                      ElevatedButton(
-                        onPressed:
-                            () =>
-                                context.read<ReportsCubit>().loadGlobalReport(),
-                        child: const Text('Retry'),
-                      ),
-                    ],
+          if (state.error != null) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Error: ${state.error}',
+                    style: const TextStyle(color: Colors.red),
                   ),
-                );
-              }
+                  ElevatedButton(
+                    onPressed:
+                        () => context.read<ReportsCubit>().loadGlobalReport(),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
 
-              // Animated view switching
-              return custom.AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                child: _buildView(context, state),
-              );
-            },
-          ),
-        ),
+          return state.viewMode == ReportViewMode.pdfPreview
+              ? Container(
+                decoration: cardDecoration(),
+                child: PdfReportPage(
+                  fleetSummary: state.fleetSummary,
+                  vehicleDistribution: state.vehicleDistribution,
+                  yearLevelBreakdown: state.yearLevelBreakdown,
+                  cityBreakdown: state.cityBreakdown,
+                  studentWithMostViolations: state.studentWithMostViolations,
+                  logsData: state.logsData,
+                  selectedTimeRange: state.selectedTimeRange,
+                  vehicleDistributionChartBytes:
+                      state.vehicleDistributionChartBytes,
+                  yearLevelBreakdownChartBytes:
+                      state.yearLevelBreakdownChartBytes,
+                  studentwithMostViolationChartBytes:
+                      state.studentwithMostViolationChartBytes,
+                  cityBreakdownChartBytes: state.cityBreakdownChartBytes,
+                  vehicleLogsDistributionChartBytes:
+                      state.vehicleLogsDistributionChartBytes,
+                  violationDistributionPerCollegeChartBytes:
+                      state.violationDistributionPerCollegeChartBytes,
+                  top5ViolationByTypeChartBytes:
+                      state.top5ViolationByTypeChartBytes,
+                  fleetLogsChartBytes: state.fleetLogsChartBytes,
+                  onBackPressed:
+                      () => context.read<ReportsCubit>().hidePdfPreview(),
+                ),
+              )
+              : _buildMainLayout(context, state);
+        },
       ),
     );
   }
@@ -268,35 +277,8 @@ class _ReportsPageContentState extends State<_ReportsPageContent> {
                 height: isGlobal ? 80 : 255,
                 child:
                     isGlobal && summary != null
-                        ? GlobalStatsSection(
-                          summary: summary,
-                          onStatCard1Click: () {
-                            //todo nav to total violations view
-                          },
-                          onStatCard2Click: () {
-                            //todo nav to total pending violations view
-                          },
-                          onStatCard3Click: () {
-                            //todo nav to total vehicles view
-                          },
-                          onStatCard4Click: () {
-                            //todo nav to total entrance/exits view
-                          },
-                        )
-                        : IndividualStatsAndInfoSection(
-                          onStatCard1Click: () {
-                            //todo nav to MVP status (days until expiration) view
-                          },
-                          onStatCard2Click: () {
-                            //todo nav to active violations view
-                          },
-                          onStatCard3Click: () {
-                            //todo nav to total violations view
-                          },
-                          onStatCard4Click: () {
-                            //todo nav to total entrance/exits view
-                          },
-                        ),
+                        ? GlobalStatsSection(summary: summary)
+                        : const IndividualStatsAndInfoSection(),
               ),
             ),
           ),
