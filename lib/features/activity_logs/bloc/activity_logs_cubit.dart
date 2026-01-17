@@ -53,35 +53,38 @@ class ActivityLogsCubit extends Cubit<ActivityLogsState> {
               );
               _applyFilters();
             },
-            onError:
-                (error) => emit(
-                  state.copyWith(error: error.toString(), isLoading: false),
-                ),
+            onError: (error) {
+              if (isClosed) return;
+              emit(state.copyWith(error: error.toString(), isLoading: false));
+            },
           );
     } catch (e) {
       emit(state.copyWith(error: e.toString(), isLoading: false));
     }
   }
 
-  // -----------------------------
   // Filtering
-  // -----------------------------
   void filterEntries(String query) {
+    if (isClosed) return;
     emit(state.copyWith(searchQuery: query));
     _applyFilters();
   }
 
   void filterByStatus(String status) {
+    if (isClosed) return;
     emit(state.copyWith(statusFilter: status));
     _applyFilters();
   }
 
   void filterByType(String type) {
+    if (isClosed) return;
     emit(state.copyWith(typeFilter: type));
     _applyFilters();
   }
 
   void _applyFilters() {
+    if (isClosed) return;
+
     var filtered = state.allLogs;
 
     // Apply search query filter
@@ -129,14 +132,13 @@ class ActivityLogsCubit extends Cubit<ActivityLogsState> {
           filtered.where((log) => log.type.name == state.typeFilter).toList();
     }
 
+    if (isClosed) return;
     emit(state.copyWith(filteredEntries: filtered));
   }
 
-  // -----------------------------
   // Selection Management
-  // -----------------------------
   void selectEntry(ActivityLog entry) {
-    if (!state.isBulkModeEnabled) return;
+    if (isClosed || !state.isBulkModeEnabled) return;
 
     final selected = List<ActivityLog>.from(state.selectedEntries);
 
@@ -146,11 +148,12 @@ class ActivityLogsCubit extends Cubit<ActivityLogsState> {
       selected.add(entry);
     }
 
+    if (isClosed) return;
     emit(state.copyWith(selectedEntries: selected));
   }
 
   void selectAllEntries() {
-    if (!state.isBulkModeEnabled) return;
+    if (isClosed || !state.isBulkModeEnabled) return;
 
     final filtered = state.filteredEntries;
     final selected = List<ActivityLog>.from(state.selectedEntries);
@@ -168,10 +171,12 @@ class ActivityLogsCubit extends Cubit<ActivityLogsState> {
       }
     }
 
+    if (isClosed) return;
     emit(state.copyWith(selectedEntries: selected));
   }
 
   void clearSelection() {
+    if (isClosed) return;
     emit(state.copyWith(selectedEntries: <ActivityLog>[]));
   }
 
@@ -194,6 +199,7 @@ class ActivityLogsCubit extends Cubit<ActivityLogsState> {
   }
 
   void clearError() {
+    if (isClosed) return;
     emit(state.copyWith(error: null));
   }
 

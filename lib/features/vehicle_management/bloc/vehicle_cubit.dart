@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/core/services/cyrpto_service.dart';
+import 'package:cvms_desktop/core/services/activity_log_service.dart';
 import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
 import 'package:cvms_desktop/features/auth/data/user_repository.dart';
 import 'package:cvms_desktop/features/vehicle_management/data/vehicle_violation_repository.dart';
@@ -27,6 +28,7 @@ class VehicleCubit extends Cubit<VehicleState> {
   final UserRepository userRepository;
   final VehicleViolationRepository violationRepository;
   final VehicleLogsRepository logsRepository;
+  final ActivityLogService _logger = ActivityLogService();
   StreamSubscription<List<VehicleEntry>>? _vehiclesSubscription;
 
   VehicleCubit(
@@ -327,7 +329,11 @@ class VehicleCubit extends Cubit<VehicleState> {
     }
   }
 
-  Future<void> exportCardAsImage(GlobalKey repaintKey, String ownerName) async {
+  Future<void> exportCardAsImage(
+    GlobalKey repaintKey,
+    String ownerName,
+    String vehicleId, //step 2 mvp export
+  ) async {
     try {
       emit(
         state.copyWith(isExporting: true, exportedFilePath: null, error: null),
@@ -362,6 +368,13 @@ class VehicleCubit extends Cubit<VehicleState> {
 
       final file = File(saveLocation.path);
       await file.writeAsBytes(pngBytes);
+
+      // Log MVP sticker export
+      await _logger.logMvpStickerExported(
+        vehicleId,
+        ownerName,
+        null,
+      ); //step 3 mvp export
 
       emit(
         state.copyWith(isExporting: false, exportedFilePath: saveLocation.path),

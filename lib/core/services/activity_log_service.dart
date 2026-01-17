@@ -127,6 +127,34 @@ class ActivityLogService {
     );
   }
 
+  Future<void> logViolationUpdated(
+    String violationId,
+    String newStatus,
+    String? userId,
+  ) async {
+    await logActivity(
+      type: ActivityType.violationUpdated,
+      description: 'Violation status updated to $newStatus',
+      userId: userId,
+      targetId: violationId,
+      metadata: {
+        'violationId': violationId,
+        'newStatus': newStatus,
+        'action': 'status_update',
+      },
+    );
+  }
+
+  Future<void> logViolationDeleted(String violationId, String? userId) async {
+    await logActivity(
+      type: ActivityType.violationDeleted,
+      description: 'Violation deleted',
+      userId: userId,
+      targetId: violationId,
+      metadata: {'violationId': violationId, 'action': 'delete'},
+    );
+  }
+
   Future<void> logBulkViolationsReported(
     List<String> violationIds,
     String? userId,
@@ -203,6 +231,26 @@ class ActivityLogService {
       userId: userId,
       targetId: userId,
       metadata: {'userEmail': userEmail, 'action': 'password_reset'},
+    );
+  }
+
+  //step 1 mvp export
+  Future<void> logMvpStickerExported(
+    String vehicleId,
+    String ownerName,
+    String? userId,
+  ) async {
+    await logActivity(
+      type: ActivityType.dataExport,
+      description: 'MVP sticker exported for vehicle $vehicleId ($ownerName)',
+      userId: userId,
+      targetId: vehicleId,
+      metadata: {
+        'vehicleId': vehicleId,
+        'ownerName': ownerName,
+        'action': 'mvp_sticker_export',
+        'type': 'vehicle_export',
+      },
     );
   }
 

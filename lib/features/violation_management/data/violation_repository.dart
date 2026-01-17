@@ -177,6 +177,9 @@ class ViolationRepository {
         'status': status,
         'lastUpdated': FieldValue.serverTimestamp(),
       });
+
+      // Log violation status update
+      await _logger.logViolationUpdated(violationId, status, null);
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }
@@ -204,6 +207,9 @@ class ViolationRepository {
   Future<void> deleteViolation(String violationId) async {
     try {
       await _firestore.collection(_collection).doc(violationId).delete();
+
+      // Log violation deletion
+      await _logger.logViolationDeleted(violationId, null);
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }

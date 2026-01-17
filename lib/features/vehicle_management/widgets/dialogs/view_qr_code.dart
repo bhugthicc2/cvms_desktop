@@ -65,6 +65,7 @@ class _ViewQrCodeDialogState extends State<ViewQrCodeDialog> {
               () => context.read<VehicleCubit>().exportCardAsImage(
                 _cardKey,
                 widget.vehicle.ownerName,
+                widget.vehicle.vehicleID, //step 4 mvp export
               ),
           title: widget.title,
           height: screenHeight * 0.9,
