@@ -15,6 +15,13 @@ class UserRepository {
     return doc.data()?['fullname'] as String?;
   }
 
+  /// Get complete user data from Firestore
+  Future<Map<String, dynamic>?> getUserData(String uid) async {
+    final doc = await _firestore.collection('users').doc(uid).get();
+    if (!doc.exists) return null;
+    return doc.data();
+  }
+
   /// Create user profile in Firestore
   Future<void> createUserProfile({
     required String uid,

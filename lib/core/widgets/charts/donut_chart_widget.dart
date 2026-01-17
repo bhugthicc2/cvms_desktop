@@ -1,10 +1,8 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:cvms_desktop/core/widgets/app/empty_state.dart';
 import 'package:cvms_desktop/core/widgets/charts/chart_empty_state.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/titles/custom_chart_title.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../../features/dashboard/models/chart_data_model.dart';

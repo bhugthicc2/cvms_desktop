@@ -16,6 +16,7 @@ import 'package:cvms_desktop/features/shell/widgets/custom_header.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_sidebar.dart';
 import 'package:cvms_desktop/features/reports/bloc/reports/reports_cubit.dart';
 import 'package:cvms_desktop/features/dashboard/data/firestore_analytics_repository.dart';
+import 'package:cvms_desktop/features/profile/bloc/profile_cubit.dart';
 
 class ShellPage extends StatefulWidget {
   const ShellPage({super.key});
@@ -71,6 +72,13 @@ class _ShellPageState extends State<ShellPage> {
         ),
         BlocProvider(
           create:
+              (_) => ProfileCubit(
+                userRepository: UserRepository(),
+                authRepository: AuthRepository(),
+              ),
+        ),
+        BlocProvider(
+          create:
               (_) => ReportsCubit(analyticsRepo: _sharedAnalyticsRepository),
         ),
       ],
@@ -109,6 +117,9 @@ class _ShellPageState extends State<ShellPage> {
                               builder: (context, userState) {
                                 final breadcrumbs = BreadcrumbScope.of(context);
                                 return CustomHeader(
+                                  profileImage:
+                                      '' ??
+                                      "", //todo call the profileImage here
                                   currentUser: userState.fullname ?? "Guest",
                                   title: titles[state.selectedIndex],
 

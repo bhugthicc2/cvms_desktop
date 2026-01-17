@@ -2,6 +2,7 @@
 
 import 'package:cvms_desktop/features/reports/bloc/reports/reports_cubit.dart';
 import 'package:cvms_desktop/features/reports/pages/reports_page.dart';
+import 'package:cvms_desktop/features/settings/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,7 +10,6 @@ import '../../activity_logs/bloc/activity_logs_cubit.dart';
 import '../../activity_logs/data/activity_log_repository.dart';
 import '../../activity_logs/pages/activity_logs_page.dart';
 import 'package:cvms_desktop/features/dashboard/pages/core/dashboard_page.dart';
-import 'package:cvms_desktop/features/settings/pages/setttings_page.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_cubit.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_management_bloc.dart';
 import 'package:cvms_desktop/features/user_management/data/user_repository.dart'
@@ -30,6 +30,7 @@ import 'package:cvms_desktop/features/vehicle_logs_management/bloc/vehicle_logs_
 import 'package:cvms_desktop/features/user_management/pages/user_management_page.dart';
 import 'package:cvms_desktop/features/violation_management/pages/violation_management_page.dart';
 import 'package:cvms_desktop/features/profile/pages/profile_page.dart';
+import 'package:cvms_desktop/features/profile/bloc/profile_cubit.dart';
 import '../../vehicle_monitoring/data/vehicle_monitoring_repository.dart'
     as vehicle_repo;
 
@@ -104,7 +105,14 @@ class ShellNavigationConfig {
         );
 
       case 8:
-        return const ProfilePage();
+        return BlocProvider(
+          create:
+              (_) => ProfileCubit(
+                userRepository: UserRepository(),
+                authRepository: AuthRepository(),
+              ),
+          child: const ProfilePage(),
+        );
 
       case 9:
         return const SettingsPage();

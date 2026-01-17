@@ -1,118 +1,130 @@
+import 'dart:convert';
+
 import 'package:cvms_desktop/core/theme/app_colors.dart';
-import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class ProfileHeader extends StatelessWidget {
+  final String image;
+  final String name;
+  final String role;
+  final VoidCallback? onImageTap;
+
   const ProfileHeader({
     super.key,
-    required this.user,
-    required this.isEditing,
-    required this.onToggleEdit,
-    required this.onSave,
+    required this.image,
+    required this.name,
+    required this.role,
+    this.onImageTap,
   });
-
-  final User? user;
-  final bool isEditing;
-  final VoidCallback onToggleEdit;
-  final VoidCallback onSave;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.medium),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.grey.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              image: const DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage('assets/images/profile.png'),
+    return Row(
+      children: [
+        ProfileImage(image: image, onTap: onImageTap),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              name,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: AppColors.black,
+                fontWeight: FontWeight.bold,
               ),
-              shape: BoxShape.circle,
-              border: Border.all(width: 2, color: AppColors.primary),
-              gradient: AppColors.lightBlue,
             ),
-          ),
-          Spacing.horizontal(size: AppSpacing.medium),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
+            Spacing.vertical(size: AppSpacing.small),
+            Text(
+              role,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                color: AppColors.grey.withValues(alpha: 0.7),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Spacing.vertical(size: AppSpacing.small),
+            Row(
               children: [
-                Spacing.vertical(size: AppSpacing.xSmall),
+                CircleAvatar(backgroundColor: AppColors.chartGreen, radius: 5),
+                Spacing.horizontal(size: AppSpacing.small),
                 Text(
-                  user?.email ?? 'admin@cvms.com',
-                  style: const TextStyle(
-                    fontSize: AppFontSizes.medium,
-                    color: AppColors.grey,
-                  ),
-                ),
-                Spacing.vertical(size: AppSpacing.xSmall),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.small,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.success.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Text(
-                    'CDRRSMU Admin', //todo retrieve the role from the user
-                    style: TextStyle(
-                      fontSize: AppFontSizes.small,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.success,
-                    ),
+                  'Active',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: AppColors.chartGreen,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class ProfileImage extends StatelessWidget {
+  final String image;
+  final VoidCallback? onTap;
+
+  const ProfileImage({super.key, required this.image, this.onTap});
+
+  ImageProvider _getImageProvider(String imagePath) {
+    if (imagePath.startsWith('assets/')) {
+      return AssetImage(imagePath);
+    } else {
+      try {
+        return MemoryImage(base64Decode(imagePath));
+      } catch (e) {
+        // Fallback to asset if base64 decode fails
+        return AssetImage('assets/images/owner_sample.jpg');
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          padding: EdgeInsets.all(3),
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.primary, width: 5),
+            color: AppColors.white,
+            shape: BoxShape.circle,
           ),
-          ElevatedButton.icon(
-            onPressed: isEditing ? onSave : onToggleEdit,
-            icon: Icon(
-              isEditing
-                  ? PhosphorIconsRegular.check
-                  : PhosphorIconsRegular.pencil,
-              size: 20,
-              color: AppColors.white,
-            ),
-            label: Text(isEditing ? 'Save Changes' : 'Edit Profile'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  isEditing ? AppColors.success : AppColors.primary,
-              foregroundColor: AppColors.white,
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.medium,
-                vertical: AppSpacing.medium,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+          child: CircleAvatar(
+            radius: 80,
+            backgroundImage: _getImageProvider(image),
+            backgroundColor: AppColors.white,
+          ),
+        ),
+        Positioned(
+          bottom: 5,
+          right: 30,
+          child: Tooltip(
+            message: 'Upload Profile Picture',
+            child: HoverGrow(
+              cursor: SystemMouseCursors.click,
+              onTap: onTap,
+              child: Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.camera_alt,
+                  color: AppColors.primary,
+                  size: 22,
+                ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

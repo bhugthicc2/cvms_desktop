@@ -75,8 +75,8 @@ class BarChartWidget extends StatelessWidget {
         series: <CartesianSeries>[
           ColumnSeries<ChartDataModel, String>(
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(3),
-              topRight: Radius.circular(3),
+              topLeft: Radius.circular(5),
+              topRight: Radius.circular(5),
             ),
             onPointTap:
                 onBarChartPointTap != null
