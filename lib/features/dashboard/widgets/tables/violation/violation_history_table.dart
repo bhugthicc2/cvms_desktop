@@ -1,4 +1,3 @@
-import 'package:cvms_desktop/features/dashboard/models/violation_history_model.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/datasource/violation/violation_history_data_source.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/tables/violation/violation_history_table_columns.dart';
 import 'package:cvms_desktop/core/widgets/table/custom_table.dart';

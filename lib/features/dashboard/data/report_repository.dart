@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cvms_desktop/features/dashboard/data/chart_data_model.dart';
+import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
 import 'package:cvms_desktop/features/dashboard/models/vehicle_logs_model.dart';
 import 'package:cvms_desktop/features/dashboard/models/vehicle_search_result.dart';
 import 'package:cvms_desktop/core/utils/registration_expiry_utils.dart';

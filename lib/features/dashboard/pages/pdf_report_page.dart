@@ -1,6 +1,6 @@
 import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard/dashboard_state.dart';
-import 'package:cvms_desktop/features/dashboard/data/chart_data_model.dart';
+import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/app/pdf_preview_app_bar.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/editor/pdf_editor_widget.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/pdf/pdf_editor_cubit.dart';

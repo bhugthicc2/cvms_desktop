@@ -1,5 +1,5 @@
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard/dashboard_state.dart';
-import 'package:cvms_desktop/features/dashboard/data/chart_data_model.dart';
+import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
 import 'package:cvms_desktop/features/dashboard/models/vehicle_logs_model.dart';
 import 'dart:typed_data';
 import 'package:equatable/equatable.dart';

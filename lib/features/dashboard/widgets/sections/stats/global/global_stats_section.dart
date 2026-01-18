@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../models/fleet_summary.dart';
+import '../../../../models/fleet_summary.dart';
 import 'global_stats_card_section.dart';
 
 /// Global Stats Section - Displays fleet-wide statistics including:

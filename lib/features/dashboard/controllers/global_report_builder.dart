@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:cvms_desktop/features/dashboard/data/chart_data_model.dart';
+import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/pdf_doc/texts/pdf_report_title.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/pdf_doc/texts/pdf_section_footer_text.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/pdf_doc/texts/pdf_section_text.dart';

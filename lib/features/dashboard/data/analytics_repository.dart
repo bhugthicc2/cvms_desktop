@@ -1,4 +1,4 @@
-import 'package:cvms_desktop/features/dashboard/data/chart_data_model.dart';
+import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
 
 abstract class AnalyticsRepository {
   Future<List<ChartDataModel>> fetchVehicleDistribution();

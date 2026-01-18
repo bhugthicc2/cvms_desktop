@@ -10,8 +10,6 @@ import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 
 /// Individual Charts Section - Displays individual vehicle charts including:
-/// - Violations by type (bar chart)
-/// - Vehicle logs over time (line chart with basic time range selector)
 class IndividualChartsSection extends StatelessWidget {
   const IndividualChartsSection({super.key});
 

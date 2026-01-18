@@ -1,4 +1,3 @@
-import 'package:cvms_desktop/features/dashboard/models/vehicle_logs_model.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/datasource/vehicle_logs/vehicle_logs_data_source.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/tables/vehicle_logs/vehicle_logs_table_columns.dart';
 import 'package:cvms_desktop/core/widgets/table/custom_table.dart';

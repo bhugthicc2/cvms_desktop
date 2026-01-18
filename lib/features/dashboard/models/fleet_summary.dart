@@ -1,4 +1,4 @@
-import 'package:cvms_desktop/features/dashboard/data/chart_data_model.dart';
+import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
 import 'package:equatable/equatable.dart';
 
 class FleetSummary extends Equatable {

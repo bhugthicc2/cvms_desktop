@@ -4,9 +4,9 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/reports/reports_cubit.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/reports/reports_state.dart';
-import '../../../utils/mvp_progress_calculator.dart';
+import '../../../../utils/mvp_progress_calculator.dart';
 import 'stats_card_section.dart';
-import '../vehicle_info_section.dart';
+import 'vehicle_info_section.dart';
 
 /// Individual Stats and Info Section - Displays individual vehicle statistics and information including:
 class IndividualStatsAndInfoSection extends StatelessWidget {

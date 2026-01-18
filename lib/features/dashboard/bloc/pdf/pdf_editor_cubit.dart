@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard/dashboard_state.dart';
-import 'package:cvms_desktop/features/dashboard/data/chart_data_model.dart';
+import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
 import 'package:cvms_desktop/features/dashboard/models/fleet_summary.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:printing/printing.dart';
