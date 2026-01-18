@@ -1,11 +1,12 @@
+import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/core/widgets/charts/donut_chart_widget.dart';
 import 'package:cvms_desktop/core/widgets/charts/stacked_bar_widget.dart';
 import 'package:cvms_desktop/core/widgets/charts/bar_chart_widget.dart';
 import 'package:cvms_desktop/core/widgets/charts/line_chart_widget.dart';
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
-import 'package:cvms_desktop/features/dashboard2/data/mock_data.dart';
 import 'package:flutter/material.dart';
 
 class GlobalChartsSection extends StatelessWidget {
@@ -13,9 +14,10 @@ class GlobalChartsSection extends StatelessWidget {
   final List<ChartDataModel> yearLevelBreakdown;
   final List<ChartDataModel> studentWithMostViolations;
   final List<ChartDataModel> cityBreakdown;
-  final List<ChartDataModel> violationDistribution;
+  final List<ChartDataModel> violationTypeDistribution;
   final List<ChartDataModel> vehicleLogsDistributionPerCollege;
   final List<ChartDataModel> violationDistributionPerCollege;
+  final List<ChartDataModel> fleetLogsData;
 
   const GlobalChartsSection({
     super.key,
@@ -23,9 +25,10 @@ class GlobalChartsSection extends StatelessWidget {
     required this.yearLevelBreakdown,
     required this.studentWithMostViolations,
     required this.cityBreakdown,
-    required this.violationDistribution,
+    required this.violationTypeDistribution,
     required this.vehicleLogsDistributionPerCollege,
     required this.violationDistributionPerCollege,
+    required this.fleetLogsData,
   });
 
   @override
@@ -115,14 +118,14 @@ class GlobalChartsSection extends StatelessWidget {
                 Expanded(
                   child: _buildBarChart(
                     'Top 5 Violations by Type',
-                    MockDashboardData.top5ViolationByType,
+                    violationTypeDistribution,
                   ),
                 ),
                 Spacing.horizontal(size: AppSpacing.medium),
                 Expanded(
                   child: _buildLineChart(
                     'Fleet logs for the last',
-                    MockDashboardData.fleetLogsData,
+                    fleetLogsData,
                   ),
                 ),
               ],
@@ -163,6 +166,16 @@ class GlobalChartsSection extends StatelessWidget {
 
   Widget _buildLineChart(String title, List<ChartDataModel> data) {
     return LineChartWidget(
+      customWidget: CustomDropdown(
+        color: AppColors.donutBlue,
+        fontSize: 14,
+        verticalPadding: 0,
+        items: const ['7 days', 'Month', 'Year'],
+        initialValue: '7 days',
+        onChanged: (value) {
+          //todo
+        },
+      ),
       data: data,
       title: title,
       onViewTap: () {},

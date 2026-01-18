@@ -12,7 +12,7 @@ class DashboardState extends Equatable {
   final String? error;
   final IndividualVehicleReport? selectedVehicle;
   final DashboardViewMode? previousViewMode;
-
+  // ----GLOBAL-----
   final int totalEntriesExits; //realtime implementation step 2
   final int totalVehicles;
   final int totalViolations;
@@ -20,6 +20,14 @@ class DashboardState extends Equatable {
   totalPendingViolations; //realtime data retrieval based on collection field step 2
   final List<ChartDataModel>
   vehicleDistribution; //real time grouped aggregation impl step 2
+  final List<ChartDataModel> yearLevelBreakdown; // realtime step 9
+  final List<ChartDataModel> topStudentsWithMostViolations; // step 7
+  final List<ChartDataModel> cityBreakdown; // realtime step 9
+  final List<ChartDataModel> vehicleLogsDistributionPerCollege; // step 7
+  final List<ChartDataModel> violationDistributionPerCollege; // step 7
+  final List<ChartDataModel> violationTypeDistribution; // step 10
+  final List<ChartDataModel> fleetLogsData;
+  final bool initialized;
 
   const DashboardState({
     this.viewMode = DashboardViewMode.global,
@@ -27,6 +35,8 @@ class DashboardState extends Equatable {
     this.error,
     this.selectedVehicle,
     this.previousViewMode,
+    this.initialized = false,
+    // ----GLOBAL-----
     this.totalEntriesExits = 0, //realtime implementation step 3
     this.totalVehicles = 0,
     this.totalViolations = 0,
@@ -34,6 +44,13 @@ class DashboardState extends Equatable {
         0, //realtime data retrieval based on collection field step 3
     this.vehicleDistribution =
         const [], //real time grouped aggregation impl step 3
+    this.yearLevelBreakdown = const [], // realtime step 10
+    this.topStudentsWithMostViolations = const [], // step 8
+    this.cityBreakdown = const [], // realtime step 10
+    this.vehicleLogsDistributionPerCollege = const [], // step 8
+    this.violationDistributionPerCollege = const [], // step 8
+    this.violationTypeDistribution = const [], // step 11
+    this.fleetLogsData = const [],
   });
 
   DashboardState copyWith({
@@ -42,6 +59,7 @@ class DashboardState extends Equatable {
     String? error,
     IndividualVehicleReport? selectedVehicle,
     DashboardViewMode? previousViewMode,
+    // ----GLOBAL-----
     int? totalEntriesExits, //realtime implementation step 4
     int? totalVehicles,
     int? totalViolations,
@@ -49,6 +67,14 @@ class DashboardState extends Equatable {
     totalPendingViolations, //realtime data retrieval based on collection field step 5
     List<ChartDataModel>?
     vehicleDistribution, //real time grouped aggregation impl step 4
+    List<ChartDataModel>? yearLevelBreakdown, // realtime step 11
+    List<ChartDataModel>? topStudentsWithMostViolations, // step 9
+    List<ChartDataModel>? cityBreakdown, // realtime step 11
+    List<ChartDataModel>? vehicleLogsDistributionPerCollege, // step 9
+    List<ChartDataModel>? violationDistributionPerCollege, // step 9
+    List<ChartDataModel>? violationTypeDistribution, // step 12
+    List<ChartDataModel>? fleetLogsData,
+    bool? initialized,
   }) {
     return DashboardState(
       viewMode: viewMode ?? this.viewMode,
@@ -56,6 +82,8 @@ class DashboardState extends Equatable {
       error: error ?? this.error,
       selectedVehicle: selectedVehicle ?? this.selectedVehicle,
       previousViewMode: previousViewMode ?? this.previousViewMode,
+      initialized: initialized ?? this.initialized,
+      // ----GLOBAL-----
       totalEntriesExits:
           totalEntriesExits ??
           this.totalEntriesExits, //realtime implementation step 5
@@ -67,6 +95,22 @@ class DashboardState extends Equatable {
       vehicleDistribution:
           vehicleDistribution ??
           this.vehicleDistribution, //real time grouped aggregation impl step 5
+      yearLevelBreakdown:
+          yearLevelBreakdown ?? this.yearLevelBreakdown, // step 12
+      topStudentsWithMostViolations:
+          topStudentsWithMostViolations ??
+          this.topStudentsWithMostViolations, // step 10
+      cityBreakdown: cityBreakdown ?? this.cityBreakdown, // step 12
+      vehicleLogsDistributionPerCollege:
+          vehicleLogsDistributionPerCollege ??
+          this.vehicleLogsDistributionPerCollege, // step 10
+      violationDistributionPerCollege:
+          violationDistributionPerCollege ??
+          this.violationDistributionPerCollege, // step 10
+      violationTypeDistribution:
+          violationTypeDistribution ??
+          this.violationTypeDistribution, // step 13
+      fleetLogsData: fleetLogsData ?? this.fleetLogsData,
     );
   }
 
@@ -77,10 +121,19 @@ class DashboardState extends Equatable {
     error,
     selectedVehicle,
     previousViewMode,
+    // ----GLOBAL-----
     totalEntriesExits, // realtime implementation step 5:
     totalVehicles,
     totalViolations,
     totalPendingViolations, //realtime data retrieval based on collection field step 7
     vehicleDistribution, //real time grouped aggregation impl step 6
+    yearLevelBreakdown, // realtime step 13
+    topStudentsWithMostViolations, // step 11
+    cityBreakdown, // realtime step 13
+    vehicleLogsDistributionPerCollege, // step 11
+    violationDistributionPerCollege, // step 11
+    violationTypeDistribution, // step 13
+    fleetLogsData,
+    initialized,
   ];
 }

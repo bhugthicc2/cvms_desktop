@@ -6,7 +6,7 @@ import 'package:cvms_desktop/features/dashboard2/bloc/dashboard_cubit.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/global_dashboard_view.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/individual_report_view.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/pdf_preview_view.dart';
-import 'package:cvms_desktop/features/dashboard2/repositories/dashboard_repository.dart';
+import 'package:cvms_desktop/features/dashboard2/repositories/global_dashboard_repository.dart';
 import 'package:cvms_desktop/features/dashboard2/services/vehicle_search_service.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/dashboard_controls_section.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +50,7 @@ class DashboardPage extends StatelessWidget {
     return BlocProvider(
       create:
           (_) => DashboardCubit(
-            DashboardRepository(
+            GlobalDashboardRepository(
               FirebaseFirestore.instance,
             ), // Realtime implementation step 20
           ),
@@ -64,8 +64,11 @@ class DashboardPage extends StatelessWidget {
         },
         child: BlocBuilder<DashboardCubit, DashboardState>(
           builder: (context, state) {
-            if (state.loading) {
-              return const ReportSkeletonLoader();
+            if (!state.initialized) {
+              return const Scaffold(
+                backgroundColor: AppColors.greySurface,
+                body: ReportSkeletonLoader(),
+              );
             }
 
             if (state.error != null) {
@@ -107,54 +110,56 @@ class DashboardPage extends StatelessWidget {
                 },
                 child: Container(
                   key: ValueKey(state.viewMode.toString()),
-                  child: Column(
-                    children: [
-                      // Controls section (not for PDF preview)
-                      if (state.viewMode != DashboardViewMode.pdfPreview)
-                        DashboardControlsSection(
-                          showBackButton:
-                              state.viewMode != DashboardViewMode.global,
-                          dateFilterText: 'DATE FILTER',
-                          onDateFilterPressed: () {
-                            // TODO: Show date filter dialog
-                          },
-                          onExportPressed: () {
-                            // TODO: Export report
-                            // Navigate to PDF preview
-                            context.read<DashboardCubit>().showPdfPreview();
-                          },
-                          onSearchSuggestions: (query) async {
-                            // Delegate search logic to service layer
-                            return VehicleSearchService.getVehicleSuggestions(
-                              query,
-                            );
-                          },
-                          onVehicleSelected: (vehiclePlate) {
-                            // Delegate vehicle lookup to service layer
-                            final vehicle =
-                                VehicleSearchService.getVehicleByPlate(
-                                  vehiclePlate,
-                                );
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        // Controls section (not for PDF preview)
+                        if (state.viewMode != DashboardViewMode.pdfPreview)
+                          DashboardControlsSection(
+                            showBackButton:
+                                state.viewMode != DashboardViewMode.global,
+                            dateFilterText: 'DATE FILTER',
+                            onDateFilterPressed: () {
+                              // TODO: Show date filter dialog
+                            },
+                            onExportPressed: () {
+                              // TODO: Export report
+                              // Navigate to PDF preview
+                              context.read<DashboardCubit>().showPdfPreview();
+                            },
+                            onSearchSuggestions: (query) async {
+                              // Delegate search logic to service layer
+                              return VehicleSearchService.getVehicleSuggestions(
+                                query,
+                              );
+                            },
+                            onVehicleSelected: (vehiclePlate) {
+                              // Delegate vehicle lookup to service layer
+                              final vehicle =
+                                  VehicleSearchService.getVehicleByPlate(
+                                    vehiclePlate,
+                                  );
 
-                            // Navigate to individual view
-                            context.read<DashboardCubit>().showIndividualReport(
-                              vehicle: vehicle,
-                            );
-                          },
-                          onBackButtonPressed:
-                              state.viewMode == DashboardViewMode.individual
-                                  ? () {
-                                    // Navigate back to global view
-                                    context
-                                        .read<DashboardCubit>()
-                                        .backToGlobal();
-                                  }
-                                  : null,
-                        ),
+                              // Navigate to individual view
+                              context
+                                  .read<DashboardCubit>()
+                                  .showIndividualReport(vehicle: vehicle);
+                            },
+                            onBackButtonPressed:
+                                state.viewMode == DashboardViewMode.individual
+                                    ? () {
+                                      // Navigate back to global view
+                                      context
+                                          .read<DashboardCubit>()
+                                          .backToGlobal();
+                                    }
+                                    : null,
+                          ),
 
-                      // Main content
-                      Expanded(child: _buildMainContent(context, state)),
-                    ],
+                        // Main content
+                        SizedBox(child: _buildMainContent(context, state)),
+                      ],
+                    ),
                   ),
                 ),
               ),

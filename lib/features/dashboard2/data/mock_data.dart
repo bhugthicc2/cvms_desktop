@@ -28,7 +28,7 @@ class MockDashboardData {
     ChartDataModel(category: '4th Year', value: 43),
   ];
 
-  static List<ChartDataModel> get studentViolations => [
+  static List<ChartDataModel> get top5studentsWithMostViolations => [
     ChartDataModel(category: 'Student A', value: 12),
     ChartDataModel(category: 'Student B', value: 8),
     ChartDataModel(category: 'Student C', value: 6),
@@ -44,10 +44,10 @@ class MockDashboardData {
     ChartDataModel(category: 'Ipil', value: 12),
   ];
 
-  static List<ChartDataModel> get violationDistribution => [
-    ChartDataModel(category: 'Engineering', value: 23),
-    ChartDataModel(category: 'Business', value: 18),
-    ChartDataModel(category: 'Arts', value: 5),
+  static List<ChartDataModel> get violationTypeDistribution => [
+    ChartDataModel(category: 'Reckless Driving', value: 23),
+    ChartDataModel(category: 'Speeding', value: 18),
+    ChartDataModel(category: 'Drunk Driving', value: 5),
   ];
 
   static List<ChartDataModel> get top5ViolationByType => [
