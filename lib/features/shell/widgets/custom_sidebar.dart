@@ -28,7 +28,6 @@ class CustomSidebar extends StatelessWidget {
     NavItem(icon: 'vehicle_management.png', label: "Vehicle Management"),
     NavItem(icon: 'user.png', label: "User Management"),
     NavItem(icon: 'violation.png', label: "Violation Management"),
-    NavItem(icon: 'analytics.png', label: "Reports"),
     NavItem(icon: 'activity.png', label: "Activity Logs"),
     NavItem(icon: 'profile.png', label: "Profile"),
     NavItem(icon: 'settings.png', label: "Settings"),

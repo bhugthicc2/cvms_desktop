@@ -1,7 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/features/auth/pages/email_sent_page.dart';
 import 'package:cvms_desktop/features/auth/pages/forgot_password_page.dart';
-import 'package:cvms_desktop/features/dashboard/pages/core/dashboard_page.dart';
+import 'package:cvms_desktop/features/dashboard/pages/dashboard_page.dart';
 import 'package:cvms_desktop/features/shell/pages/shell_page.dart';
 import 'package:flutter/material.dart';
 import '../../features/auth/pages/signin_page.dart';
@@ -48,12 +48,7 @@ class AppRoutes {
             backgroundColor: AppColors.white,
             body: Center(child: Text('Violation Management')),
           ),
-      //TODO
-      reports:
-          (context) => const Scaffold(
-            backgroundColor: AppColors.white,
-            body: Center(child: Text('Reports')),
-          ),
+
       //TODO
       settings:
           (context) => const Scaffold(

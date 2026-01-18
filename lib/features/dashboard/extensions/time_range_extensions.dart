@@ -1,4 +1,4 @@
-import '../bloc/dashboard_state.dart';
+import 'package:cvms_desktop/features/dashboard/bloc/dashboard/dashboard_state.dart';
 
 /// Extension methods for TimeRange enum to handle display name conversion
 extension TimeRangeExtension on TimeRange {

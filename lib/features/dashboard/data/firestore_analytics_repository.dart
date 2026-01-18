@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/chart_data_model.dart';
-import 'analytics_repository.dart';
+import 'package:cvms_desktop/features/dashboard/data/analytics_repository.dart';
+import 'package:cvms_desktop/features/dashboard/data/chart_data_model.dart';
 
 class FirestoreAnalyticsRepository implements AnalyticsRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

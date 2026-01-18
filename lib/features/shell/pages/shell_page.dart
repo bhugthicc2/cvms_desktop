@@ -14,8 +14,6 @@ import 'package:cvms_desktop/features/shell/bloc/shell_cubit.dart';
 import 'package:cvms_desktop/features/shell/config/shell_navigation_config.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_header.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_sidebar.dart';
-import 'package:cvms_desktop/features/reports/bloc/reports/reports_cubit.dart';
-import 'package:cvms_desktop/features/dashboard/data/firestore_analytics_repository.dart';
 import 'package:cvms_desktop/features/profile/bloc/profile_cubit.dart';
 
 class ShellPage extends StatefulWidget {
@@ -27,8 +25,6 @@ class ShellPage extends StatefulWidget {
 
 class _ShellPageState extends State<ShellPage> {
   final BreadcrumbController _breadcrumbController = BreadcrumbController();
-  final FirestoreAnalyticsRepository _sharedAnalyticsRepository =
-      FirestoreAnalyticsRepository();
 
   void _handleLogout(BuildContext context) async {
     final confirmed = await LogoutDialog.show(context);
@@ -76,10 +72,6 @@ class _ShellPageState extends State<ShellPage> {
                 userRepository: UserRepository(),
                 authRepository: AuthRepository(),
               ),
-        ),
-        BlocProvider(
-          create:
-              (_) => ReportsCubit(analyticsRepo: _sharedAnalyticsRepository),
         ),
       ],
       child: BlocListener<AuthBloc, AuthState>(
