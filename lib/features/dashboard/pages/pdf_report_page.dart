@@ -146,7 +146,7 @@ class _PdfReportPageState extends State<PdfReportPage> {
                   },
                 ),
               ),
-              body: _buildBody(state),
+              body: buildPdfBody(state),
             );
           },
         ),
@@ -154,7 +154,7 @@ class _PdfReportPageState extends State<PdfReportPage> {
     );
   }
 
-  Widget _buildBody(PdfEditorState state) {
+  Widget buildPdfBody(PdfEditorState state) {
     if (state is PdfLoading) {
       return const ReportLoader(
         message: 'Please wait while we generate your PDF report.',

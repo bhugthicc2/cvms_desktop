@@ -11,8 +11,8 @@ import 'package:cvms_desktop/features/dashboard/widgets/app/report_header_sectio
 import 'package:cvms_desktop/features/dashboard/widgets/content/date_filter_content.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/sections/charts/global_charts_section.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/sections/charts/individual_charts_section.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/sections/stats/global_stats_section.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/sections/stats/individual_stats_and_info_section.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/sections/stats/global/global_stats_section.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/sections/stats/individual/individual_stats_and_info_section.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/sections/table/vehicle_logs_table_section.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/sections/table/violations_table_section.dart';
 import 'package:flutter/material.dart';
@@ -93,10 +93,7 @@ class _DashboardPageContentState extends State<DashboardPageContent> {
       backgroundColor: AppColors.greySurface,
       body: BlocBuilder<ReportsCubit, ReportsState>(
         builder: (context, state) {
-          if (state.loading
-          //  == true || true
-          ) {
-            //test loader
+          if (state.loading) {
             return const ReportSkeletonLoader();
           }
 
