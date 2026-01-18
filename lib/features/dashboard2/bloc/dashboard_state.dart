@@ -11,12 +11,14 @@ class DashboardState extends Equatable {
   final bool loading;
   final String? error;
   final IndividualVehicleReport? selectedVehicle;
+  final DashboardViewMode? previousViewMode;
 
   const DashboardState({
     this.viewMode = DashboardViewMode.global,
     this.loading = false,
     this.error,
     this.selectedVehicle,
+    this.previousViewMode,
   });
 
   DashboardState copyWith({
@@ -24,15 +26,23 @@ class DashboardState extends Equatable {
     bool? loading,
     String? error,
     IndividualVehicleReport? selectedVehicle,
+    DashboardViewMode? previousViewMode,
   }) {
     return DashboardState(
       viewMode: viewMode ?? this.viewMode,
       loading: loading ?? this.loading,
       error: error ?? this.error,
       selectedVehicle: selectedVehicle ?? this.selectedVehicle,
+      previousViewMode: previousViewMode ?? this.previousViewMode,
     );
   }
 
   @override
-  List<Object?> get props => [viewMode, loading, error, selectedVehicle];
+  List<Object?> get props => [
+    viewMode,
+    loading,
+    error,
+    selectedVehicle,
+    previousViewMode,
+  ];
 }

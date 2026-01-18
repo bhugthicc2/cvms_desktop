@@ -1,5 +1,4 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
-import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
 import 'package:cvms_desktop/core/widgets/skeleton/report_skeleton_loader.dart';
 import 'package:cvms_desktop/features/dashboard2/bloc/dashboard_cubit.dart';
@@ -27,87 +26,19 @@ class DashboardPage extends StatelessWidget {
     }
   }
 
-  Widget _buildView(DashboardViewMode viewMode, DashboardCubit cubit) {
-    switch (viewMode) {
+  /// Build main content based on view mode
+  Widget _buildMainContent(BuildContext context, DashboardState state) {
+    switch (state.viewMode) {
       case DashboardViewMode.global:
-        return Container(
-          key: const ValueKey('global_view'),
-          child: Column(
-            children: [
-              // Controls section for global view
-              DashboardControlsSection(
-                showBackButton: false,
-                dateFilterText: 'DATE FILTER',
-                onDateFilterPressed: () {
-                  // TODO: Show date filter dialog
-                },
-                onExportPressed: () {
-                  // TODO: Export report
-                  //navigate to pdf preview
-                  cubit.showPdfPreview();
-                },
-                onSearchSuggestions: (query) async {
-                  // Delegate search logic to service layer
-                  return VehicleSearchService.getVehicleSuggestions(query);
-                },
-                onVehicleSelected: (vehiclePlate) {
-                  // Delegate vehicle lookup to service layer
-                  final vehicle = VehicleSearchService.getVehicleByPlate(
-                    vehiclePlate,
-                  );
-
-                  // Navigate to individual view
-                  cubit.showIndividualReport(vehicle: vehicle);
-                },
-              ),
-              // Global content
-              Expanded(child: const GlobalDashboardView()),
-            ],
-          ),
-        );
+        return const GlobalDashboardView();
       case DashboardViewMode.individual:
-        return Container(
-          key: const ValueKey('individual_view'),
-          child: Column(
-            children: [
-              // Controls section for individual view
-              DashboardControlsSection(
-                showBackButton: true,
-                dateFilterText: 'DATE FILTER',
-                onDateFilterPressed: () {
-                  // todo: Show date filter dialog
-                },
-                onExportPressed: () {
-                  // todo: Export report
-                  //navigate to pdf preview
-                  cubit.showPdfPreview();
-                },
-                onSearchSuggestions: (query) async {
-                  // Delegate search logic to service layer
-                  return VehicleSearchService.getVehicleSuggestions(query);
-                },
-                onVehicleSelected: (vehiclePlate) {
-                  // todo Handle vehicle selection in individual view
-                  // For now, just log the selection
-                },
-                onBackButtonPressed: () {
-                  // Navigate back to global view
-                  cubit.backToGlobal();
-                },
-              ),
-              // Individual content
-              Expanded(
-                child: IndividualReportView(
-                  vehicle: cubit.state.selectedVehicle!,
-                ),
-              ),
-            ],
-          ),
-        );
+        return IndividualReportView(vehicle: state.selectedVehicle!);
       case DashboardViewMode.pdfPreview:
-        return Container(
-          key: const ValueKey('pdf_preview_view'),
-          child: const PdfPreviewView(),
+        return PdfPreviewView(
+          onBackPressed: () {
+            // Navigate back to previous view (individual or global)
+            context.read<DashboardCubit>().backToPreviousView();
+          },
         );
     }
   }
@@ -167,9 +98,57 @@ class DashboardPage extends StatelessWidget {
                     child: FadeTransition(opacity: animation, child: child),
                   );
                 },
-                child: _buildView(
-                  state.viewMode,
-                  context.read<DashboardCubit>(),
+                child: Container(
+                  key: ValueKey(state.viewMode.toString()),
+                  child: Column(
+                    children: [
+                      // Controls section (not for PDF preview)
+                      if (state.viewMode != DashboardViewMode.pdfPreview)
+                        DashboardControlsSection(
+                          showBackButton:
+                              state.viewMode != DashboardViewMode.global,
+                          dateFilterText: 'DATE FILTER',
+                          onDateFilterPressed: () {
+                            // TODO: Show date filter dialog
+                          },
+                          onExportPressed: () {
+                            // TODO: Export report
+                            // Navigate to PDF preview
+                            context.read<DashboardCubit>().showPdfPreview();
+                          },
+                          onSearchSuggestions: (query) async {
+                            // Delegate search logic to service layer
+                            return VehicleSearchService.getVehicleSuggestions(
+                              query,
+                            );
+                          },
+                          onVehicleSelected: (vehiclePlate) {
+                            // Delegate vehicle lookup to service layer
+                            final vehicle =
+                                VehicleSearchService.getVehicleByPlate(
+                                  vehiclePlate,
+                                );
+
+                            // Navigate to individual view
+                            context.read<DashboardCubit>().showIndividualReport(
+                              vehicle: vehicle,
+                            );
+                          },
+                          onBackButtonPressed:
+                              state.viewMode == DashboardViewMode.individual
+                                  ? () {
+                                    // Navigate back to global view
+                                    context
+                                        .read<DashboardCubit>()
+                                        .backToGlobal();
+                                  }
+                                  : null,
+                        ),
+
+                      // Main content
+                      Expanded(child: _buildMainContent(context, state)),
+                    ],
+                  ),
                 ),
               ),
             );

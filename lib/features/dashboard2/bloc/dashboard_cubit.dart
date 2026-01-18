@@ -22,7 +22,22 @@ class DashboardCubit extends Cubit<DashboardState> {
   }
 
   void showPdfPreview() {
-    emit(state.copyWith(viewMode: DashboardViewMode.pdfPreview));
+    emit(
+      state.copyWith(
+        viewMode: DashboardViewMode.pdfPreview,
+        previousViewMode: state.viewMode,
+      ),
+    );
+  }
+
+  void backToPreviousView() {
+    final previousView = state.previousViewMode;
+    if (previousView != null) {
+      emit(state.copyWith(viewMode: previousView));
+    } else {
+      // Fallback to global if no previous view
+      showGlobalDashboard();
+    }
   }
 
   void backToGlobal() {
