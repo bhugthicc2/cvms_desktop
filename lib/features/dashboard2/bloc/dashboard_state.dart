@@ -13,12 +13,15 @@ class DashboardState extends Equatable {
   final IndividualVehicleReport? selectedVehicle;
   final DashboardViewMode? previousViewMode;
 
+  final int totalEntriesExits; //realtime implementation step 2
+
   const DashboardState({
     this.viewMode = DashboardViewMode.global,
     this.loading = false,
     this.error,
     this.selectedVehicle,
     this.previousViewMode,
+    this.totalEntriesExits = 0, //realtime implementation step 3
   });
 
   DashboardState copyWith({
@@ -27,6 +30,7 @@ class DashboardState extends Equatable {
     String? error,
     IndividualVehicleReport? selectedVehicle,
     DashboardViewMode? previousViewMode,
+    int? totalEntriesExits, //realtime implementation step 4
   }) {
     return DashboardState(
       viewMode: viewMode ?? this.viewMode,
@@ -34,6 +38,9 @@ class DashboardState extends Equatable {
       error: error ?? this.error,
       selectedVehicle: selectedVehicle ?? this.selectedVehicle,
       previousViewMode: previousViewMode ?? this.previousViewMode,
+      totalEntriesExits:
+          totalEntriesExits ??
+          this.totalEntriesExits, //realtime implementation step 5
     );
   }
 
@@ -44,5 +51,6 @@ class DashboardState extends Equatable {
     error,
     selectedVehicle,
     previousViewMode,
+    totalEntriesExits, // realtime implementation step 5:
   ];
 }

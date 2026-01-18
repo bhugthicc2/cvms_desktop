@@ -1,0 +1,3574 @@
+
++--- bloc
+|   +--- dashboard_cubit.dart
+|   |   import 'package:cvms_desktop/features/dashboard2/models/individual_vehicle_report.dart';
+|   |   import 'package:flutter_bloc/flutter_bloc.dart';
+|   |   import 'package:equatable/equatable.dart';
+|   |   
+|   |   part 'dashboard_state.dart';
+|   |   
+|   |   class DashboardCubit extends Cubit<DashboardState> {
+|   |     DashboardCubit() : super(const DashboardState());
+|   |   
+|   |     // View mode navigation
+|   |     void showGlobalDashboard() {
+|   |       emit(state.copyWith(viewMode: DashboardViewMode.global));
+|   |     }
+|   |   
+|   |     void showIndividualReport({required IndividualVehicleReport vehicle}) {
+|   |       emit(
+|   |         state.copyWith(
+|   |           viewMode: DashboardViewMode.individual,
+|   |           selectedVehicle: vehicle,
+|   |         ),
+|   |       );
+|   |     }
+|   |   
+|   |     void showPdfPreview() {
+|   |       emit(
+|   |         state.copyWith(
+|   |           viewMode: DashboardViewMode.pdfPreview,
+|   |           previousViewMode: state.viewMode,
+|   |         ),
+|   |       );
+|   |     }
+|   |   
+|   |     void backToPreviousView() {
+|   |       final previousView = state.previousViewMode;
+|   |       if (previousView != null) {
+|   |         emit(state.copyWith(viewMode: previousView));
+|   |       } else {
+|   |         // Fallback to global if no previous view
+|   |         showGlobalDashboard();
+|   |       }
+|   |     }
+|   |   
+|   |     void backToGlobal() {
+|   |       showGlobalDashboard();
+|   |     }
+|   |   
+|   |     // Error handling
+|   |     void clearError() {
+|   |       emit(state.copyWith(error: null));
+|   |     }
+|   |   
+|   |     void setError(String error) {
+|   |       emit(state.copyWith(error: error));
+|   |     }
+|   |   
+|   |     // Loading states
+|   |     void setLoading(bool loading) {
+|   |       emit(state.copyWith(loading: loading));
+|   |     }
+|   |   }
+|   \--- dashboard_state.dart
+|       part of 'dashboard_cubit.dart';
+|       
+|       enum DashboardViewMode {
+|         global, // Root dashboard
+|         individual, // Individual vehicle report
+|         pdfPreview, // PDF preview view
+|       }
+|       
+|       class DashboardState extends Equatable {
+|         final DashboardViewMode viewMode;
+|         final bool loading;
+|         final String? error;
+|         final IndividualVehicleReport? selectedVehicle;
+|         final DashboardViewMode? previousViewMode;
+|       
+|         const DashboardState({
+|           this.viewMode = DashboardViewMode.global,
+|           this.loading = false,
+|           this.error,
+|           this.selectedVehicle,
+|           this.previousViewMode,
+|         });
+|       
+|         DashboardState copyWith({
+|           DashboardViewMode? viewMode,
+|           bool? loading,
+|           String? error,
+|           IndividualVehicleReport? selectedVehicle,
+|           DashboardViewMode? previousViewMode,
+|         }) {
+|           return DashboardState(
+|             viewMode: viewMode ?? this.viewMode,
+|             loading: loading ?? this.loading,
+|             error: error ?? this.error,
+|             selectedVehicle: selectedVehicle ?? this.selectedVehicle,
+|             previousViewMode: previousViewMode ?? this.previousViewMode,
+|           );
+|         }
+|       
+|         @override
+|         List<Object?> get props => [
+|           viewMode,
+|           loading,
+|           error,
+|           selectedVehicle,
+|           previousViewMode,
+|         ];
+|       }
++--- data
+|   +--- mock_data.dart
+|   |   import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
+|   |   import 'package:cvms_desktop/features/dashboard/models/fleet_summary.dart';
+|   |   
+|   |   class MockDashboardData {
+|   |     static final fleetSummary = FleetSummary(
+|   |       totalVehicles: 156,
+|   |       totalViolations: 89,
+|   |       activeViolations: 23,
+|   |       totalEntriesExits: 1247,
+|   |       departmentLogData: [
+|   |         ChartDataModel(category: 'Engineering', value: 45),
+|   |         ChartDataModel(category: 'Business', value: 32),
+|   |         ChartDataModel(category: 'Arts', value: 28),
+|   |       ],
+|   |       deptViolationData: [
+|   |         ChartDataModel(category: 'Engineering', value: 23),
+|   |         ChartDataModel(category: 'Business', value: 18),
+|   |         ChartDataModel(category: 'Arts', value: 5),
+|   |       ],
+|   |     );
+|   |   
+|   |     static List<ChartDataModel> get vehicleDistribution => [
+|   |       ChartDataModel(category: 'Engineering', value: 45),
+|   |       ChartDataModel(category: 'Business', value: 32),
+|   |       ChartDataModel(category: 'Arts', value: 28),
+|   |       ChartDataModel(category: 'Science', value: 25),
+|   |       ChartDataModel(category: 'Education', value: 26),
+|   |     ];
+|   |   
+|   |     static List<ChartDataModel> get yearLevelBreakdown => [
+|   |       ChartDataModel(category: '1st Year', value: 35),
+|   |       ChartDataModel(category: '2nd Year', value: 40),
+|   |       ChartDataModel(category: '3rd Year', value: 38),
+|   |       ChartDataModel(category: '4th Year', value: 43),
+|   |     ];
+|   |   
+|   |     static List<ChartDataModel> get studentViolations => [
+|   |       ChartDataModel(category: 'Student A', value: 12),
+|   |       ChartDataModel(category: 'Student B', value: 8),
+|   |       ChartDataModel(category: 'Student C', value: 6),
+|   |       ChartDataModel(category: 'Student D', value: 4),
+|   |       ChartDataModel(category: 'Student E', value: 3),
+|   |     ];
+|   |   
+|   |     static List<ChartDataModel> get cityBreakdown => [
+|   |       ChartDataModel(category: 'Zamboanga City', value: 89),
+|   |       ChartDataModel(category: 'Dipolog City', value: 34),
+|   |       ChartDataModel(category: 'Dapitan City', value: 21),
+|   |       ChartDataModel(category: 'Pagadian City', value: 18),
+|   |       ChartDataModel(category: 'Ipil', value: 12),
+|   |     ];
+|   |   
+|   |     static List<ChartDataModel> get violationDistribution => [
+|   |       ChartDataModel(category: 'Engineering', value: 23),
+|   |       ChartDataModel(category: 'Business', value: 18),
+|   |       ChartDataModel(category: 'Arts', value: 5),
+|   |     ];
+|   |   
+|   |     static List<ChartDataModel> get top5ViolationByType => [
+|   |       ChartDataModel(category: 'No Helmet', value: 25),
+|   |       ChartDataModel(category: 'No License', value: 18),
+|   |       ChartDataModel(category: 'Overloading', value: 15),
+|   |       ChartDataModel(category: 'No Parking', value: 12),
+|   |       ChartDataModel(category: 'Speeding', value: 8),
+|   |     ];
+|   |   
+|   |     static List<ChartDataModel> get fleetLogsData => [
+|   |       ChartDataModel(category: 'Mon', value: 45),
+|   |       ChartDataModel(category: 'Tue', value: 52),
+|   |       ChartDataModel(category: 'Wed', value: 38),
+|   |       ChartDataModel(category: 'Thu', value: 65),
+|   |       ChartDataModel(category: 'Fri', value: 72),
+|   |       ChartDataModel(category: 'Sat', value: 28),
+|   |       ChartDataModel(category: 'Sun', value: 15),
+|   |     ];
+|   |   }
+|   \--- mock_individual_data.dart
+|       import 'package:cvms_desktop/features/dashboard2/models/individual_vehicle_report.dart';
+|       import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
+|       
+|       class MockIndividualData {
+|         static IndividualVehicleReport get sampleReport => IndividualVehicleReport(
+|           vehicleId: 'VH001',
+|           plateNumber: 'ABC-1234',
+|           vehicleType: 'Motorcycle',
+|           ownerName: 'Juan Dela Cruz',
+|           registeredDate: DateTime(2024, 1, 15),
+|           expiryDate: DateTime(2025, 1, 15),
+|           totalViolations: 8,
+|           activeViolations: 2,
+|           totalEntriesExits: 156,
+|           violationsByType: [
+|             ChartDataModel(category: 'No Helmet', value: 3),
+|             ChartDataModel(category: 'No License', value: 2),
+|             ChartDataModel(category: 'Overloading', value: 1),
+|             ChartDataModel(category: 'No Parking', value: 1),
+|             ChartDataModel(category: 'Speeding', value: 1),
+|           ],
+|           vehicleLogs: [
+|             ChartDataModel(category: 'Mon', value: 12),
+|             ChartDataModel(category: 'Tue', value: 8),
+|             ChartDataModel(category: 'Wed', value: 15),
+|             ChartDataModel(category: 'Thu', value: 6),
+|             ChartDataModel(category: 'Fri', value: 10),
+|             ChartDataModel(category: 'Sat', value: 4),
+|             ChartDataModel(category: 'Sun', value: 2),
+|           ],
+|         );
+|       
+|         static List<IndividualVehicleReport> get searchResults => [
+|           sampleReport,
+|           IndividualVehicleReport(
+|             vehicleId: 'VH002',
+|             plateNumber: 'XYZ-5678',
+|             vehicleType: 'Car',
+|             ownerName: 'Maria Santos',
+|             registeredDate: DateTime(2023, 6, 20),
+|             expiryDate: DateTime(2024, 6, 20),
+|             totalViolations: 3,
+|             activeViolations: 1,
+|             totalEntriesExits: 89,
+|             violationsByType: [
+|               ChartDataModel(category: 'No Parking', value: 2),
+|               ChartDataModel(category: 'Speeding', value: 1),
+|             ],
+|             vehicleLogs: [
+|               ChartDataModel(category: 'Mon', value: 8),
+|               ChartDataModel(category: 'Tue', value: 6),
+|               ChartDataModel(category: 'Wed', value: 9),
+|               ChartDataModel(category: 'Thu', value: 4),
+|               ChartDataModel(category: 'Fri', value: 7),
+|               ChartDataModel(category: 'Sat', value: 3),
+|               ChartDataModel(category: 'Sun', value: 1),
+|             ],
+|           ),
+|         ];
+|       }
++--- models
+|   +--- individual_vehicle_report.dart
+|   |   import 'package:equatable/equatable.dart';
+|   |   import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
+|   |   
+|   |   class IndividualVehicleReport extends Equatable {
+|   |     final String vehicleId;
+|   |     final String plateNumber;
+|   |     final String vehicleType;
+|   |     final String ownerName;
+|   |     final DateTime registeredDate;
+|   |     final DateTime? expiryDate;
+|   |     final int totalViolations;
+|   |     final int activeViolations;
+|   |     final int totalEntriesExits;
+|   |     final List<ChartDataModel> violationsByType;
+|   |     final List<ChartDataModel> vehicleLogs;
+|   |   
+|   |     const IndividualVehicleReport({
+|   |       required this.vehicleId,
+|   |       required this.plateNumber,
+|   |       required this.vehicleType,
+|   |       required this.ownerName,
+|   |       required this.registeredDate,
+|   |       this.expiryDate,
+|   |       required this.totalViolations,
+|   |       required this.activeViolations,
+|   |       required this.totalEntriesExits,
+|   |       required this.violationsByType,
+|   |       required this.vehicleLogs,
+|   |     });
+|   |   
+|   |     int get daysUntilExpiration {
+|   |       if (expiryDate == null) return 0;
+|   |       return expiryDate!.difference(DateTime.now()).inDays;
+|   |     }
+|   |   
+|   |     @override
+|   |     List<Object?> get props => [
+|   |       vehicleId,
+|   |       plateNumber,
+|   |       vehicleType,
+|   |       ownerName,
+|   |       registeredDate,
+|   |       expiryDate,
+|   |       totalViolations,
+|   |       activeViolations,
+|   |       totalEntriesExits,
+|   |       violationsByType,
+|   |       vehicleLogs,
+|   |     ];
+|   |   }
+|   +--- recent_log_entry.dart
+|   |   import 'package:equatable/equatable.dart';
+|   |   
+|   |   class RecentLogEntry extends Equatable {
+|   |     final String logId;
+|   |     final DateTime timeIn;
+|   |     final DateTime? timeOut;
+|   |     final int? durationMinutes;
+|   |     final String status;
+|   |     final String updatedBy;
+|   |   
+|   |     const RecentLogEntry({
+|   |       required this.logId,
+|   |       required this.timeIn,
+|   |       this.timeOut,
+|   |       this.durationMinutes,
+|   |       required this.status,
+|   |       required this.updatedBy,
+|   |     });
+|   |   
+|   |     // Computed properties
+|   |     bool get isActive => status.toLowerCase() == 'onsite';
+|   |     bool get isCompleted => status.toLowerCase() == 'offsite';
+|   |     bool get hasTimeOut => timeOut != null;
+|   |     bool get hasDuration => durationMinutes != null;
+|   |   
+|   |     @override
+|   |     List<Object?> get props => [
+|   |       logId,
+|   |       timeIn,
+|   |       timeOut,
+|   |       durationMinutes,
+|   |       status,
+|   |       updatedBy,
+|   |     ];
+|   |   }
+|   +--- vehicle_info.dart
+|   |   import 'package:equatable/equatable.dart';
+|   |   
+|   |   class VehicleInfo extends Equatable {
+|   |     final String vehicleModel;
+|   |     final String plateNumber;
+|   |     final String vehicleType;
+|   |     final String ownerName;
+|   |     final String department;
+|   |     final String status;
+|   |     final double mvpProgress;
+|   |     final DateTime? mvpRegisteredDate;
+|   |     final DateTime? mvpExpiryDate;
+|   |   
+|   |     const VehicleInfo({
+|   |       required this.vehicleModel,
+|   |       required this.plateNumber,
+|   |       required this.vehicleType,
+|   |       required this.ownerName,
+|   |       required this.department,
+|   |       required this.status,
+|   |       required this.mvpProgress,
+|   |       this.mvpRegisteredDate,
+|   |       this.mvpExpiryDate,
+|   |     });
+|   |   
+|   |     // Computed properties - pure data logic
+|   |     String get mvpStatusText {
+|   |       if (mvpExpiryDate == null) return 'Not Registered';
+|   |       final now = DateTime.now();
+|   |       if (now.isAfter(mvpExpiryDate!)) return 'Expired';
+|   |       if (now.isAfter(mvpExpiryDate!.subtract(const Duration(days: 30)))) {
+|   |         return 'Expiring Soon';
+|   |       }
+|   |       return 'Valid';
+|   |     }
+|   |   
+|   |     bool get isMvpExpired =>
+|   |         mvpExpiryDate != null && DateTime.now().isAfter(mvpExpiryDate!);
+|   |     bool get isMvpExpiringSoon =>
+|   |         mvpExpiryDate != null &&
+|   |         DateTime.now().isAfter(
+|   |           mvpExpiryDate!.subtract(const Duration(days: 30)),
+|   |         ) &&
+|   |         !isMvpExpired;
+|   |   
+|   |     @override
+|   |     List<Object?> get props => [
+|   |       vehicleModel,
+|   |       plateNumber,
+|   |       vehicleType,
+|   |       ownerName,
+|   |       department,
+|   |       status,
+|   |       mvpProgress,
+|   |       mvpRegisteredDate,
+|   |       mvpExpiryDate,
+|   |     ];
+|   |   }
+|   \--- violation_history_entry.dart
+|       import 'package:equatable/equatable.dart';
+|       
+|       class ViolationHistoryEntry extends Equatable {
+|         final String violationId;
+|         final DateTime dateTime;
+|         final String violationType;
+|         final String reportedBy;
+|         final String status;
+|         final DateTime createdAt;
+|         final DateTime lastUpdated;
+|       
+|         const ViolationHistoryEntry({
+|           required this.violationId,
+|           required this.dateTime,
+|           required this.violationType,
+|           required this.reportedBy,
+|           required this.status,
+|           required this.createdAt,
+|           required this.lastUpdated,
+|         });
+|       
+|         // Computed properties
+|         bool get isPending => status.toLowerCase() == 'pending';
+|         bool get isResolved => status.toLowerCase() == 'resolved';
+|         bool get isAppealed => status.toLowerCase() == 'appealed';
+|       
+|         @override
+|         List<Object?> get props => [
+|           violationId,
+|           dateTime,
+|           violationType,
+|           reportedBy,
+|           status,
+|           createdAt,
+|           lastUpdated,
+|         ];
+|       }
++--- pages
+|   +--- core
+|   |   \--- dasboard_page.dart
+|   |       import 'package:cvms_desktop/core/theme/app_colors.dart';
+|   |       import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
+|   |       import 'package:cvms_desktop/core/widgets/skeleton/report_skeleton_loader.dart';
+|   |       import 'package:cvms_desktop/features/dashboard2/bloc/dashboard_cubit.dart';
+|   |       import 'package:cvms_desktop/features/dashboard2/pages/views/global_dashboard_view.dart';
+|   |       import 'package:cvms_desktop/features/dashboard2/pages/views/individual_report_view.dart';
+|   |       import 'package:cvms_desktop/features/dashboard2/pages/views/pdf_preview_view.dart';
+|   |       import 'package:cvms_desktop/features/dashboard2/services/vehicle_search_service.dart';
+|   |       import 'package:cvms_desktop/features/dashboard2/widgets/sections/dashboard_controls_section.dart';
+|   |       import 'package:flutter/material.dart';
+|   |       import 'package:flutter_bloc/flutter_bloc.dart';
+|   |       import 'package:cvms_desktop/features/shell/scope/breadcrumb_scope.dart';
+|   |       import 'package:cvms_desktop/features/shell/bloc/shell_cubit.dart';
+|   |       
+|   |       class DashboardPage extends StatelessWidget {
+|   |         const DashboardPage({super.key});
+|   |       
+|   |         List<BreadcrumbItem> _buildBreadcrumbs(DashboardViewMode viewMode) {
+|   |           switch (viewMode) {
+|   |             case DashboardViewMode.global:
+|   |               return []; // Root level - no breadcrumbs
+|   |             case DashboardViewMode.individual:
+|   |               return [BreadcrumbItem(label: 'Individual Report')];
+|   |             case DashboardViewMode.pdfPreview:
+|   |               return [BreadcrumbItem(label: 'PDF Preview', isActive: true)];
+|   |           }
+|   |         }
+|   |       
+|   |         /// Build main content based on view mode
+|   |         Widget _buildMainContent(BuildContext context, DashboardState state) {
+|   |           switch (state.viewMode) {
+|   |             case DashboardViewMode.global:
+|   |               return const GlobalDashboardView();
+|   |             case DashboardViewMode.individual:
+|   |               return IndividualReportView(vehicle: state.selectedVehicle!);
+|   |             case DashboardViewMode.pdfPreview:
+|   |               return PdfPreviewView(
+|   |                 onBackPressed: () {
+|   |                   // Navigate back to previous view (individual or global)
+|   |                   context.read<DashboardCubit>().backToPreviousView();
+|   |                 },
+|   |               );
+|   |           }
+|   |         }
+|   |       
+|   |         @override
+|   |         Widget build(BuildContext context) {
+|   |           return BlocProvider(
+|   |             create: (_) => DashboardCubit(),
+|   |             child: BlocListener<DashboardCubit, DashboardState>(
+|   |               listener: (context, state) {
+|   |                 // Gating: Only publish breadcrumbs if this is the active page
+|   |                 if (context.read<ShellCubit>().state.selectedIndex != 1) return;
+|   |       
+|   |                 final breadcrumbs = _buildBreadcrumbs(state.viewMode);
+|   |                 BreadcrumbScope.controllerOf(context).setBreadcrumbs(breadcrumbs);
+|   |               },
+|   |               child: BlocBuilder<DashboardCubit, DashboardState>(
+|   |                 builder: (context, state) {
+|   |                   if (state.loading) {
+|   |                     return const ReportSkeletonLoader();
+|   |                   }
+|   |       
+|   |                   if (state.error != null) {
+|   |                     return Center(
+|   |                       child: Column(
+|   |                         mainAxisAlignment: MainAxisAlignment.center,
+|   |                         children: [
+|   |                           Text(
+|   |                             'Error: ${state.error}',
+|   |                             style: const TextStyle(color: Colors.red),
+|   |                           ),
+|   |                           ElevatedButton(
+|   |                             onPressed:
+|   |                                 () => context.read<DashboardCubit>().clearError(),
+|   |                             child: const Text('Dismiss'),
+|   |                           ),
+|   |                         ],
+|   |                       ),
+|   |                     );
+|   |                   }
+|   |       
+|   |                   return Scaffold(
+|   |                     backgroundColor: AppColors.greySurface,
+|   |                     body: AnimatedSwitcher(
+|   |                       duration: const Duration(milliseconds: 400),
+|   |                       transitionBuilder: (child, animation) {
+|   |                         return SlideTransition(
+|   |                           position: Tween<Offset>(
+|   |                             begin: const Offset(1.0, 0.0), // Slide from right
+|   |                             end: Offset.zero,
+|   |                           ).animate(
+|   |                             CurvedAnimation(
+|   |                               parent: animation,
+|   |                               curve: Curves.easeInOutCubic,
+|   |                             ),
+|   |                           ),
+|   |                           child: FadeTransition(opacity: animation, child: child),
+|   |                         );
+|   |                       },
+|   |                       child: Container(
+|   |                         key: ValueKey(state.viewMode.toString()),
+|   |                         child: Column(
+|   |                           children: [
+|   |                             // Controls section (not for PDF preview)
+|   |                             if (state.viewMode != DashboardViewMode.pdfPreview)
+|   |                               DashboardControlsSection(
+|   |                                 showBackButton:
+|   |                                     state.viewMode != DashboardViewMode.global,
+|   |                                 dateFilterText: 'DATE FILTER',
+|   |                                 onDateFilterPressed: () {
+|   |                                   // TODO: Show date filter dialog
+|   |                                 },
+|   |                                 onExportPressed: () {
+|   |                                   // TODO: Export report
+|   |                                   // Navigate to PDF preview
+|   |                                   context.read<DashboardCubit>().showPdfPreview();
+|   |                                 },
+|   |                                 onSearchSuggestions: (query) async {
+|   |                                   // Delegate search logic to service layer
+|   |                                   return VehicleSearchService.getVehicleSuggestions(
+|   |                                     query,
+|   |                                   );
+|   |                                 },
+|   |                                 onVehicleSelected: (vehiclePlate) {
+|   |                                   // Delegate vehicle lookup to service layer
+|   |                                   final vehicle =
+|   |                                       VehicleSearchService.getVehicleByPlate(
+|   |                                         vehiclePlate,
+|   |                                       );
+|   |       
+|   |                                   // Navigate to individual view
+|   |                                   context.read<DashboardCubit>().showIndividualReport(
+|   |                                     vehicle: vehicle,
+|   |                                   );
+|   |                                 },
+|   |                                 onBackButtonPressed:
+|   |                                     state.viewMode == DashboardViewMode.individual
+|   |                                         ? () {
+|   |                                           // Navigate back to global view
+|   |                                           context
+|   |                                               .read<DashboardCubit>()
+|   |                                               .backToGlobal();
+|   |                                         }
+|   |                                         : null,
+|   |                               ),
+|   |       
+|   |                             // Main content
+|   |                             Expanded(child: _buildMainContent(context, state)),
+|   |                           ],
+|   |                         ),
+|   |                       ),
+|   |                     ),
+|   |                   );
+|   |                 },
+|   |               ),
+|   |             ),
+|   |           );
+|   |         }
+|   |       }
+|   \--- views
+|       +--- global_dashboard_view.dart
+|       |   import 'package:cvms_desktop/features/dashboard2/data/mock_data.dart';
+|       |   import 'package:cvms_desktop/features/dashboard2/widgets/sections/stats/global_stats_card_section.dart';
+|       |   import 'package:cvms_desktop/features/dashboard2/widgets/sections/charts/global_charts_section.dart';
+|       |   import 'package:flutter/material.dart';
+|       |   
+|       |   class GlobalDashboardView extends StatelessWidget {
+|       |     const GlobalDashboardView({super.key});
+|       |   
+|       |     @override
+|       |     Widget build(BuildContext context) {
+|       |       return SingleChildScrollView(
+|       |         child: Column(
+|       |           children: [
+|       |             // Global Stats Cards
+|       |             GlobalStatsCardSection(
+|       |               statsCard1Label: 'Total Violations',
+|       |               statsCard1Value: MockDashboardData.fleetSummary.totalViolations,
+|       |               statsCard2Label: 'Pending Violations',
+|       |               statsCard2Value: MockDashboardData.fleetSummary.activeViolations,
+|       |               statsCard3Label: 'Total Vehicles',
+|       |               statsCard3Value: MockDashboardData.fleetSummary.totalVehicles,
+|       |               statsCard4Label: 'Total Entries/Exits',
+|       |               statsCard4Value: MockDashboardData.fleetSummary.totalEntriesExits,
+|       |             ),
+|       |   
+|       |             // Global Charts Section
+|       |             GlobalChartsSection(
+|       |               summary: MockDashboardData.fleetSummary,
+|       |               vehicleDistribution: MockDashboardData.vehicleDistribution,
+|       |               yearLevelBreakdown: MockDashboardData.yearLevelBreakdown,
+|       |               studentWithMostViolations: MockDashboardData.studentViolations,
+|       |               cityBreakdown: MockDashboardData.cityBreakdown,
+|       |               violationDistribution: MockDashboardData.violationDistribution,
+|       |             ),
+|       |           ],
+|       |         ),
+|       |       );
+|       |     }
+|       |   }
+|       +--- individual_report_view.dart
+|       |   import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+|       |   import 'package:cvms_desktop/features/dashboard2/services/mock_chart_data.dart';
+|       |   import 'package:cvms_desktop/features/dashboard2/services/mock_table_data.dart';
+|       |   import 'package:cvms_desktop/features/dashboard2/widgets/sections/charts/individual_charts_section.dart';
+|       |   import 'package:cvms_desktop/features/dashboard2/widgets/sections/stats/individual_stats_section.dart';
+|       |   import 'package:cvms_desktop/features/dashboard2/widgets/sections/tables/recent_logs/recent_logs_table_section.dart';
+|       |   import 'package:cvms_desktop/features/dashboard2/widgets/sections/tables/violation_history/violation_history_table_section.dart';
+|       |   import 'package:cvms_desktop/features/dashboard2/models/individual_vehicle_report.dart';
+|       |   import 'package:cvms_desktop/core/theme/app_spacing.dart';
+|       |   import 'package:flutter/material.dart';
+|       |   
+|       |   class IndividualReportView extends StatelessWidget {
+|       |     final IndividualVehicleReport vehicle;
+|       |   
+|       |     const IndividualReportView({super.key, required this.vehicle});
+|       |   
+|       |     @override
+|       |     Widget build(BuildContext context) {
+|       |       return SingleChildScrollView(
+|       |         child: Column(
+|       |           children: [
+|       |             //stats and info
+|       |             SizedBox(
+|       |               height: 240,
+|       |               child: IndividualStatsSection(
+|       |                 report: vehicle, //todo
+|       |                 onVehicleInfoFullView: () {
+|       |                   //todo
+|       |                 },
+|       |               ),
+|       |             ),
+|       |   
+|       |             IndividualChartsSection(
+|       |               violationDistribution:
+|       |                   MockChartData.getViolationDistributionForVehicle(
+|       |                     vehicle.vehicleId,
+|       |                   ),
+|       |               vehicleLogs: MockChartData.getVehicleLogsForVehicle(
+|       |                 vehicle.vehicleId,
+|       |               ),
+|       |             ),
+|       |   
+|       |             ViolationHistoryTableSection(
+|       |               allowSorting: false,
+|       |               istableHeaderDark: false,
+|       |               violationHistoryEntries:
+|       |                   MockTableData.getViolationHistoryForVehicle(vehicle.vehicleId),
+|       |               sectionTitle: 'Violation History',
+|       |               onClick: () {
+|       |                 //todo
+|       |               },
+|       |             ),
+|       |             RecentLogsTableSection(
+|       |               allowSorting: false,
+|       |               istableHeaderDark: false,
+|       |               recentLogsEntries: MockTableData.getRecentLogsForVehicle(
+|       |                 vehicle.vehicleId,
+|       |               ),
+|       |               sectionTitle: 'Recent Logs',
+|       |               onClick: () {
+|       |                 //todo
+|       |               },
+|       |             ),
+|       |             Spacing.vertical(size: AppSpacing.medium),
+|       |           ],
+|       |         ),
+|       |       );
+|       |     }
+|       |   }
+|       \--- pdf_preview_view.dart
+|           import 'package:cvms_desktop/core/theme/app_colors.dart';
+|           import 'package:cvms_desktop/features/dashboard2/widgets/navigation/pdf_preview_app_bar.dart';
+|           import 'package:flutter/material.dart';
+|           
+|           class PdfPreviewView extends StatelessWidget {
+|             final VoidCallback onBackPressed;
+|             const PdfPreviewView({super.key, required this.onBackPressed});
+|           
+|             @override
+|             Widget build(BuildContext context) {
+|               return Scaffold(
+|                 backgroundColor: AppColors.greySurface,
+|                 appBar: PdfPreviewAppBar(
+|                   title: 'PDF Report Preview',
+|                   breadcrumbs: [],
+|                   onBackPressed: onBackPressed,
+|                   onDownLoadPressed: () {},
+|                   onPrintPressed: () {},
+|                   onEditPressed: () {},
+|                   toggleFitMode: () {},
+|                   isFitToWidth: false,
+|                   isChart: true,
+|                 ),
+|                 body: const Center(child: Text('TODO: PDF Preview Content')),
+|               );
+|             }
+|           }
++--- repositories
++--- services
+|   +--- mock_chart_data.dart
+|   |   import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
+|   |   
+|   |   class MockChartData {
+|   |     /// Mock violation distribution data for bar chart
+|   |     static List<ChartDataModel> getViolationDistribution() {
+|   |       return [
+|   |         ChartDataModel(category: 'Speeding', value: 15, date: null),
+|   |         ChartDataModel(category: 'Illegal Parking', value: 12, date: null),
+|   |         ChartDataModel(category: 'No Permit', value: 8, date: null),
+|   |         ChartDataModel(category: 'Wrong Lane', value: 5, date: null),
+|   |         ChartDataModel(category: 'Expired Registration', value: 2, date: null),
+|   |       ];
+|   |     }
+|   |   
+|   |     /// Mock vehicle logs data for line chart
+|   |     static List<ChartDataModel> getVehicleLogs() {
+|   |       final now = DateTime.now();
+|   |       return [
+|   |         ChartDataModel(
+|   |           category: _formatDate(now.subtract(const Duration(days: 30))),
+|   |           value: 25,
+|   |           date: now.subtract(const Duration(days: 30)),
+|   |         ),
+|   |         ChartDataModel(
+|   |           category: _formatDate(now.subtract(const Duration(days: 25))),
+|   |           value: 31,
+|   |           date: now.subtract(const Duration(days: 25)),
+|   |         ),
+|   |         ChartDataModel(
+|   |           category: _formatDate(now.subtract(const Duration(days: 20))),
+|   |           value: 19,
+|   |           date: now.subtract(const Duration(days: 20)),
+|   |         ),
+|   |         ChartDataModel(
+|   |           category: _formatDate(now.subtract(const Duration(days: 15))),
+|   |           value: 35,
+|   |           date: now.subtract(const Duration(days: 15)),
+|   |         ),
+|   |         ChartDataModel(
+|   |           category: _formatDate(now.subtract(const Duration(days: 10))),
+|   |           value: 43,
+|   |           date: now.subtract(const Duration(days: 10)),
+|   |         ),
+|   |         ChartDataModel(
+|   |           category: _formatDate(now.subtract(const Duration(days: 5))),
+|   |           value: 28,
+|   |           date: now.subtract(const Duration(days: 5)),
+|   |         ),
+|   |         ChartDataModel(category: _formatDate(now), value: 33, date: now),
+|   |       ];
+|   |     }
+|   |   
+|   |     /// Get mock data for specific vehicle
+|   |     static List<ChartDataModel> getViolationDistributionForVehicle(
+|   |       String vehicleId,
+|   |     ) {
+|   |       // In real implementation, this would filter by vehicleId
+|   |       return getViolationDistribution();
+|   |     }
+|   |   
+|   |     static List<ChartDataModel> getVehicleLogsForVehicle(String vehicleId) {
+|   |       // In real implementation, this would filter by vehicleId
+|   |       return getVehicleLogs();
+|   |     }
+|   |   
+|   |     /// Format date for chart display
+|   |     static String _formatDate(DateTime date) {
+|   |       return '${date.month}/${date.day}';
+|   |     }
+|   |   }
+|   +--- mock_table_data.dart
+|   |   import 'package:cvms_desktop/features/dashboard2/models/recent_log_entry.dart';
+|   |   import 'package:cvms_desktop/features/dashboard2/models/violation_history_entry.dart';
+|   |   
+|   |   class MockTableData {
+|   |     /// Mock violation history entries for testing
+|   |     static List<ViolationHistoryEntry> getViolationHistoryEntries() {
+|   |       final now = DateTime.now();
+|   |       return [
+|   |         ViolationHistoryEntry(
+|   |           violationId: 'V001',
+|   |           dateTime: now.subtract(const Duration(days: 5, hours: 14, minutes: 30)),
+|   |           violationType: 'Speeding',
+|   |           reportedBy: 'Traffic Officer Smith',
+|   |           status: 'Pending',
+|   |           createdAt: now.subtract(
+|   |             const Duration(days: 5, hours: 14, minutes: 30),
+|   |           ),
+|   |           lastUpdated: now.subtract(const Duration(days: 5, hours: 15)),
+|   |         ),
+|   |         ViolationHistoryEntry(
+|   |           violationId: 'V002',
+|   |           dateTime: now.subtract(const Duration(days: 12, hours: 9, minutes: 15)),
+|   |           violationType: 'Illegal Parking',
+|   |           reportedBy: 'Security Guard Johnson',
+|   |           status: 'Resolved',
+|   |           createdAt: now.subtract(
+|   |             const Duration(days: 12, hours: 9, minutes: 15),
+|   |           ),
+|   |           lastUpdated: now.subtract(const Duration(days: 10, hours: 16)),
+|   |         ),
+|   |         ViolationHistoryEntry(
+|   |           violationId: 'V003',
+|   |           dateTime: now.subtract(
+|   |             const Duration(days: 25, hours: 11, minutes: 45),
+|   |           ),
+|   |           violationType: 'No Parking Permit',
+|   |           reportedBy: 'Parking Enforcement Davis',
+|   |           status: 'Appealed',
+|   |           createdAt: now.subtract(
+|   |             const Duration(days: 25, hours: 11, minutes: 45),
+|   |           ),
+|   |           lastUpdated: now.subtract(const Duration(days: 24, hours: 14)),
+|   |         ),
+|   |         ViolationHistoryEntry(
+|   |           violationId: 'V004',
+|   |           dateTime: now.subtract(
+|   |             const Duration(days: 30, hours: 16, minutes: 20),
+|   |           ),
+|   |           violationType: 'Wrong Lane Usage',
+|   |           reportedBy: 'Traffic Officer Wilson',
+|   |           status: 'Pending',
+|   |           createdAt: now.subtract(
+|   |             const Duration(days: 30, hours: 16, minutes: 20),
+|   |           ),
+|   |           lastUpdated: now.subtract(const Duration(days: 30, hours: 17)),
+|   |         ),
+|   |         ViolationHistoryEntry(
+|   |           violationId: 'V005',
+|   |           dateTime: now.subtract(const Duration(days: 45, hours: 8, minutes: 0)),
+|   |           violationType: 'Expired Registration',
+|   |           reportedBy: 'Campus Police Brown',
+|   |           status: 'Resolved',
+|   |           createdAt: now.subtract(const Duration(days: 45, hours: 8, minutes: 0)),
+|   |           lastUpdated: now.subtract(const Duration(days: 40, hours: 10)),
+|   |         ),
+|   |       ];
+|   |     }
+|   |   
+|   |     /// Mock recent log entries for testing
+|   |     static List<RecentLogEntry> getRecentLogEntries() {
+|   |       final now = DateTime.now();
+|   |       return [
+|   |         RecentLogEntry(
+|   |           logId: 'L001',
+|   |           timeIn: now.subtract(const Duration(hours: 8)),
+|   |           timeOut: now.subtract(const Duration(hours: 5)),
+|   |           durationMinutes: 180,
+|   |           status: 'Offsite',
+|   |           updatedBy: 'System',
+|   |         ),
+|   |         RecentLogEntry(
+|   |           logId: 'L002',
+|   |           timeIn: now.subtract(const Duration(days: 1, hours: 9)),
+|   |           timeOut: now.subtract(const Duration(days: 1, hours: 5)),
+|   |           durationMinutes: 240,
+|   |           status: 'Offsite',
+|   |           updatedBy: 'Juan Dela Cruz',
+|   |         ),
+|   |         RecentLogEntry(
+|   |           logId: 'L003',
+|   |           timeIn: now.subtract(const Duration(days: 2, hours: 14)),
+|   |           timeOut: null, // Still active
+|   |           durationMinutes: null,
+|   |           status: 'Onsite',
+|   |           updatedBy: 'Maria Santos',
+|   |         ),
+|   |         RecentLogEntry(
+|   |           logId: 'L004',
+|   |           timeIn: now.subtract(const Duration(days: 3, hours: 7)),
+|   |           timeOut: now.subtract(const Duration(days: 3, hours: 12)),
+|   |           durationMinutes: 300,
+|   |           status: 'Offsite',
+|   |           updatedBy: 'System',
+|   |         ),
+|   |         RecentLogEntry(
+|   |           logId: 'L005',
+|   |           timeIn: now.subtract(const Duration(days: 4, hours: 8)),
+|   |           timeOut: now.subtract(const Duration(days: 4, hours: 15)),
+|   |           durationMinutes: 420,
+|   |           status: 'Offsite',
+|   |           updatedBy: 'Carlos Rodriguez',
+|   |         ),
+|   |         RecentLogEntry(
+|   |           logId: 'L006',
+|   |           timeIn: now.subtract(const Duration(days: 5, hours: 6)),
+|   |           timeOut: null, // Still active
+|   |           durationMinutes: null,
+|   |           status: 'Onsite',
+|   |           updatedBy: 'Ana Lopez',
+|   |         ),
+|   |       ];
+|   |     }
+|   |   
+|   |     /// Get mock data for specific vehicle
+|   |     static List<ViolationHistoryEntry> getViolationHistoryForVehicle(
+|   |       String vehicleId,
+|   |     ) {
+|   |       // In real implementation, this would filter by vehicleId
+|   |       return getViolationHistoryEntries();
+|   |     }
+|   |   
+|   |     static List<RecentLogEntry> getRecentLogsForVehicle(String vehicleId) {
+|   |       // In real implementation, this would filter by vehicleId
+|   |       return getRecentLogEntries();
+|   |     }
+|   |   }
+|   +--- vehicle_info_service.dart
+|   |   import 'package:cvms_desktop/features/dashboard2/models/vehicle_info.dart';
+|   |   import 'package:flutter/material.dart';
+|   |   
+|   |   class VehicleInfoService {
+|   |     // Pure data transformation logic
+|   |     static String getVehicleTypeIcon(String vehicleType) {
+|   |       switch (vehicleType.toLowerCase()) {
+|   |         case 'two-wheeled':
+|   |           return 'assets/icons/vehicle_logs.png';
+|   |         case 'four-wheeled':
+|   |           return 'assets/icons/windows/vehicle.png';
+|   |   
+|   |         default:
+|   |           return 'assets/icons/vehicle_logs.png';
+|   |       }
+|   |     }
+|   |   
+|   |     static Color getStatusColor(String status) {
+|   |       switch (status.toLowerCase()) {
+|   |         case 'active':
+|   |           return Colors.green;
+|   |         case 'inactive':
+|   |           return Colors.grey;
+|   |         case 'suspended':
+|   |           return Colors.red;
+|   |         case 'pending':
+|   |           return Colors.orange;
+|   |         default:
+|   |           return Colors.grey;
+|   |       }
+|   |     }
+|   |   
+|   |     static Color getMvpStatusColor(VehicleInfo vehicle) {
+|   |       if (vehicle.isMvpExpired) return Colors.red;
+|   |       if (vehicle.isMvpExpiringSoon) return Colors.orange;
+|   |       return Colors.green;
+|   |     }
+|   |   
+|   |     static Color getMvpProgressColor(
+|   |       double progress,
+|   |       DateTime? registeredDate,
+|   |       DateTime? expiryDate,
+|   |     ) {
+|   |       if (expiryDate == null) return Colors.grey;
+|   |       if (DateTime.now().isAfter(expiryDate)) return Colors.red;
+|   |       if (progress < 0.3) return Colors.red;
+|   |       if (progress < 0.6) return Colors.orange;
+|   |       return Colors.green;
+|   |     }
+|   |   
+|   |     static String formatDate(DateTime? date, String prefix) {
+|   |       if (date == null) return '';
+|   |       return '$prefix${date.day}/${date.month}/${date.year}';
+|   |     }
+|   |   }
+|   \--- vehicle_search_service.dart
+|       import 'package:cvms_desktop/features/dashboard2/data/mock_individual_data.dart';
+|       import 'package:cvms_desktop/features/dashboard2/models/individual_vehicle_report.dart';
+|       
+|       class VehicleSearchService {
+|         static List<String> getVehicleSuggestions(String query) {
+|           if (query.isEmpty) return [];
+|       
+|           return MockIndividualData.searchResults
+|               .where((vehicle) => _matchesQuery(vehicle, query))
+|               .map((vehicle) => vehicle.plateNumber)
+|               .toList();
+|         }
+|       
+|         static IndividualVehicleReport getVehicleByPlate(String plateNumber) {
+|           return MockIndividualData.searchResults.firstWhere(
+|             (vehicle) => vehicle.plateNumber == plateNumber,
+|             orElse: () => MockIndividualData.sampleReport,
+|           );
+|         }
+|       
+|         static bool _matchesQuery(IndividualVehicleReport vehicle, String query) {
+|           final lowerQuery = query.toLowerCase();
+|           return vehicle.plateNumber.toLowerCase().contains(lowerQuery) ||
+|               vehicle.ownerName.toLowerCase().contains(lowerQuery) ||
+|               vehicle.vehicleType.toLowerCase().contains(lowerQuery);
+|         }
+|       }
+\--- widgets
+    +--- components
+    |   +--- buttons
+    |   |   \--- custom_icon_button.dart
+    |   |       import 'package:cvms_desktop/core/theme/app_colors.dart';
+    |   |       import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
+    |   |       import 'package:flutter/material.dart';
+    |   |       
+    |   |       class CustomIconButton extends StatelessWidget {
+    |   |         final VoidCallback onTap;
+    |   |         final IconData icon;
+    |   |         final Color iconColor;
+    |   |         final double iconSize;
+    |   |         const CustomIconButton({
+    |   |           super.key,
+    |   |           required this.onTap,
+    |   |           required this.icon,
+    |   |           this.iconColor = AppColors.black,
+    |   |           this.iconSize = 20,
+    |   |         });
+    |   |       
+    |   |         @override
+    |   |         Widget build(BuildContext context) {
+    |   |           return HoverGrow(
+    |   |             onTap: onTap,
+    |   |             child: Center(child: Icon(icon, color: iconColor, size: iconSize)),
+    |   |           );
+    |   |         }
+    |   |       }
+    |   +--- info
+    |   |   \--- vehicle_info_card.dart
+    |   |       import 'package:cvms_desktop/core/theme/app_spacing.dart';
+    |   |       import 'package:cvms_desktop/core/utils/card_decor.dart';
+    |   |       import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
+    |   |       import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+    |   |       import 'package:cvms_desktop/features/dashboard2/models/vehicle_info.dart';
+    |   |       import 'package:cvms_desktop/features/dashboard2/services/vehicle_info_service.dart';
+    |   |       import 'package:cvms_desktop/features/dashboard/widgets/buttons/custom_view_button.dart';
+    |   |       import 'package:cvms_desktop/features/dashboard/widgets/texts/custom_text.dart';
+    |   |       import 'package:flutter/material.dart';
+    |   |       
+    |   |       class VehicleInfoCard extends StatefulWidget {
+    |   |         final String title;
+    |   |         final VoidCallback onViewTap;
+    |   |         final VehicleInfo vehicleInfo;
+    |   |       
+    |   |         const VehicleInfoCard({
+    |   |           super.key,
+    |   |           required this.onViewTap,
+    |   |           this.title = "Vehicle Information",
+    |   |           required this.vehicleInfo,
+    |   |         });
+    |   |       
+    |   |         @override
+    |   |         State<VehicleInfoCard> createState() => _VehicleInfoCardState();
+    |   |       }
+    |   |       
+    |   |       class _VehicleInfoCardState extends State<VehicleInfoCard>
+    |   |           with SingleTickerProviderStateMixin {
+    |   |         late AnimationController _progressController;
+    |   |         late Animation<double> _progressAnimation;
+    |   |       
+    |   |         @override
+    |   |         void initState() {
+    |   |           super.initState();
+    |   |           _progressController = AnimationController(
+    |   |             duration: const Duration(milliseconds: 1200),
+    |   |             vsync: this,
+    |   |           );
+    |   |       
+    |   |           _progressAnimation = CurvedAnimation(
+    |   |             parent: _progressController,
+    |   |             curve: Curves.easeOutCubic,
+    |   |           );
+    |   |       
+    |   |           Future.delayed(const Duration(milliseconds: 300), () {
+    |   |             if (mounted) {
+    |   |               _progressController.forward();
+    |   |             }
+    |   |           });
+    |   |         }
+    |   |       
+    |   |         @override
+    |   |         void didUpdateWidget(VehicleInfoCard oldWidget) {
+    |   |           super.didUpdateWidget(oldWidget);
+    |   |           if (oldWidget.vehicleInfo.mvpProgress != widget.vehicleInfo.mvpProgress) {
+    |   |             _progressController.reset();
+    |   |             Future.delayed(const Duration(milliseconds: 100), () {
+    |   |               if (mounted) {
+    |   |                 _progressController.forward();
+    |   |               }
+    |   |             });
+    |   |           }
+    |   |         }
+    |   |       
+    |   |         @override
+    |   |         void dispose() {
+    |   |           _progressController.dispose();
+    |   |           super.dispose();
+    |   |         }
+    |   |       
+    |   |         @override
+    |   |         Widget build(BuildContext context) {
+    |   |           return Container(
+    |   |             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.small),
+    |   |             decoration: cardDecoration(),
+    |   |             child: Column(
+    |   |               crossAxisAlignment: CrossAxisAlignment.start,
+    |   |               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    |   |               children: [
+    |   |                 _buildHeaderSection(),
+    |   |                 const CustomDivider(direction: Axis.horizontal),
+    |   |                 Expanded(child: _buildInfoSection()),
+    |   |                 const CustomDivider(direction: Axis.horizontal),
+    |   |                 _buildMvpSection(),
+    |   |               ],
+    |   |             ),
+    |   |           );
+    |   |         }
+    |   |       
+    |   |         Widget _buildHeaderSection() {
+    |   |           return Padding(
+    |   |             padding: const EdgeInsets.fromLTRB(
+    |   |               AppSpacing.medium,
+    |   |               AppSpacing.medium,
+    |   |               AppSpacing.medium,
+    |   |               0,
+    |   |             ),
+    |   |             child: Row(
+    |   |               crossAxisAlignment: CrossAxisAlignment.start,
+    |   |               children: [
+    |   |                 Image.asset(
+    |   |                   VehicleInfoService.getVehicleTypeIcon(
+    |   |                     widget.vehicleInfo.vehicleType,
+    |   |                   ),
+    |   |                   width: 40,
+    |   |                   height: 40,
+    |   |                 ),
+    |   |                 Spacing.horizontal(size: AppSpacing.small),
+    |   |                 Column(
+    |   |                   crossAxisAlignment: CrossAxisAlignment.start,
+    |   |                   children: [
+    |   |                     CustomText(
+    |   |                       text: widget.vehicleInfo.vehicleModel,
+    |   |                       fontSize: 15,
+    |   |                       fontWeight: FontWeight.bold,
+    |   |                     ),
+    |   |                     CustomText(text: widget.vehicleInfo.plateNumber),
+    |   |                   ],
+    |   |                 ),
+    |   |                 const Spacer(),
+    |   |                 CustomViewButton(onTap: widget.onViewTap),
+    |   |               ],
+    |   |             ),
+    |   |           );
+    |   |         }
+    |   |       
+    |   |         Widget _buildInfoSection() {
+    |   |           return Column(
+    |   |             mainAxisAlignment: MainAxisAlignment.center,
+    |   |             children: [
+    |   |               Row(
+    |   |                 children: [
+    |   |                   Expanded(child: _buildLeftColumn()),
+    |   |                   Spacing.horizontal(size: AppSpacing.medium),
+    |   |                   const CustomDivider(direction: Axis.vertical, length: 70),
+    |   |                   Spacing.horizontal(size: AppSpacing.medium),
+    |   |                   Expanded(child: _buildRightColumn()),
+    |   |                 ],
+    |   |               ),
+    |   |             ],
+    |   |           );
+    |   |         }
+    |   |       
+    |   |         Widget _buildLeftColumn() {
+    |   |           return Column(
+    |   |             crossAxisAlignment: CrossAxisAlignment.start,
+    |   |             children: [
+    |   |               _buildInfoItem('Owner', widget.vehicleInfo.ownerName),
+    |   |               const CustomDivider(direction: Axis.horizontal),
+    |   |               _buildInfoItem('Type', widget.vehicleInfo.vehicleType),
+    |   |             ],
+    |   |           );
+    |   |         }
+    |   |       
+    |   |         Widget _buildRightColumn() {
+    |   |           return Column(
+    |   |             crossAxisAlignment: CrossAxisAlignment.start,
+    |   |             children: [
+    |   |               _buildInfoItem('Department', widget.vehicleInfo.department),
+    |   |               const CustomDivider(direction: Axis.horizontal),
+    |   |               _buildStatusItem(),
+    |   |             ],
+    |   |           );
+    |   |         }
+    |   |       
+    |   |         Widget _buildInfoItem(String label, String value) {
+    |   |           return Padding(
+    |   |             padding: const EdgeInsets.symmetric(
+    |   |               horizontal: AppSpacing.medium,
+    |   |               vertical: AppSpacing.xSmall,
+    |   |             ),
+    |   |             child: Column(
+    |   |               crossAxisAlignment: CrossAxisAlignment.start,
+    |   |               children: [
+    |   |                 CustomText(text: label, fontSize: 12, color: Colors.grey),
+    |   |                 CustomText(text: value, fontWeight: FontWeight.bold),
+    |   |               ],
+    |   |             ),
+    |   |           );
+    |   |         }
+    |   |       
+    |   |         Widget _buildStatusItem() {
+    |   |           return Padding(
+    |   |             padding: const EdgeInsets.symmetric(
+    |   |               horizontal: AppSpacing.medium,
+    |   |               vertical: AppSpacing.xSmall,
+    |   |             ),
+    |   |             child: Column(
+    |   |               crossAxisAlignment: CrossAxisAlignment.start,
+    |   |               children: [
+    |   |                 CustomText(text: 'Status', fontSize: 12, color: Colors.grey),
+    |   |                 Spacing.vertical(size: AppSpacing.xSmall),
+    |   |                 Container(
+    |   |                   padding: const EdgeInsets.symmetric(horizontal: 16),
+    |   |                   decoration: BoxDecoration(
+    |   |                     color: VehicleInfoService.getStatusColor(
+    |   |                       widget.vehicleInfo.status,
+    |   |                     ),
+    |   |                     borderRadius: BorderRadius.circular(999),
+    |   |                   ),
+    |   |                   child: CustomText(
+    |   |                     text:
+    |   |                         widget.vehicleInfo.status.isEmpty
+    |   |                             ? 'No logs yet.'
+    |   |                             : widget.vehicleInfo.status,
+    |   |                     fontSize: 12,
+    |   |                     color: Colors.white,
+    |   |                     fontWeight: FontWeight.bold,
+    |   |                   ),
+    |   |                 ),
+    |   |               ],
+    |   |             ),
+    |   |           );
+    |   |         }
+    |   |       
+    |   |         Widget _buildMvpSection() {
+    |   |           return Padding(
+    |   |             padding: const EdgeInsets.fromLTRB(
+    |   |               AppSpacing.medium,
+    |   |               0,
+    |   |               AppSpacing.medium,
+    |   |               AppSpacing.medium,
+    |   |             ),
+    |   |             child: Column(
+    |   |               crossAxisAlignment: CrossAxisAlignment.start,
+    |   |               children: [
+    |   |                 Spacing.vertical(size: AppSpacing.xSmall),
+    |   |                 Row(
+    |   |                   children: [
+    |   |                     CustomText(
+    |   |                       text: 'MVP Validity Status',
+    |   |                       fontSize: 12,
+    |   |                       fontWeight: FontWeight.w600,
+    |   |                     ),
+    |   |                     const Spacer(),
+    |   |                     CustomText(
+    |   |                       text: widget.vehicleInfo.mvpStatusText,
+    |   |                       fontSize: 12,
+    |   |                       color: VehicleInfoService.getMvpStatusColor(widget.vehicleInfo),
+    |   |                       fontWeight: FontWeight.w600,
+    |   |                     ),
+    |   |                   ],
+    |   |                 ),
+    |   |                 Spacing.vertical(size: AppSpacing.small),
+    |   |                 AnimatedBuilder(
+    |   |                   animation: _progressAnimation,
+    |   |                   builder: (context, child) {
+    |   |                     return LinearProgressIndicator(
+    |   |                       value:
+    |   |                           widget.vehicleInfo.mvpProgress * _progressAnimation.value,
+    |   |                       minHeight: 6,
+    |   |                       borderRadius: BorderRadius.circular(6),
+    |   |                       backgroundColor: Colors.grey.withOpacity(0.2),
+    |   |                       valueColor: AlwaysStoppedAnimation<Color>(
+    |   |                         VehicleInfoService.getMvpProgressColor(
+    |   |                           widget.vehicleInfo.mvpProgress,
+    |   |                           widget.vehicleInfo.mvpRegisteredDate,
+    |   |                           widget.vehicleInfo.mvpExpiryDate,
+    |   |                         ),
+    |   |                       ),
+    |   |                     );
+    |   |                   },
+    |   |                 ),
+    |   |                 Spacing.vertical(size: AppSpacing.xSmall),
+    |   |                 Row(
+    |   |                   children: [
+    |   |                     CustomText(
+    |   |                       text: VehicleInfoService.formatDate(
+    |   |                         widget.vehicleInfo.mvpRegisteredDate,
+    |   |                         'Registered on ',
+    |   |                       ),
+    |   |                       fontSize: 11,
+    |   |                       color: Colors.blue,
+    |   |                     ),
+    |   |                     const Spacer(),
+    |   |                     CustomText(
+    |   |                       text: VehicleInfoService.formatDate(
+    |   |                         widget.vehicleInfo.mvpExpiryDate,
+    |   |                         'Expires on ',
+    |   |                       ),
+    |   |                       fontSize: 11,
+    |   |                       color: Colors.grey,
+    |   |                     ),
+    |   |                   ],
+    |   |                 ),
+    |   |               ],
+    |   |             ),
+    |   |           );
+    |   |         }
+    |   |       }
+    |   +--- pdf_doc
+    |   |   +--- letter_head
+    |   |   |   +--- doc_footer.dart
+    |   |   |   |   import 'dart:io';
+    |   |   |   |   import 'package:pdf/pdf.dart';
+    |   |   |   |   import 'package:pdf/widgets.dart' as pw;
+    |   |   |   |   
+    |   |   |   |   class DocFooter extends pw.StatelessWidget {
+    |   |   |   |     DocFooter({
+    |   |   |   |       required this.isoCertifiedLogo,
+    |   |   |   |       required this.aacupLogo,
+    |   |   |   |       required this.homeText,
+    |   |   |   |       required this.email,
+    |   |   |   |       required this.phone,
+    |   |   |   |       required this.homeIcon,
+    |   |   |   |       required this.mailIcon,
+    |   |   |   |       required this.phoneIcon,
+    |   |   |   |     });
+    |   |   |   |   
+    |   |   |   |     final String isoCertifiedLogo;
+    |   |   |   |     final String aacupLogo;
+    |   |   |   |     final String homeText;
+    |   |   |   |     final String email;
+    |   |   |   |     final String phone;
+    |   |   |   |     final String homeIcon;
+    |   |   |   |     final String mailIcon;
+    |   |   |   |     final String phoneIcon;
+    |   |   |   |   
+    |   |   |   |     @override
+    |   |   |   |     pw.Widget build(pw.Context context) {
+    |   |   |   |       return pw.Column(
+    |   |   |   |         children: [
+    |   |   |   |           pw.Image(
+    |   |   |   |             height: 5,
+    |   |   |   |             pw.MemoryImage(
+    |   |   |   |               File('assets/images/footer_line.png').readAsBytesSync(),
+    |   |   |   |             ),
+    |   |   |   |           ),
+    |   |   |   |           pw.Container(
+    |   |   |   |             width: double.infinity,
+    |   |   |   |             padding: const pw.EdgeInsets.symmetric(horizontal: 53),
+    |   |   |   |             decoration: pw.BoxDecoration(color: PdfColors.white),
+    |   |   |   |             child: pw.Row(
+    |   |   |   |               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+    |   |   |   |               mainAxisSize: pw.MainAxisSize.min,
+    |   |   |   |               children: [
+    |   |   |   |                 pw.Row(
+    |   |   |   |                   children: [
+    |   |   |   |                     pw.Image(
+    |   |   |   |                       height: 50,
+    |   |   |   |                       pw.MemoryImage(
+    |   |   |   |                         File(
+    |   |   |   |                           'assets/images/$isoCertifiedLogo.png',
+    |   |   |   |                         ).readAsBytesSync(),
+    |   |   |   |                       ),
+    |   |   |   |                     ),
+    |   |   |   |                     pw.SizedBox(width: 10),
+    |   |   |   |                     pw.Image(
+    |   |   |   |                       height: 50,
+    |   |   |   |                       pw.MemoryImage(
+    |   |   |   |                         File('assets/images/$aacupLogo.png').readAsBytesSync(),
+    |   |   |   |                       ),
+    |   |   |   |                     ),
+    |   |   |   |                     pw.SizedBox(width: 10),
+    |   |   |   |                     pw.Column(
+    |   |   |   |                       crossAxisAlignment: pw.CrossAxisAlignment.start,
+    |   |   |   |                       children: [
+    |   |   |   |                         //home row
+    |   |   |   |                         pw.Row(
+    |   |   |   |                           children: [
+    |   |   |   |                             pw.Image(
+    |   |   |   |                               height: 12,
+    |   |   |   |                               pw.MemoryImage(
+    |   |   |   |                                 File(
+    |   |   |   |                                   'assets/images/$homeIcon.png',
+    |   |   |   |                                 ).readAsBytesSync(),
+    |   |   |   |                               ),
+    |   |   |   |                             ),
+    |   |   |   |                             pw.SizedBox(width: 5),
+    |   |   |   |                             pw.Text(homeText, style: pw.TextStyle(fontSize: 7)),
+    |   |   |   |                           ],
+    |   |   |   |                         ),
+    |   |   |   |                         //mail row
+    |   |   |   |                         pw.Row(
+    |   |   |   |                           children: [
+    |   |   |   |                             pw.Image(
+    |   |   |   |                               height: 12,
+    |   |   |   |                               pw.MemoryImage(
+    |   |   |   |                                 File(
+    |   |   |   |                                   'assets/images/$mailIcon.png',
+    |   |   |   |                                 ).readAsBytesSync(),
+    |   |   |   |                               ),
+    |   |   |   |                             ),
+    |   |   |   |                             pw.SizedBox(width: 5),
+    |   |   |   |                             pw.Text(email, style: pw.TextStyle(fontSize: 7)),
+    |   |   |   |                           ],
+    |   |   |   |                         ),
+    |   |   |   |                         //call row
+    |   |   |   |                         pw.Row(
+    |   |   |   |                           children: [
+    |   |   |   |                             pw.Image(
+    |   |   |   |                               height: 12,
+    |   |   |   |                               pw.MemoryImage(
+    |   |   |   |                                 File(
+    |   |   |   |                                   'assets/images/$phoneIcon.png',
+    |   |   |   |                                 ).readAsBytesSync(),
+    |   |   |   |                               ),
+    |   |   |   |                             ),
+    |   |   |   |                             pw.SizedBox(width: 5),
+    |   |   |   |                             pw.Text(phone, style: pw.TextStyle(fontSize: 7)),
+    |   |   |   |                           ],
+    |   |   |   |                         ),
+    |   |   |   |                       ],
+    |   |   |   |                     ),
+    |   |   |   |                   ],
+    |   |   |   |                 ),
+    |   |   |   |   
+    |   |   |   |                 pw.Image(
+    |   |   |   |                   height: 75,
+    |   |   |   |                   pw.MemoryImage(
+    |   |   |   |                     File(
+    |   |   |   |                       'assets/images/bagong_pilipinas_logo.png',
+    |   |   |   |                     ).readAsBytesSync(),
+    |   |   |   |                   ),
+    |   |   |   |                 ),
+    |   |   |   |               ],
+    |   |   |   |             ),
+    |   |   |   |           ),
+    |   |   |   |         ],
+    |   |   |   |       );
+    |   |   |   |     }
+    |   |   |   |   }
+    |   |   |   +--- doc_header.dart
+    |   |   |   |   import 'dart:io';
+    |   |   |   |   import 'package:pdf/pdf.dart';
+    |   |   |   |   import 'package:pdf/widgets.dart' as pw;
+    |   |   |   |   
+    |   |   |   |   class DocHeader extends pw.StatelessWidget {
+    |   |   |   |     final String republicText;
+    |   |   |   |     final String universityText;
+    |   |   |   |     final String taglineText;
+    |   |   |   |     final String campusText;
+    |   |   |   |     final String registrationText;
+    |   |   |   |     final String institutionLog;
+    |   |   |   |     final String isoLogo;
+    |   |   |   |     final String department;
+    |   |   |   |   
+    |   |   |   |     DocHeader({
+    |   |   |   |       required this.republicText,
+    |   |   |   |       required this.universityText,
+    |   |   |   |       required this.taglineText,
+    |   |   |   |       required this.campusText,
+    |   |   |   |       required this.registrationText,
+    |   |   |   |       required this.institutionLog,
+    |   |   |   |       required this.isoLogo,
+    |   |   |   |       required this.department,
+    |   |   |   |     });
+    |   |   |   |   
+    |   |   |   |     @override
+    |   |   |   |     pw.Widget build(pw.Context context) {
+    |   |   |   |       return pw.Column(
+    |   |   |   |         children: [
+    |   |   |   |           pw.Container(
+    |   |   |   |             width: double.infinity,
+    |   |   |   |             padding: const pw.EdgeInsets.symmetric(horizontal: 53),
+    |   |   |   |             decoration: pw.BoxDecoration(color: PdfColors.white),
+    |   |   |   |             child: pw.Column(
+    |   |   |   |               crossAxisAlignment: pw.CrossAxisAlignment.center,
+    |   |   |   |               mainAxisAlignment: pw.MainAxisAlignment.center,
+    |   |   |   |               mainAxisSize: pw.MainAxisSize.min,
+    |   |   |   |               children: [
+    |   |   |   |                 // Top row: Left logo/seal, Center text, Right certifications
+    |   |   |   |                 pw.Row(
+    |   |   |   |                   crossAxisAlignment: pw.CrossAxisAlignment.start,
+    |   |   |   |                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+    |   |   |   |                   children: [
+    |   |   |   |                     // Left: University Seal/Logo (placeholder; replace with pw.Image)
+    |   |   |   |                     pw.Column(
+    |   |   |   |                       children: [
+    |   |   |   |                         pw.SizedBox(height: 16),
+    |   |   |   |                         pw.Image(
+    |   |   |   |                           height: 70,
+    |   |   |   |                           width: 70,
+    |   |   |   |                           pw.MemoryImage(
+    |   |   |   |                             File(
+    |   |   |   |                               'assets/images/$institutionLog.png',
+    |   |   |   |                             ).readAsBytesSync(),
+    |   |   |   |                           ),
+    |   |   |   |                         ),
+    |   |   |   |                         pw.SizedBox(height: 5),
+    |   |   |   |                         pw.Text(
+    |   |   |   |                           registrationText,
+    |   |   |   |                           style: pw.TextStyle(
+    |   |   |   |                             fontSize: 7,
+    |   |   |   |                             color: PdfColors.black,
+    |   |   |   |                           ),
+    |   |   |   |                           textAlign: pw.TextAlign.center,
+    |   |   |   |                         ),
+    |   |   |   |                       ],
+    |   |   |   |                     ),
+    |   |   |   |   
+    |   |   |   |                     // Center: Main Titles
+    |   |   |   |                     pw.Padding(
+    |   |   |   |                       padding: pw.EdgeInsets.only(top: 25),
+    |   |   |   |                       child: pw.Expanded(
+    |   |   |   |                         child: pw.Column(
+    |   |   |   |                           mainAxisAlignment: pw.MainAxisAlignment.center,
+    |   |   |   |                           crossAxisAlignment: pw.CrossAxisAlignment.center,
+    |   |   |   |                           children: [
+    |   |   |   |                             pw.Text(
+    |   |   |   |                               republicText,
+    |   |   |   |                               style: pw.TextStyle(
+    |   |   |   |                                 fontSize: 10,
+    |   |   |   |                                 fontWeight: pw.FontWeight.bold,
+    |   |   |   |                                 color: PdfColors.black,
+    |   |   |   |                               ),
+    |   |   |   |                             ),
+    |   |   |   |                             pw.Text(
+    |   |   |   |                               universityText,
+    |   |   |   |                               style: pw.TextStyle(
+    |   |   |   |                                 fontSize: 14,
+    |   |   |   |                                 fontWeight: pw.FontWeight.bold,
+    |   |   |   |                                 color: PdfColors.black,
+    |   |   |   |                               ),
+    |   |   |   |                               textAlign: pw.TextAlign.center,
+    |   |   |   |                             ),
+    |   |   |   |                             pw.Text(
+    |   |   |   |                               taglineText,
+    |   |   |   |                               style: pw.TextStyle(
+    |   |   |   |                                 fontSize: 10,
+    |   |   |   |                                 color: PdfColors.red,
+    |   |   |   |                               ),
+    |   |   |   |                               textAlign: pw.TextAlign.center,
+    |   |   |   |                             ),
+    |   |   |   |                             pw.Text(
+    |   |   |   |                               campusText,
+    |   |   |   |                               style: pw.TextStyle(
+    |   |   |   |                                 fontSize: 10,
+    |   |   |   |                                 color: PdfColors.black,
+    |   |   |   |                               ),
+    |   |   |   |                               textAlign: pw.TextAlign.center,
+    |   |   |   |                             ),
+    |   |   |   |                             pw.Text(
+    |   |   |   |                               department,
+    |   |   |   |                               style: pw.TextStyle(
+    |   |   |   |                                 fontSize: 14,
+    |   |   |   |                                 fontWeight: pw.FontWeight.bold,
+    |   |   |   |                                 color: PdfColors.black,
+    |   |   |   |                               ),
+    |   |   |   |                               textAlign: pw.TextAlign.center,
+    |   |   |   |                             ),
+    |   |   |   |                           ],
+    |   |   |   |                         ),
+    |   |   |   |                       ),
+    |   |   |   |                     ),
+    |   |   |   |                     pw.Padding(
+    |   |   |   |                       padding: pw.EdgeInsets.only(top: 25),
+    |   |   |   |                       child: pw.Image(
+    |   |   |   |                         height: 80,
+    |   |   |   |                         width: 80,
+    |   |   |   |                         pw.MemoryImage(
+    |   |   |   |                           File('assets/images/$isoLogo.jpg').readAsBytesSync(),
+    |   |   |   |                         ),
+    |   |   |   |                       ),
+    |   |   |   |                     ),
+    |   |   |   |                   ],
+    |   |   |   |                 ),
+    |   |   |   |               ],
+    |   |   |   |             ),
+    |   |   |   |           ),
+    |   |   |   |           pw.SizedBox(height: 5),
+    |   |   |   |           pw.Container(
+    |   |   |   |             width: 794.0,
+    |   |   |   |             height: 0.9,
+    |   |   |   |             color: PdfColors.black,
+    |   |   |   |           ), //bottom line
+    |   |   |   |           pw.SizedBox(height: 3),
+    |   |   |   |           pw.Container(
+    |   |   |   |             width: 794.0,
+    |   |   |   |             height: 1.7,
+    |   |   |   |             decoration: pw.BoxDecoration(
+    |   |   |   |               color: PdfColors.black,
+    |   |   |   |               boxShadow: [
+    |   |   |   |                 pw.BoxShadow(
+    |   |   |   |                   color: PdfColors.black,
+    |   |   |   |                   spreadRadius: 1,
+    |   |   |   |                   blurRadius: 1,
+    |   |   |   |                 ),
+    |   |   |   |               ],
+    |   |   |   |             ),
+    |   |   |   |           ), //bottom line
+    |   |   |   |         ],
+    |   |   |   |       );
+    |   |   |   |     }
+    |   |   |   |   }
+    |   |   |   \--- doc_signatory.dart
+    |   |   |       import 'package:pdf/pdf.dart';
+    |   |   |       import 'package:pdf/widgets.dart' as pw;
+    |   |   |       
+    |   |   |       class DocSignatory extends pw.StatelessWidget {
+    |   |   |         //preparer
+    |   |   |         final String preparer;
+    |   |   |         final String preparerDesignation;
+    |   |   |       
+    |   |   |         //approve
+    |   |   |         final String approver;
+    |   |   |         final String approverDesignation;
+    |   |   |       
+    |   |   |         DocSignatory({
+    |   |   |           //preparer
+    |   |   |           required this.preparer,
+    |   |   |           required this.preparerDesignation,
+    |   |   |       
+    |   |   |           //approve
+    |   |   |           required this.approver,
+    |   |   |           required this.approverDesignation,
+    |   |   |         });
+    |   |   |       
+    |   |   |         @override
+    |   |   |         pw.Widget build(pw.Context context) {
+    |   |   |           return pw.Row(
+    |   |   |             mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+    |   |   |             crossAxisAlignment: pw.CrossAxisAlignment.center,
+    |   |   |             children: [
+    |   |   |               //prepared
+    |   |   |               pw.Column(
+    |   |   |                 crossAxisAlignment: pw.CrossAxisAlignment.start,
+    |   |   |                 children: [
+    |   |   |                   pw.SizedBox(height: 12),
+    |   |   |                   pw.Text(
+    |   |   |                     'Prepared by:',
+    |   |   |                     style: pw.TextStyle(fontSize: 12, color: PdfColors.black),
+    |   |   |                     textAlign: pw.TextAlign.start,
+    |   |   |                   ),
+    |   |   |                   pw.Column(
+    |   |   |                     crossAxisAlignment: pw.CrossAxisAlignment.center,
+    |   |   |                     children: [
+    |   |   |                       pw.SizedBox(height: 20),
+    |   |   |                       pw.Text(
+    |   |   |                         preparer,
+    |   |   |                         style: pw.TextStyle(
+    |   |   |                           fontSize: 12,
+    |   |   |                           fontWeight: pw.FontWeight.bold,
+    |   |   |                           color: PdfColors.black,
+    |   |   |                         ),
+    |   |   |                         textAlign: pw.TextAlign.center,
+    |   |   |                       ),
+    |   |   |                       pw.SizedBox(height: 2),
+    |   |   |                       pw.Container(width: 130, height: 0.9, color: PdfColors.black),
+    |   |   |                       pw.SizedBox(height: 2),
+    |   |   |                       pw.Text(
+    |   |   |                         preparerDesignation,
+    |   |   |                         style: pw.TextStyle(fontSize: 12),
+    |   |   |                         textAlign: pw.TextAlign.center,
+    |   |   |                       ),
+    |   |   |                       pw.SizedBox(height: 12),
+    |   |   |                     ],
+    |   |   |                   ),
+    |   |   |                 ],
+    |   |   |               ),
+    |   |   |               //approved
+    |   |   |               pw.Column(
+    |   |   |                 crossAxisAlignment: pw.CrossAxisAlignment.start,
+    |   |   |                 children: [
+    |   |   |                   pw.SizedBox(height: 12),
+    |   |   |                   pw.Text(
+    |   |   |                     'Approved by:',
+    |   |   |                     style: pw.TextStyle(fontSize: 12, color: PdfColors.black),
+    |   |   |                     textAlign: pw.TextAlign.start,
+    |   |   |                   ),
+    |   |   |                   pw.Column(
+    |   |   |                     crossAxisAlignment: pw.CrossAxisAlignment.center,
+    |   |   |                     children: [
+    |   |   |                       pw.SizedBox(height: 20),
+    |   |   |                       pw.Text(
+    |   |   |                         approver,
+    |   |   |                         style: pw.TextStyle(
+    |   |   |                           fontSize: 12,
+    |   |   |                           fontWeight: pw.FontWeight.bold,
+    |   |   |                           color: PdfColors.black,
+    |   |   |                         ),
+    |   |   |                         textAlign: pw.TextAlign.center,
+    |   |   |                       ),
+    |   |   |                       pw.SizedBox(height: 2),
+    |   |   |                       pw.Container(width: 130, height: 0.9, color: PdfColors.black),
+    |   |   |                       pw.SizedBox(height: 2),
+    |   |   |                       pw.Text(
+    |   |   |                         approverDesignation,
+    |   |   |                         style: pw.TextStyle(fontSize: 12),
+    |   |   |                         textAlign: pw.TextAlign.center,
+    |   |   |                       ),
+    |   |   |                       pw.SizedBox(height: 12),
+    |   |   |                     ],
+    |   |   |                   ),
+    |   |   |                 ],
+    |   |   |               ),
+    |   |   |             ],
+    |   |   |           );
+    |   |   |         }
+    |   |   |       }
+    |   |   +--- tables
+    |   |   |   \--- pdf_table.dart
+    |   |   |       import 'package:pdf/pdf.dart';
+    |   |   |       import 'package:pdf/widgets.dart' as pw;
+    |   |   |       
+    |   |   |       class PdfTable extends pw.StatelessWidget {
+    |   |   |         PdfTable({
+    |   |   |           required this.headers,
+    |   |   |           required this.rows,
+    |   |   |           this.columnWidths,
+    |   |   |           this.borderColor = PdfColors.grey300,
+    |   |   |           this.headerColor = PdfColors.grey100,
+    |   |   |           this.headerFontSize = 11,
+    |   |   |           this.headerFontWeight = pw.FontWeight.bold,
+    |   |   |           this.rowFontSize = 11,
+    |   |   |           this.cellPadding = 5,
+    |   |   |         });
+    |   |   |       
+    |   |   |         final List<String> headers;
+    |   |   |         final List<List<String>> rows;
+    |   |   |         final Map<int, pw.TableColumnWidth>? columnWidths;
+    |   |   |         final PdfColor borderColor;
+    |   |   |         final PdfColor headerColor;
+    |   |   |         final double headerFontSize;
+    |   |   |         final pw.FontWeight headerFontWeight;
+    |   |   |         final double rowFontSize;
+    |   |   |         final double cellPadding;
+    |   |   |       
+    |   |   |         @override
+    |   |   |         pw.Widget build(pw.Context context) {
+    |   |   |           return pw.Table(
+    |   |   |             border: pw.TableBorder.all(color: borderColor),
+    |   |   |             columnWidths: columnWidths ?? _getDefaultColumnWidths(),
+    |   |   |             children: [
+    |   |   |               // Header row
+    |   |   |               pw.TableRow(
+    |   |   |                 decoration: pw.BoxDecoration(color: headerColor),
+    |   |   |                 children:
+    |   |   |                     headers.map((header) {
+    |   |   |                       return pw.Padding(
+    |   |   |                         padding: pw.EdgeInsets.all(cellPadding),
+    |   |   |                         child: pw.Text(
+    |   |   |                           header,
+    |   |   |                           style: pw.TextStyle(
+    |   |   |                             fontSize: headerFontSize,
+    |   |   |                             fontWeight: headerFontWeight,
+    |   |   |                           ),
+    |   |   |                         ),
+    |   |   |                       );
+    |   |   |                     }).toList(),
+    |   |   |               ),
+    |   |   |               // Data rows
+    |   |   |               ...rows.map((row) {
+    |   |   |                 return pw.TableRow(
+    |   |   |                   children:
+    |   |   |                       row.map((cell) {
+    |   |   |                         return pw.Padding(
+    |   |   |                           padding: pw.EdgeInsets.all(cellPadding),
+    |   |   |                           child: pw.Text(
+    |   |   |                             cell,
+    |   |   |                             style: pw.TextStyle(fontSize: rowFontSize),
+    |   |   |                           ),
+    |   |   |                         );
+    |   |   |                       }).toList(),
+    |   |   |                 );
+    |   |   |               }).toList(),
+    |   |   |             ],
+    |   |   |           );
+    |   |   |         }
+    |   |   |       
+    |   |   |         Map<int, pw.TableColumnWidth> _getDefaultColumnWidths() {
+    |   |   |           return {
+    |   |   |             for (var index in List.generate(headers.length, (index) => index))
+    |   |   |               index: pw.FlexColumnWidth(1),
+    |   |   |           };
+    |   |   |         }
+    |   |   |       }
+    |   |   +--- templates
+    |   |   |   \--- pdf_page_template.dart
+    |   |   |       import 'package:cvms_desktop/features/dashboard/widgets/pdf_doc/letter_head/doc_footer.dart';
+    |   |   |       import 'package:cvms_desktop/features/dashboard/widgets/pdf_doc/letter_head/doc_header.dart';
+    |   |   |       import 'package:pdf/pdf.dart';
+    |   |   |       import 'package:pdf/widgets.dart' as pw;
+    |   |   |       
+    |   |   |       /// Reusable PDF Page Template with consistent header and footer
+    |   |   |       /// This follows SRP by separating page layout from content
+    |   |   |       class PdfPageTemplate {
+    |   |   |         const PdfPageTemplate({
+    |   |   |           this.pageFormat = PdfPageFormat.legal,
+    |   |   |           this.margin = pw.EdgeInsets.zero,
+    |   |   |           this.department = 'CDRRMS Unit',
+    |   |   |           this.republicText = 'REPUBLIC OF THE PHILIPPINES',
+    |   |   |           this.universityText = 'JOSE RIZAL MEMORIAL STATE UNIVERSITY',
+    |   |   |           this.taglineText = 'The Premier University in Zamboanga del Norte',
+    |   |   |           this.campusText = 'Katipunan Campus, Katipunan, Zamboanga del Norte',
+    |   |   |           this.registrationText = 'Registration No. 621082',
+    |   |   |           this.institutionLog = 'jrmsu-logo',
+    |   |   |           this.isoLogo = 'iso',
+    |   |   |           this.isoCertifiedLogo = 'iso_certified_logo',
+    |   |   |           this.aacupLogo = 'aaccup_logo',
+    |   |   |           this.homeText = 'Barangay Dos, Katipunan, Zamboanga del Norte Philippines',
+    |   |   |           this.email = 'cdrrsmukatipunan@jrmsu.edu.ph',
+    |   |   |           this.phone = '(062) 333-2222',
+    |   |   |           this.homeIcon = 'home_icon',
+    |   |   |           this.mailIcon = 'mail_icon',
+    |   |   |           this.phoneIcon = 'call_icon',
+    |   |   |         });
+    |   |   |       
+    |   |   |         final PdfPageFormat pageFormat;
+    |   |   |         final pw.EdgeInsets margin;
+    |   |   |         final String department;
+    |   |   |         final String republicText;
+    |   |   |         final String universityText;
+    |   |   |         final String taglineText;
+    |   |   |         final String campusText;
+    |   |   |         final String registrationText;
+    |   |   |         final String institutionLog;
+    |   |   |         final String isoLogo;
+    |   |   |         final String isoCertifiedLogo;
+    |   |   |         final String aacupLogo;
+    |   |   |         final String homeText;
+    |   |   |         final String email;
+    |   |   |         final String phone;
+    |   |   |         final String homeIcon;
+    |   |   |         final String mailIcon;
+    |   |   |         final String phoneIcon;
+    |   |   |       
+    |   |   |         pw.Page build({required pw.Widget child}) {
+    |   |   |           return pw.Page(
+    |   |   |             pageTheme: pw.PageTheme(pageFormat: pageFormat, margin: margin),
+    |   |   |             build:
+    |   |   |                 (context) => pw.Column(
+    |   |   |                   children: [
+    |   |   |                     // Consistent Header
+    |   |   |                     DocHeader(
+    |   |   |                       department: department,
+    |   |   |                       republicText: republicText,
+    |   |   |                       universityText: universityText,
+    |   |   |                       taglineText: taglineText,
+    |   |   |                       campusText: campusText,
+    |   |   |                       registrationText: registrationText,
+    |   |   |                       institutionLog: institutionLog,
+    |   |   |                       isoLogo: isoLogo,
+    |   |   |                     ),
+    |   |   |       
+    |   |   |                     // Content Area
+    |   |   |                     pw.Expanded(
+    |   |   |                       child: pw.Padding(
+    |   |   |                         padding: const pw.EdgeInsets.symmetric(
+    |   |   |                           horizontal: 53,
+    |   |   |                           vertical: 10,
+    |   |   |                         ),
+    |   |   |                         child: child,
+    |   |   |                       ),
+    |   |   |                     ),
+    |   |   |       
+    |   |   |                     // Consistent Footer
+    |   |   |                     DocFooter(
+    |   |   |                       isoCertifiedLogo: isoCertifiedLogo,
+    |   |   |                       aacupLogo: aacupLogo,
+    |   |   |                       homeText: homeText,
+    |   |   |                       email: email,
+    |   |   |                       phone: phone,
+    |   |   |                       homeIcon: homeIcon,
+    |   |   |                       mailIcon: mailIcon,
+    |   |   |                       phoneIcon: phoneIcon,
+    |   |   |                     ),
+    |   |   |                   ],
+    |   |   |                 ),
+    |   |   |           );
+    |   |   |         }
+    |   |   |       }
+    |   |   \--- texts
+    |   |       +--- pdf_report_title.dart
+    |   |       |   import 'package:pdf/widgets.dart' as pw;
+    |   |       |   
+    |   |       |   class PdfReportTitle extends pw.StatelessWidget {
+    |   |       |     PdfReportTitle({required this.titleTxt});
+    |   |       |   
+    |   |       |     final String titleTxt;
+    |   |       |   
+    |   |       |     @override
+    |   |       |     pw.Widget build(pw.Context context) {
+    |   |       |       return pw.Text(
+    |   |       |         titleTxt,
+    |   |       |         textAlign: pw.TextAlign.center,
+    |   |       |         style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
+    |   |       |       );
+    |   |       |     }
+    |   |       |   }
+    |   |       +--- pdf_section_footer_text.dart
+    |   |       |   import 'package:pdf/widgets.dart' as pw;
+    |   |       |   
+    |   |       |   class PdfSectionFooterText extends pw.StatelessWidget {
+    |   |       |     PdfSectionFooterText({
+    |   |       |       required this.footerTitle,
+    |   |       |       required this.footerSubTitle,
+    |   |       |     });
+    |   |       |   
+    |   |       |     final String footerTitle;
+    |   |       |     final String footerSubTitle;
+    |   |       |   
+    |   |       |     @override
+    |   |       |     pw.Widget build(pw.Context context) {
+    |   |       |       return pw.Column(
+    |   |       |         crossAxisAlignment: pw.CrossAxisAlignment.start,
+    |   |       |         children: [
+    |   |       |           pw.Text(
+    |   |       |             '$footerTitle ',
+    |   |       |   
+    |   |       |             style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
+    |   |       |           ),
+    |   |       |           pw.Text(
+    |   |       |             footerSubTitle,
+    |   |       |             style: pw.TextStyle(fontSize: 11, fontStyle: pw.FontStyle.italic),
+    |   |       |           ),
+    |   |       |         ],
+    |   |       |       );
+    |   |       |     }
+    |   |       |   }
+    |   |       +--- pdf_section_text.dart
+    |   |       |   import 'package:pdf/widgets.dart' as pw;
+    |   |       |   
+    |   |       |   class PdfSectionText extends pw.StatelessWidget {
+    |   |       |     PdfSectionText({required this.title, this.subTitle, this.hasSubtitle = true});
+    |   |       |   
+    |   |       |     final String title;
+    |   |       |     final String? subTitle;
+    |   |       |     final bool hasSubtitle;
+    |   |       |   
+    |   |       |     @override
+    |   |       |     pw.Widget build(pw.Context context) {
+    |   |       |       return pw.Column(
+    |   |       |         crossAxisAlignment: pw.CrossAxisAlignment.start,
+    |   |       |         children: [
+    |   |       |           pw.Text(
+    |   |       |             title,
+    |   |       |   
+    |   |       |             style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
+    |   |       |           ),
+    |   |       |           hasSubtitle
+    |   |       |               ? pw.Text(
+    |   |       |                 subTitle!,
+    |   |       |                 style: pw.TextStyle(
+    |   |       |                   fontSize: 10,
+    |   |       |                   fontWeight: pw.FontWeight.normal,
+    |   |       |                 ),
+    |   |       |               )
+    |   |       |               : pw.SizedBox.shrink(),
+    |   |       |         ],
+    |   |       |       );
+    |   |       |     }
+    |   |       |   }
+    |   |       \--- pdf_subtitle_text.dart
+    |   |           import 'package:pdf/widgets.dart' as pw;
+    |   |           
+    |   |           class PdfSubtitleText extends pw.StatelessWidget {
+    |   |             PdfSubtitleText({required this.label, required this.value});
+    |   |           
+    |   |             final String label;
+    |   |             final String value;
+    |   |           
+    |   |             @override
+    |   |             pw.Widget build(pw.Context context) {
+    |   |               return pw.Row(
+    |   |                 children: [
+    |   |                   pw.Text(
+    |   |                     '$label ',
+    |   |           
+    |   |                     style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
+    |   |                   ),
+    |   |                   pw.Text(value, style: pw.TextStyle(fontSize: 11)),
+    |   |                 ],
+    |   |               );
+    |   |             }
+    |   |           }
+    |   +--- search
+    |   |   \--- vehicle_search_bar.dart
+    |   |       import 'package:cvms_desktop/core/widgets/app/typeahead_search_field.dart';
+    |   |       import 'package:flutter/material.dart';
+    |   |       
+    |   |       class VehicleSearchBar extends StatelessWidget {
+    |   |         final String hintText;
+    |   |         final Future<List<String>> Function(String) suggestionsCallback;
+    |   |         final void Function(String) onSuggestionSelected;
+    |   |         final TextEditingController? controller;
+    |   |       
+    |   |         const VehicleSearchBar({
+    |   |           super.key,
+    |   |           this.hintText = 'Search by plate no., owner, school ID or model',
+    |   |           required this.suggestionsCallback,
+    |   |           required this.onSuggestionSelected,
+    |   |           this.controller,
+    |   |         });
+    |   |       
+    |   |         @override
+    |   |         Widget build(BuildContext context) {
+    |   |           return TypeaheadSearchField(
+    |   |             hoverScale: 1,
+    |   |             hintText: hintText,
+    |   |             searchFieldHeight: 40,
+    |   |             controller: controller ?? TextEditingController(),
+    |   |             suggestionsCallback: suggestionsCallback,
+    |   |             onSuggestionSelected: onSuggestionSelected,
+    |   |           );
+    |   |         }
+    |   |       }
+    |   +--- stats
+    |   |   \--- stats_card_section.dart
+    |   |       import 'package:cvms_desktop/core/theme/app_colors.dart';
+    |   |       import 'package:cvms_desktop/core/theme/app_spacing.dart';
+    |   |       import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+    |   |       import 'package:cvms_desktop/core/widgets/layout/stats_card.dart';
+    |   |       import 'package:flutter/material.dart';
+    |   |       import 'package:phosphor_flutter/phosphor_flutter.dart';
+    |   |       
+    |   |       class StatsCardSection extends StatelessWidget {
+    |   |         final String statsCard1Label;
+    |   |         final dynamic statsCard1Value;
+    |   |         final IconData? statsCard1Icon;
+    |   |         final String statsCard2Label;
+    |   |         final dynamic statsCard2Value;
+    |   |         final IconData? statsCard2Icon;
+    |   |         final String statsCard3Label;
+    |   |         final dynamic statsCard3Value;
+    |   |         final IconData? statsCard3Icon;
+    |   |         final String statsCard4Label;
+    |   |         final dynamic statsCard4Value;
+    |   |         final IconData? statsCard4Icon;
+    |   |         final bool isGlobal;
+    |   |         final VoidCallback? onStatsCard1Click;
+    |   |         final VoidCallback? onStatsCard2Click;
+    |   |         final VoidCallback? onStatsCard3Click;
+    |   |         final VoidCallback? onStatsCard4Click;
+    |   |       
+    |   |         const StatsCardSection({
+    |   |           super.key,
+    |   |           required this.statsCard1Label,
+    |   |           required this.statsCard1Value,
+    |   |           this.statsCard1Icon,
+    |   |           required this.statsCard2Label,
+    |   |           required this.statsCard2Value,
+    |   |           this.statsCard2Icon,
+    |   |           required this.statsCard3Label,
+    |   |           required this.statsCard3Value,
+    |   |           this.statsCard3Icon,
+    |   |           required this.statsCard4Label,
+    |   |           required this.statsCard4Value,
+    |   |           this.statsCard4Icon,
+    |   |           this.isGlobal = true,
+    |   |           this.onStatsCard1Click,
+    |   |           this.onStatsCard2Click,
+    |   |           this.onStatsCard3Click,
+    |   |           this.onStatsCard4Click,
+    |   |         });
+    |   |       
+    |   |         @override
+    |   |         Widget build(BuildContext context) {
+    |   |           return isGlobal ? _buildGlobalStatsCard() : _buildIndividualStatsCard();
+    |   |         }
+    |   |       
+    |   |         Widget _buildGlobalStatsCard() {
+    |   |           return Row(
+    |   |             children: [
+    |   |               Expanded(
+    |   |                 child: StatsCard(
+    |   |                   onClick: onStatsCard1Click,
+    |   |                   label: statsCard1Label,
+    |   |                   value: statsCard1Value,
+    |   |                   icon: PhosphorIconsBold.calendarMinus,
+    |   |                   color: Colors.blue,
+    |   |                   gradient: AppColors.blueViolet,
+    |   |                   iconColor: AppColors.donutPink,
+    |   |                 ),
+    |   |               ),
+    |   |               Spacing.horizontal(size: AppSpacing.medium),
+    |   |               Expanded(
+    |   |                 child: StatsCard(
+    |   |                   onClick: onStatsCard2Click,
+    |   |                   label: statsCard2Label,
+    |   |                   value: statsCard2Value,
+    |   |                   icon: PhosphorIconsBold.warning,
+    |   |                   color: AppColors.orange,
+    |   |                   gradient: AppColors.yellowOrange,
+    |   |                   iconColor: AppColors.orange,
+    |   |                 ),
+    |   |               ),
+    |   |               Spacing.horizontal(size: AppSpacing.medium),
+    |   |               Expanded(
+    |   |                 child: StatsCard(
+    |   |                   onClick: onStatsCard2Click,
+    |   |                   label: statsCard3Label,
+    |   |                   value: statsCard3Value,
+    |   |                   icon: PhosphorIconsBold.car,
+    |   |                   color: AppColors.donutBlue,
+    |   |                   gradient: AppColors.purpleBlue,
+    |   |                   iconColor: AppColors.donutBlue,
+    |   |                 ),
+    |   |               ),
+    |   |               Spacing.horizontal(size: AppSpacing.medium),
+    |   |               Expanded(
+    |   |                 child: StatsCard(
+    |   |                   onClick: onStatsCard4Click,
+    |   |                   label: statsCard4Label,
+    |   |                   value: statsCard4Value,
+    |   |                   icon: statsCard4Icon ?? Icons.trending_up,
+    |   |                   color: AppColors.chartGreen,
+    |   |                   gradient: AppColors.greenWhite,
+    |   |                   iconColor: AppColors.chartGreen,
+    |   |                 ),
+    |   |               ),
+    |   |             ],
+    |   |           );
+    |   |         }
+    |   |       
+    |   |         Widget _buildIndividualStatsCard() {
+    |   |           return Column(
+    |   |             children: [
+    |   |               Expanded(
+    |   |                 child: Row(
+    |   |                   children: [
+    |   |                     Expanded(
+    |   |                       child: StatsCard(
+    |   |                         onClick: onStatsCard1Click,
+    |   |                         gradient: AppColors.greenWhite,
+    |   |                         addSideBorder: false,
+    |   |                         label: statsCard1Label,
+    |   |                         value: statsCard1Value,
+    |   |                         icon: statsCard1Icon ?? Icons.dashboard,
+    |   |                         color: Colors.blue,
+    |   |                         iconColor: Colors.blue,
+    |   |                       ),
+    |   |                     ),
+    |   |                     Spacing.horizontal(size: AppSpacing.medium),
+    |   |                     Expanded(
+    |   |                       child: StatsCard(
+    |   |                         onClick: onStatsCard2Click,
+    |   |                         addSideBorder: false,
+    |   |                         gradient: AppColors.yellowOrange,
+    |   |                         label: statsCard2Label,
+    |   |                         value: statsCard2Value,
+    |   |                         icon: statsCard2Icon ?? Icons.warning,
+    |   |                         color: Colors.orange,
+    |   |                         iconColor: Colors.orange,
+    |   |                       ),
+    |   |                     ),
+    |   |                   ],
+    |   |                 ),
+    |   |               ),
+    |   |               Spacing.vertical(size: AppSpacing.medium),
+    |   |       
+    |   |               Expanded(
+    |   |                 child: Row(
+    |   |                   children: [
+    |   |                     Expanded(
+    |   |                       child: StatsCard(
+    |   |                         onClick: onStatsCard3Click,
+    |   |                         addSideBorder: false,
+    |   |                         label: statsCard3Label,
+    |   |                         value: statsCard3Value,
+    |   |                         icon: statsCard3Icon ?? Icons.error,
+    |   |                         color: Colors.red,
+    |   |                         gradient: AppColors.pinkWhite,
+    |   |                         iconColor: Colors.red,
+    |   |                       ),
+    |   |                     ),
+    |   |                     Spacing.horizontal(size: AppSpacing.medium),
+    |   |                     Expanded(
+    |   |                       child: StatsCard(
+    |   |                         onClick: onStatsCard4Click,
+    |   |                         addSideBorder: false,
+    |   |                         label: statsCard4Label,
+    |   |                         value: statsCard4Value,
+    |   |                         icon: statsCard4Icon ?? Icons.trending_up,
+    |   |                         color: AppColors.donutBlue,
+    |   |                         gradient: AppColors.purpleBlue,
+    |   |                         iconColor: Colors.green,
+    |   |                       ),
+    |   |                     ),
+    |   |                   ],
+    |   |                 ),
+    |   |               ),
+    |   |             ],
+    |   |           );
+    |   |         }
+    |   |       }
+    |   \--- tables
+    |       \--- dashboard_table.dart
+    |           import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+    |           import 'package:cvms_desktop/core/theme/app_spacing.dart';
+    |           import 'package:cvms_desktop/core/utils/card_decor.dart';
+    |           import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+    |           import 'package:cvms_desktop/features/dashboard/widgets/buttons/custom_view_button.dart';
+    |           import 'package:flutter/material.dart';
+    |           
+    |           class DashboardTable extends StatelessWidget {
+    |             const DashboardTable({
+    |               super.key,
+    |               required this.child,
+    |               required this.tableTitle,
+    |               required this.onClick,
+    |             });
+    |           
+    |             final Widget child;
+    |             final String tableTitle;
+    |             final VoidCallback onClick;
+    |           
+    |             @override
+    |             Widget build(BuildContext context) {
+    |               return Padding(
+    |                 padding: const EdgeInsets.fromLTRB(
+    |                   AppSpacing.medium,
+    |                   AppSpacing.medium,
+    |                   AppSpacing.medium,
+    |                   0,
+    |                 ),
+    |                 child: Container(
+    |                   height: 300,
+    |                   padding: const EdgeInsets.all(AppSpacing.medium),
+    |                   decoration: cardDecoration(),
+    |                   child: Column(
+    |                     children: [
+    |                       Row(
+    |                         children: [
+    |                           Text(
+    |                             tableTitle,
+    |                             style: TextStyle(
+    |                               fontSize: AppFontSizes.medium,
+    |                               fontWeight: FontWeight.bold,
+    |                             ),
+    |                           ),
+    |           
+    |                           const Spacer(),
+    |           
+    |                           CustomViewButton(onTap: onClick),
+    |                         ],
+    |                       ),
+    |                       Spacing.vertical(size: AppSpacing.small),
+    |                       Expanded(child: child),
+    |                     ],
+    |                   ),
+    |                 ),
+    |               );
+    |             }
+    |           }
+    +--- navigation
+    |   +--- action_buttons.dart
+    |   |   import 'package:cvms_desktop/core/theme/app_colors.dart';
+    |   |   import 'package:cvms_desktop/core/theme/app_spacing.dart';
+    |   |   import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
+    |   |   import 'package:cvms_desktop/core/widgets/animation/hover_slide.dart';
+    |   |   import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+    |   |   import 'package:flutter/material.dart';
+    |   |   import 'package:phosphor_flutter/phosphor_flutter.dart';
+    |   |   
+    |   |   class DateFilterButton extends StatelessWidget {
+    |   |     final String dateText;
+    |   |     final VoidCallback onPressed;
+    |   |   
+    |   |     const DateFilterButton({
+    |   |       super.key,
+    |   |       required this.dateText,
+    |   |       required this.onPressed,
+    |   |     });
+    |   |   
+    |   |     @override
+    |   |     Widget build(BuildContext context) {
+    |   |       return HoverSlide(
+    |   |         dy: -0.04,
+    |   |         dx: 0,
+    |   |         cursor: SystemMouseCursors.click,
+    |   |         onTap: onPressed,
+    |   |         child: Container(
+    |   |           height: 40,
+    |   |           padding: const EdgeInsets.symmetric(horizontal: 20),
+    |   |           decoration: BoxDecoration(
+    |   |             color: AppColors.primary,
+    |   |             borderRadius: BorderRadius.circular(5),
+    |   |           ),
+    |   |           child: Row(
+    |   |             children: [
+    |   |               Icon(
+    |   |                 PhosphorIconsRegular.calendar,
+    |   |                 color: AppColors.white,
+    |   |                 size: 22,
+    |   |               ),
+    |   |               Spacing.horizontal(size: AppSpacing.small),
+    |   |               Text(
+    |   |                 dateText,
+    |   |                 style: const TextStyle(
+    |   |                   color: AppColors.white,
+    |   |                   fontSize: 12,
+    |   |                   fontFamily: 'Poppins',
+    |   |                   fontWeight: FontWeight.w600,
+    |   |                 ),
+    |   |               ),
+    |   |             ],
+    |   |           ),
+    |   |         ),
+    |   |       );
+    |   |     }
+    |   |   }
+    |   |   
+    |   |   class ExportReportButton extends StatelessWidget {
+    |   |     final String text;
+    |   |     final VoidCallback onPressed;
+    |   |   
+    |   |     const ExportReportButton({
+    |   |       super.key,
+    |   |       this.text = 'GENERATE REPORT',
+    |   |       required this.onPressed,
+    |   |     });
+    |   |   
+    |   |     @override
+    |   |     Widget build(BuildContext context) {
+    |   |       return HoverSlide(
+    |   |         dy: -0.04,
+    |   |         dx: 0,
+    |   |         cursor: SystemMouseCursors.click,
+    |   |         onTap: onPressed,
+    |   |         child: Container(
+    |   |           height: 40,
+    |   |           padding: const EdgeInsets.symmetric(horizontal: 20),
+    |   |           decoration: BoxDecoration(
+    |   |             color: AppColors.primary,
+    |   |             borderRadius: BorderRadius.circular(5),
+    |   |           ),
+    |   |           child: Center(
+    |   |             child: Text(
+    |   |               text,
+    |   |               style: const TextStyle(
+    |   |                 color: AppColors.white,
+    |   |                 fontSize: 12,
+    |   |                 fontFamily: 'Poppins',
+    |   |                 fontWeight: FontWeight.w600,
+    |   |               ),
+    |   |             ),
+    |   |           ),
+    |   |         ),
+    |   |       );
+    |   |     }
+    |   |   }
+    |   \--- pdf_preview_app_bar.dart
+    |       import 'package:cvms_desktop/core/theme/app_colors.dart';
+    |       import 'package:cvms_desktop/core/theme/app_spacing.dart';
+    |       import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
+    |       import 'package:cvms_desktop/core/widgets/navigation/custom_breadcrumb.dart';
+    |       import 'package:cvms_desktop/features/dashboard2/widgets/components/buttons/custom_icon_button.dart';
+    |       import 'package:flutter/material.dart';
+    |       import 'package:phosphor_flutter/phosphor_flutter.dart';
+    |       
+    |       class PdfPreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
+    |         final VoidCallback onBackPressed;
+    |         final VoidCallback onDownLoadPressed;
+    |         final VoidCallback onPrintPressed;
+    |         final VoidCallback onEditPressed;
+    |         final VoidCallback toggleFitMode;
+    |         final VoidCallback? toggleChartTableMode;
+    |         final bool isFitToWidth;
+    |         final bool isChart;
+    |         final double kToolbarHeight;
+    |         final String title;
+    |         final List<BreadcrumbItem> breadcrumbs;
+    |       
+    |         const PdfPreviewAppBar({
+    |           super.key,
+    |           required this.onBackPressed,
+    |           required this.title,
+    |           required this.onDownLoadPressed,
+    |           required this.onPrintPressed,
+    |           this.kToolbarHeight = 35,
+    |           required this.onEditPressed,
+    |           required this.toggleFitMode,
+    |           this.toggleChartTableMode,
+    |           this.breadcrumbs = const [],
+    |           required this.isFitToWidth,
+    |           required this.isChart,
+    |         });
+    |       
+    |         @override
+    |         Size get preferredSize => Size.fromHeight(kToolbarHeight);
+    |       
+    |         @override
+    |         Widget build(BuildContext context) {
+    |           return AppBar(
+    |             backgroundColor: AppColors.white,
+    |             toolbarHeight: kToolbarHeight,
+    |             titleSpacing: 0,
+    |             title:
+    |                 breadcrumbs.isNotEmpty
+    |                     ? CustomBreadcrumb(items: breadcrumbs)
+    |                     : Text(
+    |                       title,
+    |                       style: TextStyle(
+    |                         fontSize: 14,
+    |                         color: AppColors.black,
+    |                         fontWeight: FontWeight.w600,
+    |                       ),
+    |                     ),
+    |       
+    |             leading: CustomIconButton(onTap: onBackPressed, icon: Icons.chevron_left),
+    |       
+    |             actions: [
+    |               if (toggleChartTableMode != null) ...[
+    |                 Tooltip(
+    |                   message: isChart ? 'Switch to Table View' : 'Switch to Chart View',
+    |                   child: Container(
+    |                     padding: const EdgeInsets.symmetric(horizontal: 8),
+    |                     child: Row(
+    |                       mainAxisSize: MainAxisSize.min,
+    |                       children: [
+    |                         Icon(
+    |                           PhosphorIconsRegular.chartBar,
+    |                           size: 20,
+    |                           color: isChart ? AppColors.primary : AppColors.grey,
+    |                         ),
+    |                         const SizedBox(width: 4),
+    |                         Transform.scale(
+    |                           scaleY: 0.7, // reduce height
+    |                           scaleX: 0.7, // optional: keep proportions
+    |                           child: Switch(
+    |                             trackColor: WidgetStatePropertyAll(AppColors.greySurface),
+    |                             thumbColor: WidgetStatePropertyAll(AppColors.primary),
+    |                             trackOutlineColor: WidgetStatePropertyAll(
+    |                               Colors.transparent,
+    |                             ),
+    |                             value: isChart,
+    |                             onChanged: (_) => toggleChartTableMode!(),
+    |                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    |                           ),
+    |                         ),
+    |                         const SizedBox(width: 4),
+    |                         Icon(
+    |                           PhosphorIconsRegular.table,
+    |                           size: 20,
+    |                           color: !isChart ? AppColors.primary : AppColors.grey,
+    |                         ),
+    |                       ],
+    |                     ),
+    |                   ),
+    |                 ),
+    |                 const SizedBox(width: AppSpacing.medium),
+    |               ],
+    |               Tooltip(
+    |                 message: 'Toggle fit to width',
+    |                 child: CustomIconButton(
+    |                   onTap: toggleFitMode,
+    |                   icon:
+    |                       isFitToWidth
+    |                           ? PhosphorIconsRegular.arrowsOut
+    |                           : PhosphorIconsRegular.arrowsIn,
+    |                 ),
+    |               ),
+    |               const SizedBox(width: AppSpacing.medium),
+    |               Tooltip(
+    |                 message: 'Edit PDF Report Templte',
+    |                 child: CustomIconButton(
+    |                   onTap: onEditPressed,
+    |                   icon: PhosphorIconsRegular.penNib,
+    |                 ),
+    |               ),
+    |               const SizedBox(width: AppSpacing.medium),
+    |               Tooltip(
+    |                 message: 'Save/Download report',
+    |                 child: CustomIconButton(
+    |                   onTap: onDownLoadPressed,
+    |                   icon: PhosphorIconsRegular.download,
+    |                 ),
+    |               ),
+    |       
+    |               const SizedBox(width: AppSpacing.medium),
+    |               Tooltip(
+    |                 message: 'Print report',
+    |                 child: CustomIconButton(
+    |                   onTap: onPrintPressed,
+    |                   icon: PhosphorIconsRegular.printer,
+    |                 ),
+    |               ),
+    |               const SizedBox(width: AppSpacing.medium),
+    |             ],
+    |           );
+    |         }
+    |       }
+    \--- sections
+        +--- dashboard_controls_section.dart
+        |   import 'package:cvms_desktop/core/theme/app_colors.dart';
+        |   import 'package:cvms_desktop/core/theme/app_spacing.dart';
+        |   import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+        |   import 'package:cvms_desktop/features/dashboard/widgets/buttons/custom_icon_button.dart';
+        |   import 'package:cvms_desktop/features/dashboard2/widgets/components/search/vehicle_search_bar.dart';
+        |   import 'package:cvms_desktop/features/dashboard2/widgets/navigation/action_buttons.dart';
+        |   import 'package:flutter/material.dart';
+        |   import 'package:phosphor_flutter/phosphor_flutter.dart';
+        |   
+        |   class DashboardControlsSection extends StatelessWidget {
+        |     final TextEditingController? searchController;
+        |     final Future<List<String>> Function(String) onSearchSuggestions;
+        |     final void Function(String) onVehicleSelected;
+        |     final String dateFilterText;
+        |     final VoidCallback onDateFilterPressed;
+        |     final VoidCallback onExportPressed;
+        |     final bool showBackButton;
+        |     final VoidCallback? onBackButtonPressed;
+        |   
+        |     const DashboardControlsSection({
+        |       super.key,
+        |       this.searchController,
+        |       required this.onSearchSuggestions,
+        |       required this.onVehicleSelected,
+        |       required this.dateFilterText,
+        |       required this.onDateFilterPressed,
+        |       required this.onExportPressed,
+        |       this.showBackButton = false,
+        |       this.onBackButtonPressed,
+        |     });
+        |   
+        |     @override
+        |     Widget build(BuildContext context) {
+        |       return Container(
+        |         padding: const EdgeInsets.fromLTRB(
+        |           AppSpacing.medium,
+        |           AppSpacing.medium,
+        |           AppSpacing.medium,
+        |           0,
+        |         ),
+        |         child: Row(
+        |           children: [
+        |             if (showBackButton) ...[
+        |               CustomIconButton(
+        |                 iconSize: 24,
+        |                 onTap: onBackButtonPressed ?? () {},
+        |                 icon: PhosphorIconsBold.arrowLeft,
+        |                 iconColor: AppColors.primary,
+        |               ),
+        |               Spacing.horizontal(size: AppSpacing.small),
+        |             ],
+        |             // Search Bar
+        |             Expanded(
+        |               child: VehicleSearchBar(
+        |                 controller: searchController,
+        |                 suggestionsCallback: onSearchSuggestions,
+        |                 onSuggestionSelected: onVehicleSelected,
+        |               ),
+        |             ),
+        |             const SizedBox(width: AppSpacing.medium),
+        |   
+        |             // Date Filter Button
+        |             DateFilterButton(
+        |               dateText: dateFilterText,
+        |               onPressed: onDateFilterPressed,
+        |             ),
+        |             const SizedBox(width: AppSpacing.medium),
+        |   
+        |             // Export Button
+        |             ExportReportButton(onPressed: onExportPressed),
+        |           ],
+        |         ),
+        |       );
+        |     }
+        |   }
+        +--- charts
+        |   +--- global_charts_section.dart
+        |   |   import 'package:cvms_desktop/core/theme/app_spacing.dart';
+        |   |   import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+        |   |   import 'package:cvms_desktop/core/widgets/charts/donut_chart_widget.dart';
+        |   |   import 'package:cvms_desktop/core/widgets/charts/stacked_bar_widget.dart';
+        |   |   import 'package:cvms_desktop/core/widgets/charts/bar_chart_widget.dart';
+        |   |   import 'package:cvms_desktop/core/widgets/charts/line_chart_widget.dart';
+        |   |   import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
+        |   |   import 'package:cvms_desktop/features/dashboard/models/fleet_summary.dart';
+        |   |   import 'package:cvms_desktop/features/dashboard2/data/mock_data.dart';
+        |   |   import 'package:flutter/material.dart';
+        |   |   
+        |   |   class GlobalChartsSection extends StatelessWidget {
+        |   |     final FleetSummary summary;
+        |   |     final List<ChartDataModel> vehicleDistribution;
+        |   |     final List<ChartDataModel> yearLevelBreakdown;
+        |   |     final List<ChartDataModel> studentWithMostViolations;
+        |   |     final List<ChartDataModel> cityBreakdown;
+        |   |     final List<ChartDataModel> violationDistribution;
+        |   |   
+        |   |     const GlobalChartsSection({
+        |   |       super.key,
+        |   |       required this.summary,
+        |   |       required this.vehicleDistribution,
+        |   |       required this.yearLevelBreakdown,
+        |   |       required this.studentWithMostViolations,
+        |   |       required this.cityBreakdown,
+        |   |       required this.violationDistribution,
+        |   |     });
+        |   |   
+        |   |     @override
+        |   |     Widget build(BuildContext context) {
+        |   |       double height = 280;
+        |   |       return Padding(
+        |   |         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
+        |   |         child: Column(
+        |   |           children: [
+        |   |             // First Row: Vehicle Distribution + Year Level
+        |   |             SizedBox(
+        |   |               height: height,
+        |   |               child: Row(
+        |   |                 children: [
+        |   |                   Expanded(
+        |   |                     child: _buildDonutChart(
+        |   |                       'Vehicle Distribution per College',
+        |   |                       vehicleDistribution,
+        |   |                     ),
+        |   |                   ),
+        |   |                   Spacing.horizontal(size: AppSpacing.medium),
+        |   |                   Expanded(
+        |   |                     child: _buildDonutChart(
+        |   |                       'Year Level Breakdown',
+        |   |                       yearLevelBreakdown,
+        |   |                     ),
+        |   |                   ),
+        |   |                 ],
+        |   |               ),
+        |   |             ),
+        |   |   
+        |   |             Spacing.vertical(size: AppSpacing.medium),
+        |   |   
+        |   |             // Second Row: Top Violators + Cities
+        |   |             SizedBox(
+        |   |               height: height,
+        |   |               child: Row(
+        |   |                 children: [
+        |   |                   Expanded(
+        |   |                     child: _buildStackedChart(
+        |   |                       'Top 5 Students with Most Violations',
+        |   |                       studentWithMostViolations,
+        |   |                     ),
+        |   |                   ),
+        |   |                   Spacing.horizontal(size: AppSpacing.medium),
+        |   |                   Expanded(
+        |   |                     child: _buildStackedChart(
+        |   |                       'Top 5 Cities/Municipalities',
+        |   |                       cityBreakdown,
+        |   |                     ),
+        |   |                   ),
+        |   |                 ],
+        |   |               ),
+        |   |             ),
+        |   |   
+        |   |             Spacing.vertical(size: AppSpacing.medium),
+        |   |   
+        |   |             // Third Row: Logs Distribution + Violation Distribution
+        |   |             SizedBox(
+        |   |               height: height,
+        |   |               child: Row(
+        |   |                 children: [
+        |   |                   Expanded(
+        |   |                     child: _buildDonutChart(
+        |   |                       'Vehicle Logs Distribution per College',
+        |   |                       summary.departmentLogData,
+        |   |                     ),
+        |   |                   ),
+        |   |                   Spacing.horizontal(size: AppSpacing.medium),
+        |   |                   Expanded(
+        |   |                     child: _buildDonutChart(
+        |   |                       'Violation Distribution per College',
+        |   |                       summary.deptViolationData,
+        |   |                     ),
+        |   |                   ),
+        |   |                 ],
+        |   |               ),
+        |   |             ),
+        |   |   
+        |   |             Spacing.vertical(size: AppSpacing.medium),
+        |   |   
+        |   |             // Fourth Row: Top 5 Violations by type + Fleet logs
+        |   |             SizedBox(
+        |   |               height: height,
+        |   |               child: Row(
+        |   |                 children: [
+        |   |                   Expanded(
+        |   |                     child: _buildBarChart(
+        |   |                       'Top 5 Violations by Type',
+        |   |                       MockDashboardData.top5ViolationByType,
+        |   |                     ),
+        |   |                   ),
+        |   |                   Spacing.horizontal(size: AppSpacing.medium),
+        |   |                   Expanded(
+        |   |                     child: _buildLineChart(
+        |   |                       'Fleet logs for the last',
+        |   |                       MockDashboardData.fleetLogsData,
+        |   |                     ),
+        |   |                   ),
+        |   |                 ],
+        |   |               ),
+        |   |             ),
+        |   |   
+        |   |             Spacing.vertical(size: AppSpacing.medium),
+        |   |           ],
+        |   |         ),
+        |   |       );
+        |   |     }
+        |   |   
+        |   |     Widget _buildDonutChart(String title, List<ChartDataModel> data) {
+        |   |       return DonutChartWidget(
+        |   |         explode: true,
+        |   |         showPercentageInSlice: false,
+        |   |         data: data,
+        |   |         title: title,
+        |   |         radius: '90%',
+        |   |         innerRadius: '60%',
+        |   |         onViewTap: () {},
+        |   |         onDonutChartPointTap: (details) {},
+        |   |       );
+        |   |     }
+        |   |   
+        |   |     Widget _buildStackedChart(String title, List<ChartDataModel> data) {
+        |   |       return StackedBarWidget(title: title, data: data, onViewTap: () {});
+        |   |     }
+        |   |   
+        |   |     Widget _buildBarChart(String title, List<ChartDataModel> data) {
+        |   |       return BarChartWidget(
+        |   |         data: data,
+        |   |         title: title,
+        |   |         onViewTap: () {},
+        |   |         onBarChartPointTap: (details) {},
+        |   |       );
+        |   |     }
+        |   |   
+        |   |     Widget _buildLineChart(String title, List<ChartDataModel> data) {
+        |   |       return LineChartWidget(
+        |   |         data: data,
+        |   |         title: title,
+        |   |         onViewTap: () {},
+        |   |         onLineChartPointTap: (details) {},
+        |   |       );
+        |   |     }
+        |   |   }
+        |   \--- individual_charts_section.dart
+        |       import 'package:cvms_desktop/core/theme/app_spacing.dart';
+        |       import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+        |       import 'package:cvms_desktop/core/widgets/charts/bar_chart_widget.dart';
+        |       import 'package:cvms_desktop/core/widgets/charts/line_chart_widget.dart';
+        |       import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
+        |       import 'package:flutter/material.dart';
+        |       
+        |       class IndividualChartsSection extends StatelessWidget {
+        |         final List<ChartDataModel> violationDistribution;
+        |         final List<ChartDataModel> vehicleLogs;
+        |       
+        |         const IndividualChartsSection({
+        |           super.key,
+        |           required this.violationDistribution,
+        |           required this.vehicleLogs,
+        |         });
+        |       
+        |         @override
+        |         Widget build(BuildContext context) {
+        |           double height = 280;
+        |           return Padding(
+        |             padding: const EdgeInsets.fromLTRB(
+        |               AppSpacing.medium,
+        |               AppSpacing.medium,
+        |               AppSpacing.medium,
+        |               0,
+        |             ),
+        |             child: SizedBox(
+        |               height: height,
+        |               child: Row(
+        |                 children: [
+        |                   Expanded(
+        |                     child: _buildBarChart(
+        |                       'Violations by Type',
+        |                       violationDistribution,
+        |                     ),
+        |                   ),
+        |                   Spacing.horizontal(size: AppSpacing.medium),
+        |                   Expanded(
+        |                     child: _buildLineChart('Vehicle logs for the last', vehicleLogs),
+        |                   ),
+        |                 ],
+        |               ),
+        |             ),
+        |           );
+        |         }
+        |       
+        |         Widget _buildBarChart(String title, List<ChartDataModel> data) {
+        |           return BarChartWidget(
+        |             data: data,
+        |             title: title,
+        |             onViewTap: () {},
+        |             onBarChartPointTap: (details) {},
+        |           );
+        |         }
+        |       
+        |         Widget _buildLineChart(String title, List<ChartDataModel> data) {
+        |           return LineChartWidget(
+        |             data: data,
+        |             title: title,
+        |             onViewTap: () {},
+        |             onLineChartPointTap: (details) {},
+        |           );
+        |         }
+        |       }
+        +--- pdf
+        +--- stats
+        |   +--- global_stats_card_section.dart
+        |   |   import 'package:cvms_desktop/core/theme/app_spacing.dart';
+        |   |   import 'package:cvms_desktop/features/dashboard2/widgets/components/stats/stats_card_section.dart';
+        |   |   import 'package:flutter/material.dart';
+        |   |   
+        |   |   class GlobalStatsCardSection extends StatelessWidget {
+        |   |     //labels
+        |   |     final String statsCard1Label;
+        |   |     final String statsCard2Label;
+        |   |     final String statsCard3Label;
+        |   |     final String statsCard4Label;
+        |   |     //values
+        |   |     final int statsCard1Value;
+        |   |     final int statsCard2Value;
+        |   |     final int statsCard3Value;
+        |   |     final int statsCard4Value;
+        |   |   
+        |   |     const GlobalStatsCardSection({
+        |   |       super.key,
+        |   |       required this.statsCard1Label,
+        |   |       required this.statsCard2Label,
+        |   |       required this.statsCard3Label,
+        |   |       required this.statsCard4Label,
+        |   |       required this.statsCard1Value,
+        |   |       required this.statsCard2Value,
+        |   |       required this.statsCard3Value,
+        |   |       required this.statsCard4Value,
+        |   |     });
+        |   |   
+        |   |     @override
+        |   |     Widget build(BuildContext context) {
+        |   |       return Padding(
+        |   |         padding: const EdgeInsets.all(AppSpacing.medium),
+        |   |         child: StatsCardSection(
+        |   |           statsCard1Label: statsCard1Label,
+        |   |           statsCard1Value: statsCard1Value,
+        |   |           statsCard2Label: statsCard2Label,
+        |   |           statsCard2Value: statsCard2Value,
+        |   |           statsCard3Label: statsCard3Label,
+        |   |           statsCard3Value: statsCard3Value,
+        |   |           statsCard4Label: statsCard4Label,
+        |   |           statsCard4Value: statsCard4Value,
+        |   |         ),
+        |   |       );
+        |   |     }
+        |   |   }
+        |   \--- individual_stats_section.dart
+        |       import 'package:cvms_desktop/core/theme/app_spacing.dart';
+        |       import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+        |       import 'package:cvms_desktop/features/dashboard2/models/vehicle_info.dart';
+        |       import 'package:cvms_desktop/features/dashboard2/widgets/components/stats/stats_card_section.dart';
+        |       import 'package:cvms_desktop/features/dashboard2/widgets/components/info/vehicle_info_card.dart';
+        |       import 'package:cvms_desktop/features/dashboard2/models/individual_vehicle_report.dart';
+        |       import 'package:flutter/material.dart';
+        |       
+        |       class IndividualStatsSection extends StatelessWidget {
+        |         final VoidCallback? onVehicleInfoFullView;
+        |         final IndividualVehicleReport report;
+        |       
+        |         const IndividualStatsSection({
+        |           super.key,
+        |           required this.report,
+        |           this.onVehicleInfoFullView,
+        |         });
+        |       
+        |         @override
+        |         Widget build(BuildContext context) {
+        |           return Padding(
+        |             padding: const EdgeInsets.fromLTRB(
+        |               AppSpacing.medium,
+        |               AppSpacing.medium,
+        |               AppSpacing.medium,
+        |               0,
+        |             ),
+        |             child: Row(
+        |               children: [
+        |                 // Stats Cards
+        |                 Expanded(
+        |                   child: StatsCardSection(
+        |                     isGlobal: false,
+        |                     statsCard1Label: 'Days Until Expiration',
+        |                     statsCard1Icon: Icons.calendar_today,
+        |                     statsCard1Value: report.daysUntilExpiration,
+        |                     statsCard2Label: 'Active Violations',
+        |                     statsCard2Icon: Icons.warning,
+        |                     statsCard2Value: report.activeViolations,
+        |                     statsCard3Label: 'Total Violations',
+        |                     statsCard3Icon: Icons.error,
+        |                     statsCard3Value: report.totalViolations,
+        |                     statsCard4Label: 'Total Entries/Exits',
+        |                     statsCard4Value: report.totalEntriesExits,
+        |                   ),
+        |                 ),
+        |       
+        |                 Spacing.horizontal(size: AppSpacing.medium),
+        |       
+        |                 // Vehicle Info Card
+        |                 Expanded(
+        |                   child: VehicleInfoCard(
+        |                     onViewTap: onVehicleInfoFullView ?? () {},
+        |                     vehicleInfo: VehicleInfo(
+        |                       vehicleModel: report.vehicleType,
+        |                       plateNumber: report.plateNumber,
+        |                       vehicleType: report.vehicleType,
+        |                       ownerName: report.ownerName,
+        |                       department: '',
+        |                       status: '',
+        |                       mvpProgress: 0,
+        |                       mvpRegisteredDate: report.registeredDate,
+        |                       mvpExpiryDate: report.expiryDate,
+        |                     ),
+        |                   ),
+        |                 ),
+        |               ],
+        |             ),
+        |           );
+        |         }
+        |       }
+        \--- tables
+            +--- recent_logs
+            |   +--- recent_logs_data_source.dart
+            |   |   import 'package:cvms_desktop/core/theme/app_colors.dart';
+            |   |   import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+            |   |   import 'package:cvms_desktop/core/utils/date_time_formatter.dart';
+            |   |   import 'package:cvms_desktop/core/widgets/table/cell_badge.dart';
+            |   |   import 'package:cvms_desktop/features/dashboard2/models/recent_log_entry.dart';
+            |   |   import 'package:flutter/material.dart';
+            |   |   import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+            |   |   
+            |   |   class RecentLogsDataSource extends DataGridSource {
+            |   |     final List<RecentLogEntry> _originalEntries;
+            |   |   
+            |   |     RecentLogsDataSource({required List<RecentLogEntry> recentLogsEntries})
+            |   |       : _originalEntries = recentLogsEntries {
+            |   |       _buildRows();
+            |   |     }
+            |   |   
+            |   |     void _buildRows() {
+            |   |       _recentLogsEntries =
+            |   |           _originalEntries
+            |   |               .map<DataGridRow>((e) => DataGridRow(cells: _buildCells(e)))
+            |   |               .toList();
+            |   |     }
+            |   |   
+            |   |     List<DataGridCell> _buildCells(RecentLogEntry entry) {
+            |   |       return [
+            |   |         DataGridCell<int>(
+            |   |           columnName: 'index',
+            |   |           value: _originalEntries.indexOf(entry) + 1,
+            |   |         ),
+            |   |         DataGridCell<String>(columnName: 'logId', value: entry.logId),
+            |   |         DataGridCell<String>(
+            |   |           columnName: 'timeIn',
+            |   |           value: DateTimeFormatter.formatNumeric(entry.timeIn),
+            |   |         ),
+            |   |         DataGridCell<String>(
+            |   |           columnName: 'timeOut',
+            |   |           value:
+            |   |               entry.timeOut != null
+            |   |                   ? DateTimeFormatter.formatNumeric(entry.timeOut!)
+            |   |                   : 'N/A',
+            |   |         ),
+            |   |         DataGridCell<int>(
+            |   |           columnName: 'durationMinutes',
+            |   |           value: entry.durationMinutes ?? 0,
+            |   |         ),
+            |   |         DataGridCell<String>(columnName: 'status', value: entry.status),
+            |   |         DataGridCell<String>(columnName: 'updatedBy', value: entry.updatedBy),
+            |   |       ];
+            |   |     }
+            |   |   
+            |   |     List<DataGridRow> _recentLogsEntries = [];
+            |   |   
+            |   |     @override
+            |   |     List<DataGridRow> get rows => _recentLogsEntries;
+            |   |   
+            |   |     @override
+            |   |     DataGridRowAdapter? buildRow(DataGridRow row) {
+            |   |       final int rowIndex = _recentLogsEntries.indexOf(row);
+            |   |       final bool isEven = rowIndex % 2 == 0;
+            |   |       final RecentLogEntry entry = _originalEntries[rowIndex];
+            |   |   
+            |   |       return DataGridRowAdapter(
+            |   |         color:
+            |   |             isEven
+            |   |                 ? AppColors.white
+            |   |                 : AppColors.dividerColor.withValues(alpha: 0.2),
+            |   |         cells:
+            |   |             row.getCells().map<Widget>((cell) {
+            |   |               return _buildCellWidget(cell, entry);
+            |   |             }).toList(),
+            |   |       );
+            |   |     }
+            |   |   
+            |   |     Widget _buildCellWidget(DataGridCell cell, RecentLogEntry entry) {
+            |   |       switch (cell.columnName) {
+            |   |         case 'index':
+            |   |           return Container(
+            |   |             alignment: Alignment.centerLeft,
+            |   |             padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            |   |             child: Text(
+            |   |               cell.value.toString(),
+            |   |               textAlign: TextAlign.center,
+            |   |               style: const TextStyle(
+            |   |                 fontSize: AppFontSizes.small,
+            |   |                 fontFamily: 'Poppins',
+            |   |               ),
+            |   |             ),
+            |   |           );
+            |   |         case 'logId':
+            |   |           return Container(
+            |   |             alignment: Alignment.centerLeft,
+            |   |             padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            |   |             child: Text(
+            |   |               cell.value.toString(),
+            |   |               textAlign: TextAlign.center,
+            |   |               style: const TextStyle(
+            |   |                 fontSize: AppFontSizes.small,
+            |   |                 fontFamily: 'Poppins',
+            |   |                 fontWeight: FontWeight.w600,
+            |   |               ),
+            |   |             ),
+            |   |           );
+            |   |   
+            |   |         case 'timeIn':
+            |   |         case 'timeOut':
+            |   |           return Container(
+            |   |             alignment: Alignment.centerLeft,
+            |   |             padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            |   |             child: Text(
+            |   |               cell.value.toString(),
+            |   |               textAlign: TextAlign.center,
+            |   |               style: const TextStyle(
+            |   |                 fontSize: AppFontSizes.small,
+            |   |                 fontFamily: 'Poppins',
+            |   |               ),
+            |   |             ),
+            |   |           );
+            |   |   
+            |   |         case 'durationMinutes':
+            |   |           return Container(
+            |   |             alignment: Alignment.centerLeft,
+            |   |             padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            |   |             child: Text(
+            |   |               '${cell.value} min',
+            |   |               textAlign: TextAlign.center,
+            |   |               style: const TextStyle(
+            |   |                 fontSize: AppFontSizes.small,
+            |   |                 fontFamily: 'Poppins',
+            |   |               ),
+            |   |             ),
+            |   |           );
+            |   |   
+            |   |         case 'updatedBy':
+            |   |           return Container(
+            |   |             alignment: Alignment.centerLeft,
+            |   |             padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            |   |             child: Text(
+            |   |               cell.value.toString(),
+            |   |               textAlign: TextAlign.left,
+            |   |               overflow: TextOverflow.ellipsis,
+            |   |               maxLines: 1,
+            |   |               style: const TextStyle(
+            |   |                 fontSize: AppFontSizes.small,
+            |   |                 fontFamily: 'Poppins',
+            |   |               ),
+            |   |             ),
+            |   |           );
+            |   |   
+            |   |         case 'status':
+            |   |           final statusStr = cell.value.toString();
+            |   |           final statusLower = statusStr.toLowerCase();
+            |   |           final bool isActive = statusLower == 'onsite';
+            |   |           final bool isCompleted = statusLower == 'offsite';
+            |   |   
+            |   |           final Color badgeBg =
+            |   |               isActive
+            |   |                   ? AppColors.successLight
+            |   |                   : isCompleted
+            |   |                   ? AppColors.neutralLight
+            |   |                   : AppColors.grey.withValues(alpha: 0.2);
+            |   |   
+            |   |           final Color textColor =
+            |   |               isActive
+            |   |                   ? const Color.fromARGB(255, 31, 144, 11)
+            |   |                   : isCompleted
+            |   |                   ? AppColors.neutral
+            |   |                   : AppColors.black;
+            |   |   
+            |   |           return CellBadge(
+            |   |             horizontalPadding: 12,
+            |   |             badgeBg: badgeBg,
+            |   |             textColor: textColor,
+            |   |             statusStr: statusStr,
+            |   |             fontSize: AppFontSizes.small,
+            |   |           );
+            |   |   
+            |   |         default:
+            |   |           return Container(
+            |   |             alignment: Alignment.center,
+            |   |             padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            |   |             child: Text(
+            |   |               cell.value.toString(),
+            |   |               textAlign: TextAlign.center,
+            |   |               style: const TextStyle(
+            |   |                 fontSize: AppFontSizes.small,
+            |   |                 fontFamily: 'Poppins',
+            |   |               ),
+            |   |             ),
+            |   |           );
+            |   |       }
+            |   |     }
+            |   |   }
+            |   +--- recent_logs_table_columns.dart
+            |   |   import 'package:cvms_desktop/core/widgets/table/table_column_factory.dart';
+            |   |   import 'package:flutter/material.dart';
+            |   |   import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+            |   |   
+            |   |   class RecentLogsTableColumns {
+            |   |     static List<GridColumn> getColumns({bool istableHeaderDark = false}) {
+            |   |       return [
+            |   |         TableColumnFactory.build(
+            |   |           hoverScale: 1,
+            |   |           istableHeaderDark: istableHeaderDark,
+            |   |           name: 'index',
+            |   |           label: '#',
+            |   |           width: 50,
+            |   |           alignment: Alignment.centerLeft,
+            |   |         ),
+            |   |         TableColumnFactory.build(
+            |   |           hoverScale: 1,
+            |   |           alignment: Alignment.centerLeft,
+            |   |           istableHeaderDark: istableHeaderDark,
+            |   |           name: 'logId',
+            |   |           label: 'LOG ID',
+            |   |           width: 200,
+            |   |         ),
+            |   |         TableColumnFactory.build(
+            |   |           hoverScale: 1,
+            |   |           alignment: Alignment.centerLeft,
+            |   |           istableHeaderDark: istableHeaderDark,
+            |   |           name: 'timeIn',
+            |   |           label: 'TIME IN',
+            |   |         ),
+            |   |         TableColumnFactory.build(
+            |   |           hoverScale: 1,
+            |   |           alignment: Alignment.centerLeft,
+            |   |           istableHeaderDark: istableHeaderDark,
+            |   |           name: 'timeOut',
+            |   |   
+            |   |           label: 'TIME OUT',
+            |   |         ),
+            |   |         TableColumnFactory.build(
+            |   |           hoverScale: 1,
+            |   |           alignment: Alignment.centerLeft,
+            |   |           istableHeaderDark: istableHeaderDark,
+            |   |           name: 'durationMinutes',
+            |   |           label: 'DURATION',
+            |   |           width: 140,
+            |   |         ),
+            |   |         TableColumnFactory.build(
+            |   |           hoverScale: 1,
+            |   |           istableHeaderDark: istableHeaderDark,
+            |   |           name: 'status',
+            |   |           label: 'STATUS',
+            |   |           width: 120,
+            |   |         ),
+            |   |         TableColumnFactory.build(
+            |   |           hoverScale: 1,
+            |   |           alignment: Alignment.centerLeft,
+            |   |           istableHeaderDark: istableHeaderDark,
+            |   |           name: 'updatedBy',
+            |   |           label: 'UPDATED BY',
+            |   |         ),
+            |   |       ];
+            |   |     }
+            |   |   
+            |   |     // Keep the original static getter for backward compatibility
+            |   |     static List<GridColumn> get columns => getColumns();
+            |   |   }
+            |   \--- recent_logs_table_section.dart
+            |       import 'package:cvms_desktop/core/widgets/table/custom_table.dart';
+            |       import 'package:cvms_desktop/features/dashboard/widgets/tables/vehicle_logs/vehicle_logs_table_columns.dart';
+            |       import 'package:cvms_desktop/features/dashboard2/models/recent_log_entry.dart';
+            |       import 'package:cvms_desktop/features/dashboard2/widgets/components/tables/dashboard_table.dart';
+            |       import 'package:cvms_desktop/features/dashboard2/widgets/sections/tables/recent_logs/recent_logs_data_source.dart';
+            |       import 'package:flutter/material.dart';
+            |       
+            |       class RecentLogsTableSection extends StatelessWidget {
+            |         final bool istableHeaderDark;
+            |         final bool allowSorting;
+            |         final List<RecentLogEntry> recentLogsEntries;
+            |         final String sectionTitle;
+            |         final VoidCallback onClick;
+            |         const RecentLogsTableSection({
+            |           super.key,
+            |           required this.istableHeaderDark,
+            |           required this.allowSorting,
+            |           required this.recentLogsEntries,
+            |           required this.sectionTitle,
+            |           required this.onClick,
+            |         });
+            |       
+            |         @override
+            |         Widget build(BuildContext context) {
+            |           return DashboardTable(
+            |             tableTitle: sectionTitle,
+            |             onClick: onClick,
+            |             child: CustomTable(
+            |               isTableHeaderDark: istableHeaderDark,
+            |               allowSorting: allowSorting,
+            |               dataSource: RecentLogsDataSource(recentLogsEntries: recentLogsEntries),
+            |               columns: VehicleLogsTableColumns.getColumns(
+            |                 istableHeaderDark: istableHeaderDark,
+            |               ),
+            |             ),
+            |           );
+            |         }
+            |       }
+            \--- violation_history
+                +--- violation_history_data_source.dart
+                |   import 'package:cvms_desktop/core/theme/app_colors.dart';
+                |   import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+                |   import 'package:cvms_desktop/core/utils/date_time_formatter.dart';
+                |   import 'package:cvms_desktop/core/widgets/table/cell_badge.dart';
+                |   import 'package:cvms_desktop/features/dashboard2/models/violation_history_entry.dart';
+                |   import 'package:flutter/material.dart';
+                |   import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+                |   
+                |   class ViolationHistoryDataSource extends DataGridSource {
+                |     final List<ViolationHistoryEntry> _originalEntries;
+                |   
+                |     ViolationHistoryDataSource({
+                |       required List<ViolationHistoryEntry> violationHistoryEntries,
+                |     }) : _originalEntries = violationHistoryEntries {
+                |       _buildRows();
+                |     }
+                |   
+                |     void _buildRows() {
+                |       _violationHistoryEntries =
+                |           _originalEntries
+                |               .map<DataGridRow>((e) => DataGridRow(cells: _buildCells(e)))
+                |               .toList();
+                |     }
+                |   
+                |     List<DataGridCell> _buildCells(ViolationHistoryEntry entry) {
+                |       return [
+                |         DataGridCell<int>(
+                |           columnName: 'index',
+                |           value: _originalEntries.indexOf(entry) + 1,
+                |         ),
+                |         DataGridCell<String>(columnName: 'violationId', value: entry.violationId),
+                |         DataGridCell<String>(
+                |           columnName: 'dateTime',
+                |           value: DateTimeFormatter.formatFull(entry.dateTime),
+                |         ),
+                |         DataGridCell<String>(
+                |           columnName: 'violationType',
+                |           value: entry.violationType,
+                |         ),
+                |         DataGridCell<String>(columnName: 'reportedBy', value: entry.reportedBy),
+                |         DataGridCell<String>(columnName: 'status', value: entry.status),
+                |         DataGridCell<String>(
+                |           columnName: 'createdAt',
+                |           value: DateTimeFormatter.formatFull(entry.createdAt),
+                |         ),
+                |         DataGridCell<String>(
+                |           columnName: 'lastUpdated',
+                |           value: DateTimeFormatter.formatFull(entry.lastUpdated),
+                |         ),
+                |       ];
+                |     }
+                |   
+                |     List<DataGridRow> _violationHistoryEntries = [];
+                |   
+                |     @override
+                |     List<DataGridRow> get rows => _violationHistoryEntries;
+                |   
+                |     @override
+                |     DataGridRowAdapter? buildRow(DataGridRow row) {
+                |       final int rowIndex = _violationHistoryEntries.indexOf(row);
+                |       final bool isEven = rowIndex % 2 == 0;
+                |       final ViolationHistoryEntry entry = _originalEntries[rowIndex];
+                |   
+                |       return DataGridRowAdapter(
+                |         color:
+                |             isEven
+                |                 ? AppColors.white
+                |                 : AppColors.dividerColor.withValues(alpha: 0.2),
+                |         cells:
+                |             row.getCells().map<Widget>((cell) {
+                |               return _buildCellWidget(cell, entry);
+                |             }).toList(),
+                |       );
+                |     }
+                |   
+                |     Widget _buildCellWidget(DataGridCell cell, ViolationHistoryEntry entry) {
+                |       switch (cell.columnName) {
+                |         case 'violationId':
+                |           return Container(
+                |             alignment: Alignment.centerLeft,
+                |             padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                |             child: Text(
+                |               cell.value.toString(),
+                |               textAlign: TextAlign.center,
+                |               style: const TextStyle(
+                |                 fontSize: AppFontSizes.small,
+                |                 fontFamily: 'Poppins',
+                |                 fontWeight: FontWeight.w600,
+                |               ),
+                |             ),
+                |           );
+                |         case 'dateTime':
+                |           return Container(
+                |             alignment: Alignment.centerLeft,
+                |             padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                |             child: Text(
+                |               cell.value.toString(),
+                |               textAlign: TextAlign.left,
+                |               style: const TextStyle(
+                |                 fontSize: AppFontSizes.small,
+                |                 fontFamily: 'Poppins',
+                |               ),
+                |             ),
+                |           );
+                |   
+                |         case 'violationType':
+                |           return Container(
+                |             alignment: Alignment.centerLeft,
+                |             padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                |             child: Text(
+                |               cell.value.toString(),
+                |               textAlign: TextAlign.left,
+                |               overflow: TextOverflow.ellipsis,
+                |               maxLines: 2,
+                |               style: const TextStyle(
+                |                 fontSize: AppFontSizes.small,
+                |                 fontFamily: 'Poppins',
+                |                 fontWeight: FontWeight.w600,
+                |               ),
+                |             ),
+                |           );
+                |   
+                |         case 'reportedBy':
+                |           return Container(
+                |             alignment: Alignment.centerLeft,
+                |             padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                |             child: Text(
+                |               cell.value.toString(),
+                |               textAlign: TextAlign.left,
+                |               overflow: TextOverflow.ellipsis,
+                |               maxLines: 1,
+                |               style: const TextStyle(
+                |                 fontSize: AppFontSizes.small,
+                |                 fontFamily: 'Poppins',
+                |               ),
+                |             ),
+                |           );
+                |   
+                |         case 'status':
+                |           final statusStr = cell.value.toString();
+                |           final statusLower = statusStr.toLowerCase();
+                |           final bool isResolved = statusLower == 'resolved';
+                |           final bool isPending = statusLower == 'pending';
+                |           final bool isInProgress = statusLower == 'in progress';
+                |   
+                |           final Color badgeBg =
+                |               isResolved
+                |                   ? AppColors.successLight
+                |                   : isPending
+                |                   ? AppColors.chartOrange.withValues(alpha: 0.3)
+                |                   : isInProgress
+                |                   ? AppColors.neutralLight
+                |                   : AppColors.grey.withValues(alpha: 0.2);
+                |   
+                |           final Color textColor =
+                |               isResolved
+                |                   ? const Color.fromARGB(255, 31, 144, 11)
+                |                   : isPending
+                |                   ? AppColors.chartOrange
+                |                   : isInProgress
+                |                   ? AppColors.neutral
+                |                   : AppColors.black;
+                |   
+                |           return CellBadge(
+                |             horizontalPadding: 24,
+                |             badgeBg: badgeBg,
+                |             textColor: textColor,
+                |             statusStr: statusStr,
+                |             fontSize: AppFontSizes.small,
+                |           );
+                |   
+                |         default:
+                |           return Container(
+                |             alignment: Alignment.centerLeft,
+                |             padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                |             child: Text(
+                |               cell.value.toString(),
+                |               textAlign: TextAlign.center,
+                |               style: const TextStyle(
+                |                 fontSize: AppFontSizes.small,
+                |                 fontFamily: 'Poppins',
+                |               ),
+                |             ),
+                |           );
+                |       }
+                |     }
+                |   }
+                +--- violation_history_table_columns.dart
+                |   import 'package:cvms_desktop/core/widgets/table/table_column_factory.dart';
+                |   import 'package:flutter/material.dart';
+                |   import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+                |   
+                |   class ViolationHistoryTableColumns {
+                |     static List<GridColumn> getColumns({bool istableHeaderDark = false}) {
+                |       return [
+                |         TableColumnFactory.build(
+                |           hoverScale: 1,
+                |           istableHeaderDark: istableHeaderDark,
+                |           name: 'index',
+                |           label: '#',
+                |           width: 50,
+                |         ),
+                |         TableColumnFactory.build(
+                |           hoverScale: 1,
+                |           alignment: Alignment.centerLeft,
+                |           istableHeaderDark: istableHeaderDark,
+                |           name: 'violationId',
+                |           label: 'VIOLATION ID',
+                |           width: 200,
+                |         ),
+                |         TableColumnFactory.build(
+                |           hoverScale: 1,
+                |           alignment: Alignment.centerLeft,
+                |           istableHeaderDark: istableHeaderDark,
+                |           name: 'dateTime',
+                |           label: 'DATE/TIME',
+                |         ),
+                |         TableColumnFactory.build(
+                |           hoverScale: 1,
+                |           alignment: Alignment.centerLeft,
+                |           istableHeaderDark: istableHeaderDark,
+                |           name: 'violationType',
+                |           label: 'VIOLATION TYPE',
+                |         ),
+                |         TableColumnFactory.build(
+                |           hoverScale: 1,
+                |           alignment: Alignment.centerLeft,
+                |           istableHeaderDark: istableHeaderDark,
+                |           name: 'reportedBy',
+                |           label: 'REPORTED BY',
+                |         ),
+                |         TableColumnFactory.build(
+                |           hoverScale: 1,
+                |           istableHeaderDark: istableHeaderDark,
+                |           name: 'status',
+                |           label: 'STATUS',
+                |           width: 140,
+                |         ),
+                |         TableColumnFactory.build(
+                |           hoverScale: 1,
+                |           alignment: Alignment.centerLeft,
+                |           istableHeaderDark: istableHeaderDark,
+                |           name: 'createdAt',
+                |           label: 'CREATED AT',
+                |         ),
+                |         TableColumnFactory.build(
+                |           hoverScale: 1,
+                |           alignment: Alignment.centerLeft,
+                |           istableHeaderDark: istableHeaderDark,
+                |           name: 'lastUpdated',
+                |           label: 'LAST UPDATED',
+                |         ),
+                |       ];
+                |     }
+                |   
+                |     // Keep the original static getter for backward compatibility
+                |     static List<GridColumn> get columns => getColumns();
+                |   }
+                \--- violation_history_table_section.dart
+                    import 'package:cvms_desktop/core/widgets/table/custom_table.dart';
+                    import 'package:cvms_desktop/features/dashboard2/models/violation_history_entry.dart';
+                    import 'package:cvms_desktop/features/dashboard2/widgets/components/tables/dashboard_table.dart';
+                    import 'package:cvms_desktop/features/dashboard2/widgets/sections/tables/violation_history/violation_history_data_source.dart';
+                    import 'package:cvms_desktop/features/dashboard2/widgets/sections/tables/violation_history/violation_history_table_columns.dart';
+                    import 'package:flutter/material.dart';
+                    
+                    class ViolationHistoryTableSection extends StatelessWidget {
+                      final List<ViolationHistoryEntry> violationHistoryEntries;
+                      final bool allowSorting;
+                      final bool istableHeaderDark;
+                      final String sectionTitle;
+                      final VoidCallback onClick;
+                      const ViolationHistoryTableSection({
+                        super.key,
+                        required this.violationHistoryEntries,
+                        required this.allowSorting,
+                        required this.istableHeaderDark,
+                        required this.sectionTitle,
+                        required this.onClick,
+                      });
+                    
+                      @override
+                      Widget build(BuildContext context) {
+                        return DashboardTable(
+                          tableTitle: sectionTitle,
+                          onClick: onClick,
+                          child: CustomTable(
+                            isTableHeaderDark: istableHeaderDark,
+                            allowSorting: allowSorting,
+                            dataSource: ViolationHistoryDataSource(
+                              violationHistoryEntries: violationHistoryEntries,
+                            ),
+                            columns: ViolationHistoryTableColumns.getColumns(
+                              istableHeaderDark: istableHeaderDark,
+                            ),
+                          ),
+                        );
+                      }
+                    }

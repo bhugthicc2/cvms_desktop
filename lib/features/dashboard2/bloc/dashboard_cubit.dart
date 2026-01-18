@@ -1,11 +1,57 @@
+import 'dart:async';
+
 import 'package:cvms_desktop/features/dashboard2/models/individual_vehicle_report.dart';
+import 'package:cvms_desktop/features/dashboard2/repositories/dashboard_repositoty.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
 part 'dashboard_state.dart';
 
 class DashboardCubit extends Cubit<DashboardState> {
-  DashboardCubit() : super(const DashboardState());
+  final DashboardRepository repository; // Realtime implementation step 6
+  StreamSubscription<int>? _logsSub; // Realtime implementation step 7
+  DashboardCubit(
+    this.repository, // Realtime implementation step 8
+  ) : super(const DashboardState()) {
+    _listenToVehicleLogs(); // Realtime implementation step 9
+  }
+
+  void _listenToVehicleLogs() {
+    // Realtime implementation step 10
+
+    _logsSub = repository.watchTotalEntriesExits().listen(
+      (count) {
+        // Realtime implementation step 11
+
+        emit(
+          // Realtime implementation step 12
+          state.copyWith(
+            // Realtime implementation step 13
+            totalEntriesExits: count, // Realtime implementation step 14
+          ),
+        );
+      },
+
+      onError: (e) {
+        // Realtime implementation step 15
+
+        emit(
+          state.copyWith(error: e.toString()),
+        ); // Realtime implementation step 16
+      },
+    );
+  }
+
+  @override
+  Future<void> close() {
+    // Realtime implementation step 17
+
+    _logsSub?.cancel();
+    // Realtime implementation step 18
+
+    return super.close();
+    // Realtime implementation step 19
+  }
 
   // View mode navigation
   void showGlobalDashboard() {

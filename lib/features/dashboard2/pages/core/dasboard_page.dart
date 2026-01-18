@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
 import 'package:cvms_desktop/core/widgets/skeleton/report_skeleton_loader.dart';
@@ -5,6 +6,7 @@ import 'package:cvms_desktop/features/dashboard2/bloc/dashboard_cubit.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/global_dashboard_view.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/individual_report_view.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/pdf_preview_view.dart';
+import 'package:cvms_desktop/features/dashboard2/repositories/dashboard_repositoty.dart';
 import 'package:cvms_desktop/features/dashboard2/services/vehicle_search_service.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/dashboard_controls_section.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +48,12 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => DashboardCubit(),
+      create:
+          (_) => DashboardCubit(
+            DashboardRepository(
+              FirebaseFirestore.instance,
+            ), // Realtime implementation step 20
+          ),
       child: BlocListener<DashboardCubit, DashboardState>(
         listener: (context, state) {
           // Gating: Only publish breadcrumbs if this is the active page
