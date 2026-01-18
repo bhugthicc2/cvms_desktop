@@ -12,7 +12,8 @@ import '../widgets/section_decor.dart';
 import '../services/profile_service.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final bool isEdit;
+  const ProfilePage({super.key, this.isEdit = true});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -64,7 +65,7 @@ class _ProfilePageState extends State<ProfilePage> {
           body: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: screenWidth * 0.07,
+                horizontal: screenWidth * 0.09,
                 vertical: AppSpacing.medium,
               ),
               child: Column(
@@ -73,18 +74,15 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   ProfilePageHeader(
                     title: 'My Profile',
-                    buttonText: 'Edit Profile',
+                    buttonText: widget.isEdit ? 'Edit Profile' : 'Save Changes',
+                    btnColor:
+                        widget.isEdit ? AppColors.primary : AppColors.success,
                     onButtonTap: () {
                       // TODO:trigger edit mode
                     },
                   ),
-                  Spacing.vertical(size: AppSpacing.medium),
-                  CustomDivider(
-                    direction: Axis.horizontal,
-                    thickness: 1,
-                    color: AppColors.dividerColor.withValues(alpha: 0.4),
-                  ),
-                  Spacing.vertical(size: AppSpacing.medium),
+
+                  Spacing.vertical(size: AppSpacing.large),
                   Container(
                     padding: const EdgeInsets.all(AppSpacing.medium),
                     height: 160,

@@ -187,6 +187,7 @@ class _DashboardPageState extends State<DashboardPage> {
     switch (state.viewMode) {
       case DashboardViewMode.overview:
         return const [];
+      //stats
       case DashboardViewMode.enteredVehicles:
         return [const BreadcrumbItem(label: 'Entered Vehicles')];
       case DashboardViewMode.exitedVehicles:
@@ -195,6 +196,7 @@ class _DashboardPageState extends State<DashboardPage> {
         return [const BreadcrumbItem(label: 'Violations')];
       case DashboardViewMode.allVehicles:
         return [const BreadcrumbItem(label: 'All Vehicles')];
+      //charts
       case DashboardViewMode.vehicleDistribution:
         return [const BreadcrumbItem(label: 'Vehicle Distribution')];
       case DashboardViewMode.vehicleLogsTrend:
@@ -276,6 +278,7 @@ class _DashboardPageState extends State<DashboardPage> {
           child: BlocBuilder<DashboardCubit, DashboardState>(
             builder: (context, state) {
               if (state.loading) {
+                //SKELETEON LOADER
                 return custom.AnimatedSwitcher(
                   duration: const Duration(milliseconds: 300),
                   child: Skeletonizer(
@@ -351,6 +354,7 @@ class _DashboardPageState extends State<DashboardPage> {
     switch (state.viewMode) {
       case DashboardViewMode.overview:
         return _buildOverviewView(context, state);
+      //stats
       case DashboardViewMode.enteredVehicles:
         return const EnteredVehiclesView();
       case DashboardViewMode.exitedVehicles:
@@ -359,6 +363,7 @@ class _DashboardPageState extends State<DashboardPage> {
         return const ViolationsView();
       case DashboardViewMode.allVehicles:
         return const AllVehiclesView();
+      //charts
       case DashboardViewMode.vehicleDistribution:
         return const VehicleDistributionView();
       case DashboardViewMode.vehicleLogsTrend:

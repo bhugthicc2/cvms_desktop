@@ -63,6 +63,9 @@ class VehicleDistributionView extends StatelessWidget {
 
                   return DonutChartWidget(
                     onViewTap: () {},
+                    radius: '70%',
+                    innerRadius: '60%',
+                    explode: true,
                     data: state.vehicleDistribution,
                     onDonutChartPointTap: (details) {
                       CustomSnackBar.show(
@@ -73,7 +76,6 @@ class VehicleDistributionView extends StatelessWidget {
                         duration: const Duration(seconds: 3),
                       );
                     },
-                    title: 'Vehicle Distribution per College',
                   );
                 },
               ),

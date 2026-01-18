@@ -6,12 +6,14 @@ class ProfilePageHeader extends StatelessWidget {
   final String title;
   final String buttonText;
   final VoidCallback onButtonTap;
+  final Color btnColor;
 
   const ProfilePageHeader({
     super.key,
     required this.title,
     required this.buttonText,
     required this.onButtonTap,
+    this.btnColor = AppColors.primary,
   });
 
   @override
@@ -26,7 +28,11 @@ class ProfilePageHeader extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        ProfilePageButton(text: buttonText, onTap: onButtonTap),
+        ProfilePageButton(
+          text: buttonText,
+          onTap: onButtonTap,
+          btnColor: btnColor,
+        ),
       ],
     );
   }
@@ -35,8 +41,14 @@ class ProfilePageHeader extends StatelessWidget {
 class ProfilePageButton extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
+  final Color btnColor;
 
-  const ProfilePageButton({super.key, required this.text, required this.onTap});
+  const ProfilePageButton({
+    super.key,
+    required this.text,
+    required this.onTap,
+    this.btnColor = AppColors.primary,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,17 +58,16 @@ class ProfilePageButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: _sectionDecoration(),
-        child: Text(text),
+        decoration: _sectionDecoration(color: btnColor),
+        child: Text(
+          text,
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
 }
 
-BoxDecoration _sectionDecoration() {
-  return BoxDecoration(
-    border: Border.all(color: AppColors.dividerColor.withValues(alpha: 0.7)),
-    color: AppColors.white,
-    borderRadius: BorderRadius.circular(5),
-  );
+BoxDecoration _sectionDecoration({required final Color color}) {
+  return BoxDecoration(color: color, borderRadius: BorderRadius.circular(5));
 }
