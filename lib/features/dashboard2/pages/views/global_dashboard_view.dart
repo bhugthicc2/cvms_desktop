@@ -43,7 +43,8 @@ class GlobalDashboardView extends StatelessWidget {
           BlocBuilder<DashboardCubit, DashboardState>(
             buildWhen:
                 (prev, curr) =>
-                    prev.vehicleDistribution != curr.vehicleDistribution,
+                    prev.vehicleDistribution !=
+                    curr.vehicleDistribution, //rebuild only when data has changes
             builder: (context, state) {
               return GlobalChartsSection(
                 vehicleDistribution:
