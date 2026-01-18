@@ -1,3 +1,4 @@
+import 'package:cvms_desktop/features/dashboard2/models/individual_vehicle_report.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -11,8 +12,13 @@ class DashboardCubit extends Cubit<DashboardState> {
     emit(state.copyWith(viewMode: DashboardViewMode.global));
   }
 
-  void showIndividualReport() {
-    emit(state.copyWith(viewMode: DashboardViewMode.individual));
+  void showIndividualReport({required IndividualVehicleReport vehicle}) {
+    emit(
+      state.copyWith(
+        viewMode: DashboardViewMode.individual,
+        selectedVehicle: vehicle,
+      ),
+    );
   }
 
   void showPdfPreview() {

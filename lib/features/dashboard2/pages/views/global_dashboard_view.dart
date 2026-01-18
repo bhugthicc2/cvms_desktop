@@ -1,4 +1,6 @@
-import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/features/dashboard2/data/mock_data.dart';
+import 'package:cvms_desktop/features/dashboard2/widgets/sections/stats/global_stats_card_section.dart';
+import 'package:cvms_desktop/features/dashboard2/widgets/sections/charts/global_charts_section.dart';
 import 'package:flutter/material.dart';
 
 class GlobalDashboardView extends StatelessWidget {
@@ -6,25 +8,29 @@ class GlobalDashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.medium),
+    return SingleChildScrollView(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Global Dashboard',
-            style: Theme.of(context).textTheme.headlineMedium,
+          // Global Stats Cards
+          GlobalStatsCardSection(
+            statsCard1Label: 'Total Violations',
+            statsCard1Value: MockDashboardData.fleetSummary.totalViolations,
+            statsCard2Label: 'Pending Violations',
+            statsCard2Value: MockDashboardData.fleetSummary.activeViolations,
+            statsCard3Label: 'Total Vehicles',
+            statsCard3Value: MockDashboardData.fleetSummary.totalVehicles,
+            statsCard4Label: 'Total Entries/Exits',
+            statsCard4Value: MockDashboardData.fleetSummary.totalEntriesExits,
           ),
-          const SizedBox(height: AppSpacing.large),
-          // Placeholder for dashboard content
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Center(child: Text('Global Dashboard Content')),
-            ),
+
+          // Global Charts Section
+          GlobalChartsSection(
+            summary: MockDashboardData.fleetSummary,
+            vehicleDistribution: MockDashboardData.vehicleDistribution,
+            yearLevelBreakdown: MockDashboardData.yearLevelBreakdown,
+            studentWithMostViolations: MockDashboardData.studentViolations,
+            cityBreakdown: MockDashboardData.cityBreakdown,
+            violationDistribution: MockDashboardData.violationDistribution,
           ),
         ],
       ),

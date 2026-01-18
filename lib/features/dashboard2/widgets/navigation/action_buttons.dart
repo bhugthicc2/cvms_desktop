@@ -1,0 +1,95 @@
+import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_slide.dart';
+import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+
+class DateFilterButton extends StatelessWidget {
+  final String dateText;
+  final VoidCallback onPressed;
+
+  const DateFilterButton({
+    super.key,
+    required this.dateText,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return HoverSlide(
+      dy: -0.04,
+      dx: 0,
+      cursor: SystemMouseCursors.click,
+      onTap: onPressed,
+      child: Container(
+        height: 40,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              PhosphorIconsRegular.calendar,
+              color: AppColors.white,
+              size: 22,
+            ),
+            Spacing.horizontal(size: AppSpacing.small),
+            Text(
+              dateText,
+              style: const TextStyle(
+                color: AppColors.white,
+                fontSize: 12,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ExportReportButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onPressed;
+
+  const ExportReportButton({
+    super.key,
+    this.text = 'GENERATE REPORT',
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return HoverSlide(
+      dy: -0.04,
+      dx: 0,
+      cursor: SystemMouseCursors.click,
+      onTap: onPressed,
+      child: Container(
+        height: 40,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: const TextStyle(
+              color: AppColors.white,
+              fontSize: 12,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
