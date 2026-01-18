@@ -13,33 +13,52 @@ class GlobalDashboardView extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          // Global Stats Cards
+          // STATS SECTION (lightweight)
           BlocBuilder<DashboardCubit, DashboardState>(
+            buildWhen:
+                (prev, curr) =>
+                    prev.totalEntriesExits != curr.totalEntriesExits ||
+                    prev.totalVehicles != curr.totalVehicles ||
+                    prev.totalPendingViolations !=
+                        curr.totalPendingViolations ||
+                    prev.totalViolations != curr.totalViolations,
             builder: (context, state) {
-              // Realtime implementation step 21
               return GlobalStatsCardSection(
                 statsCard1Label: 'Total Violations',
-                statsCard1Value: MockDashboardData.fleetSummary.totalViolations,
-                statsCard2Label: 'Pending Violations',
-                statsCard2Value:
-                    MockDashboardData.fleetSummary.activeViolations,
+                statsCard1Value: state.totalViolations,
+                statsCard2Label:
+                    'Pending Violations', //realtime data retrieval based on collection field step 13
+                statsCard2Value: state.totalPendingViolations,
                 statsCard3Label: 'Total Vehicles',
-                statsCard3Value: MockDashboardData.fleetSummary.totalVehicles,
+                statsCard3Value: state.totalVehicles,
                 statsCard4Label: 'Total Entries/Exits',
                 statsCard4Value:
-                    state.totalEntriesExits, // Realtime implementation step 22
+                    state
+                        .totalEntriesExits, // Realtime implementation step 22 ),
               );
             },
           ),
 
-          // Global Charts Section
-          GlobalChartsSection(
-            summary: MockDashboardData.fleetSummary,
-            vehicleDistribution: MockDashboardData.vehicleDistribution,
-            yearLevelBreakdown: MockDashboardData.yearLevelBreakdown,
-            studentWithMostViolations: MockDashboardData.studentViolations,
-            cityBreakdown: MockDashboardData.cityBreakdown,
-            violationDistribution: MockDashboardData.violationDistribution,
+          // CHARTS SECTION (heavy)
+          BlocBuilder<DashboardCubit, DashboardState>(
+            buildWhen:
+                (prev, curr) =>
+                    prev.vehicleDistribution != curr.vehicleDistribution,
+            builder: (context, state) {
+              return GlobalChartsSection(
+                vehicleDistribution:
+                    state
+                        .vehicleDistribution, //real time grouped aggregation impl step 11
+                yearLevelBreakdown: MockDashboardData.yearLevelBreakdown,
+                studentWithMostViolations: MockDashboardData.studentViolations,
+                cityBreakdown: MockDashboardData.cityBreakdown,
+                violationDistribution: MockDashboardData.violationDistribution,
+                vehicleLogsDistributionPerCollege:
+                    MockDashboardData.vehicleLogsDistributionPerCollege,
+                violationDistributionPerCollege:
+                    MockDashboardData.violationDistributionPerCollege,
+              );
+            },
           ),
         ],
       ),

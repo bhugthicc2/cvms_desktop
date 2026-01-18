@@ -5,26 +5,27 @@ import 'package:cvms_desktop/core/widgets/charts/stacked_bar_widget.dart';
 import 'package:cvms_desktop/core/widgets/charts/bar_chart_widget.dart';
 import 'package:cvms_desktop/core/widgets/charts/line_chart_widget.dart';
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
-import 'package:cvms_desktop/features/dashboard/models/fleet_summary.dart';
 import 'package:cvms_desktop/features/dashboard2/data/mock_data.dart';
 import 'package:flutter/material.dart';
 
 class GlobalChartsSection extends StatelessWidget {
-  final FleetSummary summary;
   final List<ChartDataModel> vehicleDistribution;
   final List<ChartDataModel> yearLevelBreakdown;
   final List<ChartDataModel> studentWithMostViolations;
   final List<ChartDataModel> cityBreakdown;
   final List<ChartDataModel> violationDistribution;
+  final List<ChartDataModel> vehicleLogsDistributionPerCollege;
+  final List<ChartDataModel> violationDistributionPerCollege;
 
   const GlobalChartsSection({
     super.key,
-    required this.summary,
     required this.vehicleDistribution,
     required this.yearLevelBreakdown,
     required this.studentWithMostViolations,
     required this.cityBreakdown,
     required this.violationDistribution,
+    required this.vehicleLogsDistributionPerCollege,
+    required this.violationDistributionPerCollege,
   });
 
   @override
@@ -90,14 +91,14 @@ class GlobalChartsSection extends StatelessWidget {
                 Expanded(
                   child: _buildDonutChart(
                     'Vehicle Logs Distribution per College',
-                    summary.departmentLogData,
+                    vehicleLogsDistributionPerCollege,
                   ),
                 ),
                 Spacing.horizontal(size: AppSpacing.medium),
                 Expanded(
                   child: _buildDonutChart(
                     'Violation Distribution per College',
-                    summary.deptViolationData,
+                    violationDistributionPerCollege,
                   ),
                 ),
               ],

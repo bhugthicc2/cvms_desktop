@@ -1,30 +1,24 @@
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
-import 'package:cvms_desktop/features/dashboard/models/fleet_summary.dart';
 
 class MockDashboardData {
-  static final fleetSummary = FleetSummary(
-    totalVehicles: 156,
-    totalViolations: 89,
-    activeViolations: 23,
-    totalEntriesExits: 1247,
-    departmentLogData: [
-      ChartDataModel(category: 'Engineering', value: 45),
-      ChartDataModel(category: 'Business', value: 32),
-      ChartDataModel(category: 'Arts', value: 28),
-    ],
-    deptViolationData: [
-      ChartDataModel(category: 'Engineering', value: 23),
-      ChartDataModel(category: 'Business', value: 18),
-      ChartDataModel(category: 'Arts', value: 5),
-    ],
-  );
-
-  static List<ChartDataModel> get vehicleDistribution => [
+  static List<ChartDataModel> get violationDistributionPerCollege => [
     ChartDataModel(category: 'Engineering', value: 45),
     ChartDataModel(category: 'Business', value: 32),
     ChartDataModel(category: 'Arts', value: 28),
-    ChartDataModel(category: 'Science', value: 25),
-    ChartDataModel(category: 'Education', value: 26),
+  ];
+
+  static List<ChartDataModel> get vehicleLogsDistributionPerCollege => [
+    ChartDataModel(category: 'Engineering', value: 45),
+    ChartDataModel(category: 'Business', value: 32),
+    ChartDataModel(category: 'Arts', value: 28),
+  ];
+
+  static List<ChartDataModel> get vehicleDistribution => [
+    ChartDataModel(category: 'SCJE', value: 45),
+    ChartDataModel(category: 'CCS', value: 32),
+    ChartDataModel(category: 'CBA', value: 28),
+    ChartDataModel(category: 'CAF-SOE', value: 25),
+    ChartDataModel(category: 'LHS', value: 26),
   ];
 
   static List<ChartDataModel> get yearLevelBreakdown => [

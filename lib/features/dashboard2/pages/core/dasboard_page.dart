@@ -6,7 +6,7 @@ import 'package:cvms_desktop/features/dashboard2/bloc/dashboard_cubit.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/global_dashboard_view.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/individual_report_view.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/pdf_preview_view.dart';
-import 'package:cvms_desktop/features/dashboard2/repositories/dashboard_repositoty.dart';
+import 'package:cvms_desktop/features/dashboard2/repositories/dashboard_repository.dart';
 import 'package:cvms_desktop/features/dashboard2/services/vehicle_search_service.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/dashboard_controls_section.dart';
 import 'package:flutter/material.dart';
