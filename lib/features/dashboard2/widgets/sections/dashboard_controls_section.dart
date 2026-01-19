@@ -12,7 +12,6 @@ class DashboardControlsSection extends StatelessWidget {
   final Future<List<String>> Function(String) onSearchSuggestions;
   final void Function(String) onVehicleSelected;
   final String dateFilterText;
-  final VoidCallback onDateFilterPressed;
   final VoidCallback onExportPressed;
   final bool showBackButton;
   final VoidCallback? onBackButtonPressed;
@@ -23,7 +22,6 @@ class DashboardControlsSection extends StatelessWidget {
     required this.onSearchSuggestions,
     required this.onVehicleSelected,
     required this.dateFilterText,
-    required this.onDateFilterPressed,
     required this.onExportPressed,
     this.showBackButton = false,
     this.onBackButtonPressed,
@@ -56,13 +54,6 @@ class DashboardControlsSection extends StatelessWidget {
               suggestionsCallback: onSearchSuggestions,
               onSuggestionSelected: onVehicleSelected,
             ),
-          ),
-          const SizedBox(width: AppSpacing.medium),
-
-          // Date Filter Button
-          DateFilterButton(
-            dateText: dateFilterText,
-            onPressed: onDateFilterPressed,
           ),
           const SizedBox(width: AppSpacing.medium),
 

@@ -27,6 +27,7 @@ class DashboardState extends Equatable {
   final List<ChartDataModel> violationDistributionPerCollege; // step 7
   final List<ChartDataModel> violationTypeDistribution; // step 10
   final List<ChartDataModel> fleetLogsData;
+  final String currentTimeRange;
   final bool initialized;
 
   const DashboardState({
@@ -51,6 +52,7 @@ class DashboardState extends Equatable {
     this.violationDistributionPerCollege = const [], // step 8
     this.violationTypeDistribution = const [], // step 11
     this.fleetLogsData = const [],
+    this.currentTimeRange = '7 days',
   });
 
   DashboardState copyWith({
@@ -74,6 +76,7 @@ class DashboardState extends Equatable {
     List<ChartDataModel>? violationDistributionPerCollege, // step 9
     List<ChartDataModel>? violationTypeDistribution, // step 12
     List<ChartDataModel>? fleetLogsData,
+    String? currentTimeRange,
     bool? initialized,
   }) {
     return DashboardState(
@@ -111,6 +114,7 @@ class DashboardState extends Equatable {
           violationTypeDistribution ??
           this.violationTypeDistribution, // step 13
       fleetLogsData: fleetLogsData ?? this.fleetLogsData,
+      currentTimeRange: currentTimeRange ?? this.currentTimeRange,
     );
   }
 
@@ -134,6 +138,7 @@ class DashboardState extends Equatable {
     violationDistributionPerCollege, // step 11
     violationTypeDistribution, // step 13
     fleetLogsData,
+    currentTimeRange,
     initialized,
   ];
 }

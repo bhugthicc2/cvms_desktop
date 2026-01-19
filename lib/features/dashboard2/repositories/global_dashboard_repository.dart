@@ -355,7 +355,6 @@ class GlobalDashboardRepository {
         .where('timeIn', isLessThanOrEqualTo: Timestamp.fromDate(end))
         .snapshots()
         .map((snapshot) {
-          print('📊 Fleet Logs Snapshot: ${snapshot.docs.length} documents');
           final Map<String, int> buckets = {};
 
           // step 1: initialize empty buckets

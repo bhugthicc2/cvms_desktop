@@ -1,3 +1,5 @@
+import 'package:cvms_desktop/core/widgets/app/custom_alert_dialog.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_date_filter.dart';
 import 'package:cvms_desktop/features/dashboard2/bloc/dashboard_cubit.dart';
 import 'package:cvms_desktop/features/dashboard2/models/time_grouping.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/stats/global_stats_card_section.dart';
@@ -79,6 +81,10 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
             // step 18
             builder: (context, state) {
               return GlobalChartsSection(
+                onTimeRangeChanged: (value) {
+                  _onTimeRangeChanged(value);
+                },
+                currentTimeRange: state.currentTimeRange,
                 yearLevelBreakdown:
                     state.yearLevelBreakdown, // realtime step 19
                 vehicleDistribution: state.vehicleDistribution,
@@ -97,6 +103,69 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
           ),
         ],
       ),
+    );
+  }
+
+  void _onTimeRangeChanged(String selectedRange) {
+    // Update time range in cubit state
+    context.read<DashboardCubit>().updateTimeRange(selectedRange);
+
+    DateTime endDate = DateTime.now();
+    DateTime startDate;
+
+    switch (selectedRange) {
+      case '7 days':
+        startDate = endDate.subtract(Duration(days: 7));
+        break;
+      case '30 days':
+        startDate = endDate.subtract(Duration(days: 30));
+        break;
+      case 'Month':
+        startDate = DateTime(endDate.year, endDate.month, 1);
+        break;
+      case 'Year':
+        startDate = DateTime(endDate.year, 1, 1);
+        break;
+      case 'Custom':
+        // Trigger custom date picker
+        _showCustomDatePicker();
+        return;
+      default:
+        return;
+    }
+
+    // Apply the selected date range to the data (e.g., fleet logs, charts)
+    context.read<DashboardCubit>().watchFleetLogsTrend(
+      start: startDate,
+      end: endDate,
+      grouping: TimeGrouping.day, // or whatever your default grouping is
+    );
+  }
+
+  void _showCustomDatePicker() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return CustomAlertDialog(
+          title: 'Select Date Range',
+          child: CustomDateFilter(
+            onApply: (period) {
+              if (period != null) {
+                // Update current time range to reflect custom selection
+                context.read<DashboardCubit>().updateTimeRange('Custom');
+
+                // Use the original context to access the cubit
+                context.read<DashboardCubit>().watchFleetLogsTrend(
+                  start: period.start,
+                  end: period.end,
+                  grouping: TimeGrouping.day,
+                );
+              }
+              Navigator.of(dialogContext).pop(); // Close the date picker dialog
+            },
+          ),
+        );
+      },
     );
   }
 }

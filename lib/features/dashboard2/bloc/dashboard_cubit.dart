@@ -300,6 +300,10 @@ class DashboardCubit extends Cubit<DashboardState> {
     );
   }
 
+  void updateTimeRange(String timeRange) {
+    emit(state.copyWith(currentTimeRange: timeRange));
+  }
+
   void backToPreviousView() {
     final previousView = state.previousViewMode;
     if (previousView != null) {

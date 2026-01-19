@@ -7,6 +7,7 @@ import 'package:cvms_desktop/core/widgets/charts/stacked_bar_widget.dart';
 import 'package:cvms_desktop/core/widgets/charts/bar_chart_widget.dart';
 import 'package:cvms_desktop/core/widgets/charts/line_chart_widget.dart';
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
+import 'package:cvms_desktop/features/dashboard2/utils/dynamic_title_formatter.dart';
 import 'package:flutter/material.dart';
 
 class GlobalChartsSection extends StatelessWidget {
@@ -18,6 +19,8 @@ class GlobalChartsSection extends StatelessWidget {
   final List<ChartDataModel> vehicleLogsDistributionPerCollege;
   final List<ChartDataModel> violationDistributionPerCollege;
   final List<ChartDataModel> fleetLogsData;
+  final Function(String)? onTimeRangeChanged;
+  final String? currentTimeRange;
 
   const GlobalChartsSection({
     super.key,
@@ -29,6 +32,8 @@ class GlobalChartsSection extends StatelessWidget {
     required this.vehicleLogsDistributionPerCollege,
     required this.violationDistributionPerCollege,
     required this.fleetLogsData,
+    this.onTimeRangeChanged,
+    this.currentTimeRange = '7 days',
   });
 
   @override
@@ -124,7 +129,10 @@ class GlobalChartsSection extends StatelessWidget {
                 Spacing.horizontal(size: AppSpacing.medium),
                 Expanded(
                   child: _buildLineChart(
-                    'Fleet logs for the last',
+                    DynamicTitleFormatter().getDynamicTitle(
+                      'Fleet logs for ',
+                      currentTimeRange,
+                    ),
                     fleetLogsData,
                   ),
                 ),
@@ -170,10 +178,10 @@ class GlobalChartsSection extends StatelessWidget {
         color: AppColors.donutBlue,
         fontSize: 14,
         verticalPadding: 0,
-        items: const ['7 days', 'Month', 'Year'],
+        items: const ['7 days', '30 days', 'Month', 'Year', 'Custom'],
         initialValue: '7 days',
         onChanged: (value) {
-          //todo
+          onTimeRangeChanged?.call(value);
         },
       ),
       data: data,

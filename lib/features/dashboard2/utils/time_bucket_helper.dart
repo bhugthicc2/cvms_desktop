@@ -36,11 +36,11 @@ class TimeBuckerHelper {
   String formatBucket(DateTime date, TimeGrouping grouping) {
     switch (grouping) {
       case TimeGrouping.day:
-        return DateFormat('EEE').format(date); // Mon, Tue
+        return DateFormat('yyyy-MM-dd').format(date); // 2025-01-20
       case TimeGrouping.week:
         return 'W${weekNumber(date)}';
       case TimeGrouping.month:
-        return DateFormat('MMM').format(date); // Jan, Feb
+        return DateFormat('yyyy-MM').format(date); // 2025-01
       case TimeGrouping.year:
         return date.year.toString();
     }
@@ -61,18 +61,8 @@ class TimeBuckerHelper {
     try {
       switch (grouping) {
         case TimeGrouping.day:
-          // Parse day names like "Mon", "Tue" to recent date
-          final now = DateTime.now();
-          final dayMap = {
-            'Mon': now.subtract(Duration(days: (now.weekday - 1) % 7)),
-            'Tue': now.subtract(Duration(days: (now.weekday - 2) % 7)),
-            'Wed': now.subtract(Duration(days: (now.weekday - 3) % 7)),
-            'Thu': now.subtract(Duration(days: (now.weekday - 4) % 7)),
-            'Fri': now.subtract(Duration(days: (now.weekday - 5) % 7)),
-            'Sat': now.subtract(Duration(days: (now.weekday - 6) % 7)),
-            'Sun': now.subtract(Duration(days: (now.weekday - 7) % 7)),
-          };
-          return dayMap[bucketKey];
+          // Parse date format like "2025-01-20"
+          return DateTime.parse(bucketKey);
 
         case TimeGrouping.week:
           // Parse week format like "W1", "W2" to date
@@ -84,25 +74,14 @@ class TimeBuckerHelper {
           break;
 
         case TimeGrouping.month:
-          // Parse month names like "Jan", "Feb" to date
-          final monthMap = {
-            'Jan': 1,
-            'Feb': 2,
-            'Mar': 3,
-            'Apr': 4,
-            'May': 5,
-            'Jun': 6,
-            'Jul': 7,
-            'Aug': 8,
-            'Sep': 9,
-            'Oct': 10,
-            'Nov': 11,
-            'Dec': 12,
-          };
-          final month = monthMap[bucketKey];
-          if (month != null) {
-            final year = DateTime.now().year;
-            return DateTime(year, month, 1);
+          // Parse month format like "2025-01"
+          final parts = bucketKey.split('-');
+          if (parts.length == 2) {
+            final year = int.tryParse(parts[0]);
+            final month = int.tryParse(parts[1]);
+            if (year != null && month != null) {
+              return DateTime(year, month, 1);
+            }
           }
           break;
 

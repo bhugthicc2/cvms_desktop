@@ -110,6 +110,7 @@ class DashboardPage extends StatelessWidget {
                 },
                 child: Container(
                   key: ValueKey(state.viewMode.toString()),
+                  //todo pdf preview should not be affected by the scrollview
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
@@ -119,9 +120,7 @@ class DashboardPage extends StatelessWidget {
                             showBackButton:
                                 state.viewMode != DashboardViewMode.global,
                             dateFilterText: 'DATE FILTER',
-                            onDateFilterPressed: () {
-                              // TODO: Show date filter dialog
-                            },
+
                             onExportPressed: () {
                               // TODO: Export report
                               // Navigate to PDF preview

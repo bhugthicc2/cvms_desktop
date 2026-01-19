@@ -79,14 +79,20 @@ class ExportReportButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(5),
         ),
         child: Center(
-          child: Text(
-            text,
-            style: const TextStyle(
-              color: AppColors.white,
-              fontSize: 12,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w600,
-            ),
+          child: Row(
+            children: [
+              Icon(PhosphorIconsRegular.receipt, color: AppColors.white),
+              const Spacing.horizontal(size: AppSpacing.small),
+              Text(
+                text,
+                style: const TextStyle(
+                  color: AppColors.white,
+                  fontSize: 12,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
         ),
       ),

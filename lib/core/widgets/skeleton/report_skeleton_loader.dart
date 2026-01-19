@@ -43,7 +43,7 @@ class ReportSkeletonLoader extends StatelessWidget {
                   ),
 
                   const Spacing.horizontal(size: AppSpacing.medium),
-                  //report date filter
+                  //report button
                   Container(
                     height: 40,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -55,21 +55,9 @@ class ReportSkeletonLoader extends StatelessWidget {
                       children: [
                         Icon(Icons.calendar_today),
                         Spacing.horizontal(size: AppSpacing.small),
-                        Text('Date Filter'),
+                        Text('GENERATE REPORT'),
                       ],
                     ),
-                  ),
-
-                  const Spacing.horizontal(size: AppSpacing.medium),
-                  //generate report button
-                  Container(
-                    height: 40,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Center(child: Text('Generate Report')),
                   ),
                 ],
               ),

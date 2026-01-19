@@ -21,7 +21,11 @@ class PdfPreviewView extends StatelessWidget {
         isFitToWidth: false,
         isChart: true,
       ),
-      body: const Center(child: Text('TODO: PDF Preview Content')),
+      body: SizedBox(
+        height: 200,
+        width: 300,
+        child: const Center(child: Text('TODO: PDF Preview Content')),
+      ),
     );
   }
 }
