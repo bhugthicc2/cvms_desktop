@@ -39,6 +39,9 @@ class DashboardPage extends StatelessWidget {
         return const GlobalDashboardView();
       case DashboardViewMode.individual:
         return BlocProvider(
+          key: ValueKey(
+            state.selectedVehicle?.vehicleId,
+          ), // Key changes recreate cubit
           create:
               (_) => IndividualDashboardCubit(
                 vehicleId: state.selectedVehicle!.vehicleId,
