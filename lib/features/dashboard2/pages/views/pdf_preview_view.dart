@@ -1,10 +1,14 @@
+import 'dart:typed_data';
+
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/features/dashboard2/widgets/components/pdf_doc/viewer/pdf_viewer_widget.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/navigation/pdf_preview_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class PdfPreviewView extends StatelessWidget {
   final VoidCallback onBackPressed;
-  const PdfPreviewView({super.key, required this.onBackPressed});
+  final Uint8List? pdfBytes;
+  const PdfPreviewView({super.key, required this.onBackPressed, this.pdfBytes});
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +25,7 @@ class PdfPreviewView extends StatelessWidget {
         isFitToWidth: false,
         isChart: true,
       ),
-      body: SizedBox(
-        height: 200,
-        width: 300,
-        child: const Center(child: Text('TODO: PDF Preview Content')),
-      ),
+      body: PdfViewerWidget(pdfBytes: pdfBytes ?? Uint8List(0)),
     );
   }
 }
