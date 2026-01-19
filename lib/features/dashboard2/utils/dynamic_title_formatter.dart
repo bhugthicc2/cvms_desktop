@@ -4,9 +4,9 @@ class DynamicTitleFormatter {
 
     switch (currentTimeRange) {
       case '7 days':
-        return '$baseTitle for the last';
+        return '$baseTitle the last';
       case '30 days':
-        return '$baseTitle for the last';
+        return '$baseTitle the last';
       case 'Month':
         return '$baseTitle this';
       case 'Year':
