@@ -1,4 +1,6 @@
+import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/core/widgets/charts/bar_chart_widget.dart';
 import 'package:cvms_desktop/core/widgets/charts/line_chart_widget.dart';
@@ -8,11 +10,15 @@ import 'package:flutter/material.dart';
 class IndividualChartsSection extends StatelessWidget {
   final List<ChartDataModel> violationDistribution;
   final List<ChartDataModel> vehicleLogs;
+  final String lineChartTitle;
+  final Function(String)? onTimeRangeChanged;
 
   const IndividualChartsSection({
     super.key,
     required this.violationDistribution,
     required this.vehicleLogs,
+    required this.lineChartTitle,
+    this.onTimeRangeChanged,
   });
 
   @override
@@ -36,9 +42,7 @@ class IndividualChartsSection extends StatelessWidget {
               ),
             ),
             Spacing.horizontal(size: AppSpacing.medium),
-            Expanded(
-              child: _buildLineChart('Vehicle logs for the last', vehicleLogs),
-            ),
+            Expanded(child: _buildLineChart(lineChartTitle, vehicleLogs)),
           ],
         ),
       ),
@@ -56,6 +60,16 @@ class IndividualChartsSection extends StatelessWidget {
 
   Widget _buildLineChart(String title, List<ChartDataModel> data) {
     return LineChartWidget(
+      customWidget: CustomDropdown(
+        color: AppColors.donutBlue,
+        fontSize: 14,
+        verticalPadding: 0,
+        items: const ['7 days', '30 days', 'Month', 'Year', 'Custom'],
+        initialValue: '7 days',
+        onChanged: (value) {
+          onTimeRangeChanged?.call(value);
+        },
+      ),
       data: data,
       title: title,
       onViewTap: () {},

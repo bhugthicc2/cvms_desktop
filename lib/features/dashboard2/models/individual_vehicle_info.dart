@@ -2,7 +2,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/core/utils/registration_expiry_utils.dart';
 
-class IndividualVehicleReport {
+class IndividualVehicleInfo {
+  final String vehicleId;
   final String plateNumber;
   final String ownerName;
   final String vehicleType;
@@ -11,6 +12,7 @@ class IndividualVehicleReport {
   final String vehicleModel;
   final DateTime? createdAt;
   final DateTime? expiryDate;
+  final int daysUntilExpiration;
 
   // MVP Progress fields
   final double mvpProgress;
@@ -18,7 +20,8 @@ class IndividualVehicleReport {
   final DateTime? mvpExpiryDate;
   final String mvpStatusText;
 
-  IndividualVehicleReport({
+  IndividualVehicleInfo({
+    required this.vehicleId,
     required this.plateNumber,
     required this.ownerName,
     required this.vehicleType,
@@ -27,13 +30,17 @@ class IndividualVehicleReport {
     this.vehicleModel = '',
     this.createdAt,
     this.expiryDate,
+    this.daysUntilExpiration = 0,
     this.mvpProgress = 0.0,
     this.mvpRegisteredDate,
     this.mvpExpiryDate,
     this.mvpStatusText = 'Not Set',
   });
 
-  factory IndividualVehicleReport.fromFirestore(Map<String, dynamic> data) {
+  factory IndividualVehicleInfo.fromFirestore(
+    String vehicleId,
+    Map<String, dynamic> data,
+  ) {
     final createdAt =
         data['createdAt'] != null
             ? (data['createdAt'] as Timestamp).toDate()
@@ -65,7 +72,8 @@ class IndividualVehicleReport {
       }
     }
 
-    return IndividualVehicleReport(
+    return IndividualVehicleInfo(
+      vehicleId: vehicleId,
       plateNumber: data['plateNumber'] ?? '',
       ownerName: data['ownerName'] ?? '',
       vehicleType: data['vehicleType'] ?? '',
@@ -74,6 +82,8 @@ class IndividualVehicleReport {
       vehicleModel: data['vehicleModel'] ?? '',
       createdAt: createdAt,
       expiryDate: expiryDate,
+      daysUntilExpiration:
+          expiryDate != null ? expiryDate.difference(DateTime.now()).inDays : 0,
       mvpProgress: mvpProgress,
       mvpRegisteredDate: createdAt,
       mvpExpiryDate: expiryDate,

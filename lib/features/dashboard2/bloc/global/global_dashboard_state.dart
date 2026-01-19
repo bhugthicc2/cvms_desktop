@@ -10,7 +10,7 @@ class GlobalDashboardState extends Equatable {
   final DashboardViewMode viewMode;
   final bool loading;
   final String? error;
-  final IndividualVehicleReport? selectedVehicle;
+  final IndividualVehicleInfo? selectedVehicle;
   final DashboardViewMode? previousViewMode;
   // ----GLOBAL-----
   final int totalEntriesExits; //realtime implementation step 2
@@ -64,7 +64,7 @@ class GlobalDashboardState extends Equatable {
     DashboardViewMode? viewMode,
     bool? loading,
     String? error,
-    IndividualVehicleReport? selectedVehicle,
+    IndividualVehicleInfo? selectedVehicle,
     DashboardViewMode? previousViewMode,
     // ----GLOBAL-----
     int? totalEntriesExits, //realtime implementation step 4

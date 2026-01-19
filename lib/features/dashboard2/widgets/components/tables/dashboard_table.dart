@@ -27,7 +27,7 @@ class DashboardTable extends StatelessWidget {
         0,
       ),
       child: Container(
-        height: 300,
+        height: 400,
         padding: const EdgeInsets.all(AppSpacing.medium),
         decoration: cardDecoration(),
         child: Column(

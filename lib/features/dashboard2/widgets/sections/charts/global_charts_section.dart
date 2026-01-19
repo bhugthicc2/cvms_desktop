@@ -7,7 +7,6 @@ import 'package:cvms_desktop/core/widgets/charts/stacked_bar_widget.dart';
 import 'package:cvms_desktop/core/widgets/charts/bar_chart_widget.dart';
 import 'package:cvms_desktop/core/widgets/charts/line_chart_widget.dart';
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
-import 'package:cvms_desktop/features/dashboard2/utils/dynamic_title_formatter.dart';
 import 'package:flutter/material.dart';
 
 class GlobalChartsSection extends StatelessWidget {
@@ -20,7 +19,7 @@ class GlobalChartsSection extends StatelessWidget {
   final List<ChartDataModel> violationDistributionPerCollege;
   final List<ChartDataModel> fleetLogsData;
   final Function(String)? onTimeRangeChanged;
-  final String? currentTimeRange;
+  final String lineChartTitle;
 
   const GlobalChartsSection({
     super.key,
@@ -33,7 +32,7 @@ class GlobalChartsSection extends StatelessWidget {
     required this.violationDistributionPerCollege,
     required this.fleetLogsData,
     this.onTimeRangeChanged,
-    this.currentTimeRange = '7 days',
+    required this.lineChartTitle,
   });
 
   @override
@@ -127,15 +126,7 @@ class GlobalChartsSection extends StatelessWidget {
                   ),
                 ),
                 Spacing.horizontal(size: AppSpacing.medium),
-                Expanded(
-                  child: _buildLineChart(
-                    DynamicTitleFormatter().getDynamicTitle(
-                      'Fleet logs for ',
-                      currentTimeRange,
-                    ),
-                    fleetLogsData,
-                  ),
-                ),
+                Expanded(child: _buildLineChart(lineChartTitle, fleetLogsData)),
               ],
             ),
           ),

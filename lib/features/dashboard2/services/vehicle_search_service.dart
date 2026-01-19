@@ -3,7 +3,7 @@
 import 'package:cvms_desktop/features/dashboard2/models/vehicle_search_suggestion.dart';
 
 import '../repositories/vehicle_search_repository.dart';
-import '../models/individual_vehicle_report.dart';
+import '../models/individual_vehicle_info.dart';
 
 class VehicleSearchService {
   final VehicleSearchRepository repository;
@@ -18,10 +18,10 @@ class VehicleSearchService {
     }).toList();
   }
 
-  Future<IndividualVehicleReport?> getIndividualReport(String vehicleId) async {
+  Future<IndividualVehicleInfo?> getIndividualReport(String vehicleId) async {
     final data = await repository.getVehicleById(vehicleId);
     if (data == null) return null;
 
-    return IndividualVehicleReport.fromFirestore(data);
+    return IndividualVehicleInfo.fromFirestore(vehicleId, data);
   }
 }

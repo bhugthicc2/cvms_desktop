@@ -3,11 +3,13 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
 import 'package:cvms_desktop/core/widgets/skeleton/report_skeleton_loader.dart';
 import 'package:cvms_desktop/features/dashboard2/bloc/global/global_dashboard_cubit.dart';
+import 'package:cvms_desktop/features/dashboard2/bloc/individual/individual_dashboard_cubit.dart';
 import 'package:cvms_desktop/features/dashboard2/models/vehicle_search_suggestion.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/global_dashboard_view.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/individual_report_view.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/pdf_preview_view.dart';
 import 'package:cvms_desktop/features/dashboard2/repositories/global_dashboard_repository.dart';
+import 'package:cvms_desktop/features/dashboard2/repositories/individual_dashboard_repository.dart';
 import 'package:cvms_desktop/features/dashboard2/repositories/vehicle_search_repository.dart';
 import 'package:cvms_desktop/features/dashboard2/services/vehicle_search_service.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/dashboard_controls_section.dart';
@@ -36,7 +38,17 @@ class DashboardPage extends StatelessWidget {
       case DashboardViewMode.global:
         return const GlobalDashboardView();
       case DashboardViewMode.individual:
-        return IndividualReportView(report: state.selectedVehicle!);
+        return BlocProvider(
+          create:
+              (_) => IndividualDashboardCubit(
+                vehicleId: state.selectedVehicle!.vehicleId,
+                repository: IndividualDashboardRepository(
+                  FirebaseFirestore.instance,
+                ),
+              ),
+          child: IndividualReportView(vehicleInfo: state.selectedVehicle!),
+        );
+
       case DashboardViewMode.pdfPreview:
         return PdfPreviewView(
           onBackPressed: () {

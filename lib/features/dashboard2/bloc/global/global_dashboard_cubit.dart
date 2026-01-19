@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
-import 'package:cvms_desktop/features/dashboard2/models/individual_vehicle_report.dart';
+import 'package:cvms_desktop/features/dashboard2/models/individual_vehicle_info.dart';
 import 'package:cvms_desktop/features/dashboard2/models/time_grouping.dart';
 import 'package:cvms_desktop/features/dashboard2/repositories/global_dashboard_repository.dart';
 import 'package:cvms_desktop/features/dashboard2/repositories/vehicle_search_repository.dart';
@@ -270,16 +270,16 @@ class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
       VehicleSearchRepository(FirebaseFirestore.instance),
     );
 
-    final report = await service.getIndividualReport(vehicleId);
+    final vehicleInfo = await service.getIndividualReport(vehicleId);
 
-    if (report == null) {
-      emit(state.copyWith(loading: false, currentVehicleId: vehicleId));
+    if (vehicleInfo == null) {
+      emit(state.copyWith(loading: false));
       return;
     }
 
     emit(
       state.copyWith(
-        selectedVehicle: report,
+        selectedVehicle: vehicleInfo, // STATIC INFO ONLY
         viewMode: DashboardViewMode.individual,
         loading: false,
       ),

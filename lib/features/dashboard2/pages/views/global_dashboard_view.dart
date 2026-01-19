@@ -2,13 +2,15 @@ import 'package:cvms_desktop/core/widgets/app/custom_alert_dialog.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_date_filter.dart';
 import 'package:cvms_desktop/features/dashboard2/bloc/global/global_dashboard_cubit.dart';
 import 'package:cvms_desktop/features/dashboard2/models/time_grouping.dart';
+import 'package:cvms_desktop/features/dashboard2/utils/dynamic_title_formatter.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/stats/global_stats_card_section.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/charts/global_charts_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GlobalDashboardView extends StatefulWidget {
-  const GlobalDashboardView({super.key});
+  final String? currentTimeRange;
+  const GlobalDashboardView({super.key, this.currentTimeRange = '7 days'});
 
   @override
   State<GlobalDashboardView> createState() => _GlobalDashboardViewState();
@@ -84,7 +86,11 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
                 onTimeRangeChanged: (value) {
                   _onTimeRangeChanged(value);
                 },
-                currentTimeRange: state.currentTimeRange,
+
+                lineChartTitle: DynamicTitleFormatter().getDynamicTitle(
+                  'Vehicle logs for ',
+                  state.currentTimeRange,
+                ),
                 yearLevelBreakdown:
                     state.yearLevelBreakdown, // realtime step 19
                 vehicleDistribution: state.vehicleDistribution,

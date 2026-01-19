@@ -2,25 +2,50 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/components/stats/stats_card_section.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/components/info/vehicle_info_card.dart';
-import 'package:cvms_desktop/features/dashboard2/models/individual_vehicle_report.dart';
 import 'package:flutter/material.dart';
 
 class IndividualStatsSection extends StatelessWidget {
   final VoidCallback? onVehicleInfoFullView;
-  final IndividualVehicleReport report;
   final int daysUntilExpiration;
   final int totalPendingViolations;
   final int totalViolations;
   final int totalVehicleLogs;
+  //info
+  final String plateNumber;
+  final String ownerName;
+  final String vehicleType;
+  final String department;
+  final String status;
+  final String vehicleModel;
+  final DateTime createdAt;
+  final DateTime expiryDate;
+
+  // MVP Progress fields
+  final double mvpProgress;
+  final DateTime mvpRegisteredDate;
+  final DateTime mvpExpiryDate;
+  final String mvpStatusText;
 
   const IndividualStatsSection({
     super.key,
-    required this.report,
     this.onVehicleInfoFullView,
     required this.daysUntilExpiration,
     required this.totalPendingViolations,
     required this.totalViolations,
     required this.totalVehicleLogs,
+    //info
+    required this.plateNumber,
+    required this.ownerName,
+    required this.vehicleType,
+    required this.department,
+    required this.status,
+    required this.vehicleModel,
+    required this.createdAt,
+    required this.expiryDate,
+    required this.mvpProgress,
+    required this.mvpRegisteredDate,
+    required this.mvpExpiryDate,
+    required this.mvpStatusText,
   });
 
   @override
@@ -58,7 +83,18 @@ class IndividualStatsSection extends StatelessWidget {
           Expanded(
             child: VehicleInfoCard(
               onViewTap: onVehicleInfoFullView ?? () {},
-              report: report,
+              plateNumber: plateNumber,
+              ownerName: ownerName,
+              vehicleType: vehicleType,
+              department: department,
+              status: status,
+              vehicleModel: vehicleModel,
+              createdAt: createdAt,
+              expiryDate: expiryDate,
+              mvpProgress: mvpProgress,
+              mvpRegisteredDate: mvpRegisteredDate,
+              mvpExpiryDate: mvpExpiryDate,
+              mvpStatusText: mvpStatusText,
             ),
           ),
         ],
