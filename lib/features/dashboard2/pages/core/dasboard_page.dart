@@ -142,9 +142,9 @@ class DashboardPage extends StatelessWidget {
                             onVehicleSelected: (
                               VehicleSearchSuggestion suggestion,
                             ) {
-                              context
-                                  .read<DashboardCubit>()
-                                  .showIndividualReport(suggestion.vehicleId);
+                              context.read<DashboardCubit>().showIndividualReport(
+                                suggestion.vehicleId,
+                              ); //navigate to individual report and display its dedicated report
                             },
 
                             onBackButtonPressed:

@@ -1,5 +1,7 @@
-import 'package:cvms_desktop/features/dashboard2/models/vehicle_info.dart';
+import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/features/dashboard/utils/mvp_progress_calculator.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class VehicleInfoService {
   // Pure data transformation logic
@@ -17,23 +19,14 @@ class VehicleInfoService {
 
   static Color getStatusColor(String status) {
     switch (status.toLowerCase()) {
-      case 'active':
+      case 'onsite':
         return Colors.green;
-      case 'inactive':
+      case 'offsite':
         return Colors.grey;
-      case 'suspended':
-        return Colors.red;
-      case 'pending':
-        return Colors.orange;
+
       default:
         return Colors.grey;
     }
-  }
-
-  static Color getMvpStatusColor(VehicleInfo vehicle) {
-    if (vehicle.isMvpExpired) return Colors.red;
-    if (vehicle.isMvpExpiringSoon) return Colors.orange;
-    return Colors.green;
   }
 
   static Color getMvpProgressColor(
@@ -41,15 +34,53 @@ class VehicleInfoService {
     DateTime? registeredDate,
     DateTime? expiryDate,
   ) {
-    if (expiryDate == null) return Colors.grey;
-    if (DateTime.now().isAfter(expiryDate)) return Colors.red;
-    if (progress < 0.3) return Colors.red;
-    if (progress < 0.6) return Colors.orange;
-    return Colors.green;
+    final colorName = MvpProgressCalculator.getProgressColor(
+      progress: progress,
+      registeredDate: registeredDate,
+      expiryDate: expiryDate,
+    );
+    switch (colorName) {
+      case 'red':
+        return Colors.redAccent;
+      case 'orange':
+        return Colors.green;
+      case 'blue':
+        return Colors.orangeAccent;
+      default:
+        return Colors.blueAccent;
+    }
   }
 
   static String formatDate(DateTime? date, String prefix) {
-    if (date == null) return '';
-    return '$prefix${date.day}/${date.month}/${date.year}';
+    if (date == null) return '${prefix}Not set';
+    final formatter = DateFormat('MMM. d, y'); // Format: Jan. 12, 2025
+    return '$prefix${formatter.format(date)}';
+  }
+
+  static String getMvpStatusText(
+    DateTime? registeredDate,
+    DateTime? expiryDate,
+  ) {
+    return MvpProgressCalculator.getMvpStatus(
+      registeredDate: registeredDate,
+      expiryDate: expiryDate,
+    );
+  }
+
+  static Color getMvpStatusColor(
+    DateTime? registeredDate,
+    DateTime? expiryDate,
+  ) {
+    final status = getMvpStatusText(registeredDate, expiryDate);
+    switch (status) {
+      case 'Valid':
+        return AppColors.chartGreen;
+      case 'Expired':
+        return Colors.redAccent;
+      case 'Not Started':
+        return Colors.grey;
+      default:
+        return Colors.grey;
+    }
   }
 }

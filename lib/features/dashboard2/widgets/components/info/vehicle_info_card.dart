@@ -2,7 +2,7 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/utils/card_decor.dart';
 import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
-import 'package:cvms_desktop/features/dashboard2/models/vehicle_info.dart';
+import 'package:cvms_desktop/features/dashboard2/models/individual_vehicle_report.dart';
 import 'package:cvms_desktop/features/dashboard2/services/vehicle_info_service.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/buttons/custom_view_button.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/texts/custom_text.dart';
@@ -11,13 +11,13 @@ import 'package:flutter/material.dart';
 class VehicleInfoCard extends StatefulWidget {
   final String title;
   final VoidCallback onViewTap;
-  final VehicleInfo vehicleInfo;
+  final IndividualVehicleReport report;
 
   const VehicleInfoCard({
     super.key,
     required this.onViewTap,
     this.title = "Vehicle Information",
-    required this.vehicleInfo,
+    required this.report,
   });
 
   @override
@@ -52,7 +52,7 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
   @override
   void didUpdateWidget(VehicleInfoCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.vehicleInfo.mvpProgress != widget.vehicleInfo.mvpProgress) {
+    if (oldWidget.report.mvpProgress != widget.report.mvpProgress) {
       _progressController.reset();
       Future.delayed(const Duration(milliseconds: 100), () {
         if (mounted) {
@@ -99,9 +99,7 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Image.asset(
-            VehicleInfoService.getVehicleTypeIcon(
-              widget.vehicleInfo.vehicleType,
-            ),
+            VehicleInfoService.getVehicleTypeIcon(widget.report.vehicleType),
             width: 40,
             height: 40,
           ),
@@ -110,11 +108,11 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomText(
-                text: widget.vehicleInfo.vehicleModel,
+                text: widget.report.vehicleModel,
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
               ),
-              CustomText(text: widget.vehicleInfo.plateNumber),
+              CustomText(text: widget.report.plateNumber),
             ],
           ),
           const Spacer(),
@@ -145,9 +143,9 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildInfoItem('Owner', widget.vehicleInfo.ownerName),
+        _buildInfoItem('Owner', widget.report.ownerName),
         const CustomDivider(direction: Axis.horizontal),
-        _buildInfoItem('Type', widget.vehicleInfo.vehicleType),
+        _buildInfoItem('Type', widget.report.vehicleType),
       ],
     );
   }
@@ -156,7 +154,7 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildInfoItem('Department', widget.vehicleInfo.department),
+        _buildInfoItem('Department', widget.report.department),
         const CustomDivider(direction: Axis.horizontal),
         _buildStatusItem(),
       ],
@@ -193,16 +191,14 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: VehicleInfoService.getStatusColor(
-                widget.vehicleInfo.status,
-              ),
+              color: VehicleInfoService.getStatusColor(widget.report.status),
               borderRadius: BorderRadius.circular(999),
             ),
             child: CustomText(
               text:
-                  widget.vehicleInfo.status.isEmpty
+                  widget.report.status.isEmpty
                       ? 'No logs yet.'
-                      : widget.vehicleInfo.status,
+                      : widget.report.status,
               fontSize: 12,
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -234,9 +230,12 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
               ),
               const Spacer(),
               CustomText(
-                text: widget.vehicleInfo.mvpStatusText,
+                text: widget.report.mvpStatusText,
                 fontSize: 12,
-                color: VehicleInfoService.getMvpStatusColor(widget.vehicleInfo),
+                color: VehicleInfoService.getMvpStatusColor(
+                  widget.report.mvpRegisteredDate,
+                  widget.report.mvpExpiryDate,
+                ),
                 fontWeight: FontWeight.w600,
               ),
             ],
@@ -246,16 +245,15 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
             animation: _progressAnimation,
             builder: (context, child) {
               return LinearProgressIndicator(
-                value:
-                    widget.vehicleInfo.mvpProgress * _progressAnimation.value,
+                value: widget.report.mvpProgress * _progressAnimation.value,
                 minHeight: 6,
                 borderRadius: BorderRadius.circular(6),
-                backgroundColor: Colors.grey.withOpacity(0.2),
+                backgroundColor: Colors.grey.withValues(alpha: 0.2),
                 valueColor: AlwaysStoppedAnimation<Color>(
                   VehicleInfoService.getMvpProgressColor(
-                    widget.vehicleInfo.mvpProgress,
-                    widget.vehicleInfo.mvpRegisteredDate,
-                    widget.vehicleInfo.mvpExpiryDate,
+                    widget.report.mvpProgress,
+                    widget.report.mvpRegisteredDate,
+                    widget.report.mvpExpiryDate,
                   ),
                 ),
               );
@@ -266,7 +264,7 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
             children: [
               CustomText(
                 text: VehicleInfoService.formatDate(
-                  widget.vehicleInfo.mvpRegisteredDate,
+                  widget.report.mvpRegisteredDate,
                   'Registered on ',
                 ),
                 fontSize: 11,
@@ -275,7 +273,7 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
               const Spacer(),
               CustomText(
                 text: VehicleInfoService.formatDate(
-                  widget.vehicleInfo.mvpExpiryDate,
+                  widget.report.mvpExpiryDate,
                   'Expires on ',
                 ),
                 fontSize: 11,

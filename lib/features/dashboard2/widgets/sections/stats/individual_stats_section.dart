@@ -1,6 +1,5 @@
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
-import 'package:cvms_desktop/features/dashboard2/models/vehicle_info.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/components/stats/stats_card_section.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/components/info/vehicle_info_card.dart';
 import 'package:cvms_desktop/features/dashboard2/models/individual_vehicle_report.dart';
@@ -47,21 +46,11 @@ class IndividualStatsSection extends StatelessWidget {
 
           Spacing.horizontal(size: AppSpacing.medium),
 
-          // Vehicle Info Card //todo
+          // Vehicle Info Card
           Expanded(
             child: VehicleInfoCard(
               onViewTap: onVehicleInfoFullView ?? () {},
-              vehicleInfo: VehicleInfo(
-                vehicleModel: report.vehicleType,
-                plateNumber: report.plateNumber,
-                vehicleType: report.vehicleType,
-                ownerName: report.ownerName,
-                department: '',
-                status: '',
-                mvpProgress: 0,
-                mvpRegisteredDate: DateTime.now(),
-                mvpExpiryDate: DateTime.now(),
-              ),
+              report: report,
             ),
           ),
         ],
