@@ -28,24 +28,19 @@ class IndividualReportView extends StatelessWidget {
     // Update time range in cubit state
     DateTime endDate = DateTime.now();
     DateTime startDate;
-    TimeGrouping grouping;
 
     switch (selectedRange) {
       case '7 days':
-        startDate = endDate.subtract(const Duration(days: 7));
-        grouping = TimeGrouping.day;
+        startDate = endDate.subtract(Duration(days: 7));
         break;
       case '30 days':
-        startDate = endDate.subtract(const Duration(days: 30));
-        grouping = TimeGrouping.day;
+        startDate = endDate.subtract(Duration(days: 30));
         break;
       case 'Month':
         startDate = DateTime(endDate.year, endDate.month, 1);
-        grouping = TimeGrouping.day;
         break;
       case 'Year':
         startDate = DateTime(endDate.year, 1, 1);
-        grouping = TimeGrouping.month;
         break;
       case 'Custom':
         // Trigger custom date picker
@@ -59,7 +54,7 @@ class IndividualReportView extends StatelessWidget {
     context.read<IndividualDashboardCubit>().updateDateFilter(
       start: startDate,
       end: endDate,
-      grouping: grouping,
+      grouping: TimeGrouping.day,
     );
   }
 
@@ -107,6 +102,7 @@ class IndividualReportView extends StatelessWidget {
                       totalViolations: state.totalViolations,
                       totalPendingViolations: state.totalPendingViolations,
                       totalVehicleLogs: state.totalVehicleLogs,
+                      //info
                       plateNumber: vehicleInfo.plateNumber,
                       ownerName: vehicleInfo.ownerName,
                       vehicleType: vehicleInfo.vehicleType,
@@ -132,7 +128,7 @@ class IndividualReportView extends StatelessWidget {
                 lineChartTitle: DynamicTitleFormatter().getDynamicTitle(
                   'Vehicle logs for ',
                   currentTimeRange,
-                ),
+                ), //todo fix the issue where the dynamic title is not working/updating
                 onTimeRangeChanged: (value) {
                   _onTimeRangeChanged(value, context);
                 },
