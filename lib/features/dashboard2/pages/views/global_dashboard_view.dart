@@ -32,6 +32,69 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
     });
   }
 
+  void _onTimeRangeChanged(String selectedRange) {
+    // Update time range in cubit state
+    context.read<GlobalDashboardCubit>().updateTimeRange(selectedRange);
+
+    DateTime endDate = DateTime.now();
+    DateTime startDate;
+
+    switch (selectedRange) {
+      case '7 days':
+        startDate = endDate.subtract(Duration(days: 7));
+        break;
+      case '30 days':
+        startDate = endDate.subtract(Duration(days: 30));
+        break;
+      case 'Month':
+        startDate = DateTime(endDate.year, endDate.month, 1);
+        break;
+      case 'Year':
+        startDate = DateTime(endDate.year, 1, 1);
+        break;
+      case 'Custom':
+        // Trigger custom date picker
+        _showCustomDatePicker();
+        return;
+      default:
+        return;
+    }
+
+    // Apply the selected date range to the data (e.g., fleet logs, charts)
+    context.read<GlobalDashboardCubit>().watchFleetLogsTrend(
+      start: startDate,
+      end: endDate,
+      grouping: TimeGrouping.day, // or whatever your default grouping is
+    );
+  }
+
+  void _showCustomDatePicker() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return CustomAlertDialog(
+          title: 'Select Date Range',
+          child: CustomDateFilter(
+            onApply: (period) {
+              if (period != null) {
+                // Update current time range to reflect custom selection
+                context.read<GlobalDashboardCubit>().updateTimeRange('Custom');
+
+                // Use the original context to access the cubit
+                context.read<GlobalDashboardCubit>().watchFleetLogsTrend(
+                  start: period.start,
+                  end: period.end,
+                  grouping: TimeGrouping.day,
+                );
+              }
+              Navigator.of(dialogContext).pop(); // Close the date picker dialog
+            },
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -109,69 +172,6 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
           ),
         ],
       ),
-    );
-  }
-
-  void _onTimeRangeChanged(String selectedRange) {
-    // Update time range in cubit state
-    context.read<GlobalDashboardCubit>().updateTimeRange(selectedRange);
-
-    DateTime endDate = DateTime.now();
-    DateTime startDate;
-
-    switch (selectedRange) {
-      case '7 days':
-        startDate = endDate.subtract(Duration(days: 7));
-        break;
-      case '30 days':
-        startDate = endDate.subtract(Duration(days: 30));
-        break;
-      case 'Month':
-        startDate = DateTime(endDate.year, endDate.month, 1);
-        break;
-      case 'Year':
-        startDate = DateTime(endDate.year, 1, 1);
-        break;
-      case 'Custom':
-        // Trigger custom date picker
-        _showCustomDatePicker();
-        return;
-      default:
-        return;
-    }
-
-    // Apply the selected date range to the data (e.g., fleet logs, charts)
-    context.read<GlobalDashboardCubit>().watchFleetLogsTrend(
-      start: startDate,
-      end: endDate,
-      grouping: TimeGrouping.day, // or whatever your default grouping is
-    );
-  }
-
-  void _showCustomDatePicker() {
-    showDialog(
-      context: context,
-      builder: (dialogContext) {
-        return CustomAlertDialog(
-          title: 'Select Date Range',
-          child: CustomDateFilter(
-            onApply: (period) {
-              if (period != null) {
-                // Update current time range to reflect custom selection
-                context.read<GlobalDashboardCubit>().updateTimeRange('Custom');
-
-                // Use the original context to access the cubit
-                context.read<GlobalDashboardCubit>().watchFleetLogsTrend(
-                  start: period.start,
-                  end: period.end,
-                  grouping: TimeGrouping.day,
-                );
-              }
-              Navigator.of(dialogContext).pop(); // Close the date picker dialog
-            },
-          ),
-        );
-      },
     );
   }
 }
