@@ -7,6 +7,7 @@ import 'package:cvms_desktop/features/dashboard2/pages/views/global_dashboard_vi
 import 'package:cvms_desktop/features/dashboard2/pages/views/individual_report_view.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/pdf_preview_view.dart';
 import 'package:cvms_desktop/features/dashboard2/repositories/global_dashboard_repository.dart';
+import 'package:cvms_desktop/features/dashboard2/repositories/vehicle_search_repository.dart';
 import 'package:cvms_desktop/features/dashboard2/services/vehicle_search_service.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/dashboard_controls_section.dart';
 import 'package:flutter/material.dart';
@@ -97,7 +98,7 @@ class DashboardPage extends StatelessWidget {
                 transitionBuilder: (child, animation) {
                   return SlideTransition(
                     position: Tween<Offset>(
-                      begin: const Offset(1.0, 0.0), // Slide from right
+                      begin: const Offset(1.0, 0.0),
                       end: Offset.zero,
                     ).animate(
                       CurvedAnimation(
@@ -120,34 +121,31 @@ class DashboardPage extends StatelessWidget {
                             showBackButton:
                                 state.viewMode != DashboardViewMode.global,
                             dateFilterText: 'DATE FILTER',
-
                             onExportPressed: () {
-                              // TODO: Export report
+                              // todo Export report
                               // Navigate to PDF preview
                               context.read<DashboardCubit>().showPdfPreview();
                             },
                             onSearchSuggestions: (query) async {
-                              // Delegate search logic to service layer
-                              return VehicleSearchService.getVehicleSuggestions(
-                                query,
+                              // DASHBOARD SEARCH FUNCTIONALITY STEP 4
+                              final searchService = VehicleSearchService(
+                                VehicleSearchRepository(
+                                  FirebaseFirestore.instance,
+                                ),
                               );
+                              return searchService.getSuggestions(query);
                             },
-                            onVehicleSelected: (vehiclePlate) {
-                              // Delegate vehicle lookup to service layer
-                              final vehicle =
-                                  VehicleSearchService.getVehicleByPlate(
-                                    vehiclePlate,
-                                  );
 
-                              // Navigate to individual view
-                              context
-                                  .read<DashboardCubit>()
-                                  .showIndividualReport(vehicle: vehicle);
+                            onVehicleSelected: (vehiclePlate) {
+                              // todo Navigate to individual view
+                              // context
+                              //     .read<DashboardCubit>()
+                              //     .showIndividualReport(vehicle: vehicle);
                             },
                             onBackButtonPressed:
                                 state.viewMode == DashboardViewMode.individual
                                     ? () {
-                                      // Navigate back to global view
+                                      // Nav back to global view
                                       context
                                           .read<DashboardCubit>()
                                           .backToGlobal();

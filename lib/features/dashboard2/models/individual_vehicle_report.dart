@@ -1,50 +1,21 @@
-import 'package:equatable/equatable.dart';
-import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
+// DASHBOARD SEARCH FUNCTIONALITY STEP 3
 
-class IndividualVehicleReport extends Equatable {
-  final String vehicleId;
+class IndividualVehicleReport {
   final String plateNumber;
-  final String vehicleType;
   final String ownerName;
-  final DateTime registeredDate;
-  final DateTime? expiryDate;
-  final int totalViolations;
-  final int activeViolations;
-  final int totalEntriesExits;
-  final List<ChartDataModel> violationsByType;
-  final List<ChartDataModel> vehicleLogs;
+  final String vehicleType;
 
-  const IndividualVehicleReport({
-    required this.vehicleId,
+  IndividualVehicleReport({
     required this.plateNumber,
-    required this.vehicleType,
     required this.ownerName,
-    required this.registeredDate,
-    this.expiryDate,
-    required this.totalViolations,
-    required this.activeViolations,
-    required this.totalEntriesExits,
-    required this.violationsByType,
-    required this.vehicleLogs,
+    required this.vehicleType,
   });
 
-  int get daysUntilExpiration {
-    if (expiryDate == null) return 0;
-    return expiryDate!.difference(DateTime.now()).inDays;
+  factory IndividualVehicleReport.fromFirestore(Map<String, dynamic> data) {
+    return IndividualVehicleReport(
+      plateNumber: data['plateNumber'] ?? '',
+      ownerName: data['ownerName'] ?? '',
+      vehicleType: data['vehicleType'] ?? '',
+    );
   }
-
-  @override
-  List<Object?> get props => [
-    vehicleId,
-    plateNumber,
-    vehicleType,
-    ownerName,
-    registeredDate,
-    expiryDate,
-    totalViolations,
-    activeViolations,
-    totalEntriesExits,
-    violationsByType,
-    vehicleLogs,
-  ];
 }

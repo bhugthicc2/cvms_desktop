@@ -1,27 +1,26 @@
-import 'package:cvms_desktop/features/dashboard2/data/mock_individual_data.dart';
-import 'package:cvms_desktop/features/dashboard2/models/individual_vehicle_report.dart';
+// DASHBOARD SEARCH FUNCTIONALITY STEP 2
+
+import '../repositories/vehicle_search_repository.dart';
+import '../models/individual_vehicle_report.dart';
 
 class VehicleSearchService {
-  static List<String> getVehicleSuggestions(String query) {
-    if (query.isEmpty) return [];
+  final VehicleSearchRepository repository;
 
-    return MockIndividualData.searchResults
-        .where((vehicle) => _matchesQuery(vehicle, query))
-        .map((vehicle) => vehicle.plateNumber)
-        .toList();
+  VehicleSearchService(this.repository);
+
+  /// Returns plate numbers for autocomplete
+  Future<List<String>> getSuggestions(String query) async {
+    final results = await repository.searchVehicles(query);
+
+    return results.map((v) => v['plateNumber'] as String).toList();
   }
 
-  static IndividualVehicleReport getVehicleByPlate(String plateNumber) {
-    return MockIndividualData.searchResults.firstWhere(
-      (vehicle) => vehicle.plateNumber == plateNumber,
-      orElse: () => MockIndividualData.sampleReport,
-    );
-  }
+  /// Fetch full vehicle report by plate
+  Future<IndividualVehicleReport?> getVehicleByPlate(String plateNumber) async {
+    final results = await repository.searchVehicles(plateNumber);
 
-  static bool _matchesQuery(IndividualVehicleReport vehicle, String query) {
-    final lowerQuery = query.toLowerCase();
-    return vehicle.plateNumber.toLowerCase().contains(lowerQuery) ||
-        vehicle.ownerName.toLowerCase().contains(lowerQuery) ||
-        vehicle.vehicleType.toLowerCase().contains(lowerQuery);
+    if (results.isEmpty) return null;
+
+    return IndividualVehicleReport.fromFirestore(results.first);
   }
 }

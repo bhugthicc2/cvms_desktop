@@ -1,6 +1,4 @@
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
-import 'package:cvms_desktop/features/dashboard2/services/mock_chart_data.dart';
-import 'package:cvms_desktop/features/dashboard2/services/mock_table_data.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/charts/individual_charts_section.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/stats/individual_stats_section.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/tables/recent_logs/recent_logs_table_section.dart';
@@ -30,21 +28,12 @@ class IndividualReportView extends StatelessWidget {
             ),
           ),
 
-          IndividualChartsSection(
-            violationDistribution:
-                MockChartData.getViolationDistributionForVehicle(
-                  vehicle.vehicleId,
-                ),
-            vehicleLogs: MockChartData.getVehicleLogsForVehicle(
-              vehicle.vehicleId,
-            ),
-          ),
+          IndividualChartsSection(violationDistribution: [], vehicleLogs: []),
 
           ViolationHistoryTableSection(
             allowSorting: false,
             istableHeaderDark: false,
-            violationHistoryEntries:
-                MockTableData.getViolationHistoryForVehicle(vehicle.vehicleId),
+            violationHistoryEntries: [],
             sectionTitle: 'Violation History',
             onClick: () {
               //todo
@@ -53,9 +42,7 @@ class IndividualReportView extends StatelessWidget {
           RecentLogsTableSection(
             allowSorting: false,
             istableHeaderDark: false,
-            recentLogsEntries: MockTableData.getRecentLogsForVehicle(
-              vehicle.vehicleId,
-            ),
+            recentLogsEntries: [],
             sectionTitle: 'Recent Logs',
             onClick: () {
               //todo
