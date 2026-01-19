@@ -69,12 +69,13 @@ class _ReportHeaderSectionState extends State<ReportHeaderSection> {
               : SizedBox(),
           Expanded(
             //search bar
-            child: TypeaheadSearchField(
+            child: TypeaheadSearchField<String>(
               hoverScale: 1,
               hintText: 'Search by plate no., owner, school ID or model',
               searchFieldHeight: 40,
               controller: _searchController,
               suggestionsCallback: _getSuggestions,
+              getSuggestionText: (suggestion) => suggestion,
               onSuggestionSelected: _onSuggestionSelected,
             ),
           ),

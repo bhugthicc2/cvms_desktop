@@ -19,12 +19,14 @@ class VehicleSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TypeaheadSearchField(
+    return TypeaheadSearchField<VehicleSearchSuggestion>(
       hoverScale: 1,
       hintText: hintText,
       searchFieldHeight: 40,
       controller: controller ?? TextEditingController(),
       suggestionsCallback: suggestionsCallback,
+      getSuggestionText:
+          (suggestion) => '${suggestion.plateNumber} - ${suggestion.ownerName}',
       onSuggestionSelected: onSuggestionSelected,
     );
   }

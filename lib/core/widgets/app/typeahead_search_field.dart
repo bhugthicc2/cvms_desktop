@@ -20,11 +20,13 @@ class TypeaheadSearchField<T> extends StatelessWidget {
   final double searchFieldHeight;
   final double searchFieldWidth;
   final double hoverScale;
+  final String Function(T) getSuggestionText;
 
   const TypeaheadSearchField({
     super.key,
     required this.controller,
     required this.suggestionsCallback,
+    required this.getSuggestionText,
     this.onChanged,
     this.onSuggestionSelected,
     this.hintText = "Search name, plate number, etc...",
@@ -121,7 +123,7 @@ class TypeaheadSearchField<T> extends StatelessWidget {
             );
 
             final query = controller.text.trim();
-            final suggestionText = suggestion as String;
+            final suggestionText = getSuggestionText(suggestion);
 
             final spans = <TextSpan>[];
             if (query.isEmpty) {
