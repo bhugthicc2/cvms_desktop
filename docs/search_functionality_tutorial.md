@@ -1,4 +1,4 @@
-# CVMS Desktop Application - Search Functionality Tutorial
+# SEARCH FUNCTIONALITY: CVMS Desktop Application - Search Functionality Tutorial
 
 ## Overview
 
@@ -10,6 +10,10 @@ This tutorial explains how the search functionality works across different featu
 2. [Search Components](#search-components)
 3. [Step-by-Step Search Flow](#step-by-step-search-flow)
 4. [Feature-Specific Implementations](#feature-specific-implementations)
+   - [Vehicle Management Search](#vehicle-management-search)
+   - [User Management Search](#user-management-search)
+   - [Vehicle Logs Search](#vehicle-logs-search)
+   - [Dashboard2 Search with Typeahead](#dashboard2-search-with-typeahead)
 5. [Search Field Configuration](#search-field-configuration)
 6. [Filtering Logic](#filtering-logic)
 7. [Empty State Handling](#empty-state-handling)
@@ -198,6 +202,123 @@ void _applyFilters() {
 **Location**: `lib/features/vehicle_logs_management/`
 
 **Note**: Vehicle logs search is implemented differently - it uses a simpler approach without complex filtering logic in the cubit.
+
+### Dashboard2 Search with Typeahead
+
+**Location**: `lib/features/dashboard2/`
+
+**Architecture**: Uses a different approach with typeahead functionality and real-time suggestions from Firestore.
+
+**Key Components**:
+
+1. **VehicleSearchService** (`lib/features/dashboard2/services/vehicle_search_service.dart`)
+   - Handles search operations and suggestion generation
+   - Returns `VehicleSearchSuggestion` objects
+
+2. **VehicleSearchSuggestion** Model (`lib/features/dashboard2/models/vehicle_search_suggestion.dart`)
+
+   ```dart
+   class VehicleSearchSuggestion {
+     final String plateNumber;
+     final String ownerName;
+     final String schoolId;
+   }
+   ```
+
+3. **DashboardControlsSection** with typeahead integration
+
+**Implementation**:
+
+```dart
+// In DashboardPage
+onSearchSuggestions: (query) async {
+  final searchService = VehicleSearchService(
+    VehicleSearchRepository(FirebaseFirestore.instance),
+  );
+  final suggestions = await searchService.getSuggestions(query);
+  return suggestions
+      .map((suggestion) => '${suggestion.plateNumber} · ${suggestion.ownerName} · ${suggestion.schoolId}')
+      .toList();
+},
+```
+
+**Repository Search Logic**:
+
+```dart
+// In VehicleSearchRepository
+Future<List<Map<String, dynamic>>> searchVehicles(String query) async {
+  if (query.isEmpty) return [];
+
+  final queryLower = query.toLowerCase();
+
+  // Search by plateNumber (exact match and starts with)
+  final plateSnapshot = await _db
+      .collection('vehicles')
+      .where('plateNumber', isGreaterThanOrEqualTo: query)
+      .where('plateNumber', isLessThan: '${query}z')
+      .limit(10)
+      .get();
+
+  // Get all vehicles for ownerName and schoolID search
+  final allVehiclesSnapshot = await _db.collection('vehicles').get();
+
+  final results = <String, Map<String, dynamic>>{};
+
+  // Add plate number results (prioritized)
+  for (final doc in plateSnapshot.docs) {
+    results[doc.id] = doc.data();
+  }
+
+  // Add owner name and school ID matches (case-insensitive)
+  for (final doc in allVehiclesSnapshot.docs) {
+    if (results.containsKey(doc.id)) continue; // Skip duplicates
+
+    final data = doc.data();
+    final ownerName = (data['ownerName'] as String? ?? '').toLowerCase();
+    final schoolId = (data['schoolID'] as String? ?? '').toLowerCase();
+
+    if (ownerName.contains(queryLower) || schoolId.contains(queryLower)) {
+      results[doc.id] = data;
+    }
+  }
+
+  return results.values.take(10).toList();
+}
+```
+
+**Search Capabilities**:
+
+- **Plate Number**: Exact and prefix matching (e.g., "ABC" matches "ABC123")
+- **Owner Name**: Case-insensitive partial matching (e.g., "john" matches "John Doe")
+- **School ID**: Case-insensitive partial matching (e.g., "2021" matches "2021-1234")
+- **Results**: Limited to 10 most relevant matches
+- **Priority**: Plate number matches are prioritized, followed by name/schoolID matches
+
+**Suggestion Format**:
+
+- Display: "Plate Number · Vehicle Owner · School ID"
+- Uses middle dot (·) separator for clean visual separation
+- Provides comprehensive vehicle information in suggestions
+
+**Search Flow**:
+
+1. User types in search bar
+2. Service queries Firestore for matching vehicles
+3. Results are formatted as "Plate · Owner · School ID"
+4. User selects suggestion from dropdown
+5. Selected vehicle data is available for navigation
+
+**Benefits**:
+
+- **Multi-field Search**: Search by plate number, owner name, or school ID
+- **Case-Insensitive**: User-friendly search experience for names and IDs
+- **Smart Prioritization**: Plate number matches are prioritized for efficiency
+- **Real-time Suggestions**: Live database queries with typeahead functionality
+- **Rich Information Display**: Comprehensive vehicle details in suggestions
+- **Deduplication**: Prevents duplicate results across different search fields
+- **Optimized Performance**: Efficient database queries with proper result limiting
+- **Typeahead Functionality**: Enhanced UX with dropdown suggestions
+- **Firestore Integration**: Live data synchronization
 
 ## Search Field Configuration
 

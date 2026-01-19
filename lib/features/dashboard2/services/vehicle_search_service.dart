@@ -1,5 +1,7 @@
 // DASHBOARD SEARCH FUNCTIONALITY STEP 2
 
+import 'package:cvms_desktop/features/dashboard2/models/vehicle_search_suggestion.dart';
+
 import '../repositories/vehicle_search_repository.dart';
 import '../models/individual_vehicle_report.dart';
 
@@ -8,11 +10,11 @@ class VehicleSearchService {
 
   VehicleSearchService(this.repository);
 
-  /// Returns plate numbers for autocomplete
-  Future<List<String>> getSuggestions(String query) async {
+  /// Returns vehicle suggestions by searching plateNumber, ownerName, and schoolID
+  Future<List<VehicleSearchSuggestion>> getSuggestions(String query) async {
     final results = await repository.searchVehicles(query);
 
-    return results.map((v) => v['plateNumber'] as String).toList();
+    return results.map(VehicleSearchSuggestion.fromFirestore).toList();
   }
 
   /// Fetch full vehicle report by plate

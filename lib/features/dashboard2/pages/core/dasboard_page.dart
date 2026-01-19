@@ -133,7 +133,14 @@ class DashboardPage extends StatelessWidget {
                                   FirebaseFirestore.instance,
                                 ),
                               );
-                              return searchService.getSuggestions(query);
+                              final suggestions = await searchService
+                                  .getSuggestions(query);
+                              return suggestions
+                                  .map(
+                                    (suggestion) =>
+                                        '${suggestion.plateNumber} · ${suggestion.ownerName} · ${suggestion.schoolId}',
+                                  )
+                                  .toList();
                             },
 
                             onVehicleSelected: (vehiclePlate) {

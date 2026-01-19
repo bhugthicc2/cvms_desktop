@@ -1,4 +1,4 @@
-# Dashboard Search Functionality Implementation
+# SEARCH FUNCTIONALITY: Dashboard Search Functionality Implementation
 
 ## Overview
 
