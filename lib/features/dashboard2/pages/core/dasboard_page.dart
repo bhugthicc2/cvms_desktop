@@ -130,61 +130,68 @@ class DashboardPage extends StatelessWidget {
                 },
                 child: Container(
                   key: ValueKey(state.viewMode.toString()),
-                  //todo pdf preview should not be affected by the scrollview
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        // Controls section (not for PDF preview)
-                        if (state.viewMode != DashboardViewMode.pdfPreview)
-                          DashboardControlsSection(
-                            showBackButton:
-                                state.viewMode != DashboardViewMode.global,
-                            dateFilterText: 'DATE FILTER',
-                            onExportPressed: () {
-                              // todo Export report
-                              // Navigate to PDF preview
-                              context
-                                  .read<GlobalDashboardCubit>()
-                                  .showPdfPreview();
-                            },
-                            onSearchSuggestions: (query) async {
-                              // DASHBOARD SEARCH FUNCTIONALITY STEP 4
-                              final searchService = VehicleSearchService(
-                                VehicleSearchRepository(
-                                  FirebaseFirestore.instance,
+                  child:
+                      state.viewMode == DashboardViewMode.pdfPreview
+                          ? // PDF preview: full screen, no scroll
+                          SizedBox(child: _buildMainContent(context, state))
+                          : // Other views: with controls and scroll
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                // Controls section
+                                DashboardControlsSection(
+                                  showBackButton:
+                                      state.viewMode !=
+                                      DashboardViewMode.global,
+                                  dateFilterText: 'DATE FILTER',
+                                  onExportPressed: () {
+                                    // todo Export report
+                                    // Navigate to PDF preview
+                                    context
+                                        .read<GlobalDashboardCubit>()
+                                        .showPdfPreview();
+                                  },
+                                  onSearchSuggestions: (query) async {
+                                    // DASHBOARD SEARCH FUNCTIONALITY STEP 4
+                                    final searchService = VehicleSearchService(
+                                      VehicleSearchRepository(
+                                        FirebaseFirestore.instance,
+                                      ),
+                                    );
+                                    final suggestions = await searchService
+                                        .getSuggestions(query);
+                                    return suggestions;
+                                  },
+
+                                  onVehicleSelected: (
+                                    VehicleSearchSuggestion suggestion,
+                                  ) {
+                                    context
+                                        .read<GlobalDashboardCubit>()
+                                        .showIndividualReport(
+                                          suggestion.vehicleId,
+                                        ); //navigate to individual report and display its dedicated report
+                                  },
+
+                                  onBackButtonPressed:
+                                      state.viewMode ==
+                                              DashboardViewMode.individual
+                                          ? () {
+                                            // Nav back to global view
+                                            context
+                                                .read<GlobalDashboardCubit>()
+                                                .backToGlobal();
+                                          }
+                                          : null,
                                 ),
-                              );
-                              final suggestions = await searchService
-                                  .getSuggestions(query);
-                              return suggestions;
-                            },
 
-                            onVehicleSelected: (
-                              VehicleSearchSuggestion suggestion,
-                            ) {
-                              context
-                                  .read<GlobalDashboardCubit>()
-                                  .showIndividualReport(
-                                    suggestion.vehicleId,
-                                  ); //navigate to individual report and display its dedicated report
-                            },
-
-                            onBackButtonPressed:
-                                state.viewMode == DashboardViewMode.individual
-                                    ? () {
-                                      // Nav back to global view
-                                      context
-                                          .read<GlobalDashboardCubit>()
-                                          .backToGlobal();
-                                    }
-                                    : null,
+                                // Main content
+                                SizedBox(
+                                  child: _buildMainContent(context, state),
+                                ),
+                              ],
+                            ),
                           ),
-
-                        // Main content
-                        SizedBox(child: _buildMainContent(context, state)),
-                      ],
-                    ),
-                  ),
                 ),
               ),
             );
