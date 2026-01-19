@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
 import 'package:cvms_desktop/core/widgets/skeleton/report_skeleton_loader.dart';
-import 'package:cvms_desktop/features/dashboard2/bloc/dashboard_cubit.dart';
+import 'package:cvms_desktop/features/dashboard2/bloc/global/global_dashboard_cubit.dart';
 import 'package:cvms_desktop/features/dashboard2/models/vehicle_search_suggestion.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/global_dashboard_view.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/individual_report_view.dart';
@@ -31,17 +31,17 @@ class DashboardPage extends StatelessWidget {
   }
 
   /// Build main content based on view mode
-  Widget _buildMainContent(BuildContext context, DashboardState state) {
+  Widget _buildMainContent(BuildContext context, GlobalDashboardState state) {
     switch (state.viewMode) {
       case DashboardViewMode.global:
         return const GlobalDashboardView();
       case DashboardViewMode.individual:
-        return IndividualReportView(vehicle: state.selectedVehicle!);
+        return IndividualReportView(report: state.selectedVehicle!);
       case DashboardViewMode.pdfPreview:
         return PdfPreviewView(
           onBackPressed: () {
             // Navigate back to previous view (individual or global)
-            context.read<DashboardCubit>().backToPreviousView();
+            context.read<GlobalDashboardCubit>().backToPreviousView();
           },
         );
     }
@@ -51,12 +51,14 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create:
-          (_) => DashboardCubit(
+          (_) => GlobalDashboardCubit(
+            null,
             GlobalDashboardRepository(
               FirebaseFirestore.instance,
             ), // Realtime implementation step 20
           ),
-      child: BlocListener<DashboardCubit, DashboardState>(
+
+      child: BlocListener<GlobalDashboardCubit, GlobalDashboardState>(
         listener: (context, state) {
           // Gating: Only publish breadcrumbs if this is the active page
           if (context.read<ShellCubit>().state.selectedIndex != 1) return;
@@ -64,7 +66,7 @@ class DashboardPage extends StatelessWidget {
           final breadcrumbs = _buildBreadcrumbs(state.viewMode);
           BreadcrumbScope.controllerOf(context).setBreadcrumbs(breadcrumbs);
         },
-        child: BlocBuilder<DashboardCubit, DashboardState>(
+        child: BlocBuilder<GlobalDashboardCubit, GlobalDashboardState>(
           builder: (context, state) {
             if (!state.initialized) {
               return const Scaffold(
@@ -79,12 +81,13 @@ class DashboardPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Error: ${state.error}',
+                      'Error: //${state.error}',
                       style: const TextStyle(color: Colors.red),
                     ),
                     ElevatedButton(
                       onPressed:
-                          () => context.read<DashboardCubit>().clearError(),
+                          () =>
+                              context.read<GlobalDashboardCubit>().clearError(),
                       child: const Text('Dismiss'),
                     ),
                   ],
@@ -125,7 +128,9 @@ class DashboardPage extends StatelessWidget {
                             onExportPressed: () {
                               // todo Export report
                               // Navigate to PDF preview
-                              context.read<DashboardCubit>().showPdfPreview();
+                              context
+                                  .read<GlobalDashboardCubit>()
+                                  .showPdfPreview();
                             },
                             onSearchSuggestions: (query) async {
                               // DASHBOARD SEARCH FUNCTIONALITY STEP 4
@@ -142,9 +147,11 @@ class DashboardPage extends StatelessWidget {
                             onVehicleSelected: (
                               VehicleSearchSuggestion suggestion,
                             ) {
-                              context.read<DashboardCubit>().showIndividualReport(
-                                suggestion.vehicleId,
-                              ); //navigate to individual report and display its dedicated report
+                              context
+                                  .read<GlobalDashboardCubit>()
+                                  .showIndividualReport(
+                                    suggestion.vehicleId,
+                                  ); //navigate to individual report and display its dedicated report
                             },
 
                             onBackButtonPressed:
@@ -152,7 +159,7 @@ class DashboardPage extends StatelessWidget {
                                     ? () {
                                       // Nav back to global view
                                       context
-                                          .read<DashboardCubit>()
+                                          .read<GlobalDashboardCubit>()
                                           .backToGlobal();
                                     }
                                     : null,

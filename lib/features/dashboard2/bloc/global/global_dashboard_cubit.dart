@@ -10,9 +10,9 @@ import 'package:cvms_desktop/features/dashboard2/services/vehicle_search_service
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
-part 'dashboard_state.dart';
+part 'global_dashboard_state.dart';
 
-class DashboardCubit extends Cubit<DashboardState> {
+class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
   // ----GLOBAL-----
   final GlobalDashboardRepository repository; // Realtime implementation step 6
   StreamSubscription<int>? _logsSub; // Realtime implementation step 7
@@ -35,9 +35,13 @@ class DashboardCubit extends Cubit<DashboardState> {
   int _readyStreams = 0;
   static const int _requiredStreams = 11; // Total number of streams to wait for
 
-  DashboardCubit(
+  //vehicle id
+  final String? currentVehicleId;
+
+  GlobalDashboardCubit(
+    this.currentVehicleId,
     this.repository, // Realtime implementation step 8
-  ) : super(const DashboardState()) {
+  ) : super(const GlobalDashboardState()) {
     // ----GLOBAL-----
     _listenToVehicleLogs(); // Realtime implementation step 9
     _listenToVehicles();
@@ -269,7 +273,7 @@ class DashboardCubit extends Cubit<DashboardState> {
     final report = await service.getIndividualReport(vehicleId);
 
     if (report == null) {
-      emit(state.copyWith(loading: false));
+      emit(state.copyWith(loading: false, currentVehicleId: vehicleId));
       return;
     }
 

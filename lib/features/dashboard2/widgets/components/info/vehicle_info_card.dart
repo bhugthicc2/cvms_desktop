@@ -1,3 +1,4 @@
+import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/utils/card_decor.dart';
 import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
@@ -170,7 +171,7 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomText(text: label, fontSize: 12, color: Colors.grey),
+          CustomText(text: label, fontSize: 12, color: AppColors.grey),
           CustomText(text: value, fontWeight: FontWeight.bold),
         ],
       ),
@@ -186,7 +187,7 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomText(text: 'Status', fontSize: 12, color: Colors.grey),
+          CustomText(text: 'Status', fontSize: 12, color: AppColors.grey),
           Spacing.vertical(size: AppSpacing.xSmall),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -200,7 +201,7 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
                       ? 'No logs yet.'
                       : widget.report.status,
               fontSize: 12,
-              color: Colors.white,
+              color: AppColors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -248,7 +249,7 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
                 value: widget.report.mvpProgress * _progressAnimation.value,
                 minHeight: 6,
                 borderRadius: BorderRadius.circular(6),
-                backgroundColor: Colors.grey.withValues(alpha: 0.2),
+                backgroundColor: AppColors.grey.withValues(alpha: 0.2),
                 valueColor: AlwaysStoppedAnimation<Color>(
                   VehicleInfoService.getMvpProgressColor(
                     widget.report.mvpProgress,
@@ -268,7 +269,7 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
                   'Registered on ',
                 ),
                 fontSize: 11,
-                color: Colors.blue,
+                color: AppColors.primary,
               ),
               const Spacer(),
               CustomText(
@@ -277,7 +278,7 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
                   'Expires on ',
                 ),
                 fontSize: 11,
-                color: Colors.grey,
+                color: AppColors.grey,
               ),
             ],
           ),

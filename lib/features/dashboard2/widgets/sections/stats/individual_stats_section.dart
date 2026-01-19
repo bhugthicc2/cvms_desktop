@@ -8,11 +8,19 @@ import 'package:flutter/material.dart';
 class IndividualStatsSection extends StatelessWidget {
   final VoidCallback? onVehicleInfoFullView;
   final IndividualVehicleReport report;
+  final int daysUntilExpiration;
+  final int totalPendingViolations;
+  final int totalViolations;
+  final int totalVehicleLogs;
 
   const IndividualStatsSection({
     super.key,
     required this.report,
     this.onVehicleInfoFullView,
+    required this.daysUntilExpiration,
+    required this.totalPendingViolations,
+    required this.totalViolations,
+    required this.totalVehicleLogs,
   });
 
   @override
@@ -32,15 +40,15 @@ class IndividualStatsSection extends StatelessWidget {
               isGlobal: false,
               statsCard1Label: 'Days Until Expiration',
               statsCard1Icon: Icons.calendar_today,
-              statsCard1Value: 23,
+              statsCard1Value: daysUntilExpiration,
               statsCard2Label: 'Active Violations',
               statsCard2Icon: Icons.warning,
-              statsCard2Value: 2,
+              statsCard2Value: totalPendingViolations,
               statsCard3Label: 'Total Violations',
               statsCard3Icon: Icons.error,
-              statsCard3Value: 2,
+              statsCard3Value: totalViolations,
               statsCard4Label: 'Total Entries/Exits',
-              statsCard4Value: 2,
+              statsCard4Value: totalVehicleLogs,
             ),
           ),
 

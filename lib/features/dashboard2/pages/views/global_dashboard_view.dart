@@ -1,6 +1,6 @@
 import 'package:cvms_desktop/core/widgets/app/custom_alert_dialog.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_date_filter.dart';
-import 'package:cvms_desktop/features/dashboard2/bloc/dashboard_cubit.dart';
+import 'package:cvms_desktop/features/dashboard2/bloc/global/global_dashboard_cubit.dart';
 import 'package:cvms_desktop/features/dashboard2/models/time_grouping.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/stats/global_stats_card_section.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/charts/global_charts_section.dart';
@@ -22,7 +22,7 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
     // step 1: wait for widget to be mounted
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // step 2: ask cubit to start listening
-      context.read<DashboardCubit>().watchFleetLogsTrend(
+      context.read<GlobalDashboardCubit>().watchFleetLogsTrend(
         start: DateTime.now().subtract(const Duration(days: 6)), // last 7 days
         end: DateTime.now(), // today
         grouping: TimeGrouping.day, // daily buckets
@@ -36,7 +36,7 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
       child: Column(
         children: [
           // STATS SECTION (lightweight)
-          BlocBuilder<DashboardCubit, DashboardState>(
+          BlocBuilder<GlobalDashboardCubit, GlobalDashboardState>(
             buildWhen:
                 (prev, curr) =>
                     prev.totalEntriesExits != curr.totalEntriesExits ||
@@ -62,7 +62,7 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
           ),
 
           // CHARTS SECTION (heavy)
-          BlocBuilder<DashboardCubit, DashboardState>(
+          BlocBuilder<GlobalDashboardCubit, GlobalDashboardState>(
             buildWhen:
                 (prev, curr) =>
                     prev.yearLevelBreakdown != curr.yearLevelBreakdown ||
@@ -108,7 +108,7 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
 
   void _onTimeRangeChanged(String selectedRange) {
     // Update time range in cubit state
-    context.read<DashboardCubit>().updateTimeRange(selectedRange);
+    context.read<GlobalDashboardCubit>().updateTimeRange(selectedRange);
 
     DateTime endDate = DateTime.now();
     DateTime startDate;
@@ -135,7 +135,7 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
     }
 
     // Apply the selected date range to the data (e.g., fleet logs, charts)
-    context.read<DashboardCubit>().watchFleetLogsTrend(
+    context.read<GlobalDashboardCubit>().watchFleetLogsTrend(
       start: startDate,
       end: endDate,
       grouping: TimeGrouping.day, // or whatever your default grouping is
@@ -152,10 +152,10 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
             onApply: (period) {
               if (period != null) {
                 // Update current time range to reflect custom selection
-                context.read<DashboardCubit>().updateTimeRange('Custom');
+                context.read<GlobalDashboardCubit>().updateTimeRange('Custom');
 
                 // Use the original context to access the cubit
-                context.read<DashboardCubit>().watchFleetLogsTrend(
+                context.read<GlobalDashboardCubit>().watchFleetLogsTrend(
                   start: period.start,
                   end: period.end,
                   grouping: TimeGrouping.day,

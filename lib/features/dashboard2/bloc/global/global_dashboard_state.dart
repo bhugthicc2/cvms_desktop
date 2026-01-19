@@ -1,4 +1,4 @@
-part of 'dashboard_cubit.dart';
+part of 'global_dashboard_cubit.dart';
 
 enum DashboardViewMode {
   global, // Root dashboard
@@ -6,7 +6,7 @@ enum DashboardViewMode {
   pdfPreview, // PDF preview view
 }
 
-class DashboardState extends Equatable {
+class GlobalDashboardState extends Equatable {
   final DashboardViewMode viewMode;
   final bool loading;
   final String? error;
@@ -29,8 +29,10 @@ class DashboardState extends Equatable {
   final List<ChartDataModel> fleetLogsData;
   final String currentTimeRange;
   final bool initialized;
+  //indi vehicle report
+  final String? currentVehicleId;
 
-  const DashboardState({
+  const GlobalDashboardState({
     this.viewMode = DashboardViewMode.global,
     this.loading = false,
     this.error,
@@ -53,9 +55,12 @@ class DashboardState extends Equatable {
     this.violationTypeDistribution = const [], // step 11
     this.fleetLogsData = const [],
     this.currentTimeRange = '7 days',
+
+    //indi vehicle report
+    this.currentVehicleId,
   });
 
-  DashboardState copyWith({
+  GlobalDashboardState copyWith({
     DashboardViewMode? viewMode,
     bool? loading,
     String? error,
@@ -78,8 +83,11 @@ class DashboardState extends Equatable {
     List<ChartDataModel>? fleetLogsData,
     String? currentTimeRange,
     bool? initialized,
+
+    //indi
+    String? currentVehicleId,
   }) {
-    return DashboardState(
+    return GlobalDashboardState(
       viewMode: viewMode ?? this.viewMode,
       loading: loading ?? this.loading,
       error: error ?? this.error,
@@ -115,6 +123,8 @@ class DashboardState extends Equatable {
           this.violationTypeDistribution, // step 13
       fleetLogsData: fleetLogsData ?? this.fleetLogsData,
       currentTimeRange: currentTimeRange ?? this.currentTimeRange,
+      //indi vehicle report
+      currentVehicleId: currentVehicleId ?? this.currentVehicleId,
     );
   }
 
@@ -140,5 +150,7 @@ class DashboardState extends Equatable {
     fleetLogsData,
     currentTimeRange,
     initialized,
+    //indi vehicle report
+    currentVehicleId,
   ];
 }
