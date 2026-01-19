@@ -1,10 +1,12 @@
 import 'package:cvms_desktop/core/widgets/app/typeahead_search_field.dart';
+import 'package:cvms_desktop/features/dashboard2/models/vehicle_search_suggestion.dart';
 import 'package:flutter/material.dart';
 
 class VehicleSearchBar extends StatelessWidget {
   final String hintText;
-  final Future<List<String>> Function(String) suggestionsCallback;
-  final void Function(String) onSuggestionSelected;
+  final Future<List<VehicleSearchSuggestion>> Function(String)
+  suggestionsCallback;
+  final void Function(VehicleSearchSuggestion) onSuggestionSelected;
   final TextEditingController? controller;
 
   const VehicleSearchBar({

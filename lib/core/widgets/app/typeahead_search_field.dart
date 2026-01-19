@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class TypeaheadSearchField extends StatelessWidget {
+class TypeaheadSearchField<T> extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String>? onChanged;
-  final ValueChanged<String>? onSuggestionSelected;
-  final Future<List<String>> Function(String) suggestionsCallback;
+  final ValueChanged<T>? onSuggestionSelected;
+  final Future<List<T>> Function(String) suggestionsCallback;
   final String hintText;
   final double contentPaddingX;
   final double contentPaddingY;
@@ -49,7 +49,7 @@ class TypeaheadSearchField extends StatelessWidget {
           color: AppColors.white,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: TypeAheadField<String>(
+        child: TypeAheadField<T>(
           controller: controller,
           suggestionsCallback: suggestionsCallback,
           builder: (context, controller, focusNode) {
@@ -121,7 +121,7 @@ class TypeaheadSearchField extends StatelessWidget {
             );
 
             final query = controller.text.trim();
-            final suggestionText = suggestion;
+            final suggestionText = suggestion as String;
 
             final spans = <TextSpan>[];
             if (query.isEmpty) {

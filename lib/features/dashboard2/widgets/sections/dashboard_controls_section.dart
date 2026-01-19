@@ -2,6 +2,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/buttons/custom_icon_button.dart';
+import 'package:cvms_desktop/features/dashboard2/models/vehicle_search_suggestion.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/components/search/vehicle_search_bar.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/navigation/action_buttons.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,9 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class DashboardControlsSection extends StatelessWidget {
   final TextEditingController? searchController;
-  final Future<List<String>> Function(String) onSearchSuggestions;
-  final void Function(String) onVehicleSelected;
+  final Future<List<VehicleSearchSuggestion>> Function(String)
+  onSearchSuggestions;
+  final void Function(VehicleSearchSuggestion) onVehicleSelected;
   final String dateFilterText;
   final VoidCallback onExportPressed;
   final bool showBackButton;

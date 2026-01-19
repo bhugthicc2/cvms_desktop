@@ -320,6 +320,147 @@ Future<List<Map<String, dynamic>>> searchVehicles(String query) async {
 - **Typeahead Functionality**: Enhanced UX with dropdown suggestions
 - **Firestore Integration**: Live data synchronization
 
+## Get Vehicle by Plate Number
+
+### Overview
+
+The "Get Vehicle by Plate Number" functionality allows users to retrieve complete vehicle details using the exact plate number. This is used when a user selects a search suggestion or when navigating to an individual vehicle report.
+
+### Architecture
+
+The functionality follows a layered approach:
+
+```dart
+UI Layer (DashboardPage) → BLoC Layer (DashboardCubit) → Service Layer (VehicleSearchService) → Repository Layer (VehicleSearchRepository) → Firestore
+```
+
+### Implementation Details
+
+#### 1. Repository Layer (`VehicleSearchRepository`)
+
+```dart
+Future<Map<String, dynamic>?> getVehicleByPlate(String plateNumber) async {
+  final snapshot = await _db
+      .collection('vehicles')
+      .where('plateNumber', isEqualTo: plateNumber)
+      .limit(1)
+      .get();
+
+  if (snapshot.docs.isEmpty) return null;
+
+  return snapshot.docs.first.data();
+}
+```
+
+**Key Features**:
+
+- **Exact Match**: Uses `isEqualTo` for precise plate number matching
+- **Single Result**: Limits to 1 document for efficiency
+- **Null Safety**: Returns `null` if vehicle not found
+- **Direct Data Access**: Returns raw Firestore document data
+
+#### 2. Service Layer (`VehicleSearchService`)
+
+```dart
+Future<IndividualVehicleReport?> getVehicleByPlate(String plateNumber) async {
+  final data = await repository.getVehicleByPlate(plateNumber);
+  if (data == null) return null;
+
+  return IndividualVehicleReport.fromFirestore(data);
+}
+```
+
+**Key Features**:
+
+- **Data Transformation**: Converts raw data to `IndividualVehicleReport` model
+- **Null Handling**: Gracefully handles missing vehicles
+- **Model Mapping**: Uses factory constructor for consistent object creation
+
+#### 3. BLoC Layer (`DashboardCubit`)
+
+```dart
+Future<void> showIndividualReportByPlate(String plateNumber) async {
+  try {
+    final service = VehicleSearchService(
+      VehicleSearchRepository(FirebaseFirestore.instance),
+    );
+
+    final vehicle = await service.getVehicleByPlate(plateNumber);
+    if (vehicle == null) return;
+
+    emit(
+      state.copyWith(
+        selectedVehicle: vehicle,
+        viewMode: DashboardViewMode.individual,
+      ),
+    );
+  } catch (e) {
+    emit(state.copyWith(error: e.toString()));
+  }
+}
+```
+
+**Key Features**:
+
+- **Service Creation**: Instantiates service and repository dependencies
+- **Error Handling**: Wraps operation in try-catch for robust error management
+- **State Management**: Updates dashboard state with selected vehicle
+- **Navigation**: Automatically switches to individual view mode
+- **Error Reporting**: Emits error state if operation fails
+
+#### 4. UI Layer (`DashboardPage`)
+
+```dart
+onVehicleSelected: (vehiclePlate) {
+  context
+      .read<DashboardCubit>()
+      .showIndividualReportByPlate(vehiclePlate);
+  debugPrint('onClick: $vehiclePlate');
+},
+```
+
+**Key Features**:
+
+- **Event Trigger**: Calls BLoC method when user selects suggestion
+- **Debug Logging**: Logs selection for development debugging
+- **Clean Integration**: Seamless integration with typeahead search
+
+### Data Flow
+
+1. **User Action**: User selects a vehicle from search suggestions
+2. **UI Event**: `onVehicleSelected` callback triggers with plate number
+3. **BLoC Call**: `showIndividualReportByPlate()` method called
+4. **Service Layer**: `getVehicleByPlate()` processes the request
+5. **Repository Query**: Firestore query executed with exact plate match
+6. **Data Transformation**: Raw data converted to `IndividualVehicleReport`
+7. **State Update**: Dashboard state updated with selected vehicle
+8. **UI Navigation**: View automatically switches to individual report
+
+### Error Handling
+
+- **Vehicle Not Found**: Returns `null` and gracefully exits
+- **Network Errors**: Caught in BLoC and emitted as error state
+- **Invalid Data**: Factory constructor handles missing fields gracefully
+- **State Consistency**: Error states don't affect existing dashboard state
+
+### Performance Considerations
+
+- **Single Document Query**: Uses `limit(1)` for optimal performance
+- **Exact Index**: Plate number field should be indexed in Firestore
+- **Lazy Loading**: Data only fetched when needed
+- **Memory Efficient**: No unnecessary data retention
+
+### Usage Examples
+
+```dart
+// Direct service usage
+final service = VehicleSearchService(repository);
+final vehicle = await service.getVehicleByPlate("ABC123");
+
+// BLoC usage (recommended)
+context.read<DashboardCubit>().showIndividualReportByPlate("ABC123");
+```
+
 ## Search Field Configuration
 
 ### Responsive Width

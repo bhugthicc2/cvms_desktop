@@ -10,19 +10,18 @@ class VehicleSearchService {
 
   VehicleSearchService(this.repository);
 
-  /// Returns vehicle suggestions by searching plateNumber, ownerName, and schoolID
   Future<List<VehicleSearchSuggestion>> getSuggestions(String query) async {
     final results = await repository.searchVehicles(query);
 
-    return results.map(VehicleSearchSuggestion.fromFirestore).toList();
+    return results.map((result) {
+      return VehicleSearchSuggestion.fromFirestore(result.id, result.data);
+    }).toList();
   }
 
-  /// Fetch full vehicle report by plate
-  Future<IndividualVehicleReport?> getVehicleByPlate(String plateNumber) async {
-    final results = await repository.searchVehicles(plateNumber);
+  Future<IndividualVehicleReport?> getIndividualReport(String vehicleId) async {
+    final data = await repository.getVehicleById(vehicleId);
+    if (data == null) return null;
 
-    if (results.isEmpty) return null;
-
-    return IndividualVehicleReport.fromFirestore(results.first);
+    return IndividualVehicleReport.fromFirestore(data);
   }
 }

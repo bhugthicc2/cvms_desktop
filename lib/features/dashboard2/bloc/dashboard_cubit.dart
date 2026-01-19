@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
 import 'package:cvms_desktop/features/dashboard2/models/individual_vehicle_report.dart';
 import 'package:cvms_desktop/features/dashboard2/models/time_grouping.dart';
 import 'package:cvms_desktop/features/dashboard2/repositories/global_dashboard_repository.dart';
+import 'package:cvms_desktop/features/dashboard2/repositories/vehicle_search_repository.dart';
+import 'package:cvms_desktop/features/dashboard2/services/vehicle_search_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -255,6 +258,30 @@ class DashboardCubit extends Cubit<DashboardState> {
         );
   }
 
+  //for individual report nav
+  Future<void> showIndividualReport(String vehicleId) async {
+    emit(state.copyWith(loading: true));
+
+    final service = VehicleSearchService(
+      VehicleSearchRepository(FirebaseFirestore.instance),
+    );
+
+    final report = await service.getIndividualReport(vehicleId);
+
+    if (report == null) {
+      emit(state.copyWith(loading: false));
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        selectedVehicle: report,
+        viewMode: DashboardViewMode.individual,
+        loading: false,
+      ),
+    );
+  }
+
   @override
   Future<void> close() {
     // Realtime implementation step 17
@@ -280,15 +307,6 @@ class DashboardCubit extends Cubit<DashboardState> {
   // View mode navigation
   void showGlobalDashboard() {
     emit(state.copyWith(viewMode: DashboardViewMode.global));
-  }
-
-  void showIndividualReport({required IndividualVehicleReport vehicle}) {
-    emit(
-      state.copyWith(
-        viewMode: DashboardViewMode.individual,
-        selectedVehicle: vehicle,
-      ),
-    );
   }
 
   void showPdfPreview() {

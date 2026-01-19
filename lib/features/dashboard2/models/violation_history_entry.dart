@@ -22,7 +22,6 @@ class ViolationHistoryEntry extends Equatable {
   // Computed properties
   bool get isPending => status.toLowerCase() == 'pending';
   bool get isResolved => status.toLowerCase() == 'resolved';
-  bool get isAppealed => status.toLowerCase() == 'appealed';
 
   @override
   List<Object?> get props => [

@@ -3,6 +3,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
 import 'package:cvms_desktop/core/widgets/skeleton/report_skeleton_loader.dart';
 import 'package:cvms_desktop/features/dashboard2/bloc/dashboard_cubit.dart';
+import 'package:cvms_desktop/features/dashboard2/models/vehicle_search_suggestion.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/global_dashboard_view.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/individual_report_view.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/pdf_preview_view.dart';
@@ -135,20 +136,17 @@ class DashboardPage extends StatelessWidget {
                               );
                               final suggestions = await searchService
                                   .getSuggestions(query);
-                              return suggestions
-                                  .map(
-                                    (suggestion) =>
-                                        '${suggestion.plateNumber} · ${suggestion.ownerName} · ${suggestion.schoolId}',
-                                  )
-                                  .toList();
+                              return suggestions;
                             },
 
-                            onVehicleSelected: (vehiclePlate) {
-                              // todo Navigate to individual view
-                              // context
-                              //     .read<DashboardCubit>()
-                              //     .showIndividualReport(vehicle: vehicle);
+                            onVehicleSelected: (
+                              VehicleSearchSuggestion suggestion,
+                            ) {
+                              context
+                                  .read<DashboardCubit>()
+                                  .showIndividualReport(suggestion.vehicleId);
                             },
+
                             onBackButtonPressed:
                                 state.viewMode == DashboardViewMode.individual
                                     ? () {

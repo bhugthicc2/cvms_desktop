@@ -47,7 +47,7 @@ class IndividualStatsSection extends StatelessWidget {
 
           Spacing.horizontal(size: AppSpacing.medium),
 
-          // Vehicle Info Card
+          // Vehicle Info Card //todo
           Expanded(
             child: VehicleInfoCard(
               onViewTap: onVehicleInfoFullView ?? () {},
