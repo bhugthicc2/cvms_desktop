@@ -4,7 +4,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import '../core/pdf_branding_config.dart';
-import 'pdf_page_template.dart';
+import '../core/pdf_page_template.dart';
 
 class DefaultPdfPageTemplate implements PdfPageTemplate {
   final PdfBrandingConfig branding;

@@ -1,5 +1,8 @@
 import 'dart:typed_data';
 
+import 'package:cvms_desktop/features/dashboard/pdf/components/layout/pdf_content_container.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/core/pdf_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/global/global_summary_section.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -20,8 +23,6 @@ class GlobalReportBuilder {
     required GlobalVehicleReportModel report,
     required PdfBrandingConfig branding,
     PdfPageFormat pageFormat = PdfPageFormat.legal,
-    double marginH = 40,
-    double marginV = 5,
   }) async {
     final pdf = pw.Document();
 
@@ -31,9 +32,9 @@ class GlobalReportBuilder {
     );
 
     // Report sections (ORDER MATTERS)
-    final sections = [
+    final List<PdfSection<GlobalVehicleReportModel>> sections = [
       GlobalReportTitleSection(),
-      // GlobalSummarySection(),
+      GlobalSummarySection(),
       // GlobalChartsSection(),
       // GlobalTablesSection(),
     ];
@@ -47,11 +48,7 @@ class GlobalReportBuilder {
           final widgets = <pw.Widget>[];
           for (final section in sections) {
             widgets.add(
-              pw.Padding(
-                padding: pw.EdgeInsets.symmetric(
-                  horizontal: marginH,
-                  vertical: marginV,
-                ),
+              PdfContentContainer(
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: section.build(report),
