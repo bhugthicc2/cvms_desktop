@@ -1,5 +1,5 @@
 import 'package:cvms_desktop/core/widgets/app/typeahead_search_field.dart';
-import 'package:cvms_desktop/features/dashboard2/models/vehicle_search_suggestion.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/vehicle_search_suggestion.dart';
 import 'package:flutter/material.dart';
 
 class VehicleSearchBar extends StatelessWidget {

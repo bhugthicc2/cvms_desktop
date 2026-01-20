@@ -2,7 +2,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/utils/date_time_formatter.dart';
 import 'package:cvms_desktop/core/widgets/table/cell_badge.dart';
-import 'package:cvms_desktop/features/dashboard2/models/violation_history_entry.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/violation_history_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 

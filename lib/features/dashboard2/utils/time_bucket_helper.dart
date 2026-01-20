@@ -1,4 +1,4 @@
-import 'package:cvms_desktop/features/dashboard2/models/time_grouping.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/time_grouping.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 

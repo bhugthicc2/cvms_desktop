@@ -32,6 +32,9 @@ class GlobalDashboardState extends Equatable {
   //indi vehicle report
   final String? currentVehicleId;
 
+  //PDF
+  final Uint8List? pdfBytes;
+
   const GlobalDashboardState({
     this.viewMode = DashboardViewMode.global,
     this.loading = false,
@@ -58,6 +61,8 @@ class GlobalDashboardState extends Equatable {
 
     //indi vehicle report
     this.currentVehicleId,
+    //pdf
+    this.pdfBytes,
   });
 
   GlobalDashboardState copyWith({
@@ -86,6 +91,9 @@ class GlobalDashboardState extends Equatable {
 
     //indi
     String? currentVehicleId,
+    //pdf
+    Uint8List? pdfBytes,
+    bool clearPdf = false,
   }) {
     return GlobalDashboardState(
       viewMode: viewMode ?? this.viewMode,
@@ -125,6 +133,9 @@ class GlobalDashboardState extends Equatable {
       currentTimeRange: currentTimeRange ?? this.currentTimeRange,
       //indi vehicle report
       currentVehicleId: currentVehicleId ?? this.currentVehicleId,
+
+      //pdf
+      pdfBytes: clearPdf ? null : pdfBytes ?? this.pdfBytes,
     );
   }
 
@@ -152,5 +163,8 @@ class GlobalDashboardState extends Equatable {
     initialized,
     //indi vehicle report
     currentVehicleId,
+
+    //pdf
+    pdfBytes,
   ];
 }

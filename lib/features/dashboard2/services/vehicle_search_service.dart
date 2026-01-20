@@ -1,9 +1,9 @@
 // DASHBOARD SEARCH FUNCTIONALITY STEP 2
 
-import 'package:cvms_desktop/features/dashboard2/models/vehicle_search_suggestion.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/vehicle_search_suggestion.dart';
 
-import '../repositories/vehicle_search_repository.dart';
-import '../models/individual_vehicle_info.dart';
+import '../repositories/dashboard/vehicle_search_repository.dart';
+import '../models/dashboard/individual_vehicle_info.dart';
 
 class VehicleSearchService {
   final VehicleSearchRepository repository;

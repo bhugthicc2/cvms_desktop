@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
-import 'package:cvms_desktop/features/dashboard2/models/time_grouping.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/time_grouping.dart';
 import 'package:cvms_desktop/features/dashboard2/utils/time_bucket_helper.dart';
 import 'package:cvms_desktop/features/dashboard2/utils/year_level_formatter.dart';
 import 'package:rxdart/rxdart.dart';

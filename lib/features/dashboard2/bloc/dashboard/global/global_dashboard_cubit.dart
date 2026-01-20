@@ -1,12 +1,16 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
-import 'package:cvms_desktop/features/dashboard2/models/individual_vehicle_info.dart';
-import 'package:cvms_desktop/features/dashboard2/models/time_grouping.dart';
-import 'package:cvms_desktop/features/dashboard2/repositories/global_dashboard_repository.dart';
-import 'package:cvms_desktop/features/dashboard2/repositories/vehicle_search_repository.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/individual_vehicle_info.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/time_grouping.dart';
+import 'package:cvms_desktop/features/dashboard2/models/report/date_range.dart';
+import 'package:cvms_desktop/features/dashboard2/repositories/dashboard/global_dashboard_repository.dart';
+import 'package:cvms_desktop/features/dashboard2/repositories/dashboard/vehicle_search_repository.dart';
 import 'package:cvms_desktop/features/dashboard2/services/vehicle_search_service.dart';
+import 'package:cvms_desktop/features/dashboard2/use_cases/pdf/global_pdf_export_usecase.dart';
+import 'package:cvms_desktop/features/dashboard2/use_cases/pdf/individual_pdf_export_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -38,9 +42,15 @@ class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
   //vehicle id
   final String? currentVehicleId;
 
+  //pdf
+  final GlobalPdfExportUseCase globalPdfExportUseCase;
+  final IndividualPdfExportUseCase individualPdfExportUseCase;
+
   GlobalDashboardCubit(
     this.currentVehicleId,
     this.repository, // Realtime implementation step 8
+    this.globalPdfExportUseCase,
+    this.individualPdfExportUseCase,
   ) : super(const GlobalDashboardState()) {
     // ----GLOBAL-----
     _listenToVehicleLogs(); // Realtime implementation step 9
@@ -313,13 +323,38 @@ class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
     emit(state.copyWith(viewMode: DashboardViewMode.global));
   }
 
-  void showPdfPreview() {
-    emit(
-      state.copyWith(
-        viewMode: DashboardViewMode.pdfPreview,
-        previousViewMode: state.viewMode,
-      ),
-    );
+  Future<void> generateReport({required DateRange range}) async {
+    emit(state.copyWith(loading: true));
+
+    try {
+      Uint8List pdfBytes;
+
+      if (state.viewMode == DashboardViewMode.global) {
+        pdfBytes = await globalPdfExportUseCase.export(range: range);
+      } else if (state.viewMode == DashboardViewMode.individual) {
+        if (state.selectedVehicle == null) {
+          throw StateError('No vehicle selected for individual report');
+        }
+
+        pdfBytes = await individualPdfExportUseCase.export(
+          vehicleId: state.selectedVehicle!.vehicleId,
+          range: range,
+        );
+      } else {
+        throw StateError('Invalid dashboard view mode for export');
+      }
+
+      emit(
+        state.copyWith(
+          pdfBytes: pdfBytes,
+          previousViewMode: state.viewMode,
+          viewMode: DashboardViewMode.pdfPreview,
+          loading: false,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(loading: false, error: e.toString()));
+    }
   }
 
   void updateTimeRange(String timeRange) {

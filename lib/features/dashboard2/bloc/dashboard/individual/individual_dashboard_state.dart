@@ -1,7 +1,7 @@
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
-import 'package:cvms_desktop/features/dashboard2/models/recent_log_entry.dart';
-import 'package:cvms_desktop/features/dashboard2/models/time_grouping.dart';
-import 'package:cvms_desktop/features/dashboard2/models/violation_history_entry.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/recent_log_entry.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/time_grouping.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/violation_history_entry.dart';
 import 'package:equatable/equatable.dart';
 
 class IndividualDashboardState extends Equatable {

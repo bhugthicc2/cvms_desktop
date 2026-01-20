@@ -1,0 +1,590 @@
+
++--- dashboard
+|   +--- individual_vehicle_info.dart
+|   |   // DASHBOARD SEARCH FUNCTIONALITY STEP 3
+|   |   import 'package:cloud_firestore/cloud_firestore.dart';
+|   |   import 'package:cvms_desktop/core/utils/registration_expiry_utils.dart';
+|   |   
+|   |   class IndividualVehicleInfo {
+|   |     final String vehicleId;
+|   |     final String plateNumber;
+|   |     final String ownerName;
+|   |     final String vehicleType;
+|   |     final String department;
+|   |     final String status;
+|   |     final String vehicleModel;
+|   |     final DateTime? createdAt;
+|   |     final DateTime? expiryDate;
+|   |     final int daysUntilExpiration;
+|   |   
+|   |     // MVP Progress fields
+|   |     final double mvpProgress;
+|   |     final DateTime? mvpRegisteredDate;
+|   |     final DateTime? mvpExpiryDate;
+|   |     final String mvpStatusText;
+|   |   
+|   |     IndividualVehicleInfo({
+|   |       required this.vehicleId,
+|   |       required this.plateNumber,
+|   |       required this.ownerName,
+|   |       required this.vehicleType,
+|   |       this.department = '',
+|   |       this.status = '',
+|   |       this.vehicleModel = '',
+|   |       this.createdAt,
+|   |       this.expiryDate,
+|   |       this.daysUntilExpiration = 0,
+|   |       this.mvpProgress = 0.0,
+|   |       this.mvpRegisteredDate,
+|   |       this.mvpExpiryDate,
+|   |       this.mvpStatusText = 'Not Set',
+|   |     });
+|   |   
+|   |     factory IndividualVehicleInfo.fromFirestore(
+|   |       String vehicleId,
+|   |       Map<String, dynamic> data,
+|   |     ) {
+|   |       final createdAt =
+|   |           data['createdAt'] != null
+|   |               ? (data['createdAt'] as Timestamp).toDate()
+|   |               : null;
+|   |       // Calculate expiry date using RegistrationExpiryUtils
+|   |       final expiryDate =
+|   |           createdAt != null
+|   |               ? RegistrationExpiryUtils.computeExpiryDate(createdAt)
+|   |               : null;
+|   |   
+|   |       // Calculate MVP progress
+|   |       double mvpProgress = 0.0;
+|   |       String mvpStatusText = 'Not Set';
+|   |   
+|   |       if (createdAt != null && expiryDate != null) {
+|   |         final now = DateTime.now();
+|   |         if (now.isBefore(createdAt)) {
+|   |           mvpStatusText = 'Not Started';
+|   |         } else if (now.isAfter(expiryDate) || now.isAtSameMomentAs(expiryDate)) {
+|   |           mvpStatusText = 'Expired';
+|   |           mvpProgress = 1.0;
+|   |         } else {
+|   |           mvpStatusText = 'Valid';
+|   |           final totalDuration = expiryDate.difference(createdAt);
+|   |           final elapsedDuration = now.difference(createdAt);
+|   |           mvpProgress = (elapsedDuration.inMilliseconds /
+|   |                   totalDuration.inMilliseconds)
+|   |               .clamp(0.0, 1.0);
+|   |         }
+|   |       }
+|   |   
+|   |       return IndividualVehicleInfo(
+|   |         vehicleId: vehicleId,
+|   |         plateNumber: data['plateNumber'] ?? '',
+|   |         ownerName: data['ownerName'] ?? '',
+|   |         vehicleType: data['vehicleType'] ?? '',
+|   |         department: data['department'] ?? '',
+|   |         status: data['status'] ?? '',
+|   |         vehicleModel: data['vehicleModel'] ?? '',
+|   |         createdAt: createdAt,
+|   |         expiryDate: expiryDate,
+|   |         daysUntilExpiration:
+|   |             expiryDate != null ? expiryDate.difference(DateTime.now()).inDays : 0,
+|   |         mvpProgress: mvpProgress,
+|   |         mvpRegisteredDate: createdAt,
+|   |         mvpExpiryDate: expiryDate,
+|   |         mvpStatusText: mvpStatusText,
+|   |       );
+|   |     }
+|   |   }
+|   +--- recent_log_entry.dart
+|   |   import 'package:equatable/equatable.dart';
+|   |   import 'package:cloud_firestore/cloud_firestore.dart';
+|   |   
+|   |   class RecentLogEntry extends Equatable {
+|   |     final String logId;
+|   |     final DateTime timeIn;
+|   |     final DateTime? timeOut;
+|   |     final int? durationMinutes;
+|   |     final String status;
+|   |     final String updatedBy;
+|   |   
+|   |     const RecentLogEntry({
+|   |       required this.logId,
+|   |       required this.timeIn,
+|   |       this.timeOut,
+|   |       this.durationMinutes,
+|   |       required this.status,
+|   |       required this.updatedBy,
+|   |     });
+|   |   
+|   |     // Factory constructor for creating from Firestore data
+|   |     factory RecentLogEntry.fromFirestore(String id, Map<String, dynamic> data) {
+|   |       return RecentLogEntry(
+|   |         logId: id,
+|   |         timeIn: (data['timeIn'] as Timestamp).toDate(),
+|   |         timeOut:
+|   |             data['timeOut'] != null
+|   |                 ? (data['timeOut'] as Timestamp).toDate()
+|   |                 : null,
+|   |         durationMinutes: data['durationMinutes'] as int?,
+|   |         status: data['status'] as String? ?? '',
+|   |         updatedBy: data['updatedByUserId'] as String? ?? '',
+|   |       );
+|   |     }
+|   |   
+|   |     // Computed properties
+|   |     bool get isActive => status.toLowerCase() == 'onsite';
+|   |     bool get isCompleted => status.toLowerCase() == 'offsite';
+|   |     bool get hasTimeOut => timeOut != null;
+|   |     bool get hasDuration => durationMinutes != null;
+|   |   
+|   |     @override
+|   |     List<Object?> get props => [
+|   |       logId,
+|   |       timeIn,
+|   |       timeOut,
+|   |       durationMinutes,
+|   |       status,
+|   |       updatedBy,
+|   |     ];
+|   |   }
+|   +--- time_grouping.dart
+|   |   enum TimeGrouping { day, week, month, year }
+|   +--- vehicle_search_result.dart
+|   |   class VehicleSearchResult {
+|   |     final String id;
+|   |     final Map<String, dynamic> data;
+|   |   
+|   |     VehicleSearchResult({required this.id, required this.data});
+|   |   }
+|   +--- vehicle_search_suggestion.dart
+|   |   class VehicleSearchSuggestion {
+|   |     final String vehicleId;
+|   |     final String plateNumber;
+|   |     final String ownerName;
+|   |     final String schoolId;
+|   |   
+|   |     const VehicleSearchSuggestion({
+|   |       required this.vehicleId,
+|   |       required this.plateNumber,
+|   |       required this.ownerName,
+|   |       required this.schoolId,
+|   |     });
+|   |   
+|   |     factory VehicleSearchSuggestion.fromFirestore(
+|   |       String id,
+|   |       Map<String, dynamic> data,
+|   |     ) {
+|   |       return VehicleSearchSuggestion(
+|   |         vehicleId: id,
+|   |         plateNumber: data['plateNumber'] ?? '',
+|   |         ownerName: data['ownerName'] ?? '',
+|   |         schoolId: data['schoolID'] ?? '',
+|   |       );
+|   |     }
+|   |   }
+|   \--- violation_history_entry.dart
+|       import 'package:equatable/equatable.dart';
+|       import 'package:cloud_firestore/cloud_firestore.dart';
+|       
+|       class ViolationHistoryEntry extends Equatable {
+|         final String violationId;
+|         final DateTime dateTime;
+|         final String violationType;
+|         final String reportedBy;
+|         final String status;
+|         final DateTime createdAt;
+|         final DateTime lastUpdated;
+|       
+|         const ViolationHistoryEntry({
+|           required this.violationId,
+|           required this.dateTime,
+|           required this.violationType,
+|           required this.reportedBy,
+|           required this.status,
+|           required this.createdAt,
+|           required this.lastUpdated,
+|         });
+|       
+|         // Factory constructor for creating from Firestore data
+|         factory ViolationHistoryEntry.fromFirestore(
+|           String id,
+|           Map<String, dynamic> data,
+|         ) {
+|           return ViolationHistoryEntry(
+|             violationId: id,
+|             dateTime: (data['reportedAt'] as Timestamp).toDate(),
+|             violationType: data['violationType'] as String? ?? '',
+|             reportedBy: data['reportedBy'] as String? ?? '',
+|             status: data['status'] as String? ?? '',
+|             createdAt: (data['createdAt'] as Timestamp).toDate(),
+|             lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
+|           );
+|         }
+|       
+|         // Computed properties
+|         bool get isPending => status.toLowerCase() == 'pending';
+|         bool get isResolved => status.toLowerCase() == 'resolved';
+|       
+|         @override
+|         List<Object?> get props => [
+|           violationId,
+|           dateTime,
+|           violationType,
+|           reportedBy,
+|           status,
+|           createdAt,
+|           lastUpdated,
+|         ];
+|       }
+\--- report
+    +--- date_range.dart
+    |   class DateRange {
+    |     final DateTime start;
+    |     final DateTime end;
+    |   
+    |     const DateRange(this.start, this.end);
+    |   
+    |     Duration get duration => end.difference(start);
+    |   
+    |     bool contains(DateTime date) {
+    |       return !date.isBefore(start) && !date.isAfter(end);
+    |     }
+    |   
+    |     @override
+    |     String toString() {
+    |       return '${_fmt(start)} - ${_fmt(end)}';
+    |     }
+    |   
+    |     String _fmt(DateTime date) {
+    |       return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+    |     }
+    |   }
+    +--- date_range_filter.dart
+    |   class DateRangeFilter {
+    |     final DateTime start;
+    |     final DateTime end;
+    |   
+    |     const DateRangeFilter({required this.start, required this.end});
+    |   }
+    +--- global_report_data.dart
+    |   import 'package:cvms_desktop/features/dashboard2/models/report/date_range.dart';
+    |   
+    |   class GlobalReportData {
+    |     final DateTime generatedAt;
+    |     final DateRange period;
+    |   
+    |     // Summary metrics
+    |     final int totalVehicles;
+    |     final int totalLogs;
+    |     final int totalViolations;
+    |     final int pendingViolations;
+    |   
+    |     // Charts
+    |     final Map<String, int> violationsByType;
+    |     final Map<DateTime, int> fleetLogsTrend;
+    |   
+    |     // Tables
+    |     final List<Map<String, String>> recentViolations;
+    |     final List<Map<String, String>> recentLogs;
+    |   
+    |     const GlobalReportData({
+    |       required this.generatedAt,
+    |       required this.period,
+    |       required this.totalVehicles,
+    |       required this.totalLogs,
+    |       required this.totalViolations,
+    |       required this.pendingViolations,
+    |       required this.violationsByType,
+    |       required this.fleetLogsTrend,
+    |       required this.recentViolations,
+    |       required this.recentLogs,
+    |     });
+    |   }
+    +--- global_report_query.dart
+    |   class GlobalReportQuery {
+    |     final DateTime start;
+    |     final DateTime end;
+    |   
+    |     const GlobalReportQuery({required this.start, required this.end});
+    |   }
+    +--- global_vehicle_report_model.dart
+    |   import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
+    |   import 'package:cvms_desktop/features/dashboard2/models/report/date_range_filter.dart';
+    |   import '../dashboard/recent_log_entry.dart';
+    |   import '../dashboard/violation_history_entry.dart';
+    |   
+    |   class GlobalVehicleReportModel {
+    |     final int totalVehicles;
+    |     final int totalFleetLogs;
+    |     final int totalViolations;
+    |     final int pendingViolations;
+    |   
+    |     final Map<String, int> violationsByType;
+    |     final List<ChartDataModel> fleetLogsTrend;
+    |   
+    |     final List<ViolationHistoryEntry> recentViolations;
+    |     final List<RecentLogEntry> recentLogs;
+    |   
+    |     final DateRangeFilter period;
+    |   
+    |     GlobalVehicleReportModel({
+    |       required this.totalVehicles,
+    |       required this.totalFleetLogs,
+    |       required this.totalViolations,
+    |       required this.pendingViolations,
+    |       required this.violationsByType,
+    |       required this.fleetLogsTrend,
+    |       required this.recentViolations,
+    |       required this.recentLogs,
+    |       required this.period,
+    |     });
+    |   }
+    +--- grouping_resolver.dart
+    |   import 'report_period_type.dart';
+    |   import 'time_grouping.dart';
+    |   
+    |   class GroupingResolver {
+    |     static TimeGrouping resolve(ReportPeriodType type) {
+    |       switch (type) {
+    |         case ReportPeriodType.today:
+    |         case ReportPeriodType.specificDate:
+    |           return TimeGrouping.hour;
+    |   
+    |         case ReportPeriodType.last7Days:
+    |         case ReportPeriodType.thisWeek:
+    |           return TimeGrouping.day;
+    |   
+    |         case ReportPeriodType.last30Days:
+    |         case ReportPeriodType.thisMonth:
+    |           return TimeGrouping.day;
+    |   
+    |         case ReportPeriodType.thisYear:
+    |           return TimeGrouping.month;
+    |   
+    |         case ReportPeriodType.customRange:
+    |           return TimeGrouping.day;
+    |   
+    |         default:
+    |           throw UnimplementedError();
+    |       }
+    |     }
+    |   }
+    +--- individual_report_options.dart
+    |   import 'package:cvms_desktop/features/dashboard2/utils/pdf/pdf_branding.dart';
+    |   
+    |   class IndividualReportOptions {
+    |     final bool includeViolationSummary;
+    |     final bool includeRecentLogs;
+    |     final bool includeCharts;
+    |     final PdfBranding branding;
+    |   
+    |     const IndividualReportOptions({
+    |       this.includeViolationSummary = true,
+    |       this.includeRecentLogs = true,
+    |       this.includeCharts = false,
+    |       required this.branding,
+    |     });
+    |   }
+    +--- individual_report_query.dart
+    |   import 'package:cvms_desktop/features/dashboard2/models/report/individual_report_options.dart';
+    |   
+    |   class IndividualReportQuery {
+    |     final String vehicleId;
+    |     final DateTime start;
+    |     final DateTime end;
+    |     final IndividualReportOptions options;
+    |   
+    |     IndividualReportQuery({
+    |       required this.vehicleId,
+    |       required this.start,
+    |       required this.end,
+    |       required this.options,
+    |     });
+    |   }
+    +--- individual_vehicle_report_model.dart
+    |   import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
+    |   import 'package:cvms_desktop/features/dashboard2/models/report/date_range_filter.dart';
+    |   
+    |   import '../dashboard/individual_vehicle_info.dart';
+    |   import '../dashboard/violation_history_entry.dart';
+    |   import '../dashboard/recent_log_entry.dart';
+    |   
+    |   class IndividualVehicleReportModel {
+    |     final IndividualVehicleInfo vehicle;
+    |     final int totalViolations;
+    |     final int pendingViolations;
+    |     final int totalLogs;
+    |     final List<ChartDataModel> vehicleLogsTrend;
+    |     final List<ViolationHistoryEntry> recentViolations;
+    |     final List<RecentLogEntry> recentLogs;
+    |     final DateRangeFilter period;
+    |   
+    |     IndividualVehicleReportModel({
+    |       required this.vehicle,
+    |       required this.totalViolations,
+    |       required this.pendingViolations,
+    |       required this.totalLogs,
+    |       required this.vehicleLogsTrend,
+    |       required this.recentViolations,
+    |       required this.recentLogs,
+    |       required this.period,
+    |     });
+    |   }
+    +--- report_period.dart
+    |   import 'package:cvms_desktop/features/dashboard2/models/report/date_range.dart';
+    |   
+    |   import 'report_period_type.dart';
+    |   
+    |   class ReportPeriod {
+    |     final ReportPeriodType type;
+    |   
+    |     /// Used only for customRange
+    |     final DateTime? start;
+    |     final DateTime? end;
+    |   
+    |     /// Used only for specificDate
+    |     final DateTime? date;
+    |   
+    |     const ReportPeriod._({required this.type, this.start, this.end, this.date});
+    |   
+    |     // ---------- FACTORIES ----------
+    |   
+    |     factory ReportPeriod.today() => ReportPeriod._(type: ReportPeriodType.today);
+    |   
+    |     factory ReportPeriod.yesterday() =>
+    |         ReportPeriod._(type: ReportPeriodType.yesterday);
+    |   
+    |     factory ReportPeriod.last7Days() =>
+    |         ReportPeriod._(type: ReportPeriodType.last7Days);
+    |   
+    |     factory ReportPeriod.last30Days() =>
+    |         ReportPeriod._(type: ReportPeriodType.last30Days);
+    |   
+    |     factory ReportPeriod.thisWeek() =>
+    |         ReportPeriod._(type: ReportPeriodType.thisWeek);
+    |   
+    |     factory ReportPeriod.thisMonth() =>
+    |         ReportPeriod._(type: ReportPeriodType.thisMonth);
+    |   
+    |     factory ReportPeriod.thisYear() =>
+    |         ReportPeriod._(type: ReportPeriodType.thisYear);
+    |   
+    |     factory ReportPeriod.customRange({
+    |       required DateTime start,
+    |       required DateTime end,
+    |     }) => ReportPeriod._(
+    |       type: ReportPeriodType.customRange,
+    |       start: start,
+    |       end: end,
+    |     );
+    |   
+    |     factory ReportPeriod.specificDate(DateTime date) =>
+    |         ReportPeriod._(type: ReportPeriodType.specificDate, date: date);
+    |   
+    |     // ---------- RESOLUTION ----------
+    |   
+    |     DateRange resolve() {
+    |       final now = DateTime.now();
+    |   
+    |       switch (type) {
+    |         case ReportPeriodType.today:
+    |           return DateRange(
+    |             DateTime(now.year, now.month, now.day),
+    |             DateTime(now.year, now.month, now.day, 23, 59, 59),
+    |           );
+    |   
+    |         case ReportPeriodType.yesterday:
+    |           final y = now.subtract(const Duration(days: 1));
+    |           return DateRange(
+    |             DateTime(y.year, y.month, y.day),
+    |             DateTime(y.year, y.month, y.day, 23, 59, 59),
+    |           );
+    |   
+    |         case ReportPeriodType.last7Days:
+    |           return DateRange(now.subtract(const Duration(days: 6)), now);
+    |   
+    |         case ReportPeriodType.last30Days:
+    |           return DateRange(now.subtract(const Duration(days: 29)), now);
+    |   
+    |         case ReportPeriodType.thisWeek:
+    |           final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    |           return DateRange(
+    |             DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day),
+    |             now,
+    |           );
+    |   
+    |         case ReportPeriodType.thisMonth:
+    |           return DateRange(DateTime(now.year, now.month, 1), now);
+    |   
+    |         case ReportPeriodType.thisYear:
+    |           return DateRange(DateTime(now.year, 1, 1), now);
+    |   
+    |         case ReportPeriodType.customRange:
+    |           return DateRange(start!, end!);
+    |   
+    |         case ReportPeriodType.specificDate:
+    |           return DateRange(
+    |             DateTime(date!.year, date!.month, date!.day),
+    |             DateTime(date!.year, date!.month, date!.day, 23, 59, 59),
+    |           );
+    |       }
+    |     }
+    |   
+    |     // ---------- LABELS ----------
+    |   
+    |     String get label {
+    |       switch (type) {
+    |         case ReportPeriodType.today:
+    |           return 'Today';
+    |         case ReportPeriodType.yesterday:
+    |           return 'Yesterday';
+    |         case ReportPeriodType.last7Days:
+    |           return 'Last 7 Days';
+    |         case ReportPeriodType.last30Days:
+    |           return 'Last 30 Days';
+    |         case ReportPeriodType.thisWeek:
+    |           return 'This Week';
+    |         case ReportPeriodType.thisMonth:
+    |           return 'This Month';
+    |         case ReportPeriodType.thisYear:
+    |           return 'This Year';
+    |         case ReportPeriodType.customRange:
+    |           return 'Custom Range';
+    |         case ReportPeriodType.specificDate:
+    |           return 'Specific Date';
+    |       }
+    |     }
+    |   
+    |     bool get isCustom =>
+    |         type == ReportPeriodType.customRange ||
+    |         type == ReportPeriodType.specificDate;
+    |   }
+    +--- report_period_type.dart
+    |   enum ReportPeriodType {
+    |     today,
+    |     yesterday,
+    |     last7Days,
+    |     last30Days,
+    |     thisWeek,
+    |     thisMonth,
+    |     thisYear,
+    |     customRange,
+    |     specificDate,
+    |   }
+    +--- time_grouping.dart
+    |   enum TimeGrouping { hour, day, week, month }
+    \--- vehicle_metrics.dart
+        import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
+        
+        class VehicleMetrics {
+          final int totalViolations;
+          final int pendingViolations;
+          final int totalLogs;
+          final List<ChartDataModel> logsTrend;
+        
+          const VehicleMetrics({
+            required this.totalViolations,
+            required this.pendingViolations,
+            required this.totalLogs,
+            required this.logsTrend,
+          });
+        }

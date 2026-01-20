@@ -47,4 +47,4 @@ Write-Tree -Path $RootPath
 # powershell -ExecutionPolicy Bypass -File tree_with_content.ps1 -RootPath lib -OutputFile tree.txt
 
 #run and modify the path for specific directory
-# powershell -ExecutionPolicy Bypass -File tree_with_content.ps1 -RootPath "lib\features\dashboard2" -OutputFile "dashboard2_tree.txt"
+# powershell -ExecutionPolicy Bypass -File tree_with_content.ps1 -RootPath "lib\features\dashboard2\models" -OutputFile "dashboard2_models_tree.txt"

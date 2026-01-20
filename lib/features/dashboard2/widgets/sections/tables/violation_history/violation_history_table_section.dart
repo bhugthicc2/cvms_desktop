@@ -1,5 +1,5 @@
 import 'package:cvms_desktop/core/widgets/table/custom_table.dart';
-import 'package:cvms_desktop/features/dashboard2/models/violation_history_entry.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/violation_history_entry.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/components/tables/dashboard_table.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/tables/violation_history/violation_history_data_source.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/tables/violation_history/violation_history_table_columns.dart';

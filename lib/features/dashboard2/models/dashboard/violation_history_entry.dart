@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ViolationHistoryEntry extends Equatable {
   final String violationId;
@@ -18,6 +19,22 @@ class ViolationHistoryEntry extends Equatable {
     required this.createdAt,
     required this.lastUpdated,
   });
+
+  // Factory constructor for creating from Firestore data
+  factory ViolationHistoryEntry.fromFirestore(
+    String id,
+    Map<String, dynamic> data,
+  ) {
+    return ViolationHistoryEntry(
+      violationId: id,
+      dateTime: (data['reportedAt'] as Timestamp).toDate(),
+      violationType: data['violationType'] as String? ?? '',
+      reportedBy: data['reportedBy'] as String? ?? '',
+      status: data['status'] as String? ?? '',
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
+    );
+  }
 
   // Computed properties
   bool get isPending => status.toLowerCase() == 'pending';

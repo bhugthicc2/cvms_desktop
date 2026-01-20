@@ -1,13 +1,13 @@
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
-import 'package:cvms_desktop/features/dashboard2/bloc/individual/individual_dashboard_cubit.dart';
-import 'package:cvms_desktop/features/dashboard2/bloc/individual/individual_dashboard_state.dart';
+import 'package:cvms_desktop/features/dashboard2/bloc/dashboard/individual/individual_dashboard_cubit.dart';
+import 'package:cvms_desktop/features/dashboard2/bloc/dashboard/individual/individual_dashboard_state.dart';
 import 'package:cvms_desktop/features/dashboard2/utils/dynamic_title_formatter.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/charts/individual_charts_section.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/stats/individual_stats_section.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/tables/recent_logs/recent_logs_table_section.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/tables/violation_history/violation_history_table_section.dart';
-import 'package:cvms_desktop/features/dashboard2/models/individual_vehicle_info.dart';
-import 'package:cvms_desktop/features/dashboard2/models/time_grouping.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/individual_vehicle_info.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/time_grouping.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

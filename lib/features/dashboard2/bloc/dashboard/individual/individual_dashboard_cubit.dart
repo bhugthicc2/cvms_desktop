@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:cvms_desktop/features/dashboard2/models/time_grouping.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/time_grouping.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'individual_dashboard_state.dart';
-import '../../repositories/individual_dashboard_repository.dart';
+import '../../../repositories/dashboard/individual_dashboard_repository.dart';
 
 class IndividualDashboardCubit extends Cubit<IndividualDashboardState> {
   final IndividualDashboardRepository repository;

@@ -37,7 +37,7 @@ class GlobalChartsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = 280;
+    double height = 260;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
       child: Column(

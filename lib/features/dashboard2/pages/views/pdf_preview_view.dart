@@ -25,7 +25,15 @@ class PdfPreviewView extends StatelessWidget {
         isFitToWidth: false,
         isChart: true,
       ),
-      body: PdfViewerWidget(pdfBytes: pdfBytes ?? Uint8List(0)),
+      body:
+          pdfBytes == null || pdfBytes!.isEmpty
+              ? const Center(
+                child: Text(
+                  'No PDF generated',
+                  style: TextStyle(color: Colors.red),
+                ),
+              )
+              : PdfViewerWidget(pdfBytes: pdfBytes!),
     );
   }
 }

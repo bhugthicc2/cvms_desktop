@@ -1,17 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_alert_dialog.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_date_filter.dart';
 import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
 import 'package:cvms_desktop/core/widgets/skeleton/report_skeleton_loader.dart';
-import 'package:cvms_desktop/features/dashboard2/bloc/global/global_dashboard_cubit.dart';
-import 'package:cvms_desktop/features/dashboard2/bloc/individual/individual_dashboard_cubit.dart';
-import 'package:cvms_desktop/features/dashboard2/models/vehicle_search_suggestion.dart';
+import 'package:cvms_desktop/features/dashboard2/bloc/dashboard/global/global_dashboard_cubit.dart';
+import 'package:cvms_desktop/features/dashboard2/bloc/dashboard/individual/individual_dashboard_cubit.dart';
+import 'package:cvms_desktop/features/dashboard2/di/dashboard_dependencies.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/vehicle_search_suggestion.dart';
+import 'package:cvms_desktop/features/dashboard2/models/report/date_range.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/global_dashboard_view.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/individual_report_view.dart';
 import 'package:cvms_desktop/features/dashboard2/pages/views/pdf_preview_view.dart';
-import 'package:cvms_desktop/features/dashboard2/repositories/global_dashboard_repository.dart';
-import 'package:cvms_desktop/features/dashboard2/repositories/individual_dashboard_repository.dart';
-import 'package:cvms_desktop/features/dashboard2/repositories/vehicle_search_repository.dart';
+import 'package:cvms_desktop/features/dashboard2/repositories/dashboard/global_dashboard_repository.dart';
+import 'package:cvms_desktop/features/dashboard2/repositories/dashboard/individual_dashboard_repository.dart';
+import 'package:cvms_desktop/features/dashboard2/repositories/dashboard/vehicle_search_repository.dart';
 import 'package:cvms_desktop/features/dashboard2/services/vehicle_search_service.dart';
+import 'package:cvms_desktop/features/dashboard2/use_cases/pdf/global_pdf_export_usecase.dart';
+import 'package:cvms_desktop/features/dashboard2/use_cases/pdf/individual_pdf_export_usecase.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/dashboard_controls_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,8 +60,8 @@ class DashboardPage extends StatelessWidget {
 
       case DashboardViewMode.pdfPreview:
         return PdfPreviewView(
+          pdfBytes: state.pdfBytes,
           onBackPressed: () {
-            // Navigate back to previous view (individual or global)
             context.read<GlobalDashboardCubit>().backToPreviousView();
           },
         );
@@ -68,8 +74,15 @@ class DashboardPage extends StatelessWidget {
       create:
           (_) => GlobalDashboardCubit(
             null,
-            GlobalDashboardRepository(
-              FirebaseFirestore.instance,
+            GlobalDashboardRepository(FirebaseFirestore.instance),
+
+            GlobalPdfExportUseCase(
+              assembler: DashboardDependencies.globalReportAssembler,
+              pdfService: DashboardDependencies.pdfGenerationService,
+            ),
+            IndividualPdfExportUseCase(
+              assembler: DashboardDependencies.individualReportAssembler,
+              pdfService: DashboardDependencies.pdfGenerationService,
             ), // Realtime implementation step 20
           ),
 
@@ -144,13 +157,17 @@ class DashboardPage extends StatelessWidget {
                                       state.viewMode !=
                                       DashboardViewMode.global,
                                   dateFilterText: 'DATE FILTER',
-                                  onExportPressed: () {
-                                    // todo Export report
-                                    // Navigate to PDF preview
+                                  onExportPressed: () async {
+                                    final range = await showCustomDatePicker(
+                                      context,
+                                    );
+                                    if (range == null) return;
+
                                     context
                                         .read<GlobalDashboardCubit>()
-                                        .showPdfPreview();
+                                        .generateReport(range: range);
                                   },
+
                                   onSearchSuggestions: (query) async {
                                     // DASHBOARD SEARCH FUNCTIONALITY STEP 4
                                     final searchService = VehicleSearchService(
@@ -199,5 +216,28 @@ class DashboardPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<DateRange?> showCustomDatePicker(BuildContext context) async {
+    DateRange? selectedRange;
+
+    await showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return CustomAlertDialog(
+          title: 'Select Date Range',
+          child: CustomDateFilter(
+            onApply: (period) {
+              if (period != null) {
+                selectedRange = DateRange(period.start, period.end);
+              }
+              Navigator.of(dialogContext).pop();
+            },
+          ),
+        );
+      },
+    );
+
+    return selectedRange;
   }
 }

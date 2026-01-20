@@ -1,7 +1,7 @@
 // DASHBOARD SEARCH FUNCTIONALITY STEP 1
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cvms_desktop/features/dashboard2/models/vehicle_search_result.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/vehicle_search_result.dart';
 
 class VehicleSearchRepository {
   final FirebaseFirestore _db;

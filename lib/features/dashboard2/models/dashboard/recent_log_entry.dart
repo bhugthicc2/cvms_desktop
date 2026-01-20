@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RecentLogEntry extends Equatable {
   final String logId;
@@ -16,6 +17,21 @@ class RecentLogEntry extends Equatable {
     required this.status,
     required this.updatedBy,
   });
+
+  // Factory constructor for creating from Firestore data
+  factory RecentLogEntry.fromFirestore(String id, Map<String, dynamic> data) {
+    return RecentLogEntry(
+      logId: id,
+      timeIn: (data['timeIn'] as Timestamp).toDate(),
+      timeOut:
+          data['timeOut'] != null
+              ? (data['timeOut'] as Timestamp).toDate()
+              : null,
+      durationMinutes: data['durationMinutes'] as int?,
+      status: data['status'] as String? ?? '',
+      updatedBy: data['updatedByUserId'] as String? ?? '',
+    );
+  }
 
   // Computed properties
   bool get isActive => status.toLowerCase() == 'onsite';

@@ -1,7 +1,7 @@
 import 'package:cvms_desktop/core/widgets/app/custom_alert_dialog.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_date_filter.dart';
-import 'package:cvms_desktop/features/dashboard2/bloc/global/global_dashboard_cubit.dart';
-import 'package:cvms_desktop/features/dashboard2/models/time_grouping.dart';
+import 'package:cvms_desktop/features/dashboard2/bloc/dashboard/global/global_dashboard_cubit.dart';
+import 'package:cvms_desktop/features/dashboard2/models/dashboard/time_grouping.dart';
 import 'package:cvms_desktop/features/dashboard2/utils/dynamic_title_formatter.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/stats/global_stats_card_section.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/sections/charts/global_charts_section.dart';
