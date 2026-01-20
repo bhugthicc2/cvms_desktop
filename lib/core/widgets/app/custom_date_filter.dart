@@ -1,6 +1,6 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
-import 'package:cvms_desktop/features/dashboard2/models/report/date_range.dart';
+import 'package:cvms_desktop/features/dashboard/models/report/date_range.dart';
 import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:flutter/material.dart';
 

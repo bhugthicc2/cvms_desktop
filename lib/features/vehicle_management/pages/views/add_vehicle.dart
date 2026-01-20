@@ -5,9 +5,9 @@ import 'package:cvms_desktop/core/utils/card_decor.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_button.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dialog.dart';
 import 'package:cvms_desktop/core/services/navigation_guard.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_icon_button.dart';
 import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/buttons/custom_icon_button.dart';
 import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_form_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_management/controllers/stepper_controller.dart';
@@ -258,7 +258,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                           children: [
                             CustomIconButton(
                               iconSize: 24,
-                              onTap: () {
+                              onPressed: () {
                                 _handleBack();
                               },
                               icon: PhosphorIconsBold.arrowLeft,

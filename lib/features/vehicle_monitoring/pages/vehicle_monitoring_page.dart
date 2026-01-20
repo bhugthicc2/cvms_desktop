@@ -1,7 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/skeleton/dashboard_overview_skeleton.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/sections/overview/dashboard_overview.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/widgets/sections/dashboard_overview.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/skeletons/table_skeleton.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';

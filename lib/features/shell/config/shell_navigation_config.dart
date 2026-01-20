@@ -1,5 +1,4 @@
 //ACTIVITY LOG 16
-import 'package:cvms_desktop/features/dashboard/pages/dashboard_page.dart';
 import 'package:cvms_desktop/features/settings/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,31 +32,29 @@ import '../../vehicle_monitoring/data/vehicle_monitoring_repository.dart'
 
 //new dashboard
 
-import 'package:cvms_desktop/features/dashboard2/pages/core/dasboard_page.dart'
+import 'package:cvms_desktop/features/dashboard/pages/core/dasboard_page.dart'
     as new_dashboard;
 
 class ShellNavigationConfig {
   static Widget getPage(int index, BuildContext context) {
     switch (index) {
       case 0:
-        return const DashboardPage();
-      case 1:
         return const new_dashboard.DashboardPage();
 
-      case 2:
+      case 1:
         return BlocProvider(
           create:
               (_) => VehicleMonitoringCubit(vehicle_repo.DashboardRepository()),
           child: const VehicleMonitoringPage(),
         );
 
-      case 3:
+      case 2:
         return BlocProvider(
           create: (_) => VehicleLogsCubit(VehicleLogsRepository()),
           child: const VehicleLogsPage(),
         );
 
-      case 4:
+      case 3:
         return BlocProvider(
           create:
               (_) => VehicleCubit(
@@ -70,7 +67,7 @@ class ShellNavigationConfig {
           child: const VehicleManagementPage(),
         );
 
-      case 5:
+      case 4:
         return MultiBlocProvider(
           providers: [
             BlocProvider(
@@ -87,13 +84,13 @@ class ShellNavigationConfig {
           child: const UserManagementPage(),
         );
 
-      case 6:
+      case 5:
         return BlocProvider(
           create: (_) => ViolationCubit(),
           child: ViolationManagementPage(),
         );
 
-      case 7:
+      case 6:
         return BlocProvider(
           create:
               (_) => ActivityLogsCubit(
@@ -102,7 +99,7 @@ class ShellNavigationConfig {
           child: ActivityLogsPage(),
         );
 
-      case 8:
+      case 7:
         return BlocProvider(
           create:
               (_) => ProfileCubit(
@@ -112,11 +109,11 @@ class ShellNavigationConfig {
           child: const ProfilePage(),
         );
 
-      case 9:
+      case 8:
         return const SettingsPage();
 
       default:
-        return const DashboardPage();
+        return const new_dashboard.DashboardPage();
     }
   }
 
@@ -126,7 +123,6 @@ class ShellNavigationConfig {
 
   static final titles = <String>[
     "Dashboard",
-    "Dashboard V2",
     "Vehicle Monitoring",
     "Vehicle Logs Management",
     "Vehicle Management",
