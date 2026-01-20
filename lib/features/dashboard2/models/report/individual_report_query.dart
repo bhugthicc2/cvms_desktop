@@ -1,15 +1,14 @@
 import 'package:cvms_desktop/features/dashboard2/models/report/individual_report_options.dart';
+import 'package:cvms_desktop/features/dashboard2/models/report/date_range.dart';
 
 class IndividualReportQuery {
   final String vehicleId;
-  final DateTime start;
-  final DateTime end;
+  final DateRange range;
   final IndividualReportOptions options;
 
   IndividualReportQuery({
     required this.vehicleId,
-    required this.start,
-    required this.end,
+    required this.range,
     required this.options,
   });
 }

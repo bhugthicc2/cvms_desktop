@@ -20,7 +20,8 @@ class GlobalReportBuilder {
               alignment: pw.Alignment.center,
               child: PdfSubtitleText(
                 label: 'Period: ',
-                value: '${data.period}',
+                value:
+                    '${data.period}', //todo should handle period not only date ranges
               ),
             ),
           ],

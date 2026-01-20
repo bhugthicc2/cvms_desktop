@@ -4,8 +4,6 @@ import 'package:cvms_desktop/features/dashboard2/builders/pdf/templates/pdf_page
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-/// Reusable PDF Page Template with consistent header and footer
-/// This follows SRP by separating page layout from content
 class DefaultPdfPageTemplate implements PdfPageTemplate {
   const DefaultPdfPageTemplate({
     this.pageFormat = PdfPageFormat.legal,

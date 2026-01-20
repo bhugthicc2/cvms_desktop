@@ -1,10 +1,11 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/features/dashboard2/models/report/date_range.dart';
 import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:flutter/material.dart';
 
 class CustomDateFilter extends StatefulWidget {
-  final Function(DatePeriod?) onApply;
+  final Function(DateRange?) onApply;
   const CustomDateFilter({super.key, required this.onApply});
 
   @override
@@ -14,7 +15,7 @@ class CustomDateFilter extends StatefulWidget {
 class _CustomDateFilterState extends State<CustomDateFilter> {
   String _selectedMode = 'Day'; // Default mode
   List<DateTime?> _selectedDates = [];
-  DatePeriod? _selectedPeriod;
+  DateRange? _selectedPeriod;
 
   @override
   Widget build(BuildContext context) {
@@ -63,27 +64,42 @@ class _CustomDateFilterState extends State<CustomDateFilter> {
                       start = start.subtract(Duration(days: weekday - 1));
                       end = start.add(const Duration(days: 6));
                       _selectedDates = [start, end];
+                      _selectedPeriod = DateRange.week(start, end);
+
                       break;
                     case 'Month':
                       // Snap to full month
-                      start = DateTime(start.year, start.month, 1);
-                      end = DateTime(start.year, start.month + 1, 0);
-                      _selectedDates = [start, end];
+
+                      _selectedPeriod = DateRange.month(
+                        start.year,
+                        start.month,
+                      );
+                      _selectedDates = [
+                        DateTime(start.year, start.month, 1),
+                        DateTime(start.year, start.month + 1, 0),
+                      ];
+
                       break;
                     case 'Year':
                       // Snap to full year
-                      start = DateTime(start.year, 1, 1);
-                      end = DateTime(start.year, 12, 31);
-                      _selectedDates = [start, end];
+
+                      _selectedPeriod = DateRange.year(start.year);
+                      _selectedDates = [
+                        DateTime(start.year, 1, 1),
+                        DateTime(start.year, 12, 31),
+                      ];
+
                       break;
                     case 'Range':
                       // Use as-is for custom range
+
+                      _selectedPeriod = DateRange.customRange(start, end);
+
                       break;
                     default:
-                      // Day: Single date
+                      _selectedPeriod = DateRange.day(start);
                       end = start;
                   }
-                  _selectedPeriod = DatePeriod(start, end);
                 }
               });
             },
@@ -140,11 +156,4 @@ class _CustomDateFilterState extends State<CustomDateFilter> {
       // Add more customizations as needed, e.g., dayBuilder for custom cells
     );
   }
-}
-
-// Helper class for period
-class DatePeriod {
-  final DateTime start;
-  final DateTime end;
-  DatePeriod(this.start, this.end);
 }

@@ -55,45 +55,42 @@ class ReportPeriod {
 
     switch (type) {
       case ReportPeriodType.today:
-        return DateRange(
-          DateTime(now.year, now.month, now.day),
-          DateTime(now.year, now.month, now.day, 23, 59, 59),
-        );
+        return DateRange.day(DateTime(now.year, now.month, now.day));
 
       case ReportPeriodType.yesterday:
         final y = now.subtract(const Duration(days: 1));
-        return DateRange(
-          DateTime(y.year, y.month, y.day),
-          DateTime(y.year, y.month, y.day, 23, 59, 59),
-        );
+        return DateRange.day(DateTime(y.year, y.month, y.day));
 
       case ReportPeriodType.last7Days:
-        return DateRange(now.subtract(const Duration(days: 6)), now);
+        return DateRange.customRange(
+          now.subtract(const Duration(days: 6)),
+          now,
+        );
 
       case ReportPeriodType.last30Days:
-        return DateRange(now.subtract(const Duration(days: 29)), now);
+        return DateRange.customRange(
+          now.subtract(const Duration(days: 29)),
+          now,
+        );
 
       case ReportPeriodType.thisWeek:
         final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-        return DateRange(
+        return DateRange.customRange(
           DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day),
           now,
         );
 
       case ReportPeriodType.thisMonth:
-        return DateRange(DateTime(now.year, now.month, 1), now);
+        return DateRange.month(now.year, now.month);
 
       case ReportPeriodType.thisYear:
-        return DateRange(DateTime(now.year, 1, 1), now);
+        return DateRange.year(now.year);
 
       case ReportPeriodType.customRange:
-        return DateRange(start!, end!);
+        return DateRange.customRange(start!, end!);
 
       case ReportPeriodType.specificDate:
-        return DateRange(
-          DateTime(date!.year, date!.month, date!.day),
-          DateTime(date!.year, date!.month, date!.day, 23, 59, 59),
-        );
+        return DateRange.day(DateTime(date!.year, date!.month, date!.day));
     }
   }
 

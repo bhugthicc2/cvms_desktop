@@ -26,8 +26,7 @@ class IndividualPdfExportUseCase {
     final report = await assembler.assemble(
       IndividualReportQuery(
         vehicleId: vehicleId,
-        start: range.start,
-        end: range.end,
+        range: range, // Pass the entire DateRange object
         options:
             options ??
             const IndividualReportOptions(

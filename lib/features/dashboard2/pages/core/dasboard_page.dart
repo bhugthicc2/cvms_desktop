@@ -241,11 +241,12 @@ class DashboardPage extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return CustomAlertDialog(
-          title: 'Select Date Range',
+          title: 'Pick a date',
+          subTitle: 'Please select a date first before generating the report.',
           child: CustomDateFilter(
             onApply: (period) {
               if (period != null) {
-                selectedRange = DateRange(period.start, period.end);
+                selectedRange = period;
               }
               Navigator.of(dialogContext).pop();
             },

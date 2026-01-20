@@ -24,8 +24,7 @@ class IndividualReportCubit extends Cubit<IndividualReportState> {
       final report = await assembler.assemble(
         IndividualReportQuery(
           vehicleId: vehicleId,
-          start: range.start,
-          end: range.end,
+          range: range, // Pass the entire DateRange object
           options: const IndividualReportOptions(
             branding: PdfBranding(
               title: 'Vehicle Report',
