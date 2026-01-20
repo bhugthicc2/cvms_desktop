@@ -1,3 +1,5 @@
+import 'package:cvms_desktop/core/utils/date_time_formatter.dart';
+
 class DateRange {
   final DateTime start;
   final DateTime end;
@@ -12,10 +14,6 @@ class DateRange {
 
   @override
   String toString() {
-    return '${_fmt(start)} - ${_fmt(end)}';
-  }
-
-  String _fmt(DateTime date) {
-    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+    return '${DateTimeFormatter.formatAbbreviated(start)} - ${DateTimeFormatter.formatAbbreviated(end)}';
   }
 }

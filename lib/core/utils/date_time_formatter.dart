@@ -7,6 +7,12 @@ class DateTimeFormatter {
     return formatter.format(dateTime);
   }
 
+  /// Jan. 12, 2026
+  static String formatAbbreviated(DateTime dateTime) {
+    final formatter = DateFormat('MMM. d, y');
+    return formatter.format(dateTime);
+  }
+
   /// 01/12/2025 10:12 AM
   static String formatNumeric(DateTime dateTime) {
     final formatter = DateFormat('MM/dd/yyyy hh:mm a');
