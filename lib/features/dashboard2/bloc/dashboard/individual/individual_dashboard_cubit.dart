@@ -28,6 +28,8 @@ class IndividualDashboardCubit extends Cubit<IndividualDashboardState> {
   }
 
   void _init() {
+    emit(state.copyWith(loading: true));
+
     _totalViolationsSub = repository.watchTotalViolations(vehicleId).listen((
       count,
     ) {
@@ -55,6 +57,11 @@ class IndividualDashboardCubit extends Cubit<IndividualDashboardState> {
     _watchVehicleLogsTrend();
     _watchViolationHistory();
     _watchRecentVehicleLogs();
+
+    // Set loading to false after initial data is loaded
+    Future.delayed(const Duration(seconds: 1), () {
+      emit(state.copyWith(loading: false));
+    });
   }
 
   void _watchVehicleLogsTrend() {

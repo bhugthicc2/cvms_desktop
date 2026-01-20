@@ -97,81 +97,90 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          // STATS SECTION (lightweight)
-          BlocBuilder<GlobalDashboardCubit, GlobalDashboardState>(
-            buildWhen:
-                (prev, curr) =>
-                    prev.totalEntriesExits != curr.totalEntriesExits ||
-                    prev.totalVehicles != curr.totalVehicles ||
-                    prev.totalPendingViolations !=
-                        curr.totalPendingViolations ||
-                    prev.totalViolations != curr.totalViolations,
-            builder: (context, state) {
-              return GlobalStatsCardSection(
-                statsCard1Label: 'Total Violations',
-                statsCard1Value: state.totalViolations,
-                statsCard2Label:
-                    'Pending Violations', //realtime data retrieval based on collection field step 13
-                statsCard2Value: state.totalPendingViolations,
-                statsCard3Label: 'Total Vehicles',
-                statsCard3Value: state.totalVehicles,
-                statsCard4Label: 'Total Entries/Exits',
-                statsCard4Value:
-                    state
-                        .totalEntriesExits, // Realtime implementation step 22 ),
-              );
-            },
-          ),
-
-          // CHARTS SECTION (heavy)
-          BlocBuilder<GlobalDashboardCubit, GlobalDashboardState>(
-            buildWhen:
-                (prev, curr) =>
-                    prev.yearLevelBreakdown != curr.yearLevelBreakdown ||
-                    prev.vehicleDistribution != curr.vehicleDistribution ||
-                    prev.topStudentsWithMostViolations !=
-                        curr.topStudentsWithMostViolations ||
-                    prev.cityBreakdown != curr.cityBreakdown ||
-                    prev.vehicleLogsDistributionPerCollege !=
-                        curr.vehicleLogsDistributionPerCollege ||
-                    prev.violationDistributionPerCollege !=
-                        curr.violationDistributionPerCollege ||
-                    prev.violationTypeDistribution !=
-                        curr.violationTypeDistribution ||
-                    prev.fleetLogsData != curr.fleetLogsData,
-            //Flutter, rebuild this widget only if the city breakdown list changed.
-            // step 18
-            builder: (context, state) {
-              return GlobalChartsSection(
-                onTimeRangeChanged: (value) {
-                  _onTimeRangeChanged(value);
+    return BlocBuilder<GlobalDashboardCubit, GlobalDashboardState>(
+      builder: (context, state) {
+        if (state.loading) {
+          Center(child: Text('Loading please wait...'));
+        }
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              // STATS SECTION (lightweight)
+              BlocBuilder<GlobalDashboardCubit, GlobalDashboardState>(
+                buildWhen:
+                    (prev, curr) =>
+                        prev.totalEntriesExits != curr.totalEntriesExits ||
+                        prev.totalVehicles != curr.totalVehicles ||
+                        prev.totalPendingViolations !=
+                            curr.totalPendingViolations ||
+                        prev.totalViolations != curr.totalViolations,
+                builder: (context, state) {
+                  return GlobalStatsCardSection(
+                    statsCard1Label: 'Total Violations',
+                    statsCard1Value: state.totalViolations,
+                    statsCard2Label:
+                        'Pending Violations', //realtime data retrieval based on collection field step 13
+                    statsCard2Value: state.totalPendingViolations,
+                    statsCard3Label: 'Total Vehicles',
+                    statsCard3Value: state.totalVehicles,
+                    statsCard4Label: 'Total Entries/Exits',
+                    statsCard4Value:
+                        state
+                            .totalEntriesExits, // Realtime implementation step 22 ),
+                  );
                 },
+              ),
 
-                lineChartTitle: DynamicTitleFormatter().getDynamicTitle(
-                  'Vehicle logs for ',
-                  state.currentTimeRange,
-                ),
-                yearLevelBreakdown:
-                    state.yearLevelBreakdown, // realtime step 19
-                vehicleDistribution: state.vehicleDistribution,
-                studentWithMostViolations: state.topStudentsWithMostViolations,
-                cityBreakdown: state.cityBreakdown,
+              // CHARTS SECTION (heavy)
+              BlocBuilder<GlobalDashboardCubit, GlobalDashboardState>(
+                buildWhen:
+                    (prev, curr) =>
+                        prev.yearLevelBreakdown != curr.yearLevelBreakdown ||
+                        prev.vehicleDistribution != curr.vehicleDistribution ||
+                        prev.topStudentsWithMostViolations !=
+                            curr.topStudentsWithMostViolations ||
+                        prev.cityBreakdown != curr.cityBreakdown ||
+                        prev.vehicleLogsDistributionPerCollege !=
+                            curr.vehicleLogsDistributionPerCollege ||
+                        prev.violationDistributionPerCollege !=
+                            curr.violationDistributionPerCollege ||
+                        prev.violationTypeDistribution !=
+                            curr.violationTypeDistribution ||
+                        prev.fleetLogsData != curr.fleetLogsData,
+                //Flutter, rebuild this widget only if the city breakdown list changed.
+                // step 18
+                builder: (context, state) {
+                  return GlobalChartsSection(
+                    onTimeRangeChanged: (value) {
+                      _onTimeRangeChanged(value);
+                    },
 
-                vehicleLogsDistributionPerCollege:
-                    state.vehicleLogsDistributionPerCollege,
-                violationDistributionPerCollege:
-                    state.violationDistributionPerCollege,
+                    lineChartTitle: DynamicTitleFormatter().getDynamicTitle(
+                      'Vehicle logs for ',
+                      state.currentTimeRange,
+                    ),
+                    yearLevelBreakdown:
+                        state.yearLevelBreakdown, // realtime step 19
+                    vehicleDistribution: state.vehicleDistribution,
+                    studentWithMostViolations:
+                        state.topStudentsWithMostViolations,
+                    cityBreakdown: state.cityBreakdown,
 
-                violationTypeDistribution: state.violationTypeDistribution,
-                fleetLogsData: state.fleetLogsData, // realtime fleet logs trend
-              );
-            },
+                    vehicleLogsDistributionPerCollege:
+                        state.vehicleLogsDistributionPerCollege,
+                    violationDistributionPerCollege:
+                        state.violationDistributionPerCollege,
+
+                    violationTypeDistribution: state.violationTypeDistribution,
+                    fleetLogsData:
+                        state.fleetLogsData, // realtime fleet logs trend
+                  );
+                },
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

@@ -84,14 +84,22 @@ class IndividualReportView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          //stats and info
-          SizedBox(
-            height: 240,
-            child:
-                BlocBuilder<IndividualDashboardCubit, IndividualDashboardState>(
+    return BlocBuilder<IndividualDashboardCubit, IndividualDashboardState>(
+      builder: (context, state) {
+        if (state.loading) {
+          Center(child: Text('Loading please wait...'));
+        }
+
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              //stats and info
+              SizedBox(
+                height: 240,
+                child: BlocBuilder<
+                  IndividualDashboardCubit,
+                  IndividualDashboardState
+                >(
                   builder: (context, state) {
                     return IndividualStatsSection(
                       onVehicleInfoFullView: () {
@@ -118,53 +126,55 @@ class IndividualReportView extends StatelessWidget {
                     );
                   },
                 ),
-          ),
+              ),
 
-          BlocBuilder<IndividualDashboardCubit, IndividualDashboardState>(
-            builder: (context, state) {
-              return IndividualChartsSection(
-                violationDistribution: state.violationDistribution,
-                vehicleLogs: state.vehicleLogsTrend, //default to 7 days
-                lineChartTitle: DynamicTitleFormatter().getDynamicTitle(
-                  'Vehicle logs for ',
-                  currentTimeRange,
-                ), //todo fix the issue where the dynamic title is not working/updating
-                onTimeRangeChanged: (value) {
-                  _onTimeRangeChanged(value, context);
+              BlocBuilder<IndividualDashboardCubit, IndividualDashboardState>(
+                builder: (context, state) {
+                  return IndividualChartsSection(
+                    violationDistribution: state.violationDistribution,
+                    vehicleLogs: state.vehicleLogsTrend, //default to 7 days
+                    lineChartTitle: DynamicTitleFormatter().getDynamicTitle(
+                      'Vehicle logs for ',
+                      currentTimeRange,
+                    ), //todo fix the issue where the dynamic title is not working/updating
+                    onTimeRangeChanged: (value) {
+                      _onTimeRangeChanged(value, context);
+                    },
+                  );
                 },
-              );
-            },
-          ),
+              ),
 
-          BlocBuilder<IndividualDashboardCubit, IndividualDashboardState>(
-            builder: (context, state) {
-              return ViolationHistoryTableSection(
-                allowSorting: false,
-                istableHeaderDark: false,
-                violationHistoryEntries: state.violationHistory,
-                sectionTitle: 'Violation History',
-                onClick: () {
-                  //todo
+              BlocBuilder<IndividualDashboardCubit, IndividualDashboardState>(
+                builder: (context, state) {
+                  return ViolationHistoryTableSection(
+                    allowSorting: false,
+                    istableHeaderDark: false,
+                    violationHistoryEntries: state.violationHistory,
+                    sectionTitle: 'Violation History',
+                    onClick: () {
+                      //todo
+                    },
+                  );
                 },
-              );
-            },
-          ),
-          BlocBuilder<IndividualDashboardCubit, IndividualDashboardState>(
-            builder: (context, state) {
-              return RecentLogsTableSection(
-                allowSorting: false,
-                istableHeaderDark: false,
-                recentLogsEntries: state.recentLogs,
-                sectionTitle: 'Recent Logs',
-                onClick: () {
-                  //todo
+              ),
+              BlocBuilder<IndividualDashboardCubit, IndividualDashboardState>(
+                builder: (context, state) {
+                  return RecentLogsTableSection(
+                    allowSorting: false,
+                    istableHeaderDark: false,
+                    recentLogsEntries: state.recentLogs,
+                    sectionTitle: 'Recent Logs',
+                    onClick: () {
+                      //todo
+                    },
+                  );
                 },
-              );
-            },
+              ),
+              Spacing.vertical(size: AppSpacing.medium),
+            ],
           ),
-          Spacing.vertical(size: AppSpacing.medium),
-        ],
-      ),
+        );
+      },
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:cvms_desktop/features/dashboard2/models/dashboard/violation_hist
 import 'package:equatable/equatable.dart';
 
 class IndividualDashboardState extends Equatable {
+  final bool loading;
   final int totalViolations;
   final int totalPendingViolations;
   final int totalVehicleLogs;
@@ -23,6 +24,7 @@ class IndividualDashboardState extends Equatable {
   final List<RecentLogEntry> recentLogs;
 
   const IndividualDashboardState({
+    this.loading = false,
     this.totalViolations = 0,
     this.totalPendingViolations = 0,
     this.totalVehicleLogs = 0,
@@ -39,6 +41,7 @@ class IndividualDashboardState extends Equatable {
   });
 
   IndividualDashboardState copyWith({
+    bool? loading,
     int? totalViolations,
     int? totalPendingViolations,
     int? totalVehicleLogs,
@@ -53,6 +56,7 @@ class IndividualDashboardState extends Equatable {
     List<RecentLogEntry>? recentLogs,
   }) {
     return IndividualDashboardState(
+      loading: loading ?? this.loading,
       totalViolations: totalViolations ?? this.totalViolations,
       totalPendingViolations:
           totalPendingViolations ?? this.totalPendingViolations,
@@ -72,6 +76,7 @@ class IndividualDashboardState extends Equatable {
 
   @override
   List<Object?> get props => [
+    loading,
     totalViolations,
     totalPendingViolations,
     totalVehicleLogs,
