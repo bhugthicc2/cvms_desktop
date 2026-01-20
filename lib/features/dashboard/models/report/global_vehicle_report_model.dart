@@ -8,14 +8,13 @@ class GlobalVehicleReportModel {
   final int totalFleetLogs;
   final int totalViolations;
   final int pendingViolations;
-
   final Map<String, int> violationsByType;
   final List<ChartDataModel> fleetLogsTrend;
-
   final List<ViolationHistoryEntry> recentViolations;
   final List<RecentLogEntry> recentLogs;
-
+  final Map<String, int> vehiclesPerCollege;
   final DateRange period;
+  final Map<String, int> vehiclesByYearLevel; //step 1 for adding a report entry
 
   GlobalVehicleReportModel({
     required this.totalVehicles,
@@ -27,5 +26,7 @@ class GlobalVehicleReportModel {
     required this.recentViolations,
     required this.recentLogs,
     required this.period,
+    required this.vehiclesPerCollege,
+    required this.vehiclesByYearLevel, //step 2 for adding a report entry
   });
 }

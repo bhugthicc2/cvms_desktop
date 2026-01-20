@@ -144,4 +144,46 @@ class GlobalReportRepository {
 
     return dailyCounts;
   }
+
+  Future<Map<String, int>> getVehicleDistributionPerCollege() async {
+    final snap = await _db.collection('vehicles').get();
+
+    final Map<String, int> result = {};
+
+    // Define valid college departments to filter out invalid entries
+    final validColleges = [
+      'CTED',
+      'CBA',
+      'CCS',
+      'CAF-SOE',
+      'SCJE',
+      'LHS',
+      'CTED',
+    ];
+
+    for (final doc in snap.docs) {
+      final department = doc['department'] as String? ?? 'Unknown';
+
+      // Only count valid college departments
+      if (validColleges.contains(department)) {
+        result[department] = (result[department] ?? 0) + 1;
+      }
+    }
+
+    return result;
+  }
+
+  Future<Map<String, int>> getVehiclesByYearLevel() async {
+    //step 3 for adding a report entry
+    final snap = await _db.collection('vehicles').get();
+
+    final Map<String, int> result = {};
+
+    for (final doc in snap.docs) {
+      final yearLevel = doc['yearLevel'] ?? 'Unknown';
+      result[yearLevel] = (result[yearLevel] ?? 0) + 1;
+    }
+
+    return result;
+  }
 }

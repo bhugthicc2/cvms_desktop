@@ -29,7 +29,7 @@ class GlobalReportTitleSection implements PdfSection<GlobalVehicleReportModel> {
         ],
       ),
 
-      pw.SizedBox(height: 10),
+      pw.SizedBox(height: 5),
     ];
   }
 }

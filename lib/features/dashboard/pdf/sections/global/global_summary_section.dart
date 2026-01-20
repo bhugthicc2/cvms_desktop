@@ -26,7 +26,7 @@ class GlobalSummarySection implements PdfSection<GlobalVehicleReportModel> {
 
       PdfInsightBox(insight),
 
-      pw.SizedBox(height: 24),
+      pw.SizedBox(height: 5),
     ];
   }
 

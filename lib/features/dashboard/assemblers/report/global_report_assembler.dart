@@ -24,14 +24,16 @@ class GlobalReportAssembler
       repository.getTotalFleetLogs(dateRange),
       repository.getTotalViolations(dateRange),
       repository.getPendingViolations(dateRange),
+      repository.getVehicleDistributionPerCollege(),
       repository.getViolationsByType(dateRange),
       repository.getFleetLogsTrend(dateRange),
       repository.getRecentViolations(dateRange, limit: 10),
       repository.getRecentLogs(dateRange, limit: 10),
+      repository.getVehiclesByYearLevel(), //step 4 for adding a report entry
     ]);
 
     // Convert map to ChartDataModel for fleetLogsTrend
-    final fleetLogsTrendMap = results[5] as Map<String, int>;
+    final fleetLogsTrendMap = results[6] as Map<String, int>;
     final fleetLogsTrend =
         fleetLogsTrendMap.entries.map((entry) {
           // Parse string date key back to DateTime
@@ -49,7 +51,7 @@ class GlobalReportAssembler
         }).toList();
 
     // Convert raw violation data to ViolationHistoryEntry
-    final rawViolations = results[6] as List<Map<String, dynamic>>;
+    final rawViolations = results[7] as List<Map<String, dynamic>>;
     final recentViolations =
         rawViolations.map((data) {
           return ViolationHistoryEntry(
@@ -73,7 +75,7 @@ class GlobalReportAssembler
         }).toList();
 
     // Convert raw log data to RecentLogEntry
-    final rawLogs = results[7] as List<Map<String, dynamic>>;
+    final rawLogs = results[8] as List<Map<String, dynamic>>;
     final recentLogs =
         rawLogs.map((data) {
           return RecentLogEntry(
@@ -91,6 +93,8 @@ class GlobalReportAssembler
             updatedBy: data['updatedBy'] as String? ?? '',
           );
         }).toList();
+    final vehiclesByYearLevel =
+        results[9] as Map<String, int>; //step 6 for adding a report entry
 
     return GlobalVehicleReportModel(
       period: dateRange,
@@ -98,10 +102,14 @@ class GlobalReportAssembler
       totalFleetLogs: results[1] as int,
       totalViolations: results[2] as int,
       pendingViolations: results[3] as int,
-      violationsByType: results[4] as Map<String, int>,
+
+      vehiclesPerCollege: results[4] as Map<String, int>,
+      violationsByType: results[5] as Map<String, int>,
       fleetLogsTrend: fleetLogsTrend,
       recentViolations: recentViolations,
       recentLogs: recentLogs,
+      vehiclesByYearLevel:
+          vehiclesByYearLevel, //step 7 for adding a report entry
     );
   }
 }

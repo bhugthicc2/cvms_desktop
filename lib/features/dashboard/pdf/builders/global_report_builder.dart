@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:cvms_desktop/features/dashboard/pdf/components/layout/pdf_content_container.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/core/pdf_section.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/sections/global/global_summary_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/global/vehicle_distribution_college_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/global/year_level_breakdown_section.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -35,6 +37,8 @@ class GlobalReportBuilder {
     final List<PdfSection<GlobalVehicleReportModel>> sections = [
       GlobalReportTitleSection(),
       GlobalSummarySection(),
+      VehicleDistributionCollegeSection(),
+      YearLevelBreakdownSection(), //step 7 for adding a report entry
       // GlobalChartsSection(),
       // GlobalTablesSection(),
     ];
