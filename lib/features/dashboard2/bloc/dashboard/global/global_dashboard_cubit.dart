@@ -330,7 +330,7 @@ class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
       Uint8List pdfBytes;
 
       if (state.viewMode == DashboardViewMode.global) {
-        pdfBytes = await globalPdfExportUseCase.export(range: range);
+        pdfBytes = await globalPdfExportUseCase.generatePdfReport(range: range);
       } else if (state.viewMode == DashboardViewMode.individual) {
         if (state.selectedVehicle == null) {
           throw StateError('No vehicle selected for individual report');

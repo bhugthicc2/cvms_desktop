@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cvms_desktop/core/theme/app_colors.dart';
-import 'package:cvms_desktop/features/dashboard2/builders/pdf/pdf_doc/viewer/pdf_viewer_widget.dart';
+import 'package:cvms_desktop/features/dashboard2/pdf/components/viewer/pdf_viewer_widget.dart';
 import 'package:cvms_desktop/features/dashboard2/widgets/navigation/pdf_preview_app_bar.dart';
 import 'package:flutter/material.dart';
 

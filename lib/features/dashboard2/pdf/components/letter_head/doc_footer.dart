@@ -14,14 +14,14 @@ class DocFooter extends pw.StatelessWidget {
     required this.phoneIcon,
   });
 
-  final String isoCertifiedLogo;
-  final String aacupLogo;
+  final pw.ImageProvider isoCertifiedLogo;
+  final pw.ImageProvider aacupLogo;
   final String homeText;
   final String email;
   final String phone;
-  final String homeIcon;
-  final String mailIcon;
-  final String phoneIcon;
+  final pw.ImageProvider homeIcon;
+  final pw.ImageProvider mailIcon;
+  final pw.ImageProvider phoneIcon;
 
   @override
   pw.Widget build(pw.Context context) {
@@ -43,21 +43,9 @@ class DocFooter extends pw.StatelessWidget {
             children: [
               pw.Row(
                 children: [
-                  pw.Image(
-                    height: 50,
-                    pw.MemoryImage(
-                      File(
-                        'assets/images/$isoCertifiedLogo.png',
-                      ).readAsBytesSync(),
-                    ),
-                  ),
+                  pw.Image(height: 50, isoCertifiedLogo),
                   pw.SizedBox(width: 10),
-                  pw.Image(
-                    height: 50,
-                    pw.MemoryImage(
-                      File('assets/images/$aacupLogo.png').readAsBytesSync(),
-                    ),
-                  ),
+                  pw.Image(height: 50, aacupLogo),
                   pw.SizedBox(width: 10),
                   pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -65,14 +53,7 @@ class DocFooter extends pw.StatelessWidget {
                       //home row
                       pw.Row(
                         children: [
-                          pw.Image(
-                            height: 12,
-                            pw.MemoryImage(
-                              File(
-                                'assets/images/$homeIcon.png',
-                              ).readAsBytesSync(),
-                            ),
-                          ),
+                          pw.Image(height: 12, homeIcon),
                           pw.SizedBox(width: 5),
                           pw.Text(homeText, style: pw.TextStyle(fontSize: 7)),
                         ],
@@ -80,14 +61,7 @@ class DocFooter extends pw.StatelessWidget {
                       //mail row
                       pw.Row(
                         children: [
-                          pw.Image(
-                            height: 12,
-                            pw.MemoryImage(
-                              File(
-                                'assets/images/$mailIcon.png',
-                              ).readAsBytesSync(),
-                            ),
-                          ),
+                          pw.Image(height: 12, mailIcon),
                           pw.SizedBox(width: 5),
                           pw.Text(email, style: pw.TextStyle(fontSize: 7)),
                         ],
@@ -95,14 +69,7 @@ class DocFooter extends pw.StatelessWidget {
                       //call row
                       pw.Row(
                         children: [
-                          pw.Image(
-                            height: 12,
-                            pw.MemoryImage(
-                              File(
-                                'assets/images/$phoneIcon.png',
-                              ).readAsBytesSync(),
-                            ),
-                          ),
+                          pw.Image(height: 12, phoneIcon),
                           pw.SizedBox(width: 5),
                           pw.Text(phone, style: pw.TextStyle(fontSize: 7)),
                         ],

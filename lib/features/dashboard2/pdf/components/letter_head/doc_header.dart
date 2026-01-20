@@ -8,8 +8,8 @@ class DocHeader extends pw.StatelessWidget {
   final String taglineText;
   final String campusText;
   final String registrationText;
-  final String institutionLog;
-  final String isoLogo;
+  final pw.ImageProvider institutionLogo;
+  final pw.ImageProvider isoLogo;
   final String department;
 
   DocHeader({
@@ -18,7 +18,7 @@ class DocHeader extends pw.StatelessWidget {
     required this.taglineText,
     required this.campusText,
     required this.registrationText,
-    required this.institutionLog,
+    required this.institutionLogo,
     required this.isoLogo,
     required this.department,
   });
@@ -45,15 +45,7 @@ class DocHeader extends pw.StatelessWidget {
                   pw.Column(
                     children: [
                       pw.SizedBox(height: 16),
-                      pw.Image(
-                        height: 70,
-                        width: 70,
-                        pw.MemoryImage(
-                          File(
-                            'assets/images/$institutionLog.png',
-                          ).readAsBytesSync(),
-                        ),
-                      ),
+                      pw.Image(height: 70, width: 70, institutionLogo),
                       pw.SizedBox(height: 5),
                       pw.Text(
                         registrationText,
@@ -122,13 +114,7 @@ class DocHeader extends pw.StatelessWidget {
                   ),
                   pw.Padding(
                     padding: pw.EdgeInsets.only(top: 25),
-                    child: pw.Image(
-                      height: 80,
-                      width: 80,
-                      pw.MemoryImage(
-                        File('assets/images/$isoLogo.jpg').readAsBytesSync(),
-                      ),
-                    ),
+                    child: pw.Image(height: 80, width: 80, isoLogo),
                   ),
                 ],
               ),

@@ -95,10 +95,12 @@ class DashboardPage extends StatelessWidget {
             GlobalPdfExportUseCase(
               assembler: DashboardDependencies.globalReportAssembler,
               pdfService: DashboardDependencies.pdfGenerationService,
+              brandingConfig: DashboardDependencies.pdfBrandingConfig,
             ),
             IndividualPdfExportUseCase(
               assembler: DashboardDependencies.individualReportAssembler,
               pdfService: DashboardDependencies.pdfGenerationService,
+              brandingConfig: DashboardDependencies.pdfBrandingConfig,
             ), // Realtime implementation step 20
           ),
 
