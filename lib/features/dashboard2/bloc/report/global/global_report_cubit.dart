@@ -1,7 +1,6 @@
 import 'package:cvms_desktop/features/dashboard2/models/report/global_vehicle_report_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/features/dashboard2/assemblers/report/global_report_assembler.dart';
-import 'package:cvms_desktop/features/dashboard2/models/report/date_range_filter.dart';
 import '../../../models/report/date_range.dart';
 
 part 'global_report_state.dart';
@@ -11,7 +10,7 @@ class GlobalReportCubit extends Cubit<GlobalReportState> {
 
   GlobalReportCubit(this.assembler) : super(const GlobalReportState.initial());
 
-  Future<void> load({required DateRangeFilter range}) async {
+  Future<void> load({required DateRange range}) async {
     emit(state.copyWith(loading: true));
 
     try {
@@ -25,7 +24,7 @@ class GlobalReportCubit extends Cubit<GlobalReportState> {
     }
   }
 
-  void updateRange(DateRangeFilter range) {
+  void updateRange(DateRange range) {
     load(range: range);
   }
 }

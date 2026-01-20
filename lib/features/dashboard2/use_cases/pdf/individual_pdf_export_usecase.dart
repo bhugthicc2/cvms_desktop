@@ -6,6 +6,7 @@ import 'package:cvms_desktop/features/dashboard2/services/pdf/pdf_generation_ser
 import '../../assemblers/report/individual_report_assembler.dart';
 import '../../models/report/date_range.dart';
 import '../../models/report/individual_report_query.dart';
+import '../../utils/pdf/pdf_branding.dart';
 
 class IndividualPdfExportUseCase {
   final IndividualReportAssembler assembler;
@@ -27,7 +28,17 @@ class IndividualPdfExportUseCase {
         vehicleId: vehicleId,
         start: range.start,
         end: range.end,
-        options: options!,
+        options:
+            options ??
+            const IndividualReportOptions(
+              includeViolationSummary: true,
+              includeRecentLogs: true,
+              includeCharts: false,
+              branding: PdfBranding(
+                title: 'Individual Vehicle Report',
+                department: 'CVMS',
+              ),
+            ),
       ),
     );
 

@@ -1,5 +1,5 @@
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
-import 'package:cvms_desktop/features/dashboard2/models/report/date_range_filter.dart';
+import 'package:cvms_desktop/features/dashboard2/models/report/date_range.dart';
 import '../dashboard/recent_log_entry.dart';
 import '../dashboard/violation_history_entry.dart';
 
@@ -15,7 +15,7 @@ class GlobalVehicleReportModel {
   final List<ViolationHistoryEntry> recentViolations;
   final List<RecentLogEntry> recentLogs;
 
-  final DateRangeFilter period;
+  final DateRange period;
 
   GlobalVehicleReportModel({
     required this.totalVehicles,

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cvms_desktop/features/dashboard2/models/report/date_range_filter.dart';
+import 'package:cvms_desktop/features/dashboard2/models/report/date_range.dart';
 import 'package:cvms_desktop/features/dashboard2/models/dashboard/individual_vehicle_info.dart';
 import 'package:cvms_desktop/features/dashboard2/models/report/vehicle_metrics.dart';
 import 'package:cvms_desktop/features/dashboard2/models/dashboard/violation_history_entry.dart';
@@ -21,7 +21,7 @@ class IndividualReportRepository {
   // METRICS (DATE RANGE BOUND)
   Future<VehicleMetrics> getVehicleMetrics(
     String vehicleId,
-    DateRangeFilter range,
+    DateRange range,
   ) async {
     final violationsSnap =
         await _db

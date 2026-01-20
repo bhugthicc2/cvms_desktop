@@ -1,5 +1,4 @@
 import 'package:cvms_desktop/features/dashboard/models/chart_data_model.dart';
-import 'package:cvms_desktop/features/dashboard2/models/report/date_range_filter.dart';
 import 'package:cvms_desktop/features/dashboard2/models/report/global_vehicle_report_model.dart';
 import 'package:cvms_desktop/features/dashboard2/repositories/report/global_report_repository.dart';
 import 'package:cvms_desktop/features/dashboard2/models/dashboard/violation_history_entry.dart';
@@ -17,7 +16,7 @@ class GlobalReportAssembler
 
   @override
   Future<GlobalVehicleReportModel> assemble({required DateRange range}) async {
-    final dateRange = DateRangeFilter(start: range.start, end: range.end);
+    final dateRange = DateRange(range.start, range.end);
 
     // Fetch in parallel
     final results = await Future.wait([

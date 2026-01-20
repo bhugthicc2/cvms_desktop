@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../models/report/date_range_filter.dart';
+import 'package:cvms_desktop/features/dashboard2/models/report/date_range.dart';
 
 class GlobalReportRepository {
   final FirebaseFirestore _db;
@@ -11,7 +11,7 @@ class GlobalReportRepository {
     return snap.size;
   }
 
-  Future<int> getTotalFleetLogs(DateRangeFilter range) async {
+  Future<int> getTotalFleetLogs(DateRange range) async {
     final snap =
         await _db
             .collection('vehicle_logs')
@@ -24,7 +24,7 @@ class GlobalReportRepository {
     return snap.size;
   }
 
-  Future<int> getTotalViolations(DateRangeFilter range) async {
+  Future<int> getTotalViolations(DateRange range) async {
     final snap =
         await _db
             .collection('violations')
@@ -40,7 +40,7 @@ class GlobalReportRepository {
     return snap.size;
   }
 
-  Future<int> getPendingViolations(DateRangeFilter range) async {
+  Future<int> getPendingViolations(DateRange range) async {
     final snap =
         await _db
             .collection('violations')
@@ -57,7 +57,7 @@ class GlobalReportRepository {
     return snap.size;
   }
 
-  Future<Map<String, int>> getViolationsByType(DateRangeFilter range) async {
+  Future<Map<String, int>> getViolationsByType(DateRange range) async {
     final snap =
         await _db
             .collection('violations')
@@ -82,7 +82,7 @@ class GlobalReportRepository {
   }
 
   Future<List<Map<String, dynamic>>> getRecentViolations(
-    DateRangeFilter range, {
+    DateRange range, {
     int limit = 10,
   }) async {
     final snap =
@@ -104,7 +104,7 @@ class GlobalReportRepository {
   }
 
   Future<List<Map<String, dynamic>>> getRecentLogs(
-    DateRangeFilter range, {
+    DateRange range, {
     int limit = 10,
   }) async {
     final snap =
@@ -122,7 +122,7 @@ class GlobalReportRepository {
     return snap.docs.map((d) => {'id': d.id, ...d.data()}).toList();
   }
 
-  Future<Map<String, int>> getFleetLogsTrend(DateRangeFilter range) async {
+  Future<Map<String, int>> getFleetLogsTrend(DateRange range) async {
     final snap =
         await _db
             .collection('vehicle_logs')

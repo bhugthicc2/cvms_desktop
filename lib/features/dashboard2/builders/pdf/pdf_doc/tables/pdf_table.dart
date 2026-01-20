@@ -61,7 +61,7 @@ class PdfTable extends pw.StatelessWidget {
                   );
                 }).toList(),
           );
-        }).toList(),
+        }),
       ],
     );
   }

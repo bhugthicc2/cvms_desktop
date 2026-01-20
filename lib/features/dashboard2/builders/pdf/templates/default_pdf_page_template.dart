@@ -1,7 +1,6 @@
 import 'package:cvms_desktop/features/dashboard/widgets/pdf_doc/letter_head/doc_footer.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/pdf_doc/letter_head/doc_header.dart';
 import 'package:cvms_desktop/features/dashboard2/builders/pdf/templates/pdf_page_template.dart';
-import 'package:cvms_desktop/features/dashboard2/utils/pdf/pdf_branding.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -49,7 +48,7 @@ class DefaultPdfPageTemplate implements PdfPageTemplate {
   final String phoneIcon;
 
   @override
-  pw.Page build({required PdfBranding branding, required pw.Widget child}) {
+  pw.Page build({required pw.Widget child}) {
     return pw.Page(
       pageTheme: pw.PageTheme(pageFormat: pageFormat, margin: margin),
       build:

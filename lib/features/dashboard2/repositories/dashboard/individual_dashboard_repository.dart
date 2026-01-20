@@ -152,12 +152,21 @@ class IndividualDashboardRepository {
 
             return ViolationHistoryEntry(
               violationId: doc.id,
-              dateTime: (data['reportedAt'] as Timestamp).toDate(),
-              violationType: data['violationType'] ?? '',
+              dateTime:
+                  data['reportedAt'] != null
+                      ? (data['reportedAt'] as Timestamp).toDate()
+                      : DateTime.now(),
+              violationType: data['violationType'] as String? ?? '',
               reportedBy: usersMap[data['reportedByUserId']] ?? 'Unknown',
-              status: data['status'] ?? '',
-              createdAt: (data['createdAt'] as Timestamp).toDate(),
-              lastUpdated: (data['createdAt'] as Timestamp).toDate(),
+              status: data['status'] as String? ?? '',
+              createdAt:
+                  data['createdAt'] != null
+                      ? (data['createdAt'] as Timestamp).toDate()
+                      : DateTime.now(),
+              lastUpdated:
+                  data['lastUpdated'] != null
+                      ? (data['lastUpdated'] as Timestamp).toDate()
+                      : DateTime.now(),
             );
           }).toList();
         });
@@ -199,7 +208,10 @@ class IndividualDashboardRepository {
           return snapshot.docs.map((doc) {
             final data = doc.data();
 
-            final timeIn = (data['timeIn'] as Timestamp).toDate();
+            final timeIn =
+                data['timeIn'] != null
+                    ? (data['timeIn'] as Timestamp).toDate()
+                    : DateTime.now();
             final timeOut =
                 data['timeOut'] != null
                     ? (data['timeOut'] as Timestamp).toDate()
@@ -209,8 +221,8 @@ class IndividualDashboardRepository {
               logId: doc.id,
               timeIn: timeIn,
               timeOut: timeOut,
-              durationMinutes: data['durationMinutes'] ?? 0,
-              status: data['status'] ?? '',
+              durationMinutes: data['durationMinutes'] as int?,
+              status: data['status'] as String? ?? '',
               updatedBy: usersMap[data['updatedByUserId']] ?? 'Unknown',
             );
           }).toList();

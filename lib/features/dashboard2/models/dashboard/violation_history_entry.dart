@@ -27,12 +27,21 @@ class ViolationHistoryEntry extends Equatable {
   ) {
     return ViolationHistoryEntry(
       violationId: id,
-      dateTime: (data['reportedAt'] as Timestamp).toDate(),
+      dateTime:
+          data['reportedAt'] != null
+              ? (data['reportedAt'] as Timestamp).toDate()
+              : DateTime.now(),
       violationType: data['violationType'] as String? ?? '',
       reportedBy: data['reportedBy'] as String? ?? '',
       status: data['status'] as String? ?? '',
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
+      createdAt:
+          data['createdAt'] != null
+              ? (data['createdAt'] as Timestamp).toDate()
+              : DateTime.now(),
+      lastUpdated:
+          data['lastUpdated'] != null
+              ? (data['lastUpdated'] as Timestamp).toDate()
+              : DateTime.now(),
     );
   }
 

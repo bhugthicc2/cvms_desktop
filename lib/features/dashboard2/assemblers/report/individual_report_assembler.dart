@@ -1,4 +1,4 @@
-import 'package:cvms_desktop/features/dashboard2/models/report/date_range_filter.dart';
+import 'package:cvms_desktop/features/dashboard2/models/report/date_range.dart';
 import 'package:cvms_desktop/features/dashboard2/models/report/individual_report_query.dart';
 import 'package:cvms_desktop/features/dashboard2/models/report/individual_vehicle_report_model.dart';
 import 'package:cvms_desktop/features/dashboard2/repositories/report/individual_report_repository.dart';
@@ -11,7 +11,7 @@ class IndividualReportAssembler {
   Future<IndividualVehicleReportModel> assemble(
     IndividualReportQuery query,
   ) async {
-    final range = DateRangeFilter(start: query.start, end: query.end);
+    final range = DateRange(query.start, query.end);
 
     final vehicle = await repository.getVehicleInfo(query.vehicleId);
 

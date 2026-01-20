@@ -1,5 +1,5 @@
 import 'package:cvms_desktop/features/dashboard2/models/report/individual_vehicle_report_model.dart';
-import 'package:cvms_desktop/features/dashboard2/widgets/components/pdf_doc/templates/pdf_page_template.dart';
+import 'package:cvms_desktop/features/dashboard2/builders/pdf/templates/pdf_page_template.dart';
 import 'package:pdf/widgets.dart' as pw;
 import '../sections/pdf_section.dart';
 

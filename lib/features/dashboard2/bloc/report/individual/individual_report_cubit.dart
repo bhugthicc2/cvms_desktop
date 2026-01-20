@@ -1,10 +1,10 @@
 import 'package:cvms_desktop/features/dashboard2/bloc/report/individual/individual_report_state.dart';
+import 'package:cvms_desktop/features/dashboard2/models/report/date_range.dart';
 import 'package:cvms_desktop/features/dashboard2/use_cases/pdf/pdf_export_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/features/dashboard2/assemblers/report/individual_report_assembler.dart';
 import 'package:cvms_desktop/features/dashboard2/models/report/individual_report_query.dart';
 import 'package:cvms_desktop/features/dashboard2/models/report/individual_report_options.dart';
-import 'package:cvms_desktop/features/dashboard2/models/report/date_range_filter.dart';
 import 'package:cvms_desktop/features/dashboard2/utils/pdf/pdf_branding.dart';
 
 class IndividualReportCubit extends Cubit<IndividualReportState> {
@@ -16,7 +16,7 @@ class IndividualReportCubit extends Cubit<IndividualReportState> {
 
   Future<void> load({
     required String vehicleId,
-    required DateRangeFilter range,
+    required DateRange range,
   }) async {
     emit(state.copyWith(loading: true));
 
@@ -41,7 +41,7 @@ class IndividualReportCubit extends Cubit<IndividualReportState> {
     }
   }
 
-  void updateRange(DateRangeFilter range) {
+  void updateRange(DateRange range) {
     final current = state.report;
     if (current == null) return;
 
