@@ -27,14 +27,30 @@ import 'package:cvms_desktop/features/shell/bloc/shell_cubit.dart';
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
-  List<BreadcrumbItem> _buildBreadcrumbs(DashboardViewMode viewMode) {
+  List<BreadcrumbItem> _buildBreadcrumbs(
+    DashboardViewMode viewMode, [
+    GlobalDashboardState? state,
+  ]) {
     switch (viewMode) {
       case DashboardViewMode.global:
         return []; // Root level - no breadcrumbs
       case DashboardViewMode.individual:
-        return [BreadcrumbItem(label: 'Individual Report')];
+        final ownerName = state?.selectedVehicle?.ownerName ?? 'Unknown';
+        return [
+          BreadcrumbItem(label: '$ownerName\'s Report'),
+        ]; //shows owner name as breadcrumb item label
       case DashboardViewMode.pdfPreview:
-        return [BreadcrumbItem(label: 'PDF Preview', isActive: true)];
+        // Check if PDF preview is from individual or global report
+        if (state?.previousViewMode == DashboardViewMode.individual) {
+          final ownerName = state?.selectedVehicle?.ownerName ?? 'Unknown';
+          return [
+            BreadcrumbItem(label: '$ownerName\'s Report'),
+            BreadcrumbItem(label: 'PDF Report Preview', isActive: true),
+          ];
+        } else {
+          // Global PDF report
+          return [BreadcrumbItem(label: 'PDF Report Preview', isActive: true)];
+        }
     }
   }
 
@@ -91,7 +107,7 @@ class DashboardPage extends StatelessWidget {
           // Gating: Only publish breadcrumbs if this is the active page
           if (context.read<ShellCubit>().state.selectedIndex != 1) return;
 
-          final breadcrumbs = _buildBreadcrumbs(state.viewMode);
+          final breadcrumbs = _buildBreadcrumbs(state.viewMode, state);
           BreadcrumbScope.controllerOf(context).setBreadcrumbs(breadcrumbs);
         },
         child: BlocBuilder<GlobalDashboardCubit, GlobalDashboardState>(
