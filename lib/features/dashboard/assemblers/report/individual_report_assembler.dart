@@ -20,6 +20,11 @@ class IndividualReportAssembler {
 
     final logs = await repository.getRecentLogs(query.vehicleId);
 
+    final violationsByType = await repository.getViolationByType(
+      query.vehicleId,
+      range,
+    );
+
     return IndividualVehicleReportModel(
       vehicle: vehicle,
       totalViolations: metrics.totalViolations,
@@ -29,6 +34,7 @@ class IndividualReportAssembler {
       recentViolations: violations,
       recentLogs: logs,
       period: range,
+      violationsByType: violationsByType,
     );
   }
 }

@@ -32,27 +32,14 @@ class GlobalSummarySection implements PdfSection<GlobalVehicleReportModel> {
 
   pw.Widget _buildSummaryTable(GlobalVehicleReportModel report) {
     return PdfTable(
-      headers: const ['Metric', 'Value', 'Metric', 'Value'],
+      headers: const ['Metric', 'Value'],
       rows: [
-        [
-          'Total Vehicles',
-          report.totalVehicles.toString(),
-          'Total Logs',
-          report.totalFleetLogs.toString(),
-        ],
-        [
-          'Total Violations',
-          report.totalViolations.toString(),
-          'Pending Violations',
-          report.pendingViolations.toString(),
-        ],
+        ['Total Vehicles', report.totalVehicles.toString()],
+        ['Total Logs', report.totalFleetLogs.toString()],
+        ['Total Violations', report.totalViolations.toString()],
+        ['Total Violations', report.totalViolations.toString()],
       ],
-      columnWidths: const {
-        0: pw.FlexColumnWidth(2),
-        1: pw.FlexColumnWidth(1),
-        2: pw.FlexColumnWidth(2),
-        3: pw.FlexColumnWidth(1),
-      },
+      columnWidths: const {0: pw.FlexColumnWidth(1), 1: pw.FlexColumnWidth(1)},
     );
   }
 

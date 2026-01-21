@@ -111,6 +111,18 @@ class UserRepository {
     }
   }
 
+  // Get user details
+  Future<Map<String, String?>> getUserDisplayData(String uid) async {
+    final doc = await _firestore.collection(_collection).doc(uid).get();
+    if (!doc.exists) return {'fullname': null, 'profileImage': null};
+
+    final data = doc.data()!;
+    return {
+      'fullname': data['fullname'] as String?,
+      'profileImage': data['profileImage'] as String?,
+    };
+  }
+
   /// Delete user profile
   Future<void> deleteUserProfile(String uid) async {
     try {

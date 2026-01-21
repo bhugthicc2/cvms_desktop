@@ -17,11 +17,13 @@ import 'package:cvms_desktop/core/widgets/app/custom_date_filter.dart';
 class IndividualReportView extends StatelessWidget {
   final IndividualVehicleInfo vehicleInfo;
   final String? currentTimeRange;
+  final double hoverDy;
 
   const IndividualReportView({
     super.key,
     required this.vehicleInfo,
     this.currentTimeRange = '7 days',
+    this.hoverDy = -0.01,
   });
 
   void _onTimeRangeChanged(String selectedRange, BuildContext context) {
@@ -123,53 +125,45 @@ class IndividualReportView extends StatelessWidget {
                       mvpRegisteredDate: vehicleInfo.mvpRegisteredDate!,
                       mvpExpiryDate: vehicleInfo.mvpExpiryDate!,
                       mvpStatusText: vehicleInfo.mvpStatusText,
+                      hoverDy: hoverDy,
                     );
                   },
                 ),
               ),
 
-              BlocBuilder<IndividualDashboardCubit, IndividualDashboardState>(
-                builder: (context, state) {
-                  return IndividualChartsSection(
-                    //ISSUE: doesn't update on load
-                    violationDistribution: state.violationDistribution,
-                    vehicleLogs: state.vehicleLogsTrend, //default to 7 days
-                    lineChartTitle: DynamicTitleFormatter().getDynamicTitle(
-                      'Vehicle logs for ',
-                      currentTimeRange,
-                    ), //todo fix the issue where the dynamic title is not working/updating
-                    onTimeRangeChanged: (value) {
-                      _onTimeRangeChanged(value, context);
-                    },
-                  );
+              IndividualChartsSection(
+                //ISSUE: doesn't update on load
+                violationDistribution: state.violationDistribution,
+                vehicleLogs: state.vehicleLogsTrend, //default to 7 days
+                lineChartTitle: DynamicTitleFormatter().getDynamicTitle(
+                  'Vehicle logs for ',
+                  currentTimeRange,
+                ), //todo fix the issue where the dynamic title is not working/updating
+                onTimeRangeChanged: (value) {
+                  _onTimeRangeChanged(value, context);
                 },
+                hoverDy: hoverDy,
               ),
 
-              BlocBuilder<IndividualDashboardCubit, IndividualDashboardState>(
-                builder: (context, state) {
-                  return ViolationHistoryTableSection(
-                    allowSorting: false,
-                    istableHeaderDark: false,
-                    violationHistoryEntries: state.violationHistory,
-                    sectionTitle: 'Violation History',
-                    onClick: () {
-                      //todo
-                    },
-                  );
+              ViolationHistoryTableSection(
+                allowSorting: false,
+                istableHeaderDark: false,
+                violationHistoryEntries: state.violationHistory,
+                sectionTitle: 'Violation History',
+                onClick: () {
+                  //todo
                 },
+                hoverDy: hoverDy,
               ),
-              BlocBuilder<IndividualDashboardCubit, IndividualDashboardState>(
-                builder: (context, state) {
-                  return RecentLogsTableSection(
-                    allowSorting: false,
-                    istableHeaderDark: false,
-                    recentLogsEntries: state.recentLogs,
-                    sectionTitle: 'Recent Logs',
-                    onClick: () {
-                      //todo
-                    },
-                  );
+              RecentLogsTableSection(
+                allowSorting: false,
+                istableHeaderDark: false,
+                recentLogsEntries: state.recentLogs,
+                sectionTitle: 'Recent Logs',
+                onClick: () {
+                  //todo
                 },
+                hoverDy: hoverDy,
               ),
               Spacing.vertical(size: AppSpacing.medium),
             ],

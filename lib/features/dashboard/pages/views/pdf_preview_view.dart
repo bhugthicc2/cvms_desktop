@@ -27,9 +27,20 @@ class PdfPreviewView extends StatelessWidget {
       body:
           pdfBytes == null || pdfBytes!.isEmpty
               ? const Center(
-                child: Text(
-                  'No PDF generated',
-                  style: TextStyle(color: Colors.red),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        AppColors.primary,
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'No PDF generated',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ],
                 ),
               )
               : PdfViewerWidget(pdfBytes: pdfBytes!),

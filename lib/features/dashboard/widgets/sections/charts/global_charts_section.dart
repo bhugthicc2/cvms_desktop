@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_slide.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/core/widgets/charts/donut_chart_widget.dart';
@@ -20,6 +21,7 @@ class GlobalChartsSection extends StatelessWidget {
   final List<ChartDataModel> fleetLogsData;
   final Function(String)? onTimeRangeChanged;
   final String lineChartTitle;
+  final double hoverDy;
 
   const GlobalChartsSection({
     super.key,
@@ -33,6 +35,7 @@ class GlobalChartsSection extends StatelessWidget {
     required this.fleetLogsData,
     this.onTimeRangeChanged,
     required this.lineChartTitle,
+    this.hoverDy = -0.01,
   });
 
   @override
@@ -138,47 +141,63 @@ class GlobalChartsSection extends StatelessWidget {
   }
 
   Widget _buildDonutChart(String title, List<ChartDataModel> data) {
-    return DonutChartWidget(
-      explode: true,
-      showPercentageInSlice: false,
-      data: data,
-      title: title,
-      radius: '90%',
-      innerRadius: '60%',
-      onViewTap: () {},
-      onDonutChartPointTap: (details) {},
+    return HoverSlide(
+      dx: 0,
+      dy: hoverDy,
+      child: DonutChartWidget(
+        explode: true,
+        showPercentageInSlice: false,
+        data: data,
+        title: title,
+        radius: '90%',
+        innerRadius: '60%',
+        onViewTap: () {},
+        onDonutChartPointTap: (details) {},
+      ),
     );
   }
 
   Widget _buildStackedChart(String title, List<ChartDataModel> data) {
-    return StackedBarWidget(title: title, data: data, onViewTap: () {});
+    return HoverSlide(
+      dx: 0,
+      dy: hoverDy,
+      child: StackedBarWidget(title: title, data: data, onViewTap: () {}),
+    );
   }
 
   Widget _buildBarChart(String title, List<ChartDataModel> data) {
-    return BarChartWidget(
-      data: data,
-      title: title,
-      onViewTap: () {},
-      onBarChartPointTap: (details) {},
+    return HoverSlide(
+      dx: 0,
+      dy: hoverDy,
+      child: BarChartWidget(
+        data: data,
+        title: title,
+        onViewTap: () {},
+        onBarChartPointTap: (details) {},
+      ),
     );
   }
 
   Widget _buildLineChart(String title, List<ChartDataModel> data) {
-    return LineChartWidget(
-      customWidget: CustomDropdown(
-        color: AppColors.donutBlue,
-        fontSize: 14,
-        verticalPadding: 0,
-        items: const ['7 days', '30 days', 'Month', 'Year', 'Custom'],
-        initialValue: '7 days',
-        onChanged: (value) {
-          onTimeRangeChanged?.call(value);
-        },
+    return HoverSlide(
+      dx: 0,
+      dy: hoverDy,
+      child: LineChartWidget(
+        customWidget: CustomDropdown(
+          color: AppColors.donutBlue,
+          fontSize: 14,
+          verticalPadding: 0,
+          items: const ['7 days', '30 days', 'Month', 'Year', 'Custom'],
+          initialValue: '7 days',
+          onChanged: (value) {
+            onTimeRangeChanged?.call(value);
+          },
+        ),
+        data: data,
+        title: title,
+        onViewTap: () {},
+        onLineChartPointTap: (details) {},
       ),
-      data: data,
-      title: title,
-      onViewTap: () {},
-      onLineChartPointTap: (details) {},
     );
   }
 }

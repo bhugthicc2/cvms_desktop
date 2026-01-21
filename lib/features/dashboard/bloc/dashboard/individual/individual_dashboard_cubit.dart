@@ -19,7 +19,7 @@ class IndividualDashboardCubit extends Cubit<IndividualDashboardState> {
   IndividualDashboardCubit({required this.vehicleId, required this.repository})
     : super(
         IndividualDashboardState(
-          startDate: DateTime.now().subtract(const Duration(days: 6)),
+          startDate: DateTime.now().subtract(const Duration(days: 7)),
           endDate: DateTime.now(),
           grouping: TimeGrouping.day,
         ),

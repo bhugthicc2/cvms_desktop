@@ -5,6 +5,13 @@ import 'package:cvms_desktop/features/dashboard/pdf/components/layout/pdf_conten
 import 'package:cvms_desktop/features/dashboard/pdf/core/pdf_section.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/sections/individual/individual_report_title_section.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/sections/individual/individual_signatory_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/individual/individual_summary_metrics_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/individual/mvp_status_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/individual/recent_logs_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/individual/vehicle_info_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/individual/vehicle_logs_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/individual/violation_history_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/individual/violations_by_type_section.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -34,9 +41,14 @@ class IndividualReportBuilder {
     // Report sections (ORDER MATTERS)
     final List<PdfSection<IndividualVehicleReportModel>> sections = [
       IndividualReportTitleSection(),
-      // GlobalSummarySection(),
-      // GlobalChartsSection(),
-      // GlobalTablesSection(),
+
+      VehicleInfoSection(),
+      MVPStatusSection(),
+      IndividualSummaryMetricsSection(),
+      ViolationsByTypeSection(),
+      VehicleLogsSection(),
+      ViolationHistorySection(),
+      RecentLogsSection(),
     ];
     // Add signatory LAST
     final signatorySection = IndividualSignatorySection(

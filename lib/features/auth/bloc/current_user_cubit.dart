@@ -33,7 +33,7 @@ class CurrentUserCubit extends Cubit<CurrentUserState> {
             ),
           );
         } else {
-          await loadFullname(user.uid);
+          await loadCurrentUser(user.uid);
         }
       },
       onError: (e) {
@@ -49,33 +49,24 @@ class CurrentUserCubit extends Cubit<CurrentUserState> {
     );
   }
 
-  Future<void> loadFullname([String? uid]) async {
+  Future<void> loadCurrentUser([String? uid]) async {
     final currentUid = uid ?? _authRepository.uid;
-    if (currentUid == null) {
-      if (isClosed) return;
-      emit(
-        state.copyWith(fullname: null, errorMessage: null, isLoading: false),
-      );
-      return;
-    }
+    if (currentUid == null) return;
 
-    if (isClosed) return;
-    emit(state.copyWith(isLoading: true, errorMessage: null));
+    emit(state.copyWith(isLoading: true));
+
     try {
-      final name = await _userRepository.getUserFullname(currentUid);
-      if (isClosed) return;
-      emit(
-        state.copyWith(isLoading: false, fullname: name, errorMessage: null),
-      );
-    } catch (e) {
-      if (isClosed) return;
+      final userData = await _userRepository.getUserProfile(currentUid);
+
       emit(
         state.copyWith(
           isLoading: false,
-          fullname: null,
-          errorMessage: e.toString(),
+          fullname: userData?['fullname'],
+          profileImage: userData?['profileImage'], // base64 string
         ),
       );
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
     }
   }
 

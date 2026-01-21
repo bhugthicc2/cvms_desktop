@@ -11,6 +11,7 @@ class RecentLogsTableSection extends StatelessWidget {
   final List<RecentLogEntry> recentLogsEntries;
   final String sectionTitle;
   final VoidCallback onClick;
+  final double hoverDy;
   const RecentLogsTableSection({
     super.key,
     required this.istableHeaderDark,
@@ -18,6 +19,7 @@ class RecentLogsTableSection extends StatelessWidget {
     required this.recentLogsEntries,
     required this.sectionTitle,
     required this.onClick,
+    this.hoverDy = -0.01,
   });
 
   @override
@@ -25,6 +27,7 @@ class RecentLogsTableSection extends StatelessWidget {
     return DashboardTable(
       tableTitle: sectionTitle,
       onClick: onClick,
+      hoverDy: hoverDy,
       child: CustomTable(
         isTableHeaderDark: istableHeaderDark,
         allowSorting: allowSorting,

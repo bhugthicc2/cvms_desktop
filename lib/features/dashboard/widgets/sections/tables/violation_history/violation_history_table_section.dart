@@ -11,6 +11,7 @@ class ViolationHistoryTableSection extends StatelessWidget {
   final bool istableHeaderDark;
   final String sectionTitle;
   final VoidCallback onClick;
+  final double hoverDy;
   const ViolationHistoryTableSection({
     super.key,
     required this.violationHistoryEntries,
@@ -18,6 +19,7 @@ class ViolationHistoryTableSection extends StatelessWidget {
     required this.istableHeaderDark,
     required this.sectionTitle,
     required this.onClick,
+    this.hoverDy = -0.01,
   });
 
   @override
@@ -25,6 +27,7 @@ class ViolationHistoryTableSection extends StatelessWidget {
     return DashboardTable(
       tableTitle: sectionTitle,
       onClick: onClick,
+      hoverDy: hoverDy,
       child: CustomTable(
         isTableHeaderDark: istableHeaderDark,
         allowSorting: allowSorting,

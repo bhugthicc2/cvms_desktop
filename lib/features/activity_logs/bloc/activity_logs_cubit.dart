@@ -23,6 +23,7 @@ class ActivityLogsCubit extends Cubit<ActivityLogsState> {
     int limit = 100,
   }) async {
     try {
+      if (isClosed) return;
       emit(state.copyWith(isLoading: true));
       await _subscription?.cancel();
 
@@ -42,6 +43,7 @@ class ActivityLogsCubit extends Cubit<ActivityLogsState> {
               final userFullnames = await _repository.fetchUserFullnames(logs);
               final userRoles = await _repository.fetchUserRoles(logs);
 
+              if (isClosed) return;
               emit(
                 state.copyWith(
                   allLogs: logs,
@@ -59,6 +61,7 @@ class ActivityLogsCubit extends Cubit<ActivityLogsState> {
             },
           );
     } catch (e) {
+      if (isClosed) return;
       emit(state.copyWith(error: e.toString(), isLoading: false));
     }
   }

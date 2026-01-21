@@ -13,6 +13,7 @@ class IndividualVehicleReportModel {
   final List<ViolationHistoryEntry> recentViolations;
   final List<RecentLogEntry> recentLogs;
   final DateRange period;
+  final List<ChartDataModel> violationsByType;
 
   IndividualVehicleReportModel({
     required this.vehicle,
@@ -23,5 +24,6 @@ class IndividualVehicleReportModel {
     required this.recentViolations,
     required this.recentLogs,
     required this.period,
+    required this.violationsByType,
   });
 }

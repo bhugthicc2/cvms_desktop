@@ -101,7 +101,8 @@ class CustomHeader extends StatelessWidget {
                   backgroundImage:
                       profileImage.isNotEmpty
                           ? MemoryImage(base64Decode(profileImage))
-                          : AssetImage('assets/images/profile.png'),
+                          : const AssetImage('assets/images/profile.png')
+                              as ImageProvider,
                 ),
                 Text(
                   currentUser,

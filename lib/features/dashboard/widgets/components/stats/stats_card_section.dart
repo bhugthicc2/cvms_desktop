@@ -23,6 +23,7 @@ class StatsCardSection extends StatelessWidget {
   final VoidCallback? onStatsCard2Click;
   final VoidCallback? onStatsCard3Click;
   final VoidCallback? onStatsCard4Click;
+  final double hoverDy;
 
   const StatsCardSection({
     super.key,
@@ -43,6 +44,7 @@ class StatsCardSection extends StatelessWidget {
     this.onStatsCard2Click,
     this.onStatsCard3Click,
     this.onStatsCard4Click,
+    this.hoverDy = -0.01,
   });
 
   @override
@@ -62,6 +64,7 @@ class StatsCardSection extends StatelessWidget {
             color: Colors.blue,
             gradient: AppColors.blueViolet,
             iconColor: AppColors.donutPink,
+            hoverDy: hoverDy,
           ),
         ),
         Spacing.horizontal(size: AppSpacing.medium),
@@ -74,6 +77,7 @@ class StatsCardSection extends StatelessWidget {
             color: AppColors.orange,
             gradient: AppColors.yellowOrange,
             iconColor: AppColors.orange,
+            hoverDy: hoverDy,
           ),
         ),
         Spacing.horizontal(size: AppSpacing.medium),
@@ -86,6 +90,7 @@ class StatsCardSection extends StatelessWidget {
             color: AppColors.donutBlue,
             gradient: AppColors.purpleBlue,
             iconColor: AppColors.donutBlue,
+            hoverDy: hoverDy,
           ),
         ),
         Spacing.horizontal(size: AppSpacing.medium),
@@ -98,6 +103,7 @@ class StatsCardSection extends StatelessWidget {
             color: AppColors.chartGreen,
             gradient: AppColors.greenWhite,
             iconColor: AppColors.chartGreen,
+            hoverDy: hoverDy,
           ),
         ),
       ],
@@ -120,6 +126,7 @@ class StatsCardSection extends StatelessWidget {
                   icon: statsCard1Icon ?? Icons.dashboard,
                   color: Colors.blue,
                   iconColor: Colors.blue,
+                  hoverDy: hoverDy,
                 ),
               ),
               Spacing.horizontal(size: AppSpacing.medium),
@@ -133,6 +140,7 @@ class StatsCardSection extends StatelessWidget {
                   icon: statsCard2Icon ?? Icons.warning,
                   color: Colors.orange,
                   iconColor: Colors.orange,
+                  hoverDy: hoverDy,
                 ),
               ),
             ],
@@ -153,6 +161,7 @@ class StatsCardSection extends StatelessWidget {
                   color: Colors.red,
                   gradient: AppColors.pinkWhite,
                   iconColor: Colors.red,
+                  hoverDy: hoverDy,
                 ),
               ),
               Spacing.horizontal(size: AppSpacing.medium),
@@ -166,6 +175,7 @@ class StatsCardSection extends StatelessWidget {
                   color: AppColors.donutBlue,
                   gradient: AppColors.purpleBlue,
                   iconColor: Colors.green,
+                  hoverDy: hoverDy,
                 ),
               ),
             ],

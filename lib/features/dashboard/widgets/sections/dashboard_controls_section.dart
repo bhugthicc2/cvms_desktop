@@ -17,6 +17,7 @@ class DashboardControlsSection extends StatelessWidget {
   final VoidCallback onExportPressed;
   final bool showBackButton;
   final VoidCallback? onBackButtonPressed;
+  final bool isLoading;
 
   const DashboardControlsSection({
     super.key,
@@ -27,6 +28,7 @@ class DashboardControlsSection extends StatelessWidget {
     required this.onExportPressed,
     this.showBackButton = false,
     this.onBackButtonPressed,
+    this.isLoading = false,
   });
 
   @override
@@ -60,7 +62,7 @@ class DashboardControlsSection extends StatelessWidget {
           const SizedBox(width: AppSpacing.medium),
 
           // Export Button
-          ExportReportButton(onPressed: onExportPressed),
+          ExportReportButton(onPressed: onExportPressed, isLoading: isLoading),
         ],
       ),
     );

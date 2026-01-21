@@ -13,6 +13,7 @@ class GlobalStatsCardSection extends StatelessWidget {
   final int statsCard2Value;
   final int statsCard3Value;
   final int statsCard4Value;
+  final double hoverDy;
 
   const GlobalStatsCardSection({
     super.key,
@@ -24,6 +25,7 @@ class GlobalStatsCardSection extends StatelessWidget {
     required this.statsCard2Value,
     required this.statsCard3Value,
     required this.statsCard4Value,
+    this.hoverDy = -0.01,
   });
 
   @override
@@ -39,6 +41,7 @@ class GlobalStatsCardSection extends StatelessWidget {
         statsCard3Value: statsCard3Value,
         statsCard4Label: statsCard4Label,
         statsCard4Value: statsCard4Value,
+        hoverDy: hoverDy + -0.05,
       ),
     );
   }

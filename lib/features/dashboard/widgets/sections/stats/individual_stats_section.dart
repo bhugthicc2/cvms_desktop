@@ -1,4 +1,5 @@
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/animation/hover_slide.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/components/stats/stats_card_section.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/components/info/vehicle_info_card.dart';
@@ -25,6 +26,7 @@ class IndividualStatsSection extends StatelessWidget {
   final DateTime mvpRegisteredDate;
   final DateTime mvpExpiryDate;
   final String mvpStatusText;
+  final double hoverDy;
 
   const IndividualStatsSection({
     super.key,
@@ -46,6 +48,7 @@ class IndividualStatsSection extends StatelessWidget {
     required this.mvpRegisteredDate,
     required this.mvpExpiryDate,
     required this.mvpStatusText,
+    this.hoverDy = -0.01,
   });
 
   @override
@@ -74,6 +77,7 @@ class IndividualStatsSection extends StatelessWidget {
               statsCard3Value: totalViolations,
               statsCard4Label: 'Total Entries/Exits',
               statsCard4Value: totalVehicleLogs,
+              hoverDy: hoverDy + -0.05,
             ),
           ),
 
@@ -81,20 +85,24 @@ class IndividualStatsSection extends StatelessWidget {
 
           // Vehicle Info Card
           Expanded(
-            child: VehicleInfoCard(
-              onViewTap: onVehicleInfoFullView ?? () {},
-              plateNumber: plateNumber,
-              ownerName: ownerName,
-              vehicleType: vehicleType,
-              department: department,
-              status: status,
-              vehicleModel: vehicleModel,
-              createdAt: createdAt,
-              expiryDate: expiryDate,
-              mvpProgress: mvpProgress,
-              mvpRegisteredDate: mvpRegisteredDate,
-              mvpExpiryDate: mvpExpiryDate,
-              mvpStatusText: mvpStatusText,
+            child: HoverSlide(
+              dx: 0,
+              dy: hoverDy,
+              child: VehicleInfoCard(
+                onViewTap: onVehicleInfoFullView ?? () {},
+                plateNumber: plateNumber,
+                ownerName: ownerName,
+                vehicleType: vehicleType,
+                department: department,
+                status: status,
+                vehicleModel: vehicleModel,
+                createdAt: createdAt,
+                expiryDate: expiryDate,
+                mvpProgress: mvpProgress,
+                mvpRegisteredDate: mvpRegisteredDate,
+                mvpExpiryDate: mvpExpiryDate,
+                mvpStatusText: mvpStatusText,
+              ),
             ),
           ),
         ],

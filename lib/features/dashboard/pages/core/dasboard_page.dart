@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/widgets/animation/report_loading_anim.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_alert_dialog.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_date_filter.dart';
 import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
@@ -159,74 +160,87 @@ class DashboardPage extends StatelessWidget {
                     child: FadeTransition(opacity: animation, child: child),
                   );
                 },
-                child: Container(
-                  key: ValueKey(state.viewMode.toString()),
-                  child:
-                      state.viewMode == DashboardViewMode.pdfPreview
-                          ? // PDF preview: full screen, no scroll
-                          SizedBox(child: _buildMainContent(context, state))
-                          : // Other views: with controls and scroll
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                // Controls section
-                                DashboardControlsSection(
-                                  showBackButton:
-                                      state.viewMode !=
-                                      DashboardViewMode.global,
-                                  dateFilterText: 'DATE FILTER',
-                                  onExportPressed: () async {
-                                    final range = await showCustomDatePicker(
-                                      context,
-                                    );
-                                    if (range == null) return;
+                child: Stack(
+                  children: [
+                    Container(
+                      key: ValueKey(state.viewMode.toString()),
+                      child:
+                          state.viewMode == DashboardViewMode.pdfPreview
+                              ? // PDF preview: full screen, no scroll
+                              SizedBox(child: _buildMainContent(context, state))
+                              : // Other views: with controls and scroll
+                              SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    // Controls section
+                                    DashboardControlsSection(
+                                      isLoading: state.loading,
+                                      showBackButton:
+                                          state.viewMode !=
+                                          DashboardViewMode.global,
+                                      dateFilterText: 'DATE FILTER',
+                                      onExportPressed: () async {
+                                        if (state.loading) {
+                                          return; // Prevent multiple clicks
+                                        }
+                                        final range =
+                                            await showCustomDatePicker(context);
+                                        if (range == null) return;
+                                        if (context.mounted) {
+                                          context
+                                              .read<GlobalDashboardCubit>()
+                                              .generateReport(range: range);
+                                        }
+                                      },
 
-                                    context
-                                        .read<GlobalDashboardCubit>()
-                                        .generateReport(range: range);
-                                  },
+                                      onSearchSuggestions: (query) async {
+                                        // DASHBOARD SEARCH FUNCTIONALITY STEP 4
+                                        final searchService =
+                                            VehicleSearchService(
+                                              VehicleSearchRepository(
+                                                FirebaseFirestore.instance,
+                                              ),
+                                            );
+                                        final suggestions = await searchService
+                                            .getSuggestions(query);
+                                        return suggestions;
+                                      },
 
-                                  onSearchSuggestions: (query) async {
-                                    // DASHBOARD SEARCH FUNCTIONALITY STEP 4
-                                    final searchService = VehicleSearchService(
-                                      VehicleSearchRepository(
-                                        FirebaseFirestore.instance,
-                                      ),
-                                    );
-                                    final suggestions = await searchService
-                                        .getSuggestions(query);
-                                    return suggestions;
-                                  },
+                                      onVehicleSelected: (
+                                        VehicleSearchSuggestion suggestion,
+                                      ) {
+                                        context
+                                            .read<GlobalDashboardCubit>()
+                                            .showIndividualReport(
+                                              suggestion.vehicleId,
+                                            ); //navigate to individual report and display its dedicated report
+                                      },
 
-                                  onVehicleSelected: (
-                                    VehicleSearchSuggestion suggestion,
-                                  ) {
-                                    context
-                                        .read<GlobalDashboardCubit>()
-                                        .showIndividualReport(
-                                          suggestion.vehicleId,
-                                        ); //navigate to individual report and display its dedicated report
-                                  },
+                                      onBackButtonPressed:
+                                          state.viewMode ==
+                                                  DashboardViewMode.individual
+                                              ? () {
+                                                // Nav back to global view
+                                                context
+                                                    .read<
+                                                      GlobalDashboardCubit
+                                                    >()
+                                                    .backToGlobal();
+                                              }
+                                              : null,
+                                    ),
 
-                                  onBackButtonPressed:
-                                      state.viewMode ==
-                                              DashboardViewMode.individual
-                                          ? () {
-                                            // Nav back to global view
-                                            context
-                                                .read<GlobalDashboardCubit>()
-                                                .backToGlobal();
-                                          }
-                                          : null,
+                                    // Main content
+                                    SizedBox(
+                                      child: _buildMainContent(context, state),
+                                    ),
+                                  ],
                                 ),
-
-                                // Main content
-                                SizedBox(
-                                  child: _buildMainContent(context, state),
-                                ),
-                              ],
-                            ),
-                          ),
+                              ),
+                    ),
+                    // Loading overlay
+                    if (state.loading) ReportLoadingAnim(),
+                  ],
                 ),
               ),
             );

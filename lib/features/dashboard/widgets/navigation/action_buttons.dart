@@ -57,11 +57,13 @@ class DateFilterButton extends StatelessWidget {
 class ExportReportButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
+  final bool isLoading;
 
   const ExportReportButton({
     super.key,
     this.text = 'GENERATE REPORT',
     required this.onPressed,
+    this.isLoading = false,
   });
 
   @override
@@ -69,22 +71,33 @@ class ExportReportButton extends StatelessWidget {
     return HoverSlide(
       dy: -0.04,
       dx: 0,
-      cursor: SystemMouseCursors.click,
-      onTap: onPressed,
+      cursor:
+          isLoading ? SystemMouseCursors.forbidden : SystemMouseCursors.click,
+      onTap: isLoading ? null : onPressed,
       child: Container(
         height: 40,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
-          color: AppColors.primary,
+          color: isLoading ? AppColors.grey : AppColors.primary,
           borderRadius: BorderRadius.circular(5),
         ),
         child: Center(
           child: Row(
             children: [
-              Icon(PhosphorIconsRegular.receipt, color: AppColors.white),
+              if (isLoading)
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
+                  ),
+                )
+              else
+                Icon(PhosphorIconsRegular.receipt, color: AppColors.white),
               const Spacing.horizontal(size: AppSpacing.small),
               Text(
-                text,
+                isLoading ? 'GENERATING...' : text,
                 style: const TextStyle(
                   color: AppColors.white,
                   fontSize: 12,

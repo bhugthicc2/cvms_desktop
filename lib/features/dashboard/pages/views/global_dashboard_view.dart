@@ -10,7 +10,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GlobalDashboardView extends StatefulWidget {
   final String? currentTimeRange;
-  const GlobalDashboardView({super.key, this.currentTimeRange = '7 days'});
+  final double hoverDy;
+  const GlobalDashboardView({
+    super.key,
+    this.currentTimeRange = '7 days',
+    this.hoverDy = -0.01,
+  });
 
   @override
   State<GlobalDashboardView> createState() => _GlobalDashboardViewState();
@@ -127,6 +132,7 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
                     statsCard4Value:
                         state
                             .totalEntriesExits, // Realtime implementation step 22 ),
+                    hoverDy: widget.hoverDy,
                   );
                 },
               ),
@@ -154,7 +160,7 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
                     onTimeRangeChanged: (value) {
                       _onTimeRangeChanged(value);
                     },
-
+                    hoverDy: widget.hoverDy,
                     lineChartTitle: DynamicTitleFormatter().getDynamicTitle(
                       'Vehicle logs for ',
                       state.currentTimeRange,

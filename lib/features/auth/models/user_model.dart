@@ -7,6 +7,7 @@ class UserModel {
   final String role;
   final String status;
   final DateTime? lastLogin;
+  final String? profileImage;
 
   UserModel({
     required this.id,
@@ -15,6 +16,7 @@ class UserModel {
     required this.role,
     required this.status,
     this.lastLogin,
+    this.profileImage,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class UserModel {
       status: json['status'] ?? 'active',
       lastLogin:
           json['lastLogin'] != null ? DateTime.parse(json['lastLogin']) : null,
+      profileImage: json['profileImage'] ?? '',
     );
   }
 
@@ -35,5 +38,6 @@ class UserModel {
     'fullname': fullname,
     'role': role,
     'status': status,
+    'profileImage': profileImage,
   };
 }

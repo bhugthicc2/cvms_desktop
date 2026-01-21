@@ -108,10 +108,9 @@ class _ShellPageState extends State<ShellPage> {
                             BlocBuilder<CurrentUserCubit, CurrentUserState>(
                               builder: (context, userState) {
                                 final breadcrumbs = BreadcrumbScope.of(context);
+
                                 return CustomHeader(
-                                  profileImage:
-                                      '' ??
-                                      "", //todo call the profileImage here
+                                  profileImage: userState.profileImage ?? '',
                                   currentUser: userState.fullname ?? "Guest",
                                   title: titles[state.selectedIndex],
 

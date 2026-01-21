@@ -79,12 +79,13 @@ class IndividualReportRepository {
     );
   }
 
-  // RECENT VIOLATIONS (LIMITED, ORDERED)
+  /// RECENT VIOLATIONS (LIMITED, ORDERED, WITH USER FULLNAME)
   Future<List<ViolationHistoryEntry>> getRecentViolations(
     String vehicleId, {
     int limit = 10,
   }) async {
-    final snap =
+    // step 1: fetch violations
+    final violationsSnap =
         await _db
             .collection('violations')
             .where('vehicleId', isEqualTo: vehicleId)
@@ -92,9 +93,53 @@ class IndividualReportRepository {
             .limit(limit)
             .get();
 
-    return snap.docs
-        .map((doc) => ViolationHistoryEntry.fromFirestore(doc.id, doc.data()))
-        .toList();
+    if (violationsSnap.docs.isEmpty) {
+      return [];
+    }
+
+    // step 2: collect unique userIds
+    final Set<String> userIds =
+        violationsSnap.docs
+            .map((doc) => doc.data()['reportedByUserId'] as String?)
+            .whereType<String>()
+            .toSet();
+
+    // step 3: fetch users (batch)
+    final Map<String, String> usersMap = {};
+
+    if (userIds.isNotEmpty) {
+      final usersSnap = await _db.collection('users').get();
+
+      for (final doc in usersSnap.docs) {
+        if (userIds.contains(doc.id)) {
+          usersMap[doc.id] = doc.data()['fullname'] ?? 'Unknown';
+        }
+      }
+    }
+
+    // step 4: map to ViolationHistoryEntry
+    return violationsSnap.docs.map((doc) {
+      final data = doc.data();
+
+      return ViolationHistoryEntry(
+        violationId: doc.id,
+        dateTime:
+            data['reportedAt'] != null
+                ? (data['reportedAt'] as Timestamp).toDate()
+                : DateTime.now(),
+        violationType: data['violationType'] as String? ?? '',
+        reportedBy: usersMap[data['reportedByUserId']] ?? 'Unknown',
+        status: data['status'] as String? ?? '',
+        createdAt:
+            data['createdAt'] != null
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.now(),
+        lastUpdated:
+            data['lastUpdated'] != null
+                ? (data['lastUpdated'] as Timestamp).toDate()
+                : DateTime.now(),
+      );
+    }).toList();
   }
 
   // RECENT VEHICLE LOGS (LIMITED)
@@ -112,6 +157,37 @@ class IndividualReportRepository {
 
     return snap.docs
         .map((doc) => RecentLogEntry.fromFirestore(doc.id, doc.data()))
+        .toList();
+  }
+
+  Future<List<ChartDataModel>> getViolationByType(
+    String vehicleId,
+    DateRange range,
+  ) async {
+    final snap =
+        await _db
+            .collection('violations')
+            .where('vehicleId', isEqualTo: vehicleId)
+            .where(
+              'createdAt',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(range.start),
+            )
+            .where(
+              'createdAt',
+              isLessThanOrEqualTo: Timestamp.fromDate(range.end),
+            )
+            .get();
+
+    final Map<String, int> counts = {};
+
+    for (final doc in snap.docs) {
+      final type = doc.data()['violationType'] as String?;
+      if (type == null) continue;
+      counts[type] = (counts[type] ?? 0) + 1;
+    }
+
+    return counts.entries
+        .map((e) => ChartDataModel(category: e.key, value: e.value.toDouble()))
         .toList();
   }
 }
