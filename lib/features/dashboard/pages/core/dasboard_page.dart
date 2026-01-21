@@ -238,8 +238,8 @@ class DashboardPage extends StatelessWidget {
                                 ),
                               ),
                     ),
-                    // Loading overlay
-                    if (state.loading) ReportLoadingAnim(),
+                    // // Loading overlay
+                    // if (state.loading) ReportLoadingAnim(),
                   ],
                 ),
               ),

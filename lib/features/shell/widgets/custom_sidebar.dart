@@ -59,7 +59,7 @@ class CustomSidebar extends StatelessWidget {
         ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CustomSidebarHeader(isExpanded: isExpanded),
           Expanded(

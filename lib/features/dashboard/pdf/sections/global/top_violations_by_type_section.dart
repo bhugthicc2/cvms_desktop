@@ -1,3 +1,5 @@
+import 'package:cvms_desktop/features/dashboard/models/dashboard/chart_data_model.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/charts/pdf_bar_chart.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import '../../../models/report/global_vehicle_report_model.dart';

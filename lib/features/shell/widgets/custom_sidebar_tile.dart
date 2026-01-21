@@ -52,7 +52,7 @@ class CustomSidebarTile extends StatelessWidget {
           cursor: SystemMouseCursors.click,
           child: Padding(
             padding: const EdgeInsets.symmetric(
-              horizontal: 50 * 0.25,
+              horizontal: 50 * 0.160,
               vertical: 11,
             ),
             child: Row(
