@@ -1,6 +1,7 @@
 import 'package:cvms_desktop/features/auth/bloc/current_user_cubit.dart';
 import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
 import 'package:cvms_desktop/features/auth/data/user_repository.dart';
+import 'package:cvms_desktop/features/shell/config/sidebar_active_style.dart';
 import 'package:cvms_desktop/features/shell/scope/breadcrumb_scope.dart';
 import 'package:cvms_desktop/features/shell/widgets/logout_dialog.dart';
 import 'package:flutter/material.dart';
@@ -101,6 +102,7 @@ class _ShellPageState extends State<ShellPage> {
                         onToggle:
                             () => context.read<ShellCubit>().toggleSidebar(),
                         onLogout: () => _handleLogout(context),
+                        activeStyle: SidebarActiveStyle.sideBorder,
                       ),
                       Expanded(
                         child: Column(

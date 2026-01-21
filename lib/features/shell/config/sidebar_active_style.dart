@@ -1,0 +1,1 @@
+enum SidebarActiveStyle { sideBorder, curvedIndicator }
