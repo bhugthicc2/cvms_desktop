@@ -16,13 +16,13 @@ class PdfPreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isFitToWidth;
   final bool isChart;
   final double kToolbarHeight;
-  final String title;
+  final String? title;
   final List<BreadcrumbItem> breadcrumbs;
 
   const PdfPreviewAppBar({
     super.key,
     required this.onBackPressed,
-    required this.title,
+    this.title,
     required this.onDownLoadPressed,
     required this.onPrintPressed,
     this.kToolbarHeight = 35,
@@ -47,7 +47,7 @@ class PdfPreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
           breadcrumbs.isNotEmpty
               ? CustomBreadcrumb(items: breadcrumbs)
               : Text(
-                title,
+                title ?? '',
                 style: TextStyle(
                   fontSize: 14,
                   color: AppColors.black,

@@ -64,6 +64,7 @@ class IndividualDashboardRepository {
 
   //VEHICLE LOGS
   Stream<List<ChartDataModel>> watchVehicleLogsTrend({
+    //ISSUE: doesn't update on load
     required String vehicleId, // step 1: scope to ONE vehicle
     required DateTime start, // step 2: date filter start
     required DateTime end, // step 3: date filter end

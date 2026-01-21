@@ -4,6 +4,7 @@ import 'package:cvms_desktop/features/dashboard/models/report/individual_vehicle
 import 'package:cvms_desktop/features/dashboard/pdf/components/layout/pdf_content_container.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/core/pdf_section.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/sections/individual/individual_report_title_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/individual/individual_signatory_section.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -37,6 +38,13 @@ class IndividualReportBuilder {
       // GlobalChartsSection(),
       // GlobalTablesSection(),
     ];
+    // Add signatory LAST
+    final signatorySection = IndividualSignatorySection(
+      preparer: 'Justine N. Nabunturan',
+      preparerDesignation: 'CDRRMSU Staff',
+      approver: 'Dr. Leonel Hidalgo',
+      approverDesignation: 'CDRRMSU Unit Head',
+    );
 
     pdf.addPage(
       pw.MultiPage(
@@ -55,7 +63,7 @@ class IndividualReportBuilder {
               ),
             );
           }
-
+          widgets.addAll(signatorySection.build(report));
           return widgets;
         },
       ),

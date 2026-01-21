@@ -15,6 +15,9 @@ class GlobalVehicleReportModel {
   final Map<String, int> vehiclesPerCollege;
   final DateRange period;
   final Map<String, int> vehiclesByYearLevel; //step 1 for adding a report entry
+  final Map<String, int> vehiclesByCity;
+  final Map<String, int> logsByCollege;
+  final Map<String, int> violationsByCollege;
 
   GlobalVehicleReportModel({
     required this.totalVehicles,
@@ -27,6 +30,9 @@ class GlobalVehicleReportModel {
     required this.recentLogs,
     required this.period,
     required this.vehiclesPerCollege,
-    required this.vehiclesByYearLevel, //step 2 for adding a report entry
+    required this.vehiclesByYearLevel,
+    required this.vehiclesByCity,
+    required this.logsByCollege,
+    required this.violationsByCollege,
   });
 }

@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cvms_desktop/features/dashboard/models/dashboard/time_grouping.dart';
 import 'package:cvms_desktop/features/dashboard/models/report/date_range.dart';
+import 'package:cvms_desktop/features/dashboard/utils/time_bucket_helper.dart';
 
 class GlobalReportRepository {
   final FirebaseFirestore _db;
@@ -122,29 +124,6 @@ class GlobalReportRepository {
     return snap.docs.map((d) => {'id': d.id, ...d.data()}).toList();
   }
 
-  Future<Map<String, int>> getFleetLogsTrend(DateRange range) async {
-    final snap =
-        await _db
-            .collection('vehicle_logs')
-            .where(
-              'timeIn',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(range.start),
-            )
-            .where('timeIn', isLessThanOrEqualTo: Timestamp.fromDate(range.end))
-            .get();
-
-    final Map<String, int> dailyCounts = {};
-
-    for (final doc in snap.docs) {
-      final date = (doc['timeIn'] as Timestamp).toDate();
-      final key = '${date.year}-${date.month}-${date.day}';
-
-      dailyCounts[key] = (dailyCounts[key] ?? 0) + 1;
-    }
-
-    return dailyCounts;
-  }
-
   Future<Map<String, int>> getVehicleDistributionPerCollege() async {
     final snap = await _db.collection('vehicles').get();
 
@@ -185,5 +164,129 @@ class GlobalReportRepository {
     }
 
     return result;
+  }
+
+  Future<Map<String, int>> getVehiclesByCity() async {
+    final snap = await _db.collection('vehicles').get();
+
+    final Map<String, int> result = {};
+
+    for (final doc in snap.docs) {
+      final city = doc['city'] ?? doc['municipality'] ?? 'Unknown';
+      result[city] = (result[city] ?? 0) + 1;
+    }
+
+    return result;
+  }
+
+  Future<Map<String, int>> getVehicleLogsByCollege(DateRange range) async {
+    // Step 1: load vehicles
+    final vehiclesSnap = await _db.collection('vehicles').get();
+
+    final Map<String, String> vehicleToCollege = {};
+
+    for (final doc in vehiclesSnap.docs) {
+      final department = doc['department'];
+      if (department != null) {
+        vehicleToCollege[doc.id] = department;
+      }
+    }
+
+    // Step 2: load logs within range
+    final logsSnap =
+        await _db
+            .collection('vehicle_logs')
+            .where(
+              'timeIn',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(range.start),
+            )
+            .where('timeIn', isLessThanOrEqualTo: Timestamp.fromDate(range.end))
+            .get();
+
+    // Step 3: count logs per college
+    final Map<String, int> collegeCounts = {};
+
+    for (final doc in logsSnap.docs) {
+      final vehicleId = doc['vehicleId'];
+      if (vehicleId == null) continue;
+
+      final college = vehicleToCollege[vehicleId];
+      if (college == null) continue;
+
+      collegeCounts[college] = (collegeCounts[college] ?? 0) + 1;
+    }
+
+    return collegeCounts;
+  }
+
+  Future<Map<String, int>> getViolationDistributionByCollege(
+    DateRange range,
+  ) async {
+    // Step 1: load vehicles
+    final vehiclesSnap = await _db.collection('vehicles').get();
+
+    final Map<String, String> vehicleToCollege = {};
+
+    for (final doc in vehiclesSnap.docs) {
+      final department = doc['department'];
+      if (department != null) {
+        vehicleToCollege[doc.id] = department;
+      }
+    }
+
+    // Step 2: load violations within date range
+    final violationsSnap =
+        await _db
+            .collection('violations')
+            .where(
+              'createdAt',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(range.start),
+            )
+            .where(
+              'createdAt',
+              isLessThanOrEqualTo: Timestamp.fromDate(range.end),
+            )
+            .get();
+
+    // Step 3: count violations per college
+    final Map<String, int> collegeCounts = {};
+
+    for (final doc in violationsSnap.docs) {
+      final vehicleId = doc['vehicleId'];
+      if (vehicleId == null) continue;
+
+      final college = vehicleToCollege[vehicleId];
+      if (college == null) continue;
+
+      collegeCounts[college] = (collegeCounts[college] ?? 0) + 1;
+    }
+
+    return collegeCounts;
+  }
+
+  Future<Map<DateTime, int>> getFleetLogsTrend(DateRange range) async {
+    final snap =
+        await _db
+            .collection('vehicle_logs')
+            .where(
+              'timeIn',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(range.start),
+            )
+            .where('timeIn', isLessThanOrEqualTo: Timestamp.fromDate(range.end))
+            .get();
+
+    final Map<DateTime, int> dailyCounts = {};
+
+    for (final doc in snap.docs) {
+      final ts = doc['timeIn'] as Timestamp?;
+      if (ts == null) continue;
+
+      final date = ts.toDate();
+      final key = DateTime(date.year, date.month, date.day);
+
+      dailyCounts[key] = (dailyCounts[key] ?? 0) + 1;
+    }
+
+    return dailyCounts;
   }
 }

@@ -15,7 +15,6 @@ class PdfPreviewView extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.greySurface,
       appBar: PdfPreviewAppBar(
-        title: 'PDF Report Preview',
         breadcrumbs: [],
         onBackPressed: onBackPressed,
         onDownLoadPressed: () {},

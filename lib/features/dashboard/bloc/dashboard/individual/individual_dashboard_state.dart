@@ -10,7 +10,7 @@ class IndividualDashboardState extends Equatable {
   final int totalPendingViolations;
   final int totalVehicleLogs;
   final List<ChartDataModel> violationDistribution;
-  final List<ChartDataModel> vehicleLogsTrend;
+  final List<ChartDataModel> vehicleLogsTrend; //ISSUE: doesn't update on load
 
   // DATE FILTER STATE
   final DateTime startDate;

@@ -131,6 +131,7 @@ class IndividualReportView extends StatelessWidget {
               BlocBuilder<IndividualDashboardCubit, IndividualDashboardState>(
                 builder: (context, state) {
                   return IndividualChartsSection(
+                    //ISSUE: doesn't update on load
                     violationDistribution: state.violationDistribution,
                     vehicleLogs: state.vehicleLogsTrend, //default to 7 days
                     lineChartTitle: DynamicTitleFormatter().getDynamicTitle(

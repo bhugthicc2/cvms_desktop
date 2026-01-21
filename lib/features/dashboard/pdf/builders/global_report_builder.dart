@@ -1,9 +1,16 @@
 import 'dart:typed_data';
 
 import 'package:cvms_desktop/features/dashboard/pdf/components/layout/pdf_content_container.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/components/sections/doc_signatory.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/core/pdf_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/global/fleet_logs_trend_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/global/global_signatory_section.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/sections/global/global_summary_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/global/top_cities_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/global/top_violations_by_type_section.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/sections/global/vehicle_distribution_college_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/global/vehicle_logs_by_college_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/global/violation_distribution_by_college_section.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/sections/global/year_level_breakdown_section.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -39,9 +46,19 @@ class GlobalReportBuilder {
       GlobalSummarySection(),
       VehicleDistributionCollegeSection(),
       YearLevelBreakdownSection(), //step 7 for adding a report entry
-      // GlobalChartsSection(),
-      // GlobalTablesSection(),
+      TopCitiesSection(limit: 5),
+      VehicleLogsByCollegeSection(),
+      ViolationDistributionByCollegeSection(limit: 7),
+      TopViolationsByTypeSection(limit: 5),
+      FleetLogsTrendSection(),
     ];
+    // Add signatory LAST
+    final signatorySection = GlobalSignatorySection(
+      preparer: 'Justine N. Nabunturan',
+      preparerDesignation: 'CDRRMSU Staff',
+      approver: 'Dr. Leonel Hidalgo',
+      approverDesignation: 'CDRRMSU Unit Head',
+    );
 
     pdf.addPage(
       pw.MultiPage(
@@ -60,7 +77,7 @@ class GlobalReportBuilder {
               ),
             );
           }
-
+          widgets.addAll(signatorySection.build(report));
           return widgets;
         },
       ),

@@ -54,7 +54,7 @@ class IndividualDashboardCubit extends Cubit<IndividualDashboardState> {
       emit(state.copyWith(violationDistribution: data));
     });
 
-    _watchVehicleLogsTrend();
+    _watchVehicleLogsTrend(); //ISSUE: doesn't update on load
     _watchViolationHistory();
     _watchRecentVehicleLogs();
 
