@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard/global/global_dashboard_cubit.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/components/viewer/pdf_viewer_widget.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/utils/pdf_file_name_builder.dart';
@@ -34,32 +35,69 @@ class PdfPreviewView extends StatelessWidget {
             breadcrumbs: [],
             onBackPressed: onBackPressed,
             onDownLoadPressed: () async {
-              debugPrint(
-                "DEBUG PDF PREVIEW VIEW DOWNLOAD CLICKED CLICKEDDDD!!!!",
-              );
               if (pdfBytes == null) return;
 
               final fileName =
-                  state.viewMode == DashboardViewMode.global
+                  state.previousViewMode == DashboardViewMode.global
                       ? PdfFileNameBuilder.globalReport(DateTime.now())
                       : PdfFileNameBuilder.individualVehicleReport(
-                        plateNumber: 'ABC-123', // pull from selected vehicle
+                        plateNumber:
+                            state
+                                .selectedVehicle!
+                                .ownerName, // pull from selected vehicle
                       );
 
-              await saveService?.savePdf(
-                pdfBytes: pdfBytes!,
-                suggestedFileName: fileName,
-              );
+              try {
+                final savedPath = await saveService?.savePdf(
+                  pdfBytes: pdfBytes!,
+                  suggestedFileName: fileName,
+                );
+
+                if (context.mounted) {
+                  if (savedPath != null) {
+                    CustomSnackBar.showSuccess(
+                      context,
+                      'PDF saved to: $savedPath',
+                    );
+                  } else {
+                    CustomSnackBar.showInfo(
+                      context,
+                      'Save operation was cancelled',
+                    );
+                  }
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  CustomSnackBar.showError(
+                    context,
+                    'Failed to save PDF: ${e.toString()}',
+                  );
+                }
+              }
             },
 
             onPrintPressed: () async {
-              debugPrint("DEBUG PDF PREVIEW VIEW PRINT CLICKED CLICKEDDDD!!!!");
               if (pdfBytes == null) return;
 
-              await printService?.printPdf(
-                pdfBytes: pdfBytes!,
-                pageFormat: PdfPageFormat.a4, // can be dynamic later
-              );
+              try {
+                await printService?.printPdf(
+                  pdfBytes: pdfBytes!,
+                  pageFormat: PdfPageFormat.a4, // can be dynamic later
+                );
+                if (context.mounted) {
+                  CustomSnackBar.showSuccess(
+                    context,
+                    'PDF sent to printer successfully',
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  CustomSnackBar.showError(
+                    context,
+                    'Failed to print PDF: ${e.toString()}',
+                  );
+                }
+              }
             },
             onEditPressed: () {},
             toggleFitMode: () {},

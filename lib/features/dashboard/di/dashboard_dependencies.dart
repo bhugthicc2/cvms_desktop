@@ -81,6 +81,6 @@ class DashboardDependencies {
     brandingConfig: pdfBrandingConfig,
   );
 
-  final _saveService = PdfSaveService();
-  final _printService = PdfPrintService();
+  final saveService = PdfSaveService();
+  final printService = PdfPrintService();
 }

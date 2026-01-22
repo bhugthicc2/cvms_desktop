@@ -80,6 +80,8 @@ class DashboardPage extends StatelessWidget {
           onBackPressed: () {
             context.read<GlobalDashboardCubit>().backToPreviousView();
           },
+          saveService: DashboardDependencies().saveService,
+          printService: DashboardDependencies().printService,
         );
     }
   }

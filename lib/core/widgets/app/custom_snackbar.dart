@@ -11,7 +11,7 @@ class CustomSnackBar {
     required BuildContext context,
     required String message,
     SnackBarType type = SnackBarType.info,
-    Duration duration = const Duration(seconds: 3),
+    Duration duration = const Duration(seconds: 6),
     VoidCallback? onRetry,
   }) {
     Color backgroundColor;
@@ -47,7 +47,7 @@ class CustomSnackBar {
     }
 
     final snackBar = SnackBar(
-      dismissDirection: DismissDirection.startToEnd,
+      dismissDirection: DismissDirection.horizontal,
       content: Row(
         children: [
           Icon(icon, color: textColor, size: 20),
@@ -56,7 +56,7 @@ class CustomSnackBar {
             child: Text(
               message,
               style: GoogleFonts.poppins(
-                fontSize: AppFontSizes.medium,
+                fontSize: AppFontSizes.small,
                 color: textColor,
                 fontWeight: FontWeight.w600,
               ),
@@ -70,7 +70,7 @@ class CustomSnackBar {
               ? const Duration(seconds: 6)
               : duration,
       behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
       margin: EdgeInsets.only(
         bottom: 30.0,
         right: 16.0,

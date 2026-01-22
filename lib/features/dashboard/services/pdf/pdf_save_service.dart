@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'package:file_selector/file_selector.dart';
 
 class PdfSaveService {
-  Future<void> savePdf({
+  Future<String?> savePdf({
     required Uint8List pdfBytes,
     required String suggestedFileName,
   }) async {
@@ -13,7 +13,7 @@ class PdfSaveService {
       ],
     );
 
-    if (path == null) return; // user cancelled
+    if (path == null) return null; // user cancelled
 
     final file = XFile.fromData(
       pdfBytes,
@@ -22,5 +22,6 @@ class PdfSaveService {
     );
 
     await file.saveTo(path.path);
+    return path.path;
   }
 }
