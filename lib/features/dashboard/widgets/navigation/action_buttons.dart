@@ -94,7 +94,11 @@ class ExportReportButton extends StatelessWidget {
                   ),
                 )
               else
-                Icon(PhosphorIconsRegular.receipt, color: AppColors.white),
+                Icon(
+                  PhosphorIconsRegular.fileArrowDown,
+                  color: AppColors.white,
+                  size: 20,
+                ),
               const Spacing.horizontal(size: AppSpacing.small),
               Text(
                 isLoading ? 'GENERATING...' : text,

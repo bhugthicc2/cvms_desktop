@@ -1,4 +1,6 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
+import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/shell/config/sidebar_active_style.dart';
 import 'package:cvms_desktop/features/shell/models/nav_item.dart';
 import 'package:cvms_desktop/features/shell/widgets/custom_sidebar_header.dart';
@@ -29,7 +31,7 @@ class CustomSidebar extends StatelessWidget {
   final List<NavItem> items = [
     NavItem(icon: 'dashboard.png', label: "Dashboard"),
     NavItem(icon: 'vehicle_monitoring.png', label: "Vehicle Monitoring"),
-    NavItem(icon: 'vehicle_logs.png', label: "Vehicle Logs Management"),
+    NavItem(icon: 'vehicle_logs.png', label: "Vehicle Logs"),
     NavItem(icon: 'vehicle_management.png', label: "Vehicle Management"),
     NavItem(icon: 'user.png', label: "User Management"),
     NavItem(icon: 'violation.png', label: "Violation Management"),
@@ -52,7 +54,7 @@ class CustomSidebar extends StatelessWidget {
           image: const AssetImage("assets/images/sidebar_bg.png"),
           fit: BoxFit.cover,
         ),
-        color: AppColors.white,
+
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -66,6 +68,7 @@ class CustomSidebar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CustomSidebarHeader(isExpanded: isExpanded),
+          Spacing.vertical(size: 2),
           Expanded(
             child:
                 activeStyle == SidebarActiveStyle.curvedIndicator
@@ -73,6 +76,11 @@ class CustomSidebar extends StatelessWidget {
                     : _buildSideBorder(),
           ),
           //LOGOUT TILE DAWG
+          CustomDivider(
+            direction: Axis.horizontal,
+            thickness: 0.5,
+            color: AppColors.dividerColor.withValues(alpha: 0.4),
+          ),
           CustomSidebarTile(
             item: NavItem(icon: 'logout.png', label: "Logout"),
             iconColor: AppColors.error,

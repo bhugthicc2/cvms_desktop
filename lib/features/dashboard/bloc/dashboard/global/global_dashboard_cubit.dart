@@ -398,6 +398,46 @@ class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
     showGlobalDashboard();
   }
 
+  // Violation view navigation
+  void showViolationView() {
+    emit(
+      state.copyWith(
+        viewMode: DashboardViewMode.violationView,
+        previousViewMode: state.viewMode,
+      ),
+    );
+  }
+
+  // Pending Violation view navigation
+  void showPendingViolationView() {
+    emit(
+      state.copyWith(
+        viewMode: DashboardViewMode.pendingViolationView,
+        previousViewMode: state.viewMode,
+      ),
+    );
+  }
+
+  // Vehicles view navigation
+  void showAllVehiclesView() {
+    emit(
+      state.copyWith(
+        viewMode: DashboardViewMode.allVehiclesView,
+        previousViewMode: state.viewMode,
+      ),
+    );
+  }
+
+  // Vehicle Logs view navigation
+  void showVehicleLogsView() {
+    emit(
+      state.copyWith(
+        viewMode: DashboardViewMode.vehicleLogsView,
+        previousViewMode: state.viewMode,
+      ),
+    );
+  }
+
   // Error handling
   void clearError() {
     emit(state.copyWith(error: null));

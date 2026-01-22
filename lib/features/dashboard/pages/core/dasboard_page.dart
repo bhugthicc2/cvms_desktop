@@ -4,14 +4,20 @@ import 'package:cvms_desktop/core/widgets/app/custom_alert_dialog.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_date_filter.dart';
 import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
 import 'package:cvms_desktop/core/widgets/skeleton/report_skeleton_loader.dart';
+import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
+import 'package:cvms_desktop/features/auth/data/user_repository.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard/global/global_dashboard_cubit.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard/individual/individual_dashboard_cubit.dart';
 import 'package:cvms_desktop/features/dashboard/di/dashboard_dependencies.dart';
 import 'package:cvms_desktop/features/dashboard/models/dashboard/vehicle_search_suggestion.dart';
 import 'package:cvms_desktop/features/dashboard/models/report/date_range.dart';
+import 'package:cvms_desktop/features/dashboard/pages/views/all_vehicles_view.dart';
 import 'package:cvms_desktop/features/dashboard/pages/views/global_dashboard_view.dart';
 import 'package:cvms_desktop/features/dashboard/pages/views/individual_report_view.dart';
 import 'package:cvms_desktop/features/dashboard/pages/views/pdf_preview_view.dart';
+import 'package:cvms_desktop/features/dashboard/pages/views/vehicle_logs_view.dart';
+import 'package:cvms_desktop/features/dashboard/pages/views/violation_view.dart';
+import 'package:cvms_desktop/features/dashboard/pages/views/pending_violation_view.dart';
 import 'package:cvms_desktop/features/dashboard/repositories/dashboard/global_dashboard_repository.dart';
 import 'package:cvms_desktop/features/dashboard/repositories/dashboard/individual_dashboard_repository.dart';
 import 'package:cvms_desktop/features/dashboard/repositories/dashboard/vehicle_search_repository.dart';
@@ -19,6 +25,12 @@ import 'package:cvms_desktop/features/dashboard/services/vehicle_search_service.
 import 'package:cvms_desktop/features/dashboard/use_cases/pdf/global_pdf_export_usecase.dart';
 import 'package:cvms_desktop/features/dashboard/use_cases/pdf/individual_pdf_export_usecase.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/sections/dashboard_controls_section.dart';
+import 'package:cvms_desktop/features/vehicle_logs_management/bloc/vehicle_logs_cubit.dart';
+import 'package:cvms_desktop/features/vehicle_logs_management/data/vehicle_logs_repository.dart';
+import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_cubit.dart';
+import 'package:cvms_desktop/features/vehicle_management/data/vehicle_repository.dart';
+import 'package:cvms_desktop/features/vehicle_management/data/vehicle_violation_repository.dart';
+import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/features/shell/scope/breadcrumb_scope.dart';
@@ -51,6 +63,14 @@ class DashboardPage extends StatelessWidget {
           // Global PDF report
           return [BreadcrumbItem(label: 'PDF Report Preview', isActive: true)];
         }
+      case DashboardViewMode.violationView:
+        return [BreadcrumbItem(label: 'Violations', isActive: true)];
+      case DashboardViewMode.pendingViolationView:
+        return [BreadcrumbItem(label: 'Pending Violations', isActive: true)];
+      case DashboardViewMode.allVehiclesView:
+        return [BreadcrumbItem(label: 'All Vehicles', isActive: true)];
+      case DashboardViewMode.vehicleLogsView:
+        return [BreadcrumbItem(label: 'Vehicle Logs', isActive: true)];
     }
   }
 
@@ -60,16 +80,16 @@ class DashboardPage extends StatelessWidget {
       case DashboardViewMode.global:
         return GlobalDashboardView(
           onTotalViolationsClick: () {
-            // Navigate to violations management or filter violations
+            context.read<GlobalDashboardCubit>().showViolationView();
           },
           onPendingViolationsClick: () {
-            // Navigate to pending violations
+            context.read<GlobalDashboardCubit>().showPendingViolationView();
           },
           onTotalVehiclesClick: () {
-            // Navigate to vehicle management
+            context.read<GlobalDashboardCubit>().showAllVehiclesView();
           },
           onTotalEntriesExitsClick: () {
-            // Navigate to entry/exit logs
+            context.read<GlobalDashboardCubit>().showVehicleLogsView();
           },
           // Chart tap handlers
           onVehicleDistributionTap: () {
@@ -151,6 +171,52 @@ class DashboardPage extends StatelessWidget {
           },
           saveService: DashboardDependencies().saveService,
           printService: DashboardDependencies().printService,
+        );
+      case DashboardViewMode.violationView:
+        return BlocProvider(
+          create: (context) => ViolationCubit(),
+          child: ViolationView(
+            onBackPressed: () {
+              context.read<GlobalDashboardCubit>().backToPreviousView();
+            },
+          ),
+        );
+
+      case DashboardViewMode.pendingViolationView:
+        return BlocProvider(
+          create: (context) => ViolationCubit(),
+          child: PendingViolationView(
+            onBackPressed: () {
+              context.read<GlobalDashboardCubit>().backToPreviousView();
+            },
+          ),
+        );
+
+      case DashboardViewMode.allVehiclesView:
+        return BlocProvider(
+          create:
+              (context) => VehicleCubit(
+                VehicleRepository(),
+                AuthRepository(),
+                UserRepository(),
+                VehicleViolationRepository(),
+                VehicleLogsRepository(),
+              ),
+          child: AllVehiclesView(
+            onBackPressed: () {
+              context.read<GlobalDashboardCubit>().backToPreviousView();
+            },
+          ),
+        );
+
+      case DashboardViewMode.vehicleLogsView:
+        return BlocProvider(
+          create: (context) => VehicleLogsCubit(VehicleLogsRepository()),
+          child: VehicleLogsView(
+            onBackPressed: () {
+              context.read<GlobalDashboardCubit>().backToPreviousView();
+            },
+          ),
         );
     }
   }
@@ -235,8 +301,16 @@ class DashboardPage extends StatelessWidget {
                     Container(
                       key: ValueKey(state.viewMode.toString()),
                       child:
-                          state.viewMode == DashboardViewMode.pdfPreview
-                              ? // PDF preview: full screen, no scroll
+                          state.viewMode == DashboardViewMode.pdfPreview ||
+                                  state.viewMode ==
+                                      DashboardViewMode.violationView ||
+                                  state.viewMode ==
+                                      DashboardViewMode.pendingViolationView ||
+                                  state.viewMode ==
+                                      DashboardViewMode.allVehiclesView ||
+                                  state.viewMode ==
+                                      DashboardViewMode.vehicleLogsView
+                              ? // PDF preview & violation view: full screen, no scroll
                               SizedBox(child: _buildMainContent(context, state))
                               : // Other views: with controls and scroll
                               SingleChildScrollView(

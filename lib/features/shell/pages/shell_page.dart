@@ -94,7 +94,7 @@ class _ShellPageState extends State<ShellPage> {
                   body: Row(
                     children: [
                       CustomSidebar(
-                        isStencil: false,
+                        isStencil: true,
                         isExpanded: state.isExpanded,
                         selectedIndex: state.selectedIndex,
                         onItemSelected:

@@ -6,6 +6,7 @@ class ViolationState {
   final List<ViolationEntry> allEntries;
   final List<ViolationEntry> filteredEntries;
   final List<ViolationEntry> selectedEntries;
+  final List<ViolationEntry> pendingEntries;
 
   final String dateFilter;
   final String searchQuery;
@@ -18,6 +19,7 @@ class ViolationState {
     required this.allEntries,
     required this.filteredEntries,
     required this.selectedEntries,
+    required this.pendingEntries,
     required this.dateFilter,
     required this.searchQuery,
     required this.isBulkModeEnabled,
@@ -28,6 +30,7 @@ class ViolationState {
     allEntries: [],
     filteredEntries: [],
     selectedEntries: [],
+    pendingEntries: [],
     dateFilter: 'All', //todo implement date filtering
     searchQuery: '',
     isBulkModeEnabled: false,
@@ -40,6 +43,7 @@ class ViolationState {
     List<ViolationEntry>? allEntries,
     List<ViolationEntry>? filteredEntries,
     List<ViolationEntry>? selectedEntries,
+    List<ViolationEntry>? pendingEntries,
     String? dateFilter,
     String? searchQuery,
     bool? isBulkModeEnabled,
@@ -51,6 +55,7 @@ class ViolationState {
       allEntries: allEntries ?? this.allEntries,
       filteredEntries: filteredEntries ?? this.filteredEntries,
       selectedEntries: selectedEntries ?? this.selectedEntries,
+      pendingEntries: pendingEntries ?? this.pendingEntries,
       dateFilter: dateFilter ?? this.dateFilter,
       searchQuery: searchQuery ?? this.searchQuery,
       isBulkModeEnabled: isBulkModeEnabled ?? this.isBulkModeEnabled,

@@ -204,6 +204,26 @@ class ViolationRepository {
         });
   }
 
+  Stream<List<ViolationEntry>> watchPendingViolations() {
+    return _firestore
+        .collection(_collection)
+        .where('status', isEqualTo: 'pending')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .asyncMap((snapshot) async {
+          final violations =
+              snapshot.docs.map((doc) {
+                final data = doc.data();
+                return ViolationEntry.fromMap(data, doc.id);
+              }).toList();
+
+          return await _enrichWithRelatedInfo(violations);
+        })
+        .handleError((error) {
+          throw Exception(FirebaseErrorHandler.handleFirestoreError(error));
+        });
+  }
+
   Future<void> deleteViolation(String violationId) async {
     try {
       await _firestore.collection(_collection).doc(violationId).delete();

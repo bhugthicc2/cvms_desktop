@@ -11,6 +11,7 @@ part 'violation_state.dart';
 class ViolationCubit extends Cubit<ViolationState> {
   final ViolationRepository _repository = ViolationRepository();
   StreamSubscription<List<ViolationEntry>>? _violationsSubscription;
+  StreamSubscription<List<ViolationEntry>>? _pendingViolationsSubscription;
 
   ViolationCubit() : super(ViolationState.initial());
 
@@ -39,6 +40,31 @@ class ViolationCubit extends Cubit<ViolationState> {
         }
       },
     );
+  }
+
+  void listenPendingViolations() {
+    emit(state.copyWith(isLoading: true));
+    _pendingViolationsSubscription?.cancel();
+    _pendingViolationsSubscription = _repository
+        .watchPendingViolations()
+        .listen(
+          (pendingViolations) {
+            if (!isClosed) {
+              emit(
+                state.copyWith(
+                  pendingEntries: pendingViolations,
+                  isLoading: false,
+                ),
+              );
+            }
+          },
+          onError: (error) {
+            if (!isClosed) {
+              debugPrint('Error in pending violations stream: $error');
+              emit(state.copyWith(isLoading: false));
+            }
+          },
+        );
   }
 
   void toggleBulkMode() {
@@ -164,6 +190,7 @@ class ViolationCubit extends Cubit<ViolationState> {
   @override
   Future<void> close() {
     _violationsSubscription?.cancel();
+    _pendingViolationsSubscription?.cancel();
     return super.close();
   }
 }

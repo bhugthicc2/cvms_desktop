@@ -4,6 +4,10 @@ enum DashboardViewMode {
   global, // Root dashboard
   individual, // Individual vehicle report
   pdfPreview, // PDF preview view
+  violationView,
+  pendingViolationView,
+  allVehiclesView,
+  vehicleLogsView,
 }
 
 class GlobalDashboardState extends Equatable {

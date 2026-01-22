@@ -19,6 +19,7 @@ class CustomHeader extends StatelessWidget {
   final VoidCallback? onMenuPressed;
   final List<BreadcrumbItem> breadcrumbs;
   final String profileImage;
+  final IconData internetIcon;
 
   const CustomHeader({
     super.key,
@@ -28,6 +29,7 @@ class CustomHeader extends StatelessWidget {
     required this.currentUser,
     required this.breadcrumbs,
     required this.profileImage,
+    this.internetIcon = PhosphorIconsRegular.wifiHigh,
   });
 
   @override
@@ -114,6 +116,25 @@ class CustomHeader extends StatelessWidget {
                   ),
                 ),
                 Spacing.horizontal(size: AppSpacing.medium),
+                Container(
+                  height: AppDimensions.headerHeight * 0.4,
+                  width: 1,
+                  decoration: BoxDecoration(
+                    color: AppColors.dividerColor.withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.small + 1,
+                  ),
+                  child: Icon(
+                    //todo: add internet monitoring
+                    internetIcon,
+                    size: 20,
+                    color: AppColors.chartGreen,
+                  ),
+                ),
                 Container(
                   height: AppDimensions.headerHeight * 0.4,
                   width: 1,
