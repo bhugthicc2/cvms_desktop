@@ -62,14 +62,40 @@ class LineChartWidget extends StatelessWidget {
     final body = SfCartesianChart(
       primaryXAxis: DateTimeAxis(),
       tooltipBehavior: TooltipBehavior(enable: true),
+      trackballBehavior: TrackballBehavior(
+        enable: true,
+        activationMode: ActivationMode.singleTap,
+        tooltipSettings: const InteractiveTooltip(
+          format: 'point.x: point.y',
+          color: Colors.black87,
+        ),
+        lineType: TrackballLineType.vertical,
+        lineColor: AppColors.primary,
+        lineWidth: 2,
+        markerSettings: const TrackballMarkerSettings(
+          markerVisibility: TrackballVisibilityMode.visible,
+          color: AppColors.primary,
+          borderColor: Colors.white,
+          borderWidth: 2,
+        ),
+      ),
       series: <CartesianSeries>[
-        LineSeries<ChartDataModel, DateTime>(
+        AreaSeries<ChartDataModel, DateTime>(
           onPointTap: onLineChartPointTap,
           dataSource: points,
           xValueMapper: (d, _) => d.date!,
           yValueMapper: (d, _) => d.value,
-          markerSettings: const MarkerSettings(isVisible: true),
-          color: AppColors.primary,
+          markerSettings: const MarkerSettings(isVisible: false),
+          gradient: LinearGradient(
+            colors: [
+              AppColors.primary.withValues(alpha: 0.1),
+              AppColors.primary.withValues(alpha: 0.1),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+          borderColor: AppColors.primary,
+          borderWidth: 2.0,
         ),
       ],
     );

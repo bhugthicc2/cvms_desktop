@@ -34,10 +34,16 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
         end: DateTime.now(), // today
         grouping: TimeGrouping.day, // daily buckets
       );
+      //for violation trend
+      context.read<GlobalDashboardCubit>().watchViolationTrend(
+        start: DateTime.now().subtract(const Duration(days: 6)), // last 7 days
+        end: DateTime.now(), // today
+        grouping: TimeGrouping.day, // daily buckets
+      );
     });
   }
 
-  void _onTimeRangeChanged(String selectedRange) {
+  void _onFleetLogsTimeRangeChanged(String selectedRange) {
     // Update time range in cubit state
     context.read<GlobalDashboardCubit>().updateTimeRange(selectedRange);
 
@@ -73,6 +79,42 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
     );
   }
 
+  void _onViolationTrendTimeRangeChanged(String selectedRange) {
+    // Update time range in cubit state
+    context.read<GlobalDashboardCubit>().updateTimeRange(selectedRange);
+
+    DateTime endDate = DateTime.now();
+    DateTime startDate;
+
+    switch (selectedRange) {
+      case '7 days':
+        startDate = endDate.subtract(Duration(days: 7));
+        break;
+      case '30 days':
+        startDate = endDate.subtract(Duration(days: 30));
+        break;
+      case 'Month':
+        startDate = DateTime(endDate.year, endDate.month, 1);
+        break;
+      case 'Year':
+        startDate = DateTime(endDate.year, 1, 1);
+        break;
+      case 'Custom':
+        // Trigger custom date picker
+        _showCustomDatePicker();
+        return;
+      default:
+        return;
+    }
+
+    //Violation trend
+    context.read<GlobalDashboardCubit>().watchViolationTrend(
+      start: startDate,
+      end: endDate,
+      grouping: TimeGrouping.day,
+    );
+  }
+
   void _showCustomDatePicker() {
     showDialog(
       context: context,
@@ -87,6 +129,12 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
 
                 // Use the original context to access the cubit
                 context.read<GlobalDashboardCubit>().watchFleetLogsTrend(
+                  start: period.start,
+                  end: period.end,
+                  grouping: TimeGrouping.day,
+                );
+                //Violation Trend
+                context.read<GlobalDashboardCubit>().watchViolationTrend(
                   start: period.start,
                   end: period.end,
                   grouping: TimeGrouping.day,
@@ -152,16 +200,20 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
                             curr.violationDistributionPerCollege ||
                         prev.violationTypeDistribution !=
                             curr.violationTypeDistribution ||
-                        prev.fleetLogsData != curr.fleetLogsData,
+                        prev.fleetLogsData != curr.fleetLogsData ||
+                        prev.violationTrendData != curr.violationTrendData,
                 //Flutter, rebuild this widget only if the city breakdown list changed.
                 // step 18
                 builder: (context, state) {
                   return GlobalChartsSection(
-                    onTimeRangeChanged: (value) {
-                      _onTimeRangeChanged(value);
+                    onTimeRangeChanged1: (value) {
+                      _onFleetLogsTimeRangeChanged(value);
+                    },
+                    onTimeRangeChanged2: (value) {
+                      _onViolationTrendTimeRangeChanged(value);
                     },
                     hoverDy: widget.hoverDy,
-                    lineChartTitle: DynamicTitleFormatter().getDynamicTitle(
+                    lineChartTitle1: DynamicTitleFormatter().getDynamicTitle(
                       'Vehicle logs for ',
                       state.currentTimeRange,
                     ),
@@ -180,6 +232,11 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
                     violationTypeDistribution: state.violationTypeDistribution,
                     fleetLogsData:
                         state.fleetLogsData, // realtime fleet logs trend
+                    lineChartTitle2: DynamicTitleFormatter().getDynamicTitle(
+                      'Violation trend for ',
+                      state.currentTimeRange,
+                    ), //todo
+                    violationTrendData: state.violationTrendData,
                   );
                 },
               ),

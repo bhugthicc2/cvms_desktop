@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
-import 'package:cvms_desktop/core/widgets/animation/report_loading_anim.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_alert_dialog.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_date_filter.dart';
 import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';

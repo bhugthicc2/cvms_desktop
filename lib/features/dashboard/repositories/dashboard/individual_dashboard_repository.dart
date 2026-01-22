@@ -115,6 +115,57 @@ class IndividualDashboardRepository {
         });
   }
 
+  // INDIVIDUAL VIOLATION TREND (REALTIME)
+  Stream<List<ChartDataModel>> watchViolationTrend({
+    required String vehicleId,
+    required DateTime start,
+    required DateTime end,
+    required TimeGrouping grouping,
+  }) {
+    return _db
+        .collection('violations')
+        .where('vehicleId', isEqualTo: vehicleId)
+        .where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(start))
+        .where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(end))
+        .snapshots()
+        .map((snapshot) {
+          final Map<String, int> buckets = {};
+
+          // generate empty buckets
+          final bucketKeys = TimeBuckerHelper().generateTimeBuckets(
+            start,
+            end,
+            grouping,
+          );
+
+          for (final key in bucketKeys) {
+            buckets[key] = 0;
+          }
+
+          // aggregate violations
+          for (final doc in snapshot.docs) {
+            final data = doc.data();
+            final Timestamp ts = data['createdAt'];
+            final date = ts.toDate();
+
+            final bucketKey = TimeBuckerHelper().formatBucket(date, grouping);
+
+            if (!buckets.containsKey(bucketKey)) continue;
+
+            buckets[bucketKey] = buckets[bucketKey]! + 1;
+          }
+
+          // map to chart data
+          return buckets.entries.map((e) {
+            return ChartDataModel(
+              category: e.key,
+              value: e.value.toDouble(),
+              date: TimeBuckerHelper().parseBucket(e.key, grouping),
+            );
+          }).toList();
+        });
+  }
+
   //VIOLATION HISTORY
   Stream<List<ViolationHistoryEntry>> watchViolationHistory({
     required String vehicleId,

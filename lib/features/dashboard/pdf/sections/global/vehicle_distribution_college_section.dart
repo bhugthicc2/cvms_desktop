@@ -44,7 +44,7 @@ class VehicleDistributionCollegeSection
         headers: const ['College', 'Vehicle Count', 'Percentage'],
         rows: rows,
         columnWidths: const {
-          0: pw.FlexColumnWidth(3),
+          0: pw.FlexColumnWidth(1),
           1: pw.FlexColumnWidth(1),
           2: pw.FlexColumnWidth(1),
         },

@@ -19,8 +19,11 @@ class GlobalChartsSection extends StatelessWidget {
   final List<ChartDataModel> vehicleLogsDistributionPerCollege;
   final List<ChartDataModel> violationDistributionPerCollege;
   final List<ChartDataModel> fleetLogsData;
-  final Function(String)? onTimeRangeChanged;
-  final String lineChartTitle;
+  final List<ChartDataModel> violationTrendData;
+  final Function(String)? onTimeRangeChanged1;
+  final Function(String)? onTimeRangeChanged2;
+  final String lineChartTitle1;
+  final String lineChartTitle2;
   final double hoverDy;
 
   const GlobalChartsSection({
@@ -33,8 +36,11 @@ class GlobalChartsSection extends StatelessWidget {
     required this.vehicleLogsDistributionPerCollege,
     required this.violationDistributionPerCollege,
     required this.fleetLogsData,
-    this.onTimeRangeChanged,
-    required this.lineChartTitle,
+    this.onTimeRangeChanged1,
+    this.onTimeRangeChanged2,
+    required this.lineChartTitle1,
+    required this.lineChartTitle2,
+    required this.violationTrendData,
     this.hoverDy = -0.01,
   });
 
@@ -129,11 +135,21 @@ class GlobalChartsSection extends StatelessWidget {
                   ),
                 ),
                 Spacing.horizontal(size: AppSpacing.medium),
-                Expanded(child: _buildLineChart(lineChartTitle, fleetLogsData)),
+                Expanded(
+                  child: _buildLineChart1(lineChartTitle1, fleetLogsData),
+                ),
               ],
             ),
           ),
 
+          Spacing.vertical(size: AppSpacing.medium),
+          SizedBox(
+            //todo violation trend
+            height: height + 100,
+            child: Expanded(
+              child: _buildLineChart2(lineChartTitle2, violationTrendData),
+            ),
+          ),
           Spacing.vertical(size: AppSpacing.medium),
         ],
       ),
@@ -178,7 +194,7 @@ class GlobalChartsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildLineChart(String title, List<ChartDataModel> data) {
+  Widget _buildLineChart1(String title, List<ChartDataModel> data) {
     return HoverSlide(
       dx: 0,
       dy: hoverDy,
@@ -190,7 +206,30 @@ class GlobalChartsSection extends StatelessWidget {
           items: const ['7 days', '30 days', 'Month', 'Year', 'Custom'],
           initialValue: '7 days',
           onChanged: (value) {
-            onTimeRangeChanged?.call(value);
+            onTimeRangeChanged1?.call(value);
+          },
+        ),
+        data: data,
+        title: title,
+        onViewTap: () {},
+        onLineChartPointTap: (details) {},
+      ),
+    );
+  }
+
+  Widget _buildLineChart2(String title, List<ChartDataModel> data) {
+    return HoverSlide(
+      dx: 0,
+      dy: hoverDy,
+      child: LineChartWidget(
+        customWidget: CustomDropdown(
+          color: AppColors.donutBlue,
+          fontSize: 14,
+          verticalPadding: 0,
+          items: const ['7 days', '30 days', 'Month', 'Year', 'Custom'],
+          initialValue: '7 days',
+          onChanged: (value) {
+            onTimeRangeChanged2?.call(value);
           },
         ),
         data: data,

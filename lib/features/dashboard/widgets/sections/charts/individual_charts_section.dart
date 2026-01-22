@@ -11,16 +11,22 @@ import 'package:flutter/material.dart';
 class IndividualChartsSection extends StatelessWidget {
   final List<ChartDataModel> violationDistribution;
   final List<ChartDataModel> vehicleLogs;
-  final String lineChartTitle;
-  final Function(String)? onTimeRangeChanged;
+  final List<ChartDataModel> violationTrend;
+  final String lineChartTitle1;
+  final String lineChartTitle2;
+  final Function(String)? onTimeRangeChanged1;
+  final Function(String)? onTimeRangeChanged2;
   final double hoverDy;
 
   const IndividualChartsSection({
     super.key,
     required this.violationDistribution,
     required this.vehicleLogs,
-    required this.lineChartTitle,
-    this.onTimeRangeChanged,
+    required this.violationTrend,
+    required this.lineChartTitle1,
+    required this.lineChartTitle2,
+    this.onTimeRangeChanged1,
+    this.onTimeRangeChanged2,
     this.hoverDy = -0.01,
   });
 
@@ -34,20 +40,31 @@ class IndividualChartsSection extends StatelessWidget {
         AppSpacing.medium,
         0,
       ),
-      child: SizedBox(
-        height: height,
-        child: Row(
-          children: [
-            Expanded(
-              child: _buildBarChart(
-                'Violations by Type',
-                violationDistribution,
-              ),
+      child: Column(
+        children: [
+          SizedBox(
+            height: height,
+            child: Row(
+              children: [
+                Expanded(
+                  child: _buildBarChart(
+                    'Violations by Type',
+                    violationDistribution,
+                  ),
+                ),
+                Spacing.horizontal(size: AppSpacing.medium),
+                Expanded(child: _buildLineChart1(lineChartTitle1, vehicleLogs)),
+              ],
             ),
-            Spacing.horizontal(size: AppSpacing.medium),
-            Expanded(child: _buildLineChart(lineChartTitle, vehicleLogs)),
-          ],
-        ),
+          ),
+          Spacing.vertical(size: AppSpacing.medium),
+          SizedBox(
+            height: height + 20,
+            child: Expanded(
+              child: _buildLineChart2(lineChartTitle2, violationTrend),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -65,7 +82,7 @@ class IndividualChartsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildLineChart(String title, List<ChartDataModel> data) {
+  Widget _buildLineChart1(String title1, List<ChartDataModel> data) {
     return HoverSlide(
       dx: 0,
       dy: hoverDy,
@@ -77,11 +94,34 @@ class IndividualChartsSection extends StatelessWidget {
           items: const ['7 days', '30 days', 'Month', 'Year', 'Custom'],
           initialValue: '7 days',
           onChanged: (value) {
-            onTimeRangeChanged?.call(value);
+            onTimeRangeChanged1?.call(value);
           },
         ),
         data: data,
-        title: title,
+        title: title1,
+        onViewTap: () {},
+        onLineChartPointTap: (details) {},
+      ),
+    );
+  }
+
+  Widget _buildLineChart2(String title2, List<ChartDataModel> data) {
+    return HoverSlide(
+      dx: 0,
+      dy: hoverDy,
+      child: LineChartWidget(
+        customWidget: CustomDropdown(
+          color: AppColors.donutBlue,
+          fontSize: 14,
+          verticalPadding: 0,
+          items: const ['7 days', '30 days', 'Month', 'Year', 'Custom'],
+          initialValue: '7 days',
+          onChanged: (value) {
+            onTimeRangeChanged2?.call(value);
+          },
+        ),
+        data: data,
+        title: title2,
         onViewTap: () {},
         onLineChartPointTap: (details) {},
       ),

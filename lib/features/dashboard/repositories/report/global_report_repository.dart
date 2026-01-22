@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cvms_desktop/features/dashboard/models/dashboard/time_grouping.dart';
+import 'package:cvms_desktop/features/dashboard/models/dashboard/chart_data_model.dart';
 import 'package:cvms_desktop/features/dashboard/models/report/date_range.dart';
-import 'package:cvms_desktop/features/dashboard/utils/time_bucket_helper.dart';
 
 class GlobalReportRepository {
   final FirebaseFirestore _db;
@@ -288,5 +287,58 @@ class GlobalReportRepository {
     }
 
     return dailyCounts;
+  }
+
+  Future<List<ChartDataModel>> getTopStudentsByViolations(
+    DateRange range, {
+    int limit = 5,
+  }) async {
+    // Step 1: Load vehicles
+    final vehiclesSnap = await _db.collection('vehicles').get();
+
+    final Map<String, String> vehicleToOwner = {};
+    for (final doc in vehiclesSnap.docs) {
+      final ownerName = doc['ownerName'];
+      if (ownerName != null && ownerName.toString().isNotEmpty) {
+        vehicleToOwner[doc.id] = ownerName;
+      }
+    }
+
+    // Step 2: Load violations in range
+    final violationsSnap =
+        await _db
+            .collection('violations')
+            .where(
+              'createdAt',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(range.start),
+            )
+            .where(
+              'createdAt',
+              isLessThanOrEqualTo: Timestamp.fromDate(range.end),
+            )
+            .get();
+
+    // Step 3: Count violations per student
+    final Map<String, int> counts = {};
+
+    for (final doc in violationsSnap.docs) {
+      final vehicleId = doc['vehicleId'];
+      if (vehicleId == null) continue;
+
+      final owner = vehicleToOwner[vehicleId];
+      if (owner == null) continue;
+
+      counts[owner] = (counts[owner] ?? 0) + 1;
+    }
+
+    // Step 4: Convert → sort → limit
+    return counts.entries
+        .map((e) => ChartDataModel(category: e.key, value: e.value.toDouble()))
+        .toList()
+      ..sort((a, b) => b.value.compareTo(a.value))
+      ..removeRange(
+        limit < counts.length ? limit : counts.length,
+        counts.length,
+      );
   }
 }

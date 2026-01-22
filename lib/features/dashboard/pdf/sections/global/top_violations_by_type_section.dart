@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/features/dashboard/models/dashboard/chart_data_model.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/charts/pdf_bar_chart.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/charts/pdf_horizontal_bar_chart.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import '../../../models/report/global_vehicle_report_model.dart';
@@ -31,14 +32,6 @@ class TopViolationsByTypeSection
     // Step 2: take top N (scalable)
     final displayed = sorted.take(limit).toList();
 
-    // Step 3: build table rows
-    final rows =
-        displayed.map((e) {
-          final percent =
-              totalViolations == 0 ? 0 : (e.value / totalViolations * 100);
-          return [e.key, e.value.toString(), '${percent.toStringAsFixed(1)}%'];
-        }).toList();
-
     return [
       PdfSectionTitle(
         title: '7. Top Violations by Type',
@@ -46,15 +39,16 @@ class TopViolationsByTypeSection
       ),
 
       pw.SizedBox(height: 10),
-
-      PdfTable(
-        headers: const ['Violation Type', 'Count', 'Percentage'],
-        rows: rows,
-        columnWidths: const {
-          0: pw.FlexColumnWidth(3),
-          1: pw.FlexColumnWidth(1),
-          2: pw.FlexColumnWidth(1),
-        },
+      PdfHorizontalBarChart(
+        data:
+            report.violationsByType.entries
+                .map(
+                  (e) => ChartDataModel(
+                    category: e.key,
+                    value: e.value.toDouble(),
+                  ),
+                )
+                .toList(),
       ),
 
       pw.SizedBox(height: 12),

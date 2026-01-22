@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/core/pdf_branding_config.dart';
+import 'package:cvms_desktop/features/dashboard/services/pdf/pdf_print_service.dart';
+import 'package:cvms_desktop/features/dashboard/services/pdf/pdf_save_service.dart';
 import 'package:cvms_desktop/features/dashboard/use_cases/pdf/global_pdf_export_usecase.dart';
 import 'package:cvms_desktop/features/dashboard/use_cases/pdf/individual_pdf_export_usecase.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -78,4 +80,7 @@ class DashboardDependencies {
     pdfService: pdfGenerationService,
     brandingConfig: pdfBrandingConfig,
   );
+
+  final _saveService = PdfSaveService();
+  final _printService = PdfPrintService();
 }

@@ -33,6 +33,7 @@ class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
   StreamSubscription<List<ChartDataModel>>? _violationByCollegeSub; // step 11
   StreamSubscription<List<ChartDataModel>>? _violationTypeSub; // step 14
   StreamSubscription<List<ChartDataModel>>? _fleetLogsSub;
+  StreamSubscription<List<ChartDataModel>>? _violationTrendSub;
 
   // Initialization tracking
   //for loafing state
@@ -272,6 +273,27 @@ class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
         );
   }
 
+  void watchViolationTrend({
+    required DateTime start,
+    required DateTime end,
+    required TimeGrouping grouping,
+  }) {
+    _violationTrendSub?.cancel(); // prevent duplicate listeners
+
+    emit(state.copyWith(loading: true));
+
+    _violationTrendSub = repository
+        .watchViolationsTrend(start: start, end: end, grouping: grouping)
+        .listen(
+          (data) {
+            emit(state.copyWith(violationTrendData: data, loading: false));
+          },
+          onError: (e) {
+            emit(state.copyWith(error: e.toString(), loading: false));
+          },
+        );
+  }
+
   //for individual report nav
   Future<void> showIndividualReport(String vehicleId) async {
     emit(state.copyWith(loading: true));
@@ -315,6 +337,7 @@ class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
     _violationByCollegeSub?.cancel(); // step 15
     _violationTypeSub?.cancel(); // step 18
     _fleetLogsSub?.cancel();
+    _violationTrendSub?.cancel();
     return super.close();
   }
 

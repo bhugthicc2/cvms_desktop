@@ -33,6 +33,7 @@ class GlobalReportAssembler
       repository.getVehicleLogsByCollege(dateRange),
       repository.getViolationDistributionByCollege(dateRange),
       repository.getFleetLogsTrend(dateRange),
+      repository.getTopStudentsByViolations(dateRange),
     ]);
 
     // Convert raw violation data to ViolationHistoryEntry
@@ -94,6 +95,7 @@ class GlobalReportAssembler
             );
           }).toList()
           ..sort((a, b) => a.date!.compareTo(b.date!));
+    final topStudentsByViolations = results[13] as List<ChartDataModel>;
 
     return GlobalVehicleReportModel(
       period: dateRange,
@@ -111,6 +113,7 @@ class GlobalReportAssembler
       vehiclesByCity: vehiclesByCity,
       logsByCollege: logsByCollege,
       violationsByCollege: violationsByCollege,
+      topStudentsByViolations: topStudentsByViolations,
     );
   }
 }

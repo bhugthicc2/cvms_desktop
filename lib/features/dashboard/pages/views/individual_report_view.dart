@@ -4,8 +4,6 @@ import 'package:cvms_desktop/features/dashboard/bloc/dashboard/individual/indivi
 import 'package:cvms_desktop/features/dashboard/utils/dynamic_title_formatter.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/sections/charts/individual_charts_section.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/sections/stats/individual_stats_section.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/sections/tables/recent_logs/recent_logs_table_section.dart';
-import 'package:cvms_desktop/features/dashboard/widgets/sections/tables/violation_history/violation_history_table_section.dart';
 import 'package:cvms_desktop/features/dashboard/models/dashboard/individual_vehicle_info.dart';
 import 'package:cvms_desktop/features/dashboard/models/dashboard/time_grouping.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
@@ -26,7 +24,10 @@ class IndividualReportView extends StatelessWidget {
     this.hoverDy = -0.01,
   });
 
-  void _onTimeRangeChanged(String selectedRange, BuildContext context) {
+  void _onVehicleLogsTimeRangeChanged(
+    String selectedRange,
+    BuildContext context,
+  ) {
     // Update time range in cubit state
     DateTime endDate = DateTime.now();
     DateTime startDate;
@@ -46,21 +47,60 @@ class IndividualReportView extends StatelessWidget {
         break;
       case 'Custom':
         // Trigger custom date picker
-        _showCustomDatePicker(context);
+        _showVehicleLogsCustomDatePicker(context);
         return;
       default:
         return;
     }
 
     // Apply selected date range to individual vehicle logs trend
-    context.read<IndividualDashboardCubit>().updateDateFilter(
+    context.read<IndividualDashboardCubit>().updateVehicleLogsDateFilter(
       start: startDate,
       end: endDate,
       grouping: TimeGrouping.day,
+      vehicleLogsCurrentTimeRange: selectedRange,
     );
   }
 
-  void _showCustomDatePicker(BuildContext context) {
+  void _onViolationTrendTimeRangeChanged(
+    String selectedRange,
+    BuildContext context,
+  ) {
+    // Update time range in cubit state
+    DateTime endDate = DateTime.now();
+    DateTime startDate;
+
+    switch (selectedRange) {
+      case '7 days':
+        startDate = endDate.subtract(Duration(days: 7));
+        break;
+      case '30 days':
+        startDate = endDate.subtract(Duration(days: 30));
+        break;
+      case 'Month':
+        startDate = DateTime(endDate.year, endDate.month, 1);
+        break;
+      case 'Year':
+        startDate = DateTime(endDate.year, 1, 1);
+        break;
+      case 'Custom':
+        // Trigger custom date picker
+        _showViolationTrendCustomDatePicker(context);
+        return;
+      default:
+        return;
+    }
+
+    // Apply selected date range to individual vehicle logs trend
+    context.read<IndividualDashboardCubit>().updateViolationDateFilter(
+      start: startDate,
+      end: endDate,
+      grouping: TimeGrouping.day,
+      violationTrendCurrentTimeRange: selectedRange,
+    );
+  }
+
+  void _showVehicleLogsCustomDatePicker(BuildContext context) {
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -70,11 +110,41 @@ class IndividualReportView extends StatelessWidget {
             onApply: (period) {
               if (period != null) {
                 // Update current time range to reflect custom selection
-                context.read<IndividualDashboardCubit>().updateDateFilter(
-                  start: period.start,
-                  end: period.end,
-                  grouping: TimeGrouping.day,
-                );
+                context
+                    .read<IndividualDashboardCubit>()
+                    .updateVehicleLogsDateFilter(
+                      start: period.start,
+                      end: period.end,
+                      grouping: TimeGrouping.day,
+                      vehicleLogsCurrentTimeRange: 'Custom',
+                    );
+              }
+              Navigator.of(dialogContext).pop();
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void _showViolationTrendCustomDatePicker(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return CustomAlertDialog(
+          title: 'Select Date Range',
+          child: CustomDateFilter(
+            onApply: (period) {
+              if (period != null) {
+                // Update current time range to reflect custom selection
+                context
+                    .read<IndividualDashboardCubit>()
+                    .updateViolationDateFilter(
+                      start: period.start,
+                      end: period.end,
+                      grouping: TimeGrouping.day,
+                      violationTrendCurrentTimeRange: 'Custom',
+                    );
               }
               Navigator.of(dialogContext).pop();
             },
@@ -132,39 +202,49 @@ class IndividualReportView extends StatelessWidget {
               ),
 
               IndividualChartsSection(
-                //ISSUE: doesn't update on load
                 violationDistribution: state.violationDistribution,
+                //vehicle logs
                 vehicleLogs: state.vehicleLogsTrend, //default to 7 days
-                lineChartTitle: DynamicTitleFormatter().getDynamicTitle(
+                lineChartTitle1: DynamicTitleFormatter().getDynamicTitle(
                   'Vehicle logs for ',
-                  currentTimeRange,
-                ), //todo fix the issue where the dynamic title is not working/updating
-                onTimeRangeChanged: (value) {
-                  _onTimeRangeChanged(value, context);
+                  state.vehicleLogsCurrentTimeRange,
+                ),
+                onTimeRangeChanged1: (value) {
+                  _onVehicleLogsTimeRangeChanged(value, context);
+                },
+                //violation
+                lineChartTitle2: DynamicTitleFormatter().getDynamicTitle(
+                  'Violation trend for ',
+                  state.violationTrendCurrentTimeRange,
+                ),
+                violationTrend: state.violationTrend,
+                onTimeRangeChanged2: (value) {
+                  _onViolationTrendTimeRangeChanged(value, context);
                 },
                 hoverDy: hoverDy,
               ),
 
-              ViolationHistoryTableSection(
-                allowSorting: false,
-                istableHeaderDark: false,
-                violationHistoryEntries: state.violationHistory,
-                sectionTitle: 'Violation History',
-                onClick: () {
-                  //todo
-                },
-                hoverDy: hoverDy,
-              ),
-              RecentLogsTableSection(
-                allowSorting: false,
-                istableHeaderDark: false,
-                recentLogsEntries: state.recentLogs,
-                sectionTitle: 'Recent Logs',
-                onClick: () {
-                  //todo
-                },
-                hoverDy: hoverDy,
-              ),
+              //TEMPORARILY DISABLE THE TABLES SINCE IT CAN BE COVERED IN THE CHART
+              // ViolationHistoryTableSection(
+              //   allowSorting: false,
+              //   istableHeaderDark: false,
+              //   violationHistoryEntries: state.violationHistory,
+              //   sectionTitle: 'Violation History',
+              //   onClick: () {
+              //     //todo
+              //   },
+              //   hoverDy: hoverDy,
+              // ),
+              // RecentLogsTableSection(
+              //   allowSorting: false,
+              //   istableHeaderDark: false,
+              //   recentLogsEntries: state.recentLogs,
+              //   sectionTitle: 'Recent Logs',
+              //   onClick: () {
+              //     //todo
+              //   },
+              //   hoverDy: hoverDy,
+              // ),
               Spacing.vertical(size: AppSpacing.medium),
             ],
           ),

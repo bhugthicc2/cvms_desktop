@@ -27,6 +27,7 @@ class GlobalDashboardState extends Equatable {
   final List<ChartDataModel> violationDistributionPerCollege; // step 7
   final List<ChartDataModel> violationTypeDistribution; // step 10
   final List<ChartDataModel> fleetLogsData;
+  final List<ChartDataModel> violationTrendData;
   final String currentTimeRange;
   final bool initialized;
   //indi vehicle report
@@ -57,6 +58,7 @@ class GlobalDashboardState extends Equatable {
     this.violationDistributionPerCollege = const [], // step 8
     this.violationTypeDistribution = const [], // step 11
     this.fleetLogsData = const [],
+    this.violationTrendData = const [],
     this.currentTimeRange = '7 days',
 
     //indi vehicle report
@@ -86,6 +88,7 @@ class GlobalDashboardState extends Equatable {
     List<ChartDataModel>? violationDistributionPerCollege, // step 9
     List<ChartDataModel>? violationTypeDistribution, // step 12
     List<ChartDataModel>? fleetLogsData,
+    List<ChartDataModel>? violationTrendData,
     String? currentTimeRange,
     bool? initialized,
 
@@ -130,6 +133,7 @@ class GlobalDashboardState extends Equatable {
           violationTypeDistribution ??
           this.violationTypeDistribution, // step 13
       fleetLogsData: fleetLogsData ?? this.fleetLogsData,
+      violationTrendData: violationTrendData ?? this.violationTrendData,
       currentTimeRange: currentTimeRange ?? this.currentTimeRange,
       //indi vehicle report
       currentVehicleId: currentVehicleId ?? this.currentVehicleId,
@@ -159,6 +163,7 @@ class GlobalDashboardState extends Equatable {
     violationDistributionPerCollege, // step 11
     violationTypeDistribution, // step 13
     fleetLogsData,
+    violationTrendData,
     currentTimeRange,
     initialized,
     //indi vehicle report

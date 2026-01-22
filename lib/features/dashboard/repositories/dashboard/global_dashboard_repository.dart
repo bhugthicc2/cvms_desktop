@@ -392,4 +392,56 @@ class GlobalDashboardRepository {
           }).toList();
         });
   }
+
+  // realtime implementation step 1:
+  // Groups violations over time for trend line charts
+  Stream<List<ChartDataModel>> watchViolationsTrend({
+    required DateTime start,
+    required DateTime end,
+    required TimeGrouping grouping,
+  }) {
+    return _db
+        .collection('violations')
+        .where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(start))
+        .where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(end))
+        .snapshots()
+        .map((snapshot) {
+          final Map<String, int> buckets = {};
+
+          // step 1: initialize time buckets
+          final bucketKeys = TimeBuckerHelper().generateTimeBuckets(
+            start,
+            end,
+            grouping,
+          );
+
+          for (final key in bucketKeys) {
+            buckets[key] = 0;
+          }
+
+          // step 2: aggregate violations into buckets
+          for (final doc in snapshot.docs) {
+            final data = doc.data();
+            final Timestamp ts = data['createdAt'];
+            final date = ts.toDate();
+
+            final bucketKey = TimeBuckerHelper().formatBucket(date, grouping);
+
+            if (!buckets.containsKey(bucketKey)) continue;
+
+            buckets[bucketKey] = buckets[bucketKey]! + 1;
+          }
+
+          // step 3: map to ChartDataModel
+          return buckets.entries.map((e) {
+            final date = TimeBuckerHelper().parseBucket(e.key, grouping);
+
+            return ChartDataModel(
+              category: e.key,
+              value: e.value.toDouble(),
+              date: date,
+            );
+          }).toList();
+        });
+  }
 }

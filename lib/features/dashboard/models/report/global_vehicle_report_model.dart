@@ -18,6 +18,7 @@ class GlobalVehicleReportModel {
   final Map<String, int> vehiclesByCity;
   final Map<String, int> logsByCollege;
   final Map<String, int> violationsByCollege;
+  final List<ChartDataModel> topStudentsByViolations;
 
   GlobalVehicleReportModel({
     required this.totalVehicles,
@@ -34,5 +35,6 @@ class GlobalVehicleReportModel {
     required this.vehiclesByCity,
     required this.logsByCollege,
     required this.violationsByCollege,
+    required this.topStudentsByViolations,
   });
 }

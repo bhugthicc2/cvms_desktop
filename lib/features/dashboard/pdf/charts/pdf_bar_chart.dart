@@ -36,7 +36,7 @@ class PdfBarChart extends pw.StatelessWidget {
                   width: 14,
                   height: height.toInt().toDouble(),
                   decoration: pw.BoxDecoration(
-                    color: PdfColor.fromInt(0xFF666666),
+                    color: PdfColors.blueGrey700,
                     borderRadius: pw.BorderRadius.circular(3),
                   ),
                 ),

@@ -7,6 +7,7 @@ import 'package:cvms_desktop/features/dashboard/pdf/sections/global/fleet_logs_t
 import 'package:cvms_desktop/features/dashboard/pdf/sections/global/global_signatory_section.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/sections/global/global_summary_section.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/sections/global/top_cities_section.dart';
+import 'package:cvms_desktop/features/dashboard/pdf/sections/global/top_students_by_violations_section.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/sections/global/top_violations_by_type_section.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/sections/global/vehicle_distribution_college_section.dart';
 import 'package:cvms_desktop/features/dashboard/pdf/sections/global/vehicle_logs_by_college_section.dart';
@@ -51,6 +52,7 @@ class GlobalReportBuilder {
       ViolationDistributionByCollegeSection(limit: 7),
       TopViolationsByTypeSection(limit: 5),
       FleetLogsTrendSection(),
+      TopStudentsByViolationsSection(limit: 5),
     ];
     // Add signatory LAST
     final signatorySection = GlobalSignatorySection(

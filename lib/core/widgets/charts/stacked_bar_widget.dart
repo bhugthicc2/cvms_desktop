@@ -64,6 +64,7 @@ class StackedBarWidget extends StatelessWidget {
       tooltipBehavior: TooltipBehavior(enable: true),
       series: <CartesianSeries>[
         BarSeries<ChartDataModel, String>(
+          width: 0.6,
           borderRadius: BorderRadius.only(
             bottomRight: Radius.circular(3),
             topRight: Radius.circular(3),
