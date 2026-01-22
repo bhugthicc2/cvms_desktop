@@ -16,12 +16,30 @@ class IndividualReportView extends StatelessWidget {
   final IndividualVehicleInfo vehicleInfo;
   final String? currentTimeRange;
   final double hoverDy;
+  // Stats card onclick handlers
+  final VoidCallback? onDaysUntilExpirationClick;
+  final VoidCallback? onActiveViolationsClick;
+  final VoidCallback? onTotalViolationsClick;
+  final VoidCallback? onTotalEntriesExitsClick;
+  final VoidCallback? onVehicleInfoFullView;
+  // Chart view tap handlers
+  final VoidCallback? onViolationDistributionTap;
+  final VoidCallback? onVehicleLogsTap;
+  final VoidCallback? onViolationTrendTap;
 
   const IndividualReportView({
     super.key,
     required this.vehicleInfo,
     this.currentTimeRange = '7 days',
     this.hoverDy = -0.01,
+    this.onDaysUntilExpirationClick,
+    this.onActiveViolationsClick,
+    this.onTotalViolationsClick,
+    this.onTotalEntriesExitsClick,
+    this.onVehicleInfoFullView,
+    this.onViolationDistributionTap,
+    this.onVehicleLogsTap,
+    this.onViolationTrendTap,
   });
 
   void _onVehicleLogsTimeRangeChanged(
@@ -174,9 +192,11 @@ class IndividualReportView extends StatelessWidget {
                 >(
                   builder: (context, state) {
                     return IndividualStatsSection(
-                      onVehicleInfoFullView: () {
-                        //todo
-                      },
+                      onVehicleInfoFullView: onVehicleInfoFullView,
+                      onDaysUntilExpirationClick: onDaysUntilExpirationClick,
+                      onActiveViolationsClick: onActiveViolationsClick,
+                      onTotalViolationsClick: onTotalViolationsClick,
+                      onTotalEntriesExitsClick: onTotalEntriesExitsClick,
                       //stat card metrics
                       daysUntilExpiration: vehicleInfo.daysUntilExpiration,
                       totalViolations: state.totalViolations,
@@ -222,6 +242,10 @@ class IndividualReportView extends StatelessWidget {
                   _onViolationTrendTimeRangeChanged(value, context);
                 },
                 hoverDy: hoverDy,
+                // Chart tap handlers
+                onViolationDistributionTap: onViolationDistributionTap,
+                onVehicleLogsTap: onVehicleLogsTap,
+                onViolationTrendTap: onViolationTrendTap,
               ),
 
               //TEMPORARILY DISABLE THE TABLES SINCE IT CAN BE COVERED IN THE CHART

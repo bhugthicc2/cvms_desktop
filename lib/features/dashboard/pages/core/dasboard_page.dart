@@ -58,7 +58,48 @@ class DashboardPage extends StatelessWidget {
   Widget _buildMainContent(BuildContext context, GlobalDashboardState state) {
     switch (state.viewMode) {
       case DashboardViewMode.global:
-        return const GlobalDashboardView();
+        return GlobalDashboardView(
+          onTotalViolationsClick: () {
+            // Navigate to violations management or filter violations
+          },
+          onPendingViolationsClick: () {
+            // Navigate to pending violations
+          },
+          onTotalVehiclesClick: () {
+            // Navigate to vehicle management
+          },
+          onTotalEntriesExitsClick: () {
+            // Navigate to entry/exit logs
+          },
+          // Chart tap handlers
+          onVehicleDistributionTap: () {
+            // Handle vehicle distribution chart tap
+          },
+          onYearLevelBreakdownTap: () {
+            // Handle year level breakdown chart tap
+          },
+          onTopViolatorsTap: () {
+            // Handle top violators chart tap
+          },
+          onTopCitiesTap: () {
+            // Handle top cities chart tap
+          },
+          onVehicleLogsDistributionTap: () {
+            // Handle vehicle logs distribution chart tap
+          },
+          onViolationDistributionTap: () {
+            // Handle violation distribution chart tap
+          },
+          onTopViolationsTap: () {
+            // Handle top violations chart tap
+          },
+          onFleetLogsTap: () {
+            // Handle fleet logs chart tap
+          },
+          onViolationTrendTap: () {
+            // Handle violation trend chart tap
+          },
+        );
       case DashboardViewMode.individual:
         return BlocProvider(
           key: ValueKey(
@@ -71,7 +112,35 @@ class DashboardPage extends StatelessWidget {
                   FirebaseFirestore.instance,
                 ),
               ),
-          child: IndividualReportView(vehicleInfo: state.selectedVehicle!),
+          child: IndividualReportView(
+            vehicleInfo: state.selectedVehicle!,
+            // Individual stats card handlers
+            onDaysUntilExpirationClick: () {
+              // Handle days until expiration click
+            },
+            onActiveViolationsClick: () {
+              // Handle active violations click
+            },
+            onTotalViolationsClick: () {
+              // Handle total violations click
+            },
+            onTotalEntriesExitsClick: () {
+              // Handle total entries/exits click
+            },
+            onVehicleInfoFullView: () {
+              // Handle vehicle info full view click
+            },
+            // Individual chart handlers
+            onViolationDistributionTap: () {
+              // Handle violation distribution chart tap
+            },
+            onVehicleLogsTap: () {
+              // Handle vehicle logs chart tap
+            },
+            onViolationTrendTap: () {
+              // Handle violation trend chart tap
+            },
+          ),
         );
 
       case DashboardViewMode.pdfPreview:

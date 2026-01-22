@@ -11,10 +11,39 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class GlobalDashboardView extends StatefulWidget {
   final String? currentTimeRange;
   final double hoverDy;
+  // Stats card onclick handlers
+  final VoidCallback? onTotalViolationsClick;
+  final VoidCallback? onPendingViolationsClick;
+  final VoidCallback? onTotalVehiclesClick;
+  final VoidCallback? onTotalEntriesExitsClick;
+  // Chart view tap handlers
+  final VoidCallback? onVehicleDistributionTap;
+  final VoidCallback? onYearLevelBreakdownTap;
+  final VoidCallback? onTopViolatorsTap;
+  final VoidCallback? onTopCitiesTap;
+  final VoidCallback? onVehicleLogsDistributionTap;
+  final VoidCallback? onViolationDistributionTap;
+  final VoidCallback? onTopViolationsTap;
+  final VoidCallback? onFleetLogsTap;
+  final VoidCallback? onViolationTrendTap;
+
   const GlobalDashboardView({
     super.key,
     this.currentTimeRange = '7 days',
     this.hoverDy = -0.01,
+    this.onTotalViolationsClick,
+    this.onPendingViolationsClick,
+    this.onTotalVehiclesClick,
+    this.onTotalEntriesExitsClick,
+    this.onVehicleDistributionTap,
+    this.onYearLevelBreakdownTap,
+    this.onTopViolatorsTap,
+    this.onTopCitiesTap,
+    this.onVehicleLogsDistributionTap,
+    this.onViolationDistributionTap,
+    this.onTopViolationsTap,
+    this.onFleetLogsTap,
+    this.onViolationTrendTap,
   });
 
   @override
@@ -181,6 +210,10 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
                         state
                             .totalEntriesExits, // Realtime implementation step 22 ),
                     hoverDy: widget.hoverDy,
+                    onStatsCard1Click: widget.onTotalViolationsClick,
+                    onStatsCard2Click: widget.onPendingViolationsClick,
+                    onStatsCard3Click: widget.onTotalVehiclesClick,
+                    onStatsCard4Click: widget.onTotalEntriesExitsClick,
                   );
                 },
               ),
@@ -237,6 +270,18 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
                       state.currentTimeRange,
                     ), //todo
                     violationTrendData: state.violationTrendData,
+                    // Chart tap handlers
+                    onVehicleDistributionTap: widget.onVehicleDistributionTap,
+                    onYearLevelBreakdownTap: widget.onYearLevelBreakdownTap,
+                    onTopViolatorsTap: widget.onTopViolatorsTap,
+                    onTopCitiesTap: widget.onTopCitiesTap,
+                    onVehicleLogsDistributionTap:
+                        widget.onVehicleLogsDistributionTap,
+                    onViolationDistributionTap:
+                        widget.onViolationDistributionTap,
+                    onTopViolationsTap: widget.onTopViolationsTap,
+                    onFleetLogsTap: widget.onFleetLogsTap,
+                    onViolationTrendTap: widget.onViolationTrendTap,
                   );
                 },
               ),

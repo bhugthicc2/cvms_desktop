@@ -45,6 +45,7 @@ class StatsCardSection extends StatelessWidget {
     this.onStatsCard3Click,
     this.onStatsCard4Click,
     this.hoverDy = -0.01,
+    //
   });
 
   @override
@@ -83,7 +84,7 @@ class StatsCardSection extends StatelessWidget {
         Spacing.horizontal(size: AppSpacing.medium),
         Expanded(
           child: StatsCard(
-            onClick: onStatsCard2Click,
+            onClick: onStatsCard3Click,
             label: statsCard3Label,
             value: statsCard3Value,
             icon: PhosphorIconsBold.car,

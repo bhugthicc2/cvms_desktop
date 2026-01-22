@@ -17,6 +17,10 @@ class IndividualChartsSection extends StatelessWidget {
   final Function(String)? onTimeRangeChanged1;
   final Function(String)? onTimeRangeChanged2;
   final double hoverDy;
+  // Chart view tap handlers
+  final VoidCallback? onViolationDistributionTap;
+  final VoidCallback? onVehicleLogsTap;
+  final VoidCallback? onViolationTrendTap;
 
   const IndividualChartsSection({
     super.key,
@@ -28,6 +32,9 @@ class IndividualChartsSection extends StatelessWidget {
     this.onTimeRangeChanged1,
     this.onTimeRangeChanged2,
     this.hoverDy = -0.01,
+    this.onViolationDistributionTap,
+    this.onVehicleLogsTap,
+    this.onViolationTrendTap,
   });
 
   @override
@@ -50,10 +57,17 @@ class IndividualChartsSection extends StatelessWidget {
                   child: _buildBarChart(
                     'Violations by Type',
                     violationDistribution,
+                    onViolationDistributionTap,
                   ),
                 ),
                 Spacing.horizontal(size: AppSpacing.medium),
-                Expanded(child: _buildLineChart1(lineChartTitle1, vehicleLogs)),
+                Expanded(
+                  child: _buildLineChart1(
+                    lineChartTitle1,
+                    vehicleLogs,
+                    onVehicleLogsTap,
+                  ),
+                ),
               ],
             ),
           ),
@@ -61,7 +75,11 @@ class IndividualChartsSection extends StatelessWidget {
           SizedBox(
             height: height + 20,
             child: Expanded(
-              child: _buildLineChart2(lineChartTitle2, violationTrend),
+              child: _buildLineChart2(
+                lineChartTitle2,
+                violationTrend,
+                onViolationTrendTap,
+              ),
             ),
           ),
         ],
@@ -69,20 +87,28 @@ class IndividualChartsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildBarChart(String title, List<ChartDataModel> data) {
+  Widget _buildBarChart(
+    String title,
+    List<ChartDataModel> data,
+    VoidCallback? onViewTap,
+  ) {
     return HoverSlide(
       dx: 0,
       dy: hoverDy,
       child: BarChartWidget(
         data: data,
         title: title,
-        onViewTap: () {},
+        onViewTap: onViewTap ?? () {},
         onBarChartPointTap: (details) {},
       ),
     );
   }
 
-  Widget _buildLineChart1(String title1, List<ChartDataModel> data) {
+  Widget _buildLineChart1(
+    String title1,
+    List<ChartDataModel> data,
+    VoidCallback? onViewTap,
+  ) {
     return HoverSlide(
       dx: 0,
       dy: hoverDy,
@@ -99,13 +125,17 @@ class IndividualChartsSection extends StatelessWidget {
         ),
         data: data,
         title: title1,
-        onViewTap: () {},
+        onViewTap: onViewTap ?? () {},
         onLineChartPointTap: (details) {},
       ),
     );
   }
 
-  Widget _buildLineChart2(String title2, List<ChartDataModel> data) {
+  Widget _buildLineChart2(
+    String title2,
+    List<ChartDataModel> data,
+    VoidCallback? onViewTap,
+  ) {
     return HoverSlide(
       dx: 0,
       dy: hoverDy,
@@ -122,7 +152,7 @@ class IndividualChartsSection extends StatelessWidget {
         ),
         data: data,
         title: title2,
-        onViewTap: () {},
+        onViewTap: onViewTap ?? () {},
         onLineChartPointTap: (details) {},
       ),
     );

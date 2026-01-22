@@ -25,6 +25,16 @@ class GlobalChartsSection extends StatelessWidget {
   final String lineChartTitle1;
   final String lineChartTitle2;
   final double hoverDy;
+  // Chart view tap handlers
+  final VoidCallback? onVehicleDistributionTap;
+  final VoidCallback? onYearLevelBreakdownTap;
+  final VoidCallback? onTopViolatorsTap;
+  final VoidCallback? onTopCitiesTap;
+  final VoidCallback? onVehicleLogsDistributionTap;
+  final VoidCallback? onViolationDistributionTap;
+  final VoidCallback? onTopViolationsTap;
+  final VoidCallback? onFleetLogsTap;
+  final VoidCallback? onViolationTrendTap;
 
   const GlobalChartsSection({
     super.key,
@@ -42,6 +52,15 @@ class GlobalChartsSection extends StatelessWidget {
     required this.lineChartTitle2,
     required this.violationTrendData,
     this.hoverDy = -0.01,
+    this.onVehicleDistributionTap,
+    this.onYearLevelBreakdownTap,
+    this.onTopViolatorsTap,
+    this.onTopCitiesTap,
+    this.onVehicleLogsDistributionTap,
+    this.onViolationDistributionTap,
+    this.onTopViolationsTap,
+    this.onFleetLogsTap,
+    this.onViolationTrendTap,
   });
 
   @override
@@ -60,6 +79,7 @@ class GlobalChartsSection extends StatelessWidget {
                   child: _buildDonutChart(
                     'Vehicle Distribution per College',
                     vehicleDistribution,
+                    onVehicleDistributionTap,
                   ),
                 ),
                 Spacing.horizontal(size: AppSpacing.medium),
@@ -67,6 +87,7 @@ class GlobalChartsSection extends StatelessWidget {
                   child: _buildDonutChart(
                     'Year Level Breakdown',
                     yearLevelBreakdown,
+                    onYearLevelBreakdownTap,
                   ),
                 ),
               ],
@@ -84,6 +105,7 @@ class GlobalChartsSection extends StatelessWidget {
                   child: _buildStackedChart(
                     'Top 5 Students with Most Violations',
                     studentWithMostViolations,
+                    onTopViolatorsTap,
                   ),
                 ),
                 Spacing.horizontal(size: AppSpacing.medium),
@@ -91,6 +113,7 @@ class GlobalChartsSection extends StatelessWidget {
                   child: _buildStackedChart(
                     'Top 5 Cities/Municipalities',
                     cityBreakdown,
+                    onTopCitiesTap,
                   ),
                 ),
               ],
@@ -108,6 +131,7 @@ class GlobalChartsSection extends StatelessWidget {
                   child: _buildDonutChart(
                     'Vehicle Logs Distribution per College',
                     vehicleLogsDistributionPerCollege,
+                    onVehicleLogsDistributionTap,
                   ),
                 ),
                 Spacing.horizontal(size: AppSpacing.medium),
@@ -115,6 +139,7 @@ class GlobalChartsSection extends StatelessWidget {
                   child: _buildDonutChart(
                     'Violation Distribution per College',
                     violationDistributionPerCollege,
+                    onViolationDistributionTap,
                   ),
                 ),
               ],
@@ -132,11 +157,16 @@ class GlobalChartsSection extends StatelessWidget {
                   child: _buildBarChart(
                     'Top 5 Violations by Type',
                     violationTypeDistribution,
+                    onTopViolationsTap,
                   ),
                 ),
                 Spacing.horizontal(size: AppSpacing.medium),
                 Expanded(
-                  child: _buildLineChart1(lineChartTitle1, fleetLogsData),
+                  child: _buildLineChart1(
+                    lineChartTitle1,
+                    fleetLogsData,
+                    onFleetLogsTap,
+                  ),
                 ),
               ],
             ),
@@ -147,7 +177,11 @@ class GlobalChartsSection extends StatelessWidget {
             //todo violation trend
             height: height + 100,
             child: Expanded(
-              child: _buildLineChart2(lineChartTitle2, violationTrendData),
+              child: _buildLineChart2(
+                lineChartTitle2,
+                violationTrendData,
+                onViolationTrendTap,
+              ),
             ),
           ),
           Spacing.vertical(size: AppSpacing.medium),
@@ -156,7 +190,11 @@ class GlobalChartsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildDonutChart(String title, List<ChartDataModel> data) {
+  Widget _buildDonutChart(
+    String title,
+    List<ChartDataModel> data,
+    VoidCallback? onViewTap,
+  ) {
     return HoverSlide(
       dx: 0,
       dy: hoverDy,
@@ -167,34 +205,50 @@ class GlobalChartsSection extends StatelessWidget {
         title: title,
         radius: '90%',
         innerRadius: '60%',
-        onViewTap: () {},
+        onViewTap: onViewTap ?? () {},
         onDonutChartPointTap: (details) {},
       ),
     );
   }
 
-  Widget _buildStackedChart(String title, List<ChartDataModel> data) {
+  Widget _buildStackedChart(
+    String title,
+    List<ChartDataModel> data,
+    VoidCallback? onViewTap,
+  ) {
     return HoverSlide(
       dx: 0,
       dy: hoverDy,
-      child: StackedBarWidget(title: title, data: data, onViewTap: () {}),
+      child: StackedBarWidget(
+        title: title,
+        data: data,
+        onViewTap: onViewTap ?? () {},
+      ),
     );
   }
 
-  Widget _buildBarChart(String title, List<ChartDataModel> data) {
+  Widget _buildBarChart(
+    String title,
+    List<ChartDataModel> data,
+    VoidCallback? onViewTap,
+  ) {
     return HoverSlide(
       dx: 0,
       dy: hoverDy,
       child: BarChartWidget(
         data: data,
         title: title,
-        onViewTap: () {},
+        onViewTap: onViewTap ?? () {},
         onBarChartPointTap: (details) {},
       ),
     );
   }
 
-  Widget _buildLineChart1(String title, List<ChartDataModel> data) {
+  Widget _buildLineChart1(
+    String title,
+    List<ChartDataModel> data,
+    VoidCallback? onViewTap,
+  ) {
     return HoverSlide(
       dx: 0,
       dy: hoverDy,
@@ -211,13 +265,17 @@ class GlobalChartsSection extends StatelessWidget {
         ),
         data: data,
         title: title,
-        onViewTap: () {},
+        onViewTap: onViewTap ?? () {},
         onLineChartPointTap: (details) {},
       ),
     );
   }
 
-  Widget _buildLineChart2(String title, List<ChartDataModel> data) {
+  Widget _buildLineChart2(
+    String title,
+    List<ChartDataModel> data,
+    VoidCallback? onViewTap,
+  ) {
     return HoverSlide(
       dx: 0,
       dy: hoverDy,
@@ -234,7 +292,7 @@ class GlobalChartsSection extends StatelessWidget {
         ),
         data: data,
         title: title,
-        onViewTap: () {},
+        onViewTap: onViewTap ?? () {},
         onLineChartPointTap: (details) {},
       ),
     );

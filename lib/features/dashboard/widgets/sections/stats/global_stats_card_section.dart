@@ -14,6 +14,11 @@ class GlobalStatsCardSection extends StatelessWidget {
   final int statsCard3Value;
   final int statsCard4Value;
   final double hoverDy;
+  //onclick handlers
+  final VoidCallback? onStatsCard1Click;
+  final VoidCallback? onStatsCard2Click;
+  final VoidCallback? onStatsCard3Click;
+  final VoidCallback? onStatsCard4Click;
 
   const GlobalStatsCardSection({
     super.key,
@@ -26,6 +31,10 @@ class GlobalStatsCardSection extends StatelessWidget {
     required this.statsCard3Value,
     required this.statsCard4Value,
     this.hoverDy = -0.01,
+    this.onStatsCard1Click,
+    this.onStatsCard2Click,
+    this.onStatsCard3Click,
+    this.onStatsCard4Click,
   });
 
   @override
@@ -42,6 +51,12 @@ class GlobalStatsCardSection extends StatelessWidget {
         statsCard4Label: statsCard4Label,
         statsCard4Value: statsCard4Value,
         hoverDy: hoverDy + -0.05,
+
+        //onclick handlers
+        onStatsCard1Click: onStatsCard1Click,
+        onStatsCard2Click: onStatsCard2Click,
+        onStatsCard3Click: onStatsCard3Click,
+        onStatsCard4Click: onStatsCard4Click,
       ),
     );
   }

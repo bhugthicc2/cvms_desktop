@@ -7,6 +7,11 @@ import 'package:flutter/material.dart';
 
 class IndividualStatsSection extends StatelessWidget {
   final VoidCallback? onVehicleInfoFullView;
+  // Stats card onclick handlers
+  final VoidCallback? onDaysUntilExpirationClick;
+  final VoidCallback? onActiveViolationsClick;
+  final VoidCallback? onTotalViolationsClick;
+  final VoidCallback? onTotalEntriesExitsClick;
   final int daysUntilExpiration;
   final int totalPendingViolations;
   final int totalViolations;
@@ -31,6 +36,10 @@ class IndividualStatsSection extends StatelessWidget {
   const IndividualStatsSection({
     super.key,
     this.onVehicleInfoFullView,
+    this.onDaysUntilExpirationClick,
+    this.onActiveViolationsClick,
+    this.onTotalViolationsClick,
+    this.onTotalEntriesExitsClick,
     required this.daysUntilExpiration,
     required this.totalPendingViolations,
     required this.totalViolations,
@@ -78,6 +87,10 @@ class IndividualStatsSection extends StatelessWidget {
               statsCard4Label: 'Total Entries/Exits',
               statsCard4Value: totalVehicleLogs,
               hoverDy: hoverDy + -0.05,
+              onStatsCard1Click: onDaysUntilExpirationClick,
+              onStatsCard2Click: onActiveViolationsClick,
+              onStatsCard3Click: onTotalViolationsClick,
+              onStatsCard4Click: onTotalEntriesExitsClick,
             ),
           ),
 
