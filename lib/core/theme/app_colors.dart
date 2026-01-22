@@ -28,6 +28,7 @@ class AppColors {
 
   //Others
   static const Color darkBlue = Color(0xFF050132);
+  static const Color marineBlue = Color(0xFF382e5e);
   static const Color sidebarheaderSub = Color(0xFFD9D9D9);
   static const Color lineColor = Color(0xFFB5B5B5);
   static const Color tableHeaderColor = Color(0xFF0D046D);

@@ -13,6 +13,7 @@ class CustomSidebar extends StatelessWidget {
   final Function(int) onItemSelected;
   final VoidCallback onToggle;
   final VoidCallback onLogout;
+  final bool isStencil;
 
   CustomSidebar({
     super.key,
@@ -22,6 +23,7 @@ class CustomSidebar extends StatelessWidget {
     required this.activeStyle,
     required this.onToggle,
     required this.onLogout,
+    this.isStencil = true,
   });
 
   final List<NavItem> items = [
@@ -46,15 +48,17 @@ class CustomSidebar extends StatelessWidget {
       width: isExpanded ? 235 : 50,
       decoration: BoxDecoration(
         image: DecorationImage(
+          opacity: 0.7,
           image: const AssetImage("assets/images/sidebar_bg.png"),
           fit: BoxFit.cover,
         ),
+        color: AppColors.white,
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
+            AppColors.darkBlue,
             AppColors.darkBlue.withValues(alpha: 0.7),
-            AppColors.black.withValues(alpha: 0.8),
           ],
         ),
       ),
@@ -77,6 +81,7 @@ class CustomSidebar extends StatelessWidget {
             isSelected: false,
             onTap: onLogout,
             showActiveBorder: false,
+            isStencil: isStencil,
           ),
         ],
       ),
@@ -94,7 +99,7 @@ class CustomSidebar extends StatelessWidget {
           isSelected: index == selectedIndex,
           onTap: () => onItemSelected(index),
           showActiveBorder: true,
-
+          isStencil: isStencil,
           labelColor: AppColors.white,
         );
       },
@@ -129,7 +134,8 @@ class CustomSidebar extends StatelessWidget {
               isExpanded: isExpanded,
               isSelected: index == selectedIndex,
               onTap: () => onItemSelected(index),
-              showActiveBorder: false, // 🔥 IMPORTANT
+              showActiveBorder: false,
+              isStencil: isStencil,
             );
           },
         ),
