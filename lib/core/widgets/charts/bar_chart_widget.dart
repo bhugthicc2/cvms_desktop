@@ -14,6 +14,7 @@ class BarChartWidget extends StatelessWidget {
   final String title;
   final Function(ChartPointDetails)? onBarChartPointTap;
   final ScreenshotController? screenshotController;
+  final int? highlightHighestIndex;
 
   const BarChartWidget({
     super.key,
@@ -22,6 +23,7 @@ class BarChartWidget extends StatelessWidget {
     this.onBarChartPointTap,
     required this.onViewTap,
     this.screenshotController,
+    this.highlightHighestIndex,
   });
 
   @override
@@ -64,7 +66,6 @@ class BarChartWidget extends StatelessWidget {
               : SystemMouseCursors.basic,
       child: SfCartesianChart(
         primaryXAxis: CategoryAxis(
-          // labelRotation: -45,
           labelIntersectAction: AxisLabelIntersectAction.wrap, // Allow wrapping
           labelStyle: const TextStyle(
             fontSize:
@@ -102,11 +103,15 @@ class BarChartWidget extends StatelessWidget {
               ) {
                 final value = (data as ChartDataModel).value;
                 final percentage = total > 0 ? (value / total * 100) : 0;
+                final isHighlighted = highlightHighestIndex == pointIndex;
+
                 return Text(
                   '${percentage.toStringAsFixed(1)}%',
-                  style: const TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
+                  style: TextStyle(
+                    fontSize: isHighlighted ? 12 : 10,
+                    fontWeight:
+                        isHighlighted ? FontWeight.bold : FontWeight.normal,
+                    color: isHighlighted ? AppColors.darkBlue : null,
                   ),
                 );
               },

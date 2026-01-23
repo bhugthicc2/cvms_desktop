@@ -77,6 +77,7 @@ class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
 
   void _listenToVehicles() {
     _vehicleSub = repository.watchTotalVehicles().listen(
+      // ignore: avoid_types_as_parameter_names
       (count) {
         emit(state.copyWith(totalVehicles: count));
         _markReady();
@@ -433,6 +434,16 @@ class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
     emit(
       state.copyWith(
         viewMode: DashboardViewMode.vehicleLogsView,
+        previousViewMode: state.viewMode,
+      ),
+    );
+  }
+
+  // Vehicle by Department View
+  void showVehicleByDepartmentView() {
+    emit(
+      state.copyWith(
+        viewMode: DashboardViewMode.vehicleByDepartmentView,
         previousViewMode: state.viewMode,
       ),
     );

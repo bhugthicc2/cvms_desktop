@@ -8,6 +8,7 @@ import 'package:cvms_desktop/core/widgets/charts/stacked_bar_widget.dart';
 import 'package:cvms_desktop/core/widgets/charts/bar_chart_widget.dart';
 import 'package:cvms_desktop/core/widgets/charts/line_chart_widget.dart';
 import 'package:cvms_desktop/features/dashboard/models/dashboard/chart_data_model.dart';
+import 'package:cvms_desktop/features/dashboard/utils/chart_data_sorter.dart';
 import 'package:flutter/material.dart';
 
 class GlobalChartsSection extends StatelessWidget {
@@ -77,7 +78,7 @@ class GlobalChartsSection extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildDonutChart(
-                    'Vehicle Distribution per College',
+                    'Registered Vehicles by College',
                     vehicleDistribution,
                     onVehicleDistributionTap,
                   ),
@@ -85,7 +86,7 @@ class GlobalChartsSection extends StatelessWidget {
                 Spacing.horizontal(size: AppSpacing.medium),
                 Expanded(
                   child: _buildDonutChart(
-                    'Year Level Breakdown',
+                    'Registered Vehicles by Year Level',
                     yearLevelBreakdown,
                     onYearLevelBreakdownTap,
                   ),
@@ -103,7 +104,7 @@ class GlobalChartsSection extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildStackedChart(
-                    'Top 5 Students with Most Violations',
+                    'Top 5 Students by Violation Share',
                     studentWithMostViolations,
                     onTopViolatorsTap,
                   ),
@@ -111,7 +112,7 @@ class GlobalChartsSection extends StatelessWidget {
                 Spacing.horizontal(size: AppSpacing.medium),
                 Expanded(
                   child: _buildStackedChart(
-                    'Top 5 Cities/Municipalities',
+                    'Top 5 Cities/Municipalities by Vehicle Share',
                     cityBreakdown,
                     onTopCitiesTap,
                   ),
@@ -129,7 +130,7 @@ class GlobalChartsSection extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildDonutChart(
-                    'Vehicle Logs Distribution per College',
+                    'Vehicle Logs by College',
                     vehicleLogsDistributionPerCollege,
                     onVehicleLogsDistributionTap,
                   ),
@@ -137,7 +138,7 @@ class GlobalChartsSection extends StatelessWidget {
                 Spacing.horizontal(size: AppSpacing.medium),
                 Expanded(
                   child: _buildDonutChart(
-                    'Violation Distribution per College',
+                    'Violation by College',
                     violationDistributionPerCollege,
                     onViolationDistributionTap,
                   ),
@@ -195,18 +196,26 @@ class GlobalChartsSection extends StatelessWidget {
     List<ChartDataModel> data,
     VoidCallback? onViewTap,
   ) {
+    // Sort data by value in descending order for legend
+    // In UI widget
+    final sortedData = ChartDataSorter.sortByValueDescending(data);
+
     return HoverSlide(
       dx: 0,
       dy: hoverDy,
       child: DonutChartWidget(
         explode: true,
         showPercentageInSlice: false,
-        data: data,
+        data: sortedData,
         title: title,
         radius: '90%',
         innerRadius: '60%',
         onViewTap: onViewTap ?? () {},
         onDonutChartPointTap: (details) {},
+        highlightHighestIndex:
+            sortedData.isNotEmpty
+                ? 0
+                : null, // First item is highest after sorting
       ),
     );
   }
@@ -216,13 +225,21 @@ class GlobalChartsSection extends StatelessWidget {
     List<ChartDataModel> data,
     VoidCallback? onViewTap,
   ) {
+    // Sort data by value in descending order for highlighting
+    final sortedData = ChartDataSorter.sortByValueDescending(data);
+
     return HoverSlide(
       dx: 0,
       dy: hoverDy,
       child: StackedBarWidget(
         title: title,
-        data: data,
+        data: sortedData,
         onViewTap: onViewTap ?? () {},
+        onStackBarPointTapped: (details) {},
+        highlightHighestIndex:
+            sortedData.isNotEmpty
+                ? 0
+                : null, // First item is highest after sorting
       ),
     );
   }
@@ -232,14 +249,21 @@ class GlobalChartsSection extends StatelessWidget {
     List<ChartDataModel> data,
     VoidCallback? onViewTap,
   ) {
+    // Sort data by value in descending order for highlighting
+    final sortedData = ChartDataSorter.sortByValueDescending(data);
+
     return HoverSlide(
       dx: 0,
       dy: hoverDy,
       child: BarChartWidget(
-        data: data,
+        data: sortedData,
         title: title,
         onViewTap: onViewTap ?? () {},
         onBarChartPointTap: (details) {},
+        highlightHighestIndex:
+            sortedData.isNotEmpty
+                ? 0
+                : null, // First item is highest after sorting
       ),
     );
   }

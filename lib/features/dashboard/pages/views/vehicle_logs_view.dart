@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/skeletons/table_skeleton.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 

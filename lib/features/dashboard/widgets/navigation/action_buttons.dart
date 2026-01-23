@@ -1,6 +1,5 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:cvms_desktop/core/widgets/animation/hover_slide.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +77,10 @@ class ExportReportButton extends StatelessWidget {
         height: 40,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
-          color: isLoading ? AppColors.grey : AppColors.primary,
+          color:
+              isLoading
+                  ? AppColors.lineColor.withValues(alpha: 0.4)
+                  : AppColors.primary,
           borderRadius: BorderRadius.circular(5),
         ),
         child: Center(

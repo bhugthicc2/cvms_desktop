@@ -14,6 +14,7 @@ class StackedBarWidget extends StatelessWidget {
   final String title;
   final Function(ChartPointDetails)? onStackBarPointTapped;
   final ScreenshotController? screenshotController;
+  final int? highlightHighestIndex;
 
   const StackedBarWidget({
     super.key,
@@ -22,6 +23,7 @@ class StackedBarWidget extends StatelessWidget {
     this.onStackBarPointTapped,
     required this.onViewTap,
     this.screenshotController,
+    this.highlightHighestIndex,
   });
 
   @override
@@ -90,11 +92,15 @@ class StackedBarWidget extends StatelessWidget {
             ) {
               final value = (data as ChartDataModel).value;
               final percentage = total > 0 ? (value / total * 100) : 0;
+              final isHighlighted = highlightHighestIndex == pointIndex;
+
               return Text(
                 '${percentage.toStringAsFixed(1)}%',
-                style: const TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
+                style: TextStyle(
+                  fontSize: isHighlighted ? 12 : 10,
+                  fontWeight:
+                      isHighlighted ? FontWeight.bold : FontWeight.normal,
+                  color: isHighlighted ? AppColors.darkBlue : null,
                 ),
               );
             },

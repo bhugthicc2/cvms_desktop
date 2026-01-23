@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_windows
   cloud_firestore
+  connectivity_plus
   desktop_drop
   file_selector_windows
   firebase_auth

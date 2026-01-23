@@ -203,7 +203,7 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
                     statsCard2Label:
                         'Pending Violations', //realtime data retrieval based on collection field step 13
                     statsCard2Value: state.totalPendingViolations,
-                    statsCard3Label: 'Total Vehicles',
+                    statsCard3Label: 'Total Vehicles  Registered',
                     statsCard3Value: state.totalVehicles,
                     statsCard4Label: 'Total Entries/Exits',
                     statsCard4Value:
@@ -246,10 +246,11 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
                       _onViolationTrendTimeRangeChanged(value);
                     },
                     hoverDy: widget.hoverDy,
-                    lineChartTitle1: DynamicTitleFormatter().getDynamicTitle(
-                      'Vehicle logs for ',
-                      state.currentTimeRange,
-                    ),
+                    lineChartTitle1: DynamicTitleFormatter()
+                        .getDynamicVehicleLogsTrendTitle(
+                          'Vehicle logs trend for ',
+                          state.currentTimeRange,
+                        ),
                     yearLevelBreakdown:
                         state.yearLevelBreakdown, // realtime step 19
                     vehicleDistribution: state.vehicleDistribution,
@@ -265,10 +266,11 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
                     violationTypeDistribution: state.violationTypeDistribution,
                     fleetLogsData:
                         state.fleetLogsData, // realtime fleet logs trend
-                    lineChartTitle2: DynamicTitleFormatter().getDynamicTitle(
-                      'Violation trend for ',
-                      state.currentTimeRange,
-                    ), //todo
+                    lineChartTitle2: DynamicTitleFormatter()
+                        .getDynamicViolationTrendTitle(
+                          'Violation trend for ',
+                          state.currentTimeRange,
+                        ), //todo
                     violationTrendData: state.violationTrendData,
                     // Chart tap handlers
                     onVehicleDistributionTap: widget.onVehicleDistributionTap,

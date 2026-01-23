@@ -225,18 +225,20 @@ class IndividualReportView extends StatelessWidget {
                 violationDistribution: state.violationDistribution,
                 //vehicle logs
                 vehicleLogs: state.vehicleLogsTrend, //default to 7 days
-                lineChartTitle1: DynamicTitleFormatter().getDynamicTitle(
-                  'Vehicle logs for ',
-                  state.vehicleLogsCurrentTimeRange,
-                ),
+                lineChartTitle1: DynamicTitleFormatter()
+                    .getDynamicVehicleLogsTrendTitle(
+                      'Vehicle logs trend for ',
+                      state.vehicleLogsCurrentTimeRange,
+                    ),
                 onTimeRangeChanged1: (value) {
                   _onVehicleLogsTimeRangeChanged(value, context);
                 },
                 //violation
-                lineChartTitle2: DynamicTitleFormatter().getDynamicTitle(
-                  'Violation trend for ',
-                  state.violationTrendCurrentTimeRange,
-                ),
+                lineChartTitle2: DynamicTitleFormatter()
+                    .getDynamicViolationTrendTitle(
+                      'Violation trend for ',
+                      state.violationTrendCurrentTimeRange,
+                    ),
                 violationTrend: state.violationTrend,
                 onTimeRangeChanged2: (value) {
                   _onViolationTrendTimeRangeChanged(value, context);

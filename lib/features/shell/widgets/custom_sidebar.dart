@@ -31,13 +31,13 @@ class CustomSidebar extends StatelessWidget {
   final List<NavItem> items = [
     NavItem(icon: 'dashboard.png', label: "Dashboard"),
     NavItem(icon: 'vehicle_monitoring.png', label: "Vehicle Monitoring"),
-    NavItem(icon: 'vehicle_logs.png', label: "Vehicle Logs"),
-    NavItem(icon: 'vehicle_management.png', label: "Vehicle Management"),
+    NavItem(icon: 'vehicle.png', label: "Vehicle Logs"),
+    NavItem(icon: 'vehicle_type.png', label: "Vehicle Management"),
     NavItem(icon: 'user.png', label: "User Management"),
     NavItem(icon: 'violation.png', label: "Violation Management"),
-    NavItem(icon: 'activity.png', label: "Activity Logs"),
+    NavItem(icon: 'activity2.png', label: "Activity Logs"),
     NavItem(icon: 'profile.png', label: "Profile"),
-    NavItem(icon: 'settings.png', label: "Settings"),
+    NavItem(icon: 'gear.png', label: "Settings"),
   ];
 
   @override

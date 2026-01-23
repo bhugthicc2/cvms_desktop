@@ -1,4 +1,5 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/charts/chart_empty_state.dart';
 import 'package:cvms_desktop/core/widgets/titles/custom_chart_title.dart';
@@ -17,6 +18,7 @@ class DonutChartWidget extends StatelessWidget {
   final bool showPercentageInSlice;
   final Function(ChartPointDetails)? onDonutChartPointTap;
   final ScreenshotController? screenshotController;
+  final int? highlightHighestIndex;
 
   const DonutChartWidget({
     super.key,
@@ -29,6 +31,7 @@ class DonutChartWidget extends StatelessWidget {
     this.innerRadius = '55%',
     this.explode = false,
     this.showPercentageInSlice = true,
+    this.highlightHighestIndex,
   });
 
   @override
@@ -83,7 +86,7 @@ class DonutChartWidget extends StatelessWidget {
                             ? (d, _) {
                               final v = d.value;
                               if (total == 0) return '0%';
-                              final pct = (v / total) * 100;
+                              final pct = (v / total) * 100; //percentage
                               return '${pct.toStringAsFixed(1)}%';
                             }
                             : null,
@@ -153,7 +156,7 @@ class DonutChartWidget extends StatelessWidget {
               children: [
                 for (int i = 0; i < data.length; i++)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -182,6 +185,17 @@ class DonutChartWidget extends StatelessWidget {
                           child: Text(
                             data[i].category,
                             overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: AppFontSizes.small,
+                              fontWeight:
+                                  highlightHighestIndex == i
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                              color:
+                                  highlightHighestIndex == i
+                                      ? AppColors.darkBlue
+                                      : null,
+                            ),
                           ),
                         ),
 
@@ -193,17 +207,42 @@ class DonutChartWidget extends StatelessWidget {
                                 ? data[i].value.toInt().toString()
                                 : data[i].value.toString(),
                             textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: AppFontSizes.small,
+                              fontWeight:
+                                  highlightHighestIndex == i
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                              color:
+                                  highlightHighestIndex == i
+                                      ? AppColors.darkBlue
+                                      : null,
+                            ),
                           ),
                         ),
                         //percentage
                         if (!showPercentageInSlice)
                           Expanded(
-                            child: Text(() {
-                              final v = data[i].value;
-                              if (total == 0) return '0%';
-                              final pct = (v / total) * 100;
-                              return '${pct.toStringAsFixed(1)}%';
-                            }(), textAlign: TextAlign.left),
+                            child: Text(
+                              () {
+                                final v = data[i].value;
+                                if (total == 0) return '0%';
+                                final pct = (v / total) * 100;
+                                return '${pct.toStringAsFixed(1)}%';
+                              }(),
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: AppFontSizes.small,
+                                fontWeight:
+                                    highlightHighestIndex == i
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                color:
+                                    highlightHighestIndex == i
+                                        ? AppColors.darkBlue
+                                        : null,
+                              ),
+                            ),
                           ),
                       ],
                     ),

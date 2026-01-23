@@ -1,6 +1,8 @@
+import 'package:cvms_desktop/core/services/connectivity/connectivity_service.dart';
 import 'package:cvms_desktop/features/auth/bloc/current_user_cubit.dart';
 import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
 import 'package:cvms_desktop/features/auth/data/user_repository.dart';
+import 'package:cvms_desktop/features/shell/bloc/connectivity_cubit.dart';
 import 'package:cvms_desktop/features/shell/config/sidebar_active_style.dart';
 import 'package:cvms_desktop/features/shell/scope/breadcrumb_scope.dart';
 import 'package:cvms_desktop/features/shell/widgets/logout_dialog.dart';
@@ -60,6 +62,7 @@ class _ShellPageState extends State<ShellPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => ShellCubit()),
+        BlocProvider(create: (_) => ConnectivityCubit(ConnectivityService())),
         BlocProvider(
           create:
               (_) => CurrentUserCubit(

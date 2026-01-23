@@ -15,6 +15,7 @@ import 'package:cvms_desktop/features/dashboard/pages/views/all_vehicles_view.da
 import 'package:cvms_desktop/features/dashboard/pages/views/global_dashboard_view.dart';
 import 'package:cvms_desktop/features/dashboard/pages/views/individual_report_view.dart';
 import 'package:cvms_desktop/features/dashboard/pages/views/pdf_preview_view.dart';
+import 'package:cvms_desktop/features/dashboard/pages/views/vehicle_by_department_view.dart';
 import 'package:cvms_desktop/features/dashboard/pages/views/vehicle_logs_view.dart';
 import 'package:cvms_desktop/features/dashboard/pages/views/violation_view.dart';
 import 'package:cvms_desktop/features/dashboard/pages/views/pending_violation_view.dart';
@@ -71,6 +72,13 @@ class DashboardPage extends StatelessWidget {
         return [BreadcrumbItem(label: 'All Vehicles', isActive: true)];
       case DashboardViewMode.vehicleLogsView:
         return [BreadcrumbItem(label: 'Vehicle Logs', isActive: true)];
+      case DashboardViewMode.vehicleByDepartmentView:
+        return [
+          BreadcrumbItem(
+            label: 'Vehicle Distribution by Department',
+            isActive: true,
+          ),
+        ];
     }
   }
 
@@ -93,7 +101,8 @@ class DashboardPage extends StatelessWidget {
           },
           // Chart tap handlers
           onVehicleDistributionTap: () {
-            // Handle vehicle distribution chart tap
+            context.read<GlobalDashboardCubit>().showVehicleByDepartmentView();
+            //vehicle distribution by department drill down view
           },
           onYearLevelBreakdownTap: () {
             // Handle year level breakdown chart tap
@@ -218,6 +227,12 @@ class DashboardPage extends StatelessWidget {
             },
           ),
         );
+      case DashboardViewMode.vehicleByDepartmentView:
+        return VehicleByDepartmentView(
+          onBackPressed: () {
+            context.read<GlobalDashboardCubit>().backToPreviousView();
+          },
+        );
     }
   }
 
@@ -309,8 +324,10 @@ class DashboardPage extends StatelessWidget {
                                   state.viewMode ==
                                       DashboardViewMode.allVehiclesView ||
                                   state.viewMode ==
-                                      DashboardViewMode.vehicleLogsView
-                              ? // PDF preview & violation view: full screen, no scroll
+                                      DashboardViewMode.vehicleLogsView ||
+                                  state.viewMode ==
+                                      DashboardViewMode.vehicleByDepartmentView
+                              ? // exclude pages that doesn't need the controls and to be scrolled
                               SizedBox(child: _buildMainContent(context, state))
                               : // Other views: with controls and scroll
                               SingleChildScrollView(

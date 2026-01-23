@@ -8,6 +8,7 @@ enum DashboardViewMode {
   pendingViolationView,
   allVehiclesView,
   vehicleLogsView,
+  vehicleByDepartmentView,
 }
 
 class GlobalDashboardState extends Equatable {

@@ -8,8 +8,11 @@ import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_window_buttons.dart';
 import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
+import 'package:cvms_desktop/features/shell/bloc/connectivity_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CustomHeader extends StatelessWidget {
@@ -19,7 +22,6 @@ class CustomHeader extends StatelessWidget {
   final VoidCallback? onMenuPressed;
   final List<BreadcrumbItem> breadcrumbs;
   final String profileImage;
-  final IconData internetIcon;
 
   const CustomHeader({
     super.key,
@@ -29,7 +31,6 @@ class CustomHeader extends StatelessWidget {
     required this.currentUser,
     required this.breadcrumbs,
     required this.profileImage,
-    this.internetIcon = PhosphorIconsRegular.wifiHigh,
   });
 
   @override
@@ -128,11 +129,30 @@ class CustomHeader extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.small + 1,
                   ),
-                  child: Icon(
-                    //todo: add internet monitoring
-                    internetIcon,
-                    size: 20,
-                    color: AppColors.chartGreen,
+                  child: BlocBuilder<ConnectivityCubit, InternetStatus>(
+                    builder: (context, status) {
+                      IconData icon;
+                      Color color;
+                      String tooltip;
+
+                      switch (status) {
+                        case InternetStatus.connected:
+                          icon = PhosphorIconsRegular.wifiHigh;
+                          color = AppColors.chartGreen;
+                          tooltip = 'Online';
+                          break;
+                        case InternetStatus.disconnected:
+                          icon = PhosphorIconsRegular.wifiSlash;
+                          color = AppColors.error;
+                          tooltip = 'Offline';
+                          break;
+                      }
+
+                      return Tooltip(
+                        message: tooltip,
+                        child: Icon(icon, size: 20, color: color),
+                      );
+                    },
                   ),
                 ),
                 Container(
