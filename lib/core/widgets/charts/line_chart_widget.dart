@@ -7,6 +7,7 @@ import 'package:cvms_desktop/core/widgets/titles/custom_chart_title.dart';
 import 'package:cvms_desktop/features/dashboard/models/dashboard/chart_data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class LineChartWidget extends StatelessWidget {
@@ -59,8 +60,116 @@ class LineChartWidget extends StatelessWidget {
       );
     }
 
+    // Smart day format that shows month only for first day or month change
+    DateFormat _getSmartDayFormat(DateTime firstDate) {
+      // This is a simplified approach - for true smart labeling,
+      // we'd need to use onLabelRender or create custom labels
+      return DateFormat('MMM d');
+    }
+
+    // Smart month format that shows year only for first month
+    DateFormat _getSmartMonthFormat(DateTime firstDate) {
+      // This is a simplified approach - for true smart labeling,
+      // we'd need to use onLabelRender or create custom labels
+      return DateFormat('MMM yyyy');
+    }
+
+    // Create dynamic date axis with smart labeling
+    DateTimeAxis createSmartDateAxis(double containerWidth) {
+      if (points.isEmpty) return DateTimeAxis();
+
+      final firstDate = points.first.date!;
+      final lastDate = points.last.date!;
+      final totalDays = lastDate.difference(firstDate).inDays;
+
+      // Calculate maximum labels based on container width (~80px per label minimum)
+      final maxLabels = (containerWidth / 80).floor().clamp(3, 12);
+
+      // Calculate dynamic interval based on data points and available space
+      final dataPointCount = points.length;
+      final dynamicInterval = (dataPointCount / maxLabels).ceil().clamp(
+        1,
+        dataPointCount,
+      );
+
+      // Determine the appropriate format based on data span
+      if (totalDays <= 6) {
+        // For 7 days: Use smart day format with width-aware intervals
+        return DateTimeAxis(
+          dateFormat: _getSmartDayFormat(firstDate),
+          labelStyle: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+          ),
+          intervalType: DateTimeIntervalType.days,
+          interval: dynamicInterval.toDouble(),
+          labelRotation: 0,
+          maximumLabels: maxLabels,
+          labelIntersectAction: AxisLabelIntersectAction.multipleRows,
+        );
+      } else if (totalDays <= 29) {
+        // For 30 days: Use day format with width-aware intervals
+        return DateTimeAxis(
+          dateFormat: _getSmartDayFormat(firstDate),
+          labelStyle: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+          ),
+          intervalType: DateTimeIntervalType.days,
+          interval:
+              dynamicInterval
+                  .clamp(1, 7)
+                  .toDouble(), // Cap at weekly intervals for 30 days
+          labelRotation: 0,
+          maximumLabels: maxLabels,
+          labelIntersectAction: AxisLabelIntersectAction.multipleRows,
+        );
+      } else if (totalDays <= 364) {
+        // For yearly data: Use month format with width-aware intervals
+        return DateTimeAxis(
+          dateFormat: _getSmartMonthFormat(firstDate),
+          labelStyle: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+          ),
+          intervalType: DateTimeIntervalType.months,
+          interval:
+              (dynamicInterval / 30)
+                  .ceil()
+                  .clamp(1, 3)
+                  .toDouble(), // Convert to monthly intervals
+          labelRotation: 0,
+          maximumLabels: maxLabels,
+          labelIntersectAction: AxisLabelIntersectAction.multipleRows,
+          edgeLabelPlacement: EdgeLabelPlacement.shift,
+        );
+      } else {
+        // For multi-year data: Use year format with width-aware intervals
+        return DateTimeAxis(
+          dateFormat: DateFormat('yyyy'),
+          labelStyle: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+          ),
+          intervalType: DateTimeIntervalType.years,
+          interval:
+              (dynamicInterval / 365)
+                  .ceil()
+                  .clamp(1, 10)
+                  .toDouble(), // Convert to yearly intervals
+          labelRotation: 0,
+          maximumLabels: maxLabels,
+          labelIntersectAction: AxisLabelIntersectAction.multipleRows,
+        );
+      }
+    }
+
+    // Calculate container width (estimate based on typical chart container)
+    final containerWidth =
+        MediaQuery.of(context).size.width * 0.6; // Adjust for your layout
+
     final body = SfCartesianChart(
-      primaryXAxis: DateTimeAxis(),
+      primaryXAxis: createSmartDateAxis(containerWidth),
       tooltipBehavior: TooltipBehavior(enable: true),
       trackballBehavior: TrackballBehavior(
         enable: true,

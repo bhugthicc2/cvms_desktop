@@ -385,6 +385,14 @@ class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
     emit(state.copyWith(currentTimeRange: timeRange));
   }
 
+  void updateVehicleLogsTimeRange(String timeRange) {
+    emit(state.copyWith(vehicleLogsTimeRange: timeRange));
+  }
+
+  void updateViolationTrendTimeRange(String timeRange) {
+    emit(state.copyWith(violationTrendTimeRange: timeRange));
+  }
+
   void backToPreviousView() {
     final previousView = state.previousViewMode;
     if (previousView != null) {

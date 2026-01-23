@@ -25,6 +25,8 @@ class GlobalChartsSection extends StatelessWidget {
   final Function(String)? onTimeRangeChanged2;
   final String lineChartTitle1;
   final String lineChartTitle2;
+  final String vehicleLogsTimeRange;
+  final String violationTrendTimeRange;
   final double hoverDy;
   // Chart view tap handlers
   final VoidCallback? onVehicleDistributionTap;
@@ -51,6 +53,8 @@ class GlobalChartsSection extends StatelessWidget {
     this.onTimeRangeChanged2,
     required this.lineChartTitle1,
     required this.lineChartTitle2,
+    required this.vehicleLogsTimeRange,
+    required this.violationTrendTimeRange,
     required this.violationTrendData,
     this.hoverDy = -0.01,
     this.onVehicleDistributionTap,
@@ -175,7 +179,6 @@ class GlobalChartsSection extends StatelessWidget {
 
           Spacing.vertical(size: AppSpacing.medium),
           SizedBox(
-            //todo violation trend
             height: height + 100,
             child: Expanded(
               child: _buildLineChart2(
@@ -282,7 +285,7 @@ class GlobalChartsSection extends StatelessWidget {
           fontSize: 14,
           verticalPadding: 0,
           items: const ['7 days', '30 days', 'Month', 'Year', 'Custom'],
-          initialValue: '7 days',
+          initialValue: vehicleLogsTimeRange,
           onChanged: (value) {
             onTimeRangeChanged1?.call(value);
           },
@@ -309,7 +312,7 @@ class GlobalChartsSection extends StatelessWidget {
           fontSize: 14,
           verticalPadding: 0,
           items: const ['7 days', '30 days', 'Month', 'Year', 'Custom'],
-          initialValue: '7 days',
+          initialValue: violationTrendTimeRange,
           onChanged: (value) {
             onTimeRangeChanged2?.call(value);
           },

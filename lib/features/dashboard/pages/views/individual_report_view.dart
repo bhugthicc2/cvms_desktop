@@ -52,10 +52,10 @@ class IndividualReportView extends StatelessWidget {
 
     switch (selectedRange) {
       case '7 days':
-        startDate = endDate.subtract(Duration(days: 7));
+        startDate = endDate.subtract(Duration(days: 6));
         break;
       case '30 days':
-        startDate = endDate.subtract(Duration(days: 30));
+        startDate = endDate.subtract(Duration(days: 29));
         break;
       case 'Month':
         startDate = DateTime(endDate.year, endDate.month, 1);
@@ -90,10 +90,10 @@ class IndividualReportView extends StatelessWidget {
 
     switch (selectedRange) {
       case '7 days':
-        startDate = endDate.subtract(Duration(days: 7));
+        startDate = endDate.subtract(Duration(days: 6));
         break;
       case '30 days':
-        startDate = endDate.subtract(Duration(days: 30));
+        startDate = endDate.subtract(Duration(days: 29));
         break;
       case 'Month':
         startDate = DateTime(endDate.year, endDate.month, 1);

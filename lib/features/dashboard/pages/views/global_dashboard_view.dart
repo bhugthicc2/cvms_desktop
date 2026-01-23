@@ -72,19 +72,21 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
     });
   }
 
-  void _onFleetLogsTimeRangeChanged(String selectedRange) {
-    // Update time range in cubit state
-    context.read<GlobalDashboardCubit>().updateTimeRange(selectedRange);
+  void _onFleetLogsTimeRangeChanged(String selectedFleetLogsTimeRange) {
+    // Update vehicle logs time range in cubit state
+    context.read<GlobalDashboardCubit>().updateVehicleLogsTimeRange(
+      selectedFleetLogsTimeRange,
+    );
 
     DateTime endDate = DateTime.now();
     DateTime startDate;
 
-    switch (selectedRange) {
+    switch (selectedFleetLogsTimeRange) {
       case '7 days':
-        startDate = endDate.subtract(Duration(days: 7));
+        startDate = endDate.subtract(Duration(days: 6));
         break;
       case '30 days':
-        startDate = endDate.subtract(Duration(days: 30));
+        startDate = endDate.subtract(Duration(days: 29));
         break;
       case 'Month':
         startDate = DateTime(endDate.year, endDate.month, 1);
@@ -94,7 +96,7 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
         break;
       case 'Custom':
         // Trigger custom date picker
-        _showCustomDatePicker();
+        _showCustomVehicleLogsTrendDatePicker();
         return;
       default:
         return;
@@ -108,19 +110,23 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
     );
   }
 
-  void _onViolationTrendTimeRangeChanged(String selectedRange) {
-    // Update time range in cubit state
-    context.read<GlobalDashboardCubit>().updateTimeRange(selectedRange);
+  void _onViolationTrendTimeRangeChanged(
+    String selectedViolationTrendTimeRange,
+  ) {
+    // Update violation trend time range in cubit state
+    context.read<GlobalDashboardCubit>().updateViolationTrendTimeRange(
+      selectedViolationTrendTimeRange,
+    );
 
     DateTime endDate = DateTime.now();
     DateTime startDate;
 
-    switch (selectedRange) {
+    switch (selectedViolationTrendTimeRange) {
       case '7 days':
-        startDate = endDate.subtract(Duration(days: 7));
+        startDate = endDate.subtract(Duration(days: 6));
         break;
       case '30 days':
-        startDate = endDate.subtract(Duration(days: 30));
+        startDate = endDate.subtract(Duration(days: 29));
         break;
       case 'Month':
         startDate = DateTime(endDate.year, endDate.month, 1);
@@ -130,7 +136,7 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
         break;
       case 'Custom':
         // Trigger custom date picker
-        _showCustomDatePicker();
+        _showCustomViolationTrendDatePicker();
         return;
       default:
         return;
@@ -144,7 +150,7 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
     );
   }
 
-  void _showCustomDatePicker() {
+  void _showCustomVehicleLogsTrendDatePicker() {
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -153,8 +159,10 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
           child: CustomDateFilter(
             onApply: (period) {
               if (period != null) {
-                // Update current time range to reflect custom selection
-                context.read<GlobalDashboardCubit>().updateTimeRange('Custom');
+                // Update vehicle logs time range to reflect custom selection
+                context.read<GlobalDashboardCubit>().updateVehicleLogsTimeRange(
+                  'Custom',
+                );
 
                 // Use the original context to access the cubit
                 context.read<GlobalDashboardCubit>().watchFleetLogsTrend(
@@ -162,6 +170,29 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
                   end: period.end,
                   grouping: TimeGrouping.day,
                 );
+              }
+              Navigator.of(dialogContext).pop(); // Close the date picker dialog
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void _showCustomViolationTrendDatePicker() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return CustomAlertDialog(
+          title: 'Select Date Range',
+          child: CustomDateFilter(
+            onApply: (period) {
+              if (period != null) {
+                // Update violation trend time range to reflect custom selection
+                context
+                    .read<GlobalDashboardCubit>()
+                    .updateViolationTrendTimeRange('Custom');
+
                 //Violation Trend
                 context.read<GlobalDashboardCubit>().watchViolationTrend(
                   start: period.start,
@@ -246,10 +277,12 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
                       _onViolationTrendTimeRangeChanged(value);
                     },
                     hoverDy: widget.hoverDy,
+                    vehicleLogsTimeRange: state.vehicleLogsTimeRange,
+                    violationTrendTimeRange: state.violationTrendTimeRange,
                     lineChartTitle1: DynamicTitleFormatter()
                         .getDynamicVehicleLogsTrendTitle(
                           'Vehicle logs trend for ',
-                          state.currentTimeRange,
+                          state.vehicleLogsTimeRange,
                         ),
                     yearLevelBreakdown:
                         state.yearLevelBreakdown, // realtime step 19
@@ -269,8 +302,8 @@ class _GlobalDashboardViewState extends State<GlobalDashboardView> {
                     lineChartTitle2: DynamicTitleFormatter()
                         .getDynamicViolationTrendTitle(
                           'Violation trend for ',
-                          state.currentTimeRange,
-                        ), //todo
+                          state.violationTrendTimeRange,
+                        ),
                     violationTrendData: state.violationTrendData,
                     // Chart tap handlers
                     onVehicleDistributionTap: widget.onVehicleDistributionTap,
