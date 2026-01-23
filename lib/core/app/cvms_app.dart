@@ -62,6 +62,9 @@ class _CVMSAppState extends State<CVMSApp> with WidgetsBindingObserver {
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(),
                           style: TextButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
                             textStyle: const TextStyle(fontFamily: 'Poppins'),
                           ),
                           child: const Text('OK'),

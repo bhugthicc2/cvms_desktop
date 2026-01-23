@@ -49,7 +49,7 @@ class TypeaheadSearchField<T> extends StatelessWidget {
         height: searchFieldHeight,
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(5),
         ),
         child: TypeAheadField<T>(
           controller: controller,
@@ -77,7 +77,7 @@ class TypeaheadSearchField<T> extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(5),
                 ),
                 hintText: hintText,
                 hintStyle: TextStyle(
@@ -168,9 +168,10 @@ class TypeaheadSearchField<T> extends StatelessWidget {
 
             return HoverSlide(
               cursor: SystemMouseCursors.click,
-              dx: 0.04,
+              dx: 0.03,
               dy: 0,
               child: ListTile(
+                hoverColor: AppColors.grey,
                 title: RichText(
                   text: TextSpan(style: baseStyle, children: spans),
                   maxLines: 1,

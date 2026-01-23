@@ -61,14 +61,14 @@ class LineChartWidget extends StatelessWidget {
     }
 
     // Smart day format that shows month only for first day or month change
-    DateFormat _getSmartDayFormat(DateTime firstDate) {
+    DateFormat getSmartDayFormat(DateTime firstDate) {
       // This is a simplified approach - for true smart labeling,
       // we'd need to use onLabelRender or create custom labels
       return DateFormat('MMM d');
     }
 
     // Smart month format that shows year only for first month
-    DateFormat _getSmartMonthFormat(DateTime firstDate) {
+    DateFormat getSmartMonthFormat(DateTime firstDate) {
       // This is a simplified approach - for true smart labeling,
       // we'd need to use onLabelRender or create custom labels
       return DateFormat('MMM yyyy');
@@ -96,7 +96,7 @@ class LineChartWidget extends StatelessWidget {
       if (totalDays <= 6) {
         // For 7 days: Use smart day format with width-aware intervals
         return DateTimeAxis(
-          dateFormat: _getSmartDayFormat(firstDate),
+          dateFormat: getSmartDayFormat(firstDate),
           labelStyle: const TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w500,
@@ -110,7 +110,7 @@ class LineChartWidget extends StatelessWidget {
       } else if (totalDays <= 29) {
         // For 30 days: Use day format with width-aware intervals
         return DateTimeAxis(
-          dateFormat: _getSmartDayFormat(firstDate),
+          dateFormat: getSmartDayFormat(firstDate),
           labelStyle: const TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w500,
@@ -127,7 +127,7 @@ class LineChartWidget extends StatelessWidget {
       } else if (totalDays <= 364) {
         // For yearly data: Use month format with width-aware intervals
         return DateTimeAxis(
-          dateFormat: _getSmartMonthFormat(firstDate),
+          dateFormat: getSmartMonthFormat(firstDate),
           labelStyle: const TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w500,
@@ -165,8 +165,7 @@ class LineChartWidget extends StatelessWidget {
     }
 
     // Calculate container width (estimate based on typical chart container)
-    final containerWidth =
-        MediaQuery.of(context).size.width * 0.6; // Adjust for your layout
+    final containerWidth = MediaQuery.of(context).size.width * 0.6;
 
     final body = SfCartesianChart(
       primaryXAxis: createSmartDateAxis(containerWidth),
