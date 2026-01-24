@@ -413,8 +413,8 @@ class GlobalDashboardRepository {
   }) {
     return _db
         .collection('vehicle_logs')
-        .where('timeIn', isGreaterThanOrEqualTo: Timestamp.fromDate(start))
-        .where('timeIn', isLessThanOrEqualTo: Timestamp.fromDate(end))
+        .where('timeOut', isGreaterThanOrEqualTo: Timestamp.fromDate(start))
+        .where('timeOut', isLessThanOrEqualTo: Timestamp.fromDate(end))
         .snapshots()
         .map((snapshot) {
           final Map<String, int> buckets = {};
@@ -432,7 +432,7 @@ class GlobalDashboardRepository {
           // step 2: aggregate logs
           for (final doc in snapshot.docs) {
             final data = doc.data();
-            final Timestamp ts = data['timeIn'];
+            final Timestamp ts = data['timeOut'];
             final date = ts.toDate();
 
             final bucketKey = TimeBuckerHelper().formatBucket(date, grouping);

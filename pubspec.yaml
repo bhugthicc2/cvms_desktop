@@ -123,3 +123,15 @@ flutter:
           weight: 700
         - asset: assets/fonts/inter_font_fam/Inter-ExtraBold.ttf
           weight: 800
+    - family: Groote
+      fonts:
+        - asset: assets/fonts/Groote-Regular.otf
+          weight: 400
+        - asset: assets/fonts/Groote-Regular.otf
+          weight: 500
+        - asset: assets/fonts/Groote-Regular.otf
+          weight: 600
+        - asset: assets/fonts/Groote-Regular.otf
+          weight: 700
+        - asset: assets/fonts/Groote-Regular.otf
+          weight: 800

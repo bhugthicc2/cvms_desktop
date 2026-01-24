@@ -30,6 +30,7 @@ class ViolationRepository {
       // Log violation report
       await _logger.logViolationReported(
         violationDoc.id,
+        vehicleId,
         '$violationType violation reported',
         reportedByUserId,
       );

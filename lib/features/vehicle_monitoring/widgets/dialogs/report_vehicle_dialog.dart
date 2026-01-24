@@ -10,16 +10,12 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 class ReportVehicleDialog extends StatefulWidget {
   final String title;
   final String vehicleId;
-  final String plateNumber;
-  final String ownerName;
   final ValueChanged<String> onSubmit; // callback sends selected violation
 
   const ReportVehicleDialog({
     super.key,
     required this.title,
     required this.vehicleId,
-    required this.plateNumber,
-    required this.ownerName,
     required this.onSubmit,
   });
 

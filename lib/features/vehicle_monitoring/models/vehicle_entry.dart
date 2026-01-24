@@ -21,7 +21,7 @@ class VehicleEntry {
        _vehicleModel = vehicleModel,
        _plateNumber = plateNumber;
 
-  String get status => timeOut == null ? "inside" : "outside";
+  String get status => timeOut == null ? "onsite" : "offsite";
 
   factory VehicleEntry.fromDoc(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;

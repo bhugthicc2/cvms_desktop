@@ -2,6 +2,8 @@ import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard/individual/individual_dashboard_cubit.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard/individual/individual_dashboard_state.dart';
 import 'package:cvms_desktop/features/dashboard/utils/dynamic_title_formatter.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/sections/cards/individual_info_section.dart';
+import 'package:cvms_desktop/features/dashboard/widgets/sections/charts/individual_bar_chart_section.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/sections/charts/individual_charts_section.dart';
 import 'package:cvms_desktop/features/dashboard/widgets/sections/stats/individual_stats_section.dart';
 import 'package:cvms_desktop/features/dashboard/models/dashboard/individual_vehicle_info.dart';
@@ -174,6 +176,7 @@ class IndividualReportView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double sectionHeight = 300;
     return BlocBuilder<IndividualDashboardCubit, IndividualDashboardState>(
       builder: (context, state) {
         if (state.loading) {
@@ -185,7 +188,7 @@ class IndividualReportView extends StatelessWidget {
             children: [
               //stats and info
               SizedBox(
-                height: 240,
+                height: 100,
                 child: BlocBuilder<
                   IndividualDashboardCubit,
                   IndividualDashboardState
@@ -202,52 +205,74 @@ class IndividualReportView extends StatelessWidget {
                       totalViolations: state.totalViolations,
                       totalPendingViolations: state.totalPendingViolations,
                       totalVehicleLogs: state.totalVehicleLogs,
-                      //info
-                      plateNumber: vehicleInfo.plateNumber,
-                      ownerName: vehicleInfo.ownerName,
-                      vehicleType: vehicleInfo.vehicleType,
-                      department: vehicleInfo.department,
-                      status: vehicleInfo.status,
-                      vehicleModel: vehicleInfo.vehicleModel,
-                      createdAt: vehicleInfo.createdAt!,
-                      expiryDate: vehicleInfo.expiryDate!,
-                      mvpProgress: vehicleInfo.mvpProgress,
-                      mvpRegisteredDate: vehicleInfo.mvpRegisteredDate!,
-                      mvpExpiryDate: vehicleInfo.mvpExpiryDate!,
-                      mvpStatusText: vehicleInfo.mvpStatusText,
-                      hoverDy: hoverDy,
                     );
                   },
                 ),
               ),
 
-              IndividualChartsSection(
-                violationDistribution: state.violationDistribution,
-                //vehicle logs
-                vehicleLogs: state.vehicleLogsTrend, //default to 7 days
-                lineChartTitle1: DynamicTitleFormatter()
-                    .getDynamicVehicleLogsTrendTitle(
-                      'Vehicle logs trend for ',
-                      state.vehicleLogsCurrentTimeRange,
+              //Vehicle info section
+              SizedBox(
+                height: sectionHeight,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: IndividualInfoSection(
+                        //info
+                        plateNumber: vehicleInfo.plateNumber,
+                        ownerName: vehicleInfo.ownerName,
+                        vehicleType: vehicleInfo.vehicleType,
+                        department: vehicleInfo.department,
+                        status: vehicleInfo.status,
+                        vehicleModel: vehicleInfo.vehicleModel,
+                        createdAt: vehicleInfo.createdAt!,
+                        expiryDate: vehicleInfo.expiryDate!,
+                        mvpProgress: vehicleInfo.mvpProgress,
+                        mvpRegisteredDate: vehicleInfo.mvpRegisteredDate!,
+                        mvpExpiryDate: vehicleInfo.mvpExpiryDate!,
+                        mvpStatusText: vehicleInfo.mvpStatusText,
+                        hoverDy: hoverDy,
+                      ),
                     ),
-                onTimeRangeChanged1: (value) {
-                  _onVehicleLogsTimeRangeChanged(value, context);
-                },
-                //violation
-                lineChartTitle2: DynamicTitleFormatter()
-                    .getDynamicViolationTrendTitle(
-                      'Violation trend for ',
-                      state.violationTrendCurrentTimeRange,
+                    Spacing.horizontal(size: AppSpacing.medium),
+                    Expanded(
+                      child: IndividualBarChartSection(
+                        violationDistribution: state.violationDistribution,
+                      ),
                     ),
-                violationTrend: state.violationTrend,
-                onTimeRangeChanged2: (value) {
-                  _onViolationTrendTimeRangeChanged(value, context);
-                },
-                hoverDy: hoverDy,
-                // Chart tap handlers
-                onViolationDistributionTap: onViolationDistributionTap,
-                onVehicleLogsTap: onVehicleLogsTap,
-                onViolationTrendTap: onViolationTrendTap,
+                  ],
+                ),
+              ),
+
+              //
+              SizedBox(
+                height: sectionHeight,
+                child: IndividualChartsSection(
+                  //vehicle logs
+                  vehicleLogs: state.vehicleLogsTrend, //default to 7 days
+                  lineChartTitle1: DynamicTitleFormatter()
+                      .getDynamicVehicleLogsTrendTitle(
+                        'Vehicle logs trend for ',
+                        state.vehicleLogsCurrentTimeRange,
+                      ),
+                  onTimeRangeChanged1: (value) {
+                    _onVehicleLogsTimeRangeChanged(value, context);
+                  },
+                  //violation
+                  lineChartTitle2: DynamicTitleFormatter()
+                      .getDynamicViolationTrendTitle(
+                        'Violation trend for ',
+                        state.violationTrendCurrentTimeRange,
+                      ),
+                  violationTrend: state.violationTrend,
+                  onTimeRangeChanged2: (value) {
+                    _onViolationTrendTimeRangeChanged(value, context);
+                  },
+                  hoverDy: hoverDy,
+                  // Chart tap handlers
+                  onViolationDistributionTap: onViolationDistributionTap,
+                  onVehicleLogsTap: onVehicleLogsTap,
+                  onViolationTrendTap: onViolationTrendTap,
+                ),
               ),
 
               //TEMPORARILY DISABLE THE TABLES SINCE IT CAN BE COVERED IN THE CHART

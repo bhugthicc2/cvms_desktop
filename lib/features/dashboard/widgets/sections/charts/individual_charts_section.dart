@@ -9,7 +9,6 @@ import 'package:cvms_desktop/features/dashboard/models/dashboard/chart_data_mode
 import 'package:flutter/material.dart';
 
 class IndividualChartsSection extends StatelessWidget {
-  final List<ChartDataModel> violationDistribution;
   final List<ChartDataModel> vehicleLogs;
   final List<ChartDataModel> violationTrend;
   final String lineChartTitle1;
@@ -24,7 +23,6 @@ class IndividualChartsSection extends StatelessWidget {
 
   const IndividualChartsSection({
     super.key,
-    required this.violationDistribution,
     required this.vehicleLogs,
     required this.violationTrend,
     required this.lineChartTitle1,
@@ -39,67 +37,32 @@ class IndividualChartsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = 280;
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.medium,
-        AppSpacing.medium,
+        0,
         AppSpacing.medium,
         0,
       ),
-      child: Column(
+      child: Row(
         children: [
-          SizedBox(
-            height: height,
-            child: Row(
-              children: [
-                Expanded(
-                  child: _buildBarChart(
-                    'Violations by Type',
-                    violationDistribution,
-                    onViolationDistributionTap,
-                  ),
-                ),
-                Spacing.horizontal(size: AppSpacing.medium),
-                Expanded(
-                  child: _buildLineChart1(
-                    lineChartTitle1,
-                    vehicleLogs,
-                    onVehicleLogsTap,
-                  ),
-                ),
-              ],
+          Expanded(
+            child: _buildLineChart1(
+              lineChartTitle1,
+              vehicleLogs,
+              onVehicleLogsTap,
             ),
           ),
-          Spacing.vertical(size: AppSpacing.medium),
-          SizedBox(
-            height: height + 20,
-            child: Expanded(
-              child: _buildLineChart2(
-                lineChartTitle2,
-                violationTrend,
-                onViolationTrendTap,
-              ),
+
+          Spacing.horizontal(size: AppSpacing.medium),
+          Expanded(
+            child: _buildLineChart2(
+              lineChartTitle2,
+              violationTrend,
+              onViolationTrendTap,
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBarChart(
-    String title,
-    List<ChartDataModel> data,
-    VoidCallback? onViewTap,
-  ) {
-    return HoverSlide(
-      dx: 0,
-      dy: hoverDy,
-      child: BarChartWidget(
-        data: data,
-        title: title,
-        onViewTap: onViewTap ?? () {},
-        onBarChartPointTap: (details) {},
       ),
     );
   }

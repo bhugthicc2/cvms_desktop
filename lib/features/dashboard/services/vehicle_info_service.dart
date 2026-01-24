@@ -20,12 +20,24 @@ class VehicleInfoService {
   static Color getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'onsite':
-        return Colors.green;
+        return AppColors.chartGreen.withValues(alpha: 0.1);
       case 'offsite':
-        return Colors.grey;
+        return AppColors.error.withValues(alpha: 0.1);
 
       default:
-        return Colors.grey;
+        return AppColors.grey.withValues(alpha: 0.1);
+    }
+  }
+
+  static Color getTextStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'onsite':
+        return AppColors.chartGreen;
+      case 'offsite':
+        return AppColors.error;
+
+      default:
+        return AppColors.grey;
     }
   }
 

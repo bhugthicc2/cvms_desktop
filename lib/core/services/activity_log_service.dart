@@ -115,6 +115,7 @@ class ActivityLogService {
 
   Future<void> logViolationReported(
     String violationId,
+    String vehicleId,
     String description,
     String? userId,
   ) async {
@@ -122,7 +123,7 @@ class ActivityLogService {
       type: ActivityType.violationReported,
       description: 'Violation reported: $description',
       userId: userId,
-      targetId: violationId,
+      targetId: vehicleId,
       metadata: {'violationId': violationId, 'action': 'report'},
     );
   }

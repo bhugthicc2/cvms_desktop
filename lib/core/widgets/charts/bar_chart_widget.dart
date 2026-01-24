@@ -2,6 +2,8 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/charts/chart_empty_state.dart';
+import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
+import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/core/widgets/titles/custom_chart_title.dart';
 import 'package:cvms_desktop/features/dashboard/models/dashboard/chart_data_model.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +54,7 @@ class BarChartWidget extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: CustomChartTitle(title: title, showViewBtn: false),
             ),
-            ChartEmptyState(),
+            Center(child: ChartEmptyState()),
           ],
         ),
       );
@@ -99,8 +101,8 @@ class BarChartWidget extends StatelessWidget {
             spacing: 0.2,
             width: 0.6,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(3),
-              topRight: Radius.circular(3),
+              topLeft: Radius.circular(5),
+              topRight: Radius.circular(5),
             ),
             onPointTap:
                 onBarChartPointTap != null
@@ -166,18 +168,31 @@ class BarChartWidget extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(0),
         child: Column(
           children: [
             if (title.isNotEmpty)
-              Align(
-                alignment: Alignment.centerLeft,
-                child: CustomChartTitle(title: title, onViewTap: onViewTap),
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.medium),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: CustomChartTitle(title: title, onViewTap: onViewTap),
+                ),
               ),
+
+            CustomDivider(
+              direction: Axis.horizontal,
+              thickness: 2,
+              color: AppColors.greySurface,
+            ),
+
             Expanded(
               child:
                   screenshotController == null
-                      ? body
+                      ? Padding(
+                        padding: const EdgeInsets.all(AppSpacing.medium),
+                        child: body,
+                      )
                       : Screenshot(
                         controller: screenshotController!,
                         child: body,

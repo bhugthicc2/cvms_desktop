@@ -70,7 +70,7 @@ class GlobalChartsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = 260;
+    double height = 300;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium),
       child: Column(
@@ -103,11 +103,11 @@ class GlobalChartsSection extends StatelessWidget {
 
           // Second Row: Top Violators + Cities
           SizedBox(
-            height: height,
+            height: height + 10,
             child: Row(
               children: [
                 Expanded(
-                  child: _buildStackedChart(
+                  child: _buildBarChart(
                     'Top 5 Students by Violation Share',
                     studentWithMostViolations,
                     onTopViolatorsTap,
@@ -115,7 +115,7 @@ class GlobalChartsSection extends StatelessWidget {
                 ),
                 Spacing.horizontal(size: AppSpacing.medium),
                 Expanded(
-                  child: _buildStackedChart(
+                  child: _buildBarChart(
                     'Top 5 Cities/Municipalities by Vehicle Share',
                     cityBreakdown,
                     onTopCitiesTap,
@@ -223,29 +223,29 @@ class GlobalChartsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildStackedChart(
-    String title,
-    List<ChartDataModel> data,
-    VoidCallback? onViewTap,
-  ) {
-    // Sort data by value in descending order for highlighting
-    final sortedData = ChartDataSorter.sortByValueDescending(data);
+  // Widget _buildStackedChart(
+  //   String title,
+  //   List<ChartDataModel> data,
+  //   VoidCallback? onViewTap,
+  // ) {
+  //   // Sort data by value in descending order for highlighting
+  //   final sortedData = ChartDataSorter.sortByValueDescending(data);
 
-    return HoverSlide(
-      dx: 0,
-      dy: hoverDy,
-      child: StackedBarWidget(
-        title: title,
-        data: sortedData,
-        onViewTap: onViewTap ?? () {},
-        onStackBarPointTapped: (details) {},
-        highlightHighestIndex:
-            sortedData.isNotEmpty
-                ? 0
-                : null, // First item is highest after sorting
-      ),
-    );
-  }
+  //   return HoverSlide(
+  //     dx: 0,
+  //     dy: hoverDy,
+  //     child: StackedBarWidget(
+  //       title: title,
+  //       data: sortedData,
+  //       onViewTap: onViewTap ?? () {},
+  //       onStackBarPointTapped: (details) {},
+  //       highlightHighestIndex:
+  //           sortedData.isNotEmpty
+  //               ? 0
+  //               : null, // First item is highest after sorting
+  //     ),
+  //   );
+  // }
 
   Widget _buildBarChart(
     String title,

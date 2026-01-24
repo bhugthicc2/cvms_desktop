@@ -2,71 +2,63 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ViolationModel {
   final String violationId;
-  final Timestamp dateTime;
-  final String reportedBy;
-  final String plateNumber;
-  final String vehicleId;
-  final String owner;
-  final String violation;
+  final Timestamp createdAt;
+  final Timestamp reportedAt;
+  final String reportedByUserId;
   final String status;
+  final String vehicleId;
+  final String violationType;
 
   ViolationModel({
     required this.violationId,
-    required this.dateTime,
-    required this.reportedBy,
-    required this.plateNumber,
-    required this.vehicleId,
-    required this.owner,
-    required this.violation,
+    required this.createdAt,
+    required this.reportedAt,
+    required this.reportedByUserId,
     required this.status,
+    required this.vehicleId,
+    required this.violationType,
   });
 
   factory ViolationModel.fromMap(Map<String, dynamic> map, String id) {
     return ViolationModel(
       violationId: id,
-      dateTime: map['dateTime'] ?? Timestamp.now(),
-      reportedBy: map['reportedBy'] ?? '',
-      plateNumber: map['plateNumber'] ?? '',
-      vehicleId: map['vehicleId'] ?? '',
-      owner: map['owner'] ?? '',
-      violation: map['violation'] ?? '',
+      createdAt: map['createdAt'] ?? Timestamp.now(),
+      reportedAt: map['reportedAt'] ?? Timestamp.now(),
+      reportedByUserId: map['reportedByUserId'] ?? '',
       status: map['status'] ?? 'pending',
+      vehicleId: map['vehicleId'] ?? '',
+      violationType: map['violationType'] ?? '',
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'dateTime': dateTime,
-      'reportedBy': reportedBy,
-      'plateNumber': plateNumber,
-      'vehicleID': vehicleId,
-      'owner': owner,
-      'violation': violation,
+      'createdAt': createdAt,
+      'reportedAt': reportedAt,
+      'reportedByUserId': reportedByUserId,
       'status': status,
-      'createdAt': FieldValue.serverTimestamp(),
+      'vehicleId': vehicleId,
+      'violationType': violationType,
     };
   }
 
   ViolationModel copyWith({
     String? violationId,
-    Timestamp? dateTime,
-    String? reportedBy,
-    String? plateNumber,
-    String? vehicleId,
-    String? owner,
-    String? violation,
+    Timestamp? createdAt,
+    Timestamp? reportedAt,
+    String? reportedByUserId,
     String? status,
-    String? reportReason,
+    String? vehicleId,
+    String? violationType,
   }) {
     return ViolationModel(
       violationId: violationId ?? this.violationId,
-      dateTime: dateTime ?? this.dateTime,
-      reportedBy: reportedBy ?? this.reportedBy,
-      plateNumber: plateNumber ?? this.plateNumber,
-      vehicleId: vehicleId ?? this.vehicleId,
-      owner: owner ?? this.owner,
-      violation: violation ?? this.violation,
+      createdAt: createdAt ?? this.createdAt,
+      reportedAt: reportedAt ?? this.reportedAt,
+      reportedByUserId: reportedByUserId ?? this.reportedByUserId,
       status: status ?? this.status,
+      vehicleId: vehicleId ?? this.vehicleId,
+      violationType: violationType ?? this.violationType,
     );
   }
 }

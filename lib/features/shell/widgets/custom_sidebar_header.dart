@@ -26,8 +26,8 @@ class CustomSidebarHeader extends StatelessWidget {
           ClipOval(
             child: Image.asset(
               "assets/images/jrmsu-logo.png",
-              width: 25,
-              height: 25,
+              width: isExpanded ? 30 : 25,
+              height: isExpanded ? 30 : 25,
               fit: BoxFit.cover,
             ),
           ),
@@ -49,19 +49,19 @@ class CustomSidebarHeader extends StatelessWidget {
                               Text(
                                 "JRMSU-K",
                                 style: TextStyle(
-                                  fontFamily: 'Inter',
+                                  fontFamily: 'Groote',
                                   color: AppColors.yellow,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: AppFontSizes.large,
+                                  fontSize: AppFontSizes.medium,
                                 ),
                               ),
                               Text(
-                                " CVMS",
+                                "CVMS",
                                 style: TextStyle(
-                                  fontFamily: 'Inter',
+                                  fontFamily: 'Groote',
                                   color: AppColors.white,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: AppFontSizes.large,
+                                  fontSize: AppFontSizes.medium,
                                 ),
                               ),
                             ],

@@ -82,6 +82,7 @@ class CustomSidebar extends StatelessWidget {
             color: AppColors.dividerColor.withValues(alpha: 0.4),
           ),
           CustomSidebarTile(
+            isLogoutTile: true,
             item: NavItem(icon: 'logout.png', label: "Logout"),
             iconColor: AppColors.error,
             labelColor: AppColors.error,
@@ -98,7 +99,7 @@ class CustomSidebar extends StatelessWidget {
 
   Widget _buildSideBorder() {
     return ListView.builder(
-      itemExtent: 42,
+      itemExtent: 46,
       itemCount: items.length,
       itemBuilder: (context, index) {
         return CustomSidebarTile(

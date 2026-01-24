@@ -112,74 +112,63 @@ class StatsCardSection extends StatelessWidget {
   }
 
   Widget _buildIndividualStatsCard() {
-    return Column(
+    return Row(
       children: [
         Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: StatsCard(
-                  onClick: onStatsCard1Click,
-                  gradient: AppColors.greenWhite,
-                  addSideBorder: false,
-                  label: statsCard1Label,
-                  value: statsCard1Value,
-                  icon: statsCard1Icon ?? Icons.dashboard,
-                  color: Colors.blue,
-                  iconColor: Colors.blue,
-                  hoverDy: hoverDy,
-                ),
-              ),
-              Spacing.horizontal(size: AppSpacing.medium),
-              Expanded(
-                child: StatsCard(
-                  onClick: onStatsCard2Click,
-                  addSideBorder: false,
-                  gradient: AppColors.yellowOrange,
-                  label: statsCard2Label,
-                  value: statsCard2Value,
-                  icon: statsCard2Icon ?? Icons.warning,
-                  color: Colors.orange,
-                  iconColor: Colors.orange,
-                  hoverDy: hoverDy,
-                ),
-              ),
-            ],
+          child: StatsCard(
+            onClick: onStatsCard1Click,
+            gradient: AppColors.greenWhite,
+            // addSideBorder: false,
+            label: statsCard1Label,
+            value: statsCard1Value,
+            icon: statsCard1Icon ?? Icons.dashboard,
+            color: Colors.blue,
+            iconColor: Colors.blue,
+            hoverDy: hoverDy,
           ),
         ),
-        Spacing.vertical(size: AppSpacing.medium),
+        Spacing.horizontal(size: AppSpacing.medium),
+        Expanded(
+          child: StatsCard(
+            onClick: onStatsCard2Click,
+            // addSideBorder: false,
+            gradient: AppColors.yellowOrange,
+            label: statsCard2Label,
+            value: statsCard2Value,
+            icon: statsCard2Icon ?? Icons.warning,
+            color: Colors.orange,
+            iconColor: Colors.orange,
+            hoverDy: hoverDy,
+          ),
+        ),
+
+        Spacing.horizontal(size: AppSpacing.medium),
 
         Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: StatsCard(
-                  onClick: onStatsCard3Click,
-                  addSideBorder: false,
-                  label: statsCard3Label,
-                  value: statsCard3Value,
-                  icon: statsCard3Icon ?? Icons.error,
-                  color: Colors.red,
-                  gradient: AppColors.pinkWhite,
-                  iconColor: Colors.red,
-                  hoverDy: hoverDy,
-                ),
-              ),
-              Spacing.horizontal(size: AppSpacing.medium),
-              Expanded(
-                child: StatsCard(
-                  onClick: onStatsCard4Click,
-                  addSideBorder: false,
-                  label: statsCard4Label,
-                  value: statsCard4Value,
-                  icon: statsCard4Icon ?? Icons.trending_up,
-                  color: AppColors.donutBlue,
-                  gradient: AppColors.purpleBlue,
-                  iconColor: Colors.green,
-                  hoverDy: hoverDy,
-                ),
-              ),
-            ],
+          child: StatsCard(
+            onClick: onStatsCard3Click,
+            // addSideBorder: false,
+            label: statsCard3Label,
+            value: statsCard3Value,
+            icon: statsCard3Icon ?? Icons.error,
+            color: Colors.red,
+            gradient: AppColors.pinkWhite,
+            iconColor: Colors.red,
+            hoverDy: hoverDy,
+          ),
+        ),
+        Spacing.horizontal(size: AppSpacing.medium),
+        Expanded(
+          child: StatsCard(
+            onClick: onStatsCard4Click,
+            // addSideBorder: false,
+            label: statsCard4Label,
+            value: statsCard4Value,
+            icon: statsCard4Icon ?? Icons.trending_up,
+            color: AppColors.donutBlue,
+            gradient: AppColors.purpleBlue,
+            iconColor: Colors.green,
+            hoverDy: hoverDy,
           ),
         ),
       ],

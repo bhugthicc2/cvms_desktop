@@ -2,6 +2,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/utils/text_formatter.dart';
 import 'package:cvms_desktop/core/widgets/charts/chart_empty_state.dart';
+import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
 import 'package:cvms_desktop/core/widgets/titles/custom_chart_title.dart';
 import 'package:cvms_desktop/features/dashboard/models/dashboard/chart_data_model.dart';
 import 'package:flutter/material.dart';
@@ -156,12 +157,12 @@ class StackedBarWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            if (title.isNotEmpty)
-              Align(
+      child: Column(
+        children: [
+          if (title.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.medium),
+              child: Align(
                 alignment: Alignment.centerLeft,
                 child: CustomChartTitle(
                   title: title,
@@ -169,17 +170,25 @@ class StackedBarWidget extends StatelessWidget {
                   showViewBtn: showViewBtn,
                 ),
               ),
-            Expanded(
-              child:
-                  screenshotController == null
-                      ? body
-                      : Screenshot(
-                        controller: screenshotController!,
-                        child: body,
-                      ),
             ),
-          ],
-        ),
+          CustomDivider(
+            direction: Axis.horizontal,
+            thickness: 2,
+            color: AppColors.greySurface,
+          ),
+          Expanded(
+            child:
+                screenshotController == null
+                    ? Padding(
+                      padding: const EdgeInsets.all(AppSpacing.medium),
+                      child: body,
+                    )
+                    : Screenshot(
+                      controller: screenshotController!,
+                      child: body,
+                    ),
+          ),
+        ],
       ),
     );
   }

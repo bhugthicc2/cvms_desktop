@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_report_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/models/vehicle_entry.dart';
 import 'package:cvms_desktop/core/widgets/app/pop_up_menu_item.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/models/violation_model.dart';
@@ -9,6 +10,7 @@ import 'package:cvms_desktop/features/vehicle_monitoring/widgets/dialogs/custom_
     show CustomDeleteDialog;
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/dialogs/report_vehicle_dialog.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/dialogs/custom_update_dialog.dart';
+import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -129,22 +131,22 @@ class VehicleActionsMenu extends StatelessWidget {
             child: ReportVehicleDialog(
               title: "Report Vehicle",
               vehicleId: vehicleEntry.vehicleId,
-              plateNumber: vehicleEntry.plateNumber,
-              ownerName: vehicleEntry.ownerName,
               onSubmit: (violationType) async {
                 try {
+                  final authRepository = AuthRepository();
+                  final currentUserId = authRepository.uid ?? 'Unknown';
+
                   final violation = ViolationModel(
                     violationId: '',
-                    dateTime: Timestamp.now(),
-                    reportedBy: 'CDRRMSU Admin',
-                    plateNumber: vehicleEntry.plateNumber,
+                    createdAt: Timestamp.now(),
+                    reportedAt: Timestamp.now(),
+                    reportedByUserId: currentUserId,
                     vehicleId: vehicleEntry.vehicleId,
-                    owner: vehicleEntry.ownerName,
-                    violation: violationType,
+                    violationType: violationType,
                     status: 'pending',
                   );
 
-                  await context.read<VehicleMonitoringCubit>().reportViolation(
+                  await context.read<VehicleReportCubit>().reportViolation(
                     violation,
                   );
 

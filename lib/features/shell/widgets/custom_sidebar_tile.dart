@@ -12,6 +12,7 @@ class CustomSidebarTile extends StatelessWidget {
   final bool showActiveBorder;
   final Color? iconColor;
   final Color labelColor;
+  final bool isLogoutTile;
   final bool isStencil;
 
   const CustomSidebarTile({
@@ -24,6 +25,7 @@ class CustomSidebarTile extends StatelessWidget {
     this.iconColor = AppColors.white,
     required this.labelColor,
     this.isStencil = true,
+    this.isLogoutTile = false,
   });
 
   @override
@@ -106,7 +108,7 @@ class CustomSidebarTile extends StatelessWidget {
                                                         alpha: 0.7,
                                                       ),
                                               fontWeight:
-                                                  isSelected
+                                                  isSelected || isLogoutTile
                                                       ? FontWeight.w600
                                                       : FontWeight.normal,
                                             ),

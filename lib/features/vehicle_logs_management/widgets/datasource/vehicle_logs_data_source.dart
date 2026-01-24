@@ -145,13 +145,23 @@ class VehicleLogsDataSource extends DataGridSource {
           case 'status':
             final status = entry.status.toLowerCase();
             final isOnsite = status == 'onsite';
+            final isOffsite = status == 'offsite';
+            final Color badgeBg =
+                isOnsite
+                    ? AppColors.chartGreen.withValues(alpha: 0.1)
+                    : isOffsite
+                    ? AppColors.error.withValues(alpha: 0.1)
+                    : AppColors.grey.withValues(alpha: 0.2);
 
+            final Color textColor =
+                isOnsite
+                    ? const Color.fromARGB(255, 31, 144, 11)
+                    : isOffsite
+                    ? AppColors.error
+                    : AppColors.black;
             return CellBadge(
-              badgeBg: isOnsite ? AppColors.successLight : AppColors.errorLight,
-              textColor:
-                  isOnsite
-                      ? const Color.fromARGB(255, 31, 144, 11)
-                      : AppColors.error,
+              badgeBg: badgeBg,
+              textColor: textColor,
               statusStr: entry.status,
               fontSize: AppFontSizes.small,
             );
@@ -184,7 +194,7 @@ class VehicleLogsDataSource extends DataGridSource {
         maxLines: 2,
         style: const TextStyle(
           fontSize: AppFontSizes.small,
-          fontFamily: 'Inter',
+          fontFamily: 'Poppins',
         ),
       ),
     );

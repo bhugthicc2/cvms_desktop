@@ -1,4 +1,4 @@
 class AppDimensions {
-  static const double headerHeight = 45.0;
-  static const double tableHeaderHeight = 36;
+  static const double headerHeight = 55.0;
+  static const double tableHeaderHeight = 40;
 }

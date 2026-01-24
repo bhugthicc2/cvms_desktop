@@ -3,6 +3,7 @@ import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_view_button.dart';
 import 'package:cvms_desktop/core/widgets/charts/chart_empty_state.dart';
+import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
 import 'package:cvms_desktop/core/widgets/titles/custom_chart_title.dart';
 import 'package:cvms_desktop/features/dashboard/models/dashboard/chart_data_model.dart';
 import 'package:flutter/material.dart';
@@ -222,12 +223,15 @@ class LineChartWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Column(
-          children: [
-            if (title.isNotEmpty)
-              Row(
+      child: Column(
+        children: [
+          if (title.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.medium,
+                vertical: AppFontSizes.small + 2,
+              ),
+              child: Row(
                 children: [
                   Text(
                     title,
@@ -243,17 +247,26 @@ class LineChartWidget extends StatelessWidget {
                   CustomViewButton(onTap: onViewTap),
                 ],
               ),
-            Expanded(
-              child:
-                  screenshotController == null
-                      ? body
-                      : Screenshot(
-                        controller: screenshotController!,
-                        child: body,
-                      ),
             ),
-          ],
-        ),
+
+          CustomDivider(
+            direction: Axis.horizontal,
+            thickness: 2,
+            color: AppColors.greySurface,
+          ),
+          Expanded(
+            child:
+                screenshotController == null
+                    ? Padding(
+                      padding: const EdgeInsets.all(AppSpacing.medium),
+                      child: body,
+                    )
+                    : Screenshot(
+                      controller: screenshotController!,
+                      child: body,
+                    ),
+          ),
+        ],
       ),
     );
   }

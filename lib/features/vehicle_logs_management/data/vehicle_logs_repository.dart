@@ -4,11 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/models/vehicle_log_model.dart';
 import '../../../core/error/firebase_error_handler.dart';
 import '../../../core/services/activity_log_service.dart';
+import '../../../features/auth/data/auth_repository.dart';
 
 class VehicleLogsRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String _collection = 'vehicle_logs';
   final ActivityLogService _logger = ActivityLogService();
+  final AuthRepository _authRepository = AuthRepository();
 
   /// Add a manual log entry (reference-based)
   Future<void> addManualLog(VehicleLogModel entry) async {
@@ -38,7 +40,7 @@ class VehicleLogsRepository {
       await _logger.logVehicleLogCreated(
         entry.vehicleId,
         entry.status,
-        null, // Will use current user from service
+        _authRepository.uid,
       );
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));

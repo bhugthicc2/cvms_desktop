@@ -48,8 +48,8 @@ class _CustomUpdateStatusDialogState extends State<CustomUpdateDialog> {
           labelText: "Vehicle Status",
           hintText: "Select status",
           items: const [
-            DropdownItem(value: 'inside', label: 'Inside'),
-            DropdownItem(value: 'outside', label: 'Outside'),
+            DropdownItem(value: 'onsite', label: 'Onsite'),
+            DropdownItem(value: 'offsite', label: 'Offsite'),
           ],
           onChanged: (status) => setState(() => _selectedStatus = status),
         ),

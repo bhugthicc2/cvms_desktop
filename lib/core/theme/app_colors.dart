@@ -11,12 +11,14 @@ class AppColors {
   // Primary proj colors
   static const Color primary = Color(0xFF1F5AF1);
   static const Color secondary = Color(0xFF1E1E1E);
-  static const Color greySurface = Color(0xFFeaedf7);
+  // static const Color greySurface = Color(0xFFeaedf7);
+  static const Color greySurface = Color(0xFFf5f6ff);
 
   // neutral proj colors
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF1E1E1E);
-  static const Color grey = Color(0XFF7E818D);
+  // static const Color grey = Color(0XFF7E818D);
+  static const Color grey = Color(0XFF8c9ec6);
   static const Color dividerColor = Color(0xFFBEC8ED);
   static const Color yellow = Color(0xFFF7D22F);
   static const Color orange = Color(0xFFEF4126);

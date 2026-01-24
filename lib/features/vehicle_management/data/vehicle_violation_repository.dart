@@ -16,7 +16,8 @@ class VehicleViolationRepository {
       // Log violation report
       await _logger.logViolationReported(
         violation.id,
-        violation.violationType,
+        violation.vehicleId,
+        '${violation.violationType} violation reported',
         null, // Will use current user from service
       );
     } catch (e) {

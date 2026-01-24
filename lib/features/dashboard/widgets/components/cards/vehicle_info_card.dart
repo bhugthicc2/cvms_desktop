@@ -102,9 +102,15 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildHeaderSection(),
-          const CustomDivider(direction: Axis.horizontal),
+          const CustomDivider(
+            direction: Axis.horizontal,
+            color: AppColors.greySurface,
+          ),
           Expanded(child: _buildInfoSection()),
-          const CustomDivider(direction: Axis.horizontal),
+          const CustomDivider(
+            direction: Axis.horizontal,
+            color: AppColors.greySurface,
+          ),
           _buildMvpSection(),
         ],
       ),
@@ -154,7 +160,11 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
           children: [
             Expanded(child: _buildLeftColumn()),
             Spacing.horizontal(size: AppSpacing.medium),
-            const CustomDivider(direction: Axis.vertical, length: 70),
+            const CustomDivider(
+              direction: Axis.vertical,
+              length: 70,
+              color: AppColors.greySurface,
+            ),
             Spacing.horizontal(size: AppSpacing.medium),
             Expanded(child: _buildRightColumn()),
           ],
@@ -168,7 +178,10 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildInfoItem('Owner', widget.ownerName),
-        const CustomDivider(direction: Axis.horizontal),
+        const CustomDivider(
+          direction: Axis.horizontal,
+          color: AppColors.greySurface,
+        ),
         _buildInfoItem('Type', widget.vehicleType),
       ],
     );
@@ -179,7 +192,10 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildInfoItem('Department', widget.department),
-        const CustomDivider(direction: Axis.horizontal),
+        const CustomDivider(
+          direction: Axis.horizontal,
+          color: AppColors.greySurface,
+        ),
         _buildStatusItem(),
       ],
     );
@@ -221,7 +237,7 @@ class _VehicleInfoCardState extends State<VehicleInfoCard>
             child: CustomText(
               text: widget.status.isEmpty ? 'No logs yet.' : widget.status,
               fontSize: 12,
-              color: AppColors.white,
+              color: VehicleInfoService.getTextStatusColor(widget.status),
               fontWeight: FontWeight.bold,
             ),
           ),

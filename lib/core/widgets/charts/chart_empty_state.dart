@@ -12,7 +12,11 @@ class ChartEmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Lottie.asset('assets/anim/empty_state_anim.json', width: 220),
+        Lottie.asset(
+          'assets/anim/empty_state_anim.json',
+          height: 150,
+          width: 220,
+        ),
 
         const Text(
           'No data available',
