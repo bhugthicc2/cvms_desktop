@@ -55,7 +55,7 @@ class CustomUserButton extends StatelessWidget {
               Text(
                 label,
                 style: const TextStyle(
-                  fontFamily: 'Poppins',
+                  fontFamily: 'Inter',
                   fontSize: AppFontSizes.small,
                   fontWeight: FontWeight.w600,
                 ),

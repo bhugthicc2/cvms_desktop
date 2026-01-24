@@ -35,7 +35,7 @@ class TableColumnFactory {
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
               color: istableHeaderDark ? AppColors.white : AppColors.black,
               overflow: TextOverflow.ellipsis,
             ),

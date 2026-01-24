@@ -84,7 +84,7 @@ class ViolationHistoryDataSource extends DataGridSource {
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -98,7 +98,7 @@ class ViolationHistoryDataSource extends DataGridSource {
             textAlign: TextAlign.left,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
             ),
           ),
         );
@@ -114,7 +114,7 @@ class ViolationHistoryDataSource extends DataGridSource {
             maxLines: 2,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -131,7 +131,7 @@ class ViolationHistoryDataSource extends DataGridSource {
             maxLines: 1,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
             ),
           ),
         );
@@ -178,7 +178,7 @@ class ViolationHistoryDataSource extends DataGridSource {
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
             ),
           ),
         );

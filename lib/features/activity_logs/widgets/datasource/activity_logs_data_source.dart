@@ -157,7 +157,7 @@ class ActivityLogsDataSource extends DataGridSource {
                   fontSize: AppFontSizes.small,
                   color: type.color,
                   fontWeight: FontWeight.w500,
-                  fontFamily: 'Poppins',
+                  fontFamily: 'Inter',
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -180,7 +180,7 @@ class ActivityLogsDataSource extends DataGridSource {
         maxLines: 2,
         style: const TextStyle(
           fontSize: AppFontSizes.small,
-          fontFamily: 'Poppins',
+          fontFamily: 'Inter',
         ),
       ),
     );

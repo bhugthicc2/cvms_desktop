@@ -101,7 +101,7 @@ class VehicleEntryDataSource extends DataGridSource {
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: AppFontSizes.small,
-                  fontFamily: 'Poppins',
+                  fontFamily: 'Inter',
                 ),
               ),
             );

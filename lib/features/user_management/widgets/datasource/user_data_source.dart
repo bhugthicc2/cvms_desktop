@@ -129,7 +129,7 @@ class UserDataSource extends DataGridSource {
             maxLines: 2,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
             ),
           ),
         );
@@ -145,7 +145,7 @@ class UserDataSource extends DataGridSource {
             maxLines: 2,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
             ),
           ),
         );
@@ -186,7 +186,7 @@ class UserDataSource extends DataGridSource {
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
             ),
           ),
         );

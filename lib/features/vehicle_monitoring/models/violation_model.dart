@@ -1,21 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ViolationModel {
-  final String violationID;
+  final String violationId;
   final Timestamp dateTime;
   final String reportedBy;
   final String plateNumber;
-  final String vehicleID;
+  final String vehicleId;
   final String owner;
   final String violation;
   final String status;
 
   ViolationModel({
-    required this.violationID,
+    required this.violationId,
     required this.dateTime,
     required this.reportedBy,
     required this.plateNumber,
-    required this.vehicleID,
+    required this.vehicleId,
     required this.owner,
     required this.violation,
     required this.status,
@@ -23,11 +23,11 @@ class ViolationModel {
 
   factory ViolationModel.fromMap(Map<String, dynamic> map, String id) {
     return ViolationModel(
-      violationID: id,
+      violationId: id,
       dateTime: map['dateTime'] ?? Timestamp.now(),
       reportedBy: map['reportedBy'] ?? '',
       plateNumber: map['plateNumber'] ?? '',
-      vehicleID: map['vehicleID'] ?? '',
+      vehicleId: map['vehicleId'] ?? '',
       owner: map['owner'] ?? '',
       violation: map['violation'] ?? '',
       status: map['status'] ?? 'pending',
@@ -39,7 +39,7 @@ class ViolationModel {
       'dateTime': dateTime,
       'reportedBy': reportedBy,
       'plateNumber': plateNumber,
-      'vehicleID': vehicleID,
+      'vehicleID': vehicleId,
       'owner': owner,
       'violation': violation,
       'status': status,
@@ -48,22 +48,22 @@ class ViolationModel {
   }
 
   ViolationModel copyWith({
-    String? violationID,
+    String? violationId,
     Timestamp? dateTime,
     String? reportedBy,
     String? plateNumber,
-    String? vehicleID,
+    String? vehicleId,
     String? owner,
     String? violation,
     String? status,
     String? reportReason,
   }) {
     return ViolationModel(
-      violationID: violationID ?? this.violationID,
+      violationId: violationId ?? this.violationId,
       dateTime: dateTime ?? this.dateTime,
       reportedBy: reportedBy ?? this.reportedBy,
       plateNumber: plateNumber ?? this.plateNumber,
-      vehicleID: vehicleID ?? this.vehicleID,
+      vehicleId: vehicleId ?? this.vehicleId,
       owner: owner ?? this.owner,
       violation: violation ?? this.violation,
       status: status ?? this.status,

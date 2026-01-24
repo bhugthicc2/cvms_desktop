@@ -15,6 +15,7 @@ class BarChartWidget extends StatelessWidget {
   final Function(ChartPointDetails)? onBarChartPointTap;
   final ScreenshotController? screenshotController;
   final int? highlightHighestIndex;
+  final bool enableTooltip;
 
   const BarChartWidget({
     super.key,
@@ -24,6 +25,7 @@ class BarChartWidget extends StatelessWidget {
     required this.onViewTap,
     this.screenshotController,
     this.highlightHighestIndex,
+    this.enableTooltip = false,
   });
 
   @override
@@ -65,6 +67,23 @@ class BarChartWidget extends StatelessWidget {
               ? SystemMouseCursors.click
               : SystemMouseCursors.basic,
       child: SfCartesianChart(
+        trackballBehavior: TrackballBehavior(
+          enable: true,
+          activationMode: ActivationMode.singleTap,
+          tooltipSettings: const InteractiveTooltip(
+            format: 'point.x: point.y',
+            color: Colors.black87,
+          ),
+          lineType: TrackballLineType.vertical,
+          lineColor: AppColors.primary,
+          lineWidth: 2,
+          markerSettings: const TrackballMarkerSettings(
+            markerVisibility: TrackballVisibilityMode.visible,
+            color: AppColors.primary,
+            borderColor: Colors.white,
+            borderWidth: 2,
+          ),
+        ),
         primaryXAxis: CategoryAxis(
           labelIntersectAction: AxisLabelIntersectAction.wrap, // Allow wrapping
           labelStyle: const TextStyle(
@@ -73,8 +92,11 @@ class BarChartWidget extends StatelessWidget {
           ),
         ),
         tooltipBehavior: TooltipBehavior(enable: true),
+
         series: <CartesianSeries>[
           ColumnSeries<ChartDataModel, String>(
+            enableTooltip: enableTooltip,
+            spacing: 0.2,
             width: 0.6,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(3),

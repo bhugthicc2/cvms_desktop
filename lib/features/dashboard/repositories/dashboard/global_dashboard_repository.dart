@@ -157,6 +157,68 @@ class GlobalDashboardRepository {
     });
   }
 
+  //Listen to all violations by student (no limit)
+  Stream<List<ChartDataModel>> watchAllTopStudentsWithMostViolations() {
+    final vehiclesStream = _db.collection('vehicles').snapshots();
+    final violationsStream = _db.collection('violations').snapshots();
+
+    return Rx.combineLatest2(vehiclesStream, violationsStream, (
+      vehiclesSnap,
+      violationsSnap,
+    ) {
+      // step 2: map vehicleId -> student info
+      final Map<String, Map<String, dynamic>> vehicleToStudent = {};
+
+      for (final doc in vehiclesSnap.docs) {
+        final data = doc.data();
+        vehicleToStudent[doc.id] = {
+          'schoolID': data['schoolID'],
+          'ownerName': data['ownerName'],
+        };
+      }
+
+      // step 3: count violations per student
+      final Map<String, int> studentViolationCounts = {};
+      final Map<String, String> studentNames = {};
+
+      for (final doc in violationsSnap.docs) {
+        final data = doc.data();
+        final vehicleId = data['vehicleId'];
+
+        if (vehicleId == null) continue;
+        final student = vehicleToStudent[vehicleId];
+        if (student == null) continue;
+
+        final schoolID = student['schoolID'];
+        final name = student['ownerName'];
+
+        if (schoolID == null) continue;
+
+        studentViolationCounts[schoolID] =
+            (studentViolationCounts[schoolID] ?? 0) + 1;
+
+        studentNames[schoolID] = name;
+      }
+
+      // step 4: convert to chart data
+      final results =
+          studentViolationCounts.entries
+              .map(
+                (e) => ChartDataModel(
+                  category: studentNames[e.key] ?? e.key,
+                  value: e.value.toDouble(),
+                ),
+              )
+              .toList();
+
+      // step 5: sort descending
+      results.sort((a, b) => b.value.compareTo(a.value));
+
+      // step 6: return top N
+      return results;
+    });
+  }
+
   // realtime implementation step 1:
   // Returns top N cities with vehicle counts, scalable for future
   Stream<List<ChartDataModel>> watchCityBreakdown({int limit = 5}) {

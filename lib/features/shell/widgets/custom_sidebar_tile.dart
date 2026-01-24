@@ -94,8 +94,8 @@ class CustomSidebarTile extends StatelessWidget {
                                           child: Text(
                                             item.label,
                                             style: TextStyle(
-                                              fontFamily: 'Poppins',
-                                              fontSize: AppFontSizes.medium - 1,
+                                              fontFamily: 'Inter',
+                                              fontSize: AppFontSizes.medium,
                                               color:
                                                   isSelected
                                                       ? AppColors.chartOrange

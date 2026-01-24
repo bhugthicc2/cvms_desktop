@@ -1,6 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/widgets/actions/toggle_actions.dart';
+import 'package:cvms_desktop/features/vehicle_logs_management/widgets/dialogs/custom_add_dialog.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/widgets/dialogs/custom_delete_dialog.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/widgets/tables/table_header.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,21 @@ class _VehicleLogsManagementState extends State<VehicleLogsTable> {
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
           child: Column(
             children: [
-              TableHeader(searchController: widget.searchController),
+              TableHeader(
+                searchController: widget.searchController,
+                onAddVehicleLog: () {
+                  showDialog(
+                    context: context,
+                    builder:
+                        (_) => CustomAddDialog(
+                          title: "Add Vehicle Log",
+                          onSave: (log) {
+                            // TODO: Implement save logic
+                          },
+                        ),
+                  );
+                },
+              ),
               if (state.isBulkModeEnabled) ...[
                 Spacing.vertical(size: AppFontSizes.medium),
                 ToggleActions(

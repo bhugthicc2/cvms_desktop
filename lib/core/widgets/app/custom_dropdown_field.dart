@@ -98,7 +98,7 @@ class _CustomDropdownFieldState<T> extends State<CustomDropdownField<T>> {
                           fontWeight: FontWeight.w600,
                           color: AppColors.grey,
                           fontSize: AppFontSizes.medium,
-                          fontFamily: 'Poppins',
+                          fontFamily: 'Inter',
                         ),
                       )
                       : null,
@@ -116,7 +116,7 @@ class _CustomDropdownFieldState<T> extends State<CustomDropdownField<T>> {
                     fontWeight: FontWeight.w600,
                     color: AppColors.black,
                     fontSize: AppFontSizes.medium,
-                    fontFamily: 'Poppins',
+                    fontFamily: 'Inter',
                   ),
               dropdownColor: AppColors.white,
               items:
@@ -136,7 +136,7 @@ class _CustomDropdownFieldState<T> extends State<CustomDropdownField<T>> {
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.black,
                                 fontSize: AppFontSizes.medium,
-                                fontFamily: 'Poppins',
+                                fontFamily: 'Inter',
                               ),
                             ),
                           ),

@@ -7,6 +7,8 @@ class VehicleState {
 
   final String statusFilter;
   final String typeFilter;
+  final String collegeFilter;
+  final String yearLevelFilter;
   final String searchQuery;
   final bool isBulkModeEnabled;
   final String? error;
@@ -27,6 +29,8 @@ class VehicleState {
     required this.selectedEntries,
     required this.statusFilter,
     required this.typeFilter,
+    required this.collegeFilter,
+    required this.yearLevelFilter,
     required this.searchQuery,
     required this.isBulkModeEnabled,
     this.error,
@@ -44,6 +48,8 @@ class VehicleState {
     selectedEntries: [],
     statusFilter: 'All',
     typeFilter: 'All',
+    collegeFilter: 'All',
+    yearLevelFilter: 'All',
     searchQuery: '',
     isBulkModeEnabled: false,
     error: null,
@@ -61,6 +67,8 @@ class VehicleState {
     List<VehicleEntry>? selectedEntries,
     String? statusFilter,
     String? typeFilter,
+    String? collegeFilter,
+    String? yearLevelFilter,
     String? searchQuery,
     bool? isBulkModeEnabled,
     String? error,
@@ -77,6 +85,8 @@ class VehicleState {
       selectedEntries: selectedEntries ?? this.selectedEntries,
       statusFilter: statusFilter ?? this.statusFilter,
       typeFilter: typeFilter ?? this.typeFilter,
+      collegeFilter: collegeFilter ?? this.collegeFilter,
+      yearLevelFilter: yearLevelFilter ?? this.yearLevelFilter,
       searchQuery: searchQuery ?? this.searchQuery,
       isBulkModeEnabled: isBulkModeEnabled ?? this.isBulkModeEnabled,
       error: error,

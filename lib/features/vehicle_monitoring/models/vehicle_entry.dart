@@ -87,21 +87,4 @@ class VehicleEntry {
     final d = duration;
     return "${d.inHours}h ${d.inMinutes % 60}m";
   }
-
-  @override
-  String toString() {
-    return 'VehicleEntry(vehicleId: $vehicleId, owner: $ownerName, plate: $plateNumber, docId: $docId)';
-  }
-
-  static VehicleEntry sample() {
-    return VehicleEntry(
-      docId: 'sample-doc-id',
-      vehicleId: 'sample-vehicle-id',
-      timeIn: DateTime.now().subtract(const Duration(hours: 2)),
-      timeOut: null,
-      ownerName: 'Sample Owner',
-      vehicleModel: 'Sample Model',
-      plateNumber: 'ABC-123',
-    );
-  }
 }

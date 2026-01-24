@@ -49,6 +49,7 @@ class CustomSidebarHeader extends StatelessWidget {
                               Text(
                                 "JRMSU-K",
                                 style: TextStyle(
+                                  fontFamily: 'Inter',
                                   color: AppColors.yellow,
                                   fontWeight: FontWeight.bold,
                                   fontSize: AppFontSizes.large,
@@ -57,8 +58,9 @@ class CustomSidebarHeader extends StatelessWidget {
                               Text(
                                 " CVMS",
                                 style: TextStyle(
+                                  fontFamily: 'Inter',
                                   color: AppColors.white,
-                                  fontWeight: FontWeight.w100,
+                                  fontWeight: FontWeight.bold,
                                   fontSize: AppFontSizes.large,
                                 ),
                               ),

@@ -6,7 +6,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../bloc/vehicle_logs_cubit.dart';
 import '../bloc/vehicle_logs_state.dart';
 import '../widgets/tables/vehicle_logs_table.dart';
-// import '../widgets/dialogs/vehicle_logs_info_dialog.dart';
+import '../widgets/dialogs/vehicle_logs_info_dialog.dart';
 
 class VehicleLogsPage extends StatefulWidget {
   const VehicleLogsPage({super.key});
@@ -22,9 +22,9 @@ class _VehicleLogsPageState extends State<VehicleLogsPage> {
   @override
   void initState() {
     super.initState();
-
-    context.read<VehicleLogsCubit>().loadVehicleLogs();
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<VehicleLogsCubit>().loadVehicleLogs();
+    });
     // Add search controller listener
     onsiteSearchController.addListener(() {
       context.read<VehicleLogsCubit>().filterEntries(
@@ -66,17 +66,17 @@ class _VehicleLogsPageState extends State<VehicleLogsPage> {
                     hasSearchQuery: onsiteSearchController.text.isNotEmpty,
                     onCellTap: (details) {
                       //TEMPORARILY DISABLED DUE TO REFACTORED CHANGES OF VEHICLE LOG MODEL
-                      // if (details.rowColumnIndex.rowIndex > 0) {
-                      //   final log =
-                      //       state.filteredEntries[details
-                      //               .rowColumnIndex
-                      //               .rowIndex -
-                      //           1];
-                      //   showDialog(
-                      //     context: context,
-                      //     builder: (_) => VehicleLogsInfoDialog(log: log),
-                      //   );
-                      // }
+                      if (details.rowColumnIndex.rowIndex > 0) {
+                        final log =
+                            state.filteredEntries[details
+                                    .rowColumnIndex
+                                    .rowIndex -
+                                1];
+                        showDialog(
+                          context: context,
+                          builder: (_) => VehicleLogsInfoDialog(log: log),
+                        );
+                      }
                     },
                   ),
                 ),

@@ -42,7 +42,7 @@ class DateFilterButton extends StatelessWidget {
               style: const TextStyle(
                 color: AppColors.white,
                 fontSize: 12,
-                fontFamily: 'Poppins',
+                fontFamily: 'Inter',
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -107,7 +107,7 @@ class ExportReportButton extends StatelessWidget {
                 style: const TextStyle(
                   color: AppColors.white,
                   fontSize: 12,
-                  fontFamily: 'Poppins',
+                  fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
                 ),
               ),

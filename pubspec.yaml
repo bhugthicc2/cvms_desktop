@@ -46,9 +46,9 @@ dependencies:
   #syncfusion main package
   collection: ^1.19.1
   #charting library
-  syncfusion_flutter_charts: ^32.1.22
-  syncfusion_flutter_core: ^32.1.22
-  syncfusion_flutter_datagrid: ^32.1.22
+  syncfusion_flutter_charts: ^32.1.24
+  syncfusion_flutter_core: ^32.1.24
+  syncfusion_flutter_datagrid: ^32.1.24
   calendar_date_picker2: ^2.0.1
   equatable: ^2.0.7
   intl: ^0.20.2
@@ -86,6 +86,7 @@ flutter:
   assets:
     - assets/images/
     - assets/fonts/
+    - assets/fonts/inter_font_fam/
     - assets/icons/
     - assets/icons/duotone/
     - assets/icons/stencil/
@@ -107,4 +108,18 @@ flutter:
         - asset: assets/fonts/Poppins-Bold.ttf
           weight: 700
         - asset: assets/fonts/Poppins-ExtraBold.ttf
+          weight: 800
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/inter_font_fam/Inter-Light.ttf
+          weight: 300
+        - asset: assets/fonts/inter_font_fam/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/inter_font_fam/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/inter_font_fam/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/inter_font_fam/Inter-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/inter_font_fam/Inter-ExtraBold.ttf
           weight: 800

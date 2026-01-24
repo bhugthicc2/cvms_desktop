@@ -977,26 +977,26 @@ packages:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_charts
-      sha256: "2a0bf92a9d582b18fcdfaa794a130f83b596ffcb3efc758ee96191e7f91373b7"
+      sha256: "9cbc455b7aeb3598c22db7f47c3e424b660eb812507b36e88ae4d2e529052db8"
       url: "https://pub.dev"
     source: hosted
-    version: "32.1.22"
+    version: "32.1.24"
   syncfusion_flutter_core:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_core
-      sha256: c9446faa7a5cd8f6496357e41e8c4b24e158a8760222d32a5837abc35dd5d629
+      sha256: "2c6ba5e21f944e9c18db7be9fb40a9e09747b6f9942c9c0e77eb573c15e68338"
       url: "https://pub.dev"
     source: hosted
-    version: "32.1.23"
+    version: "32.1.24"
   syncfusion_flutter_datagrid:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_datagrid
-      sha256: fb51dad69e6208ebaddeaeaedf48e9f756f88dfe2dd6f9399da53bca3b41b46f
+      sha256: "15b9670dfe39a6cc05bb93ecb1e1e1e5636f8006a504f31c898ee520d150ab21"
       url: "https://pub.dev"
     source: hosted
-    version: "32.1.22"
+    version: "32.1.24"
   synchronized:
     dependency: transitive
     description:

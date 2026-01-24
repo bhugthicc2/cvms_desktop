@@ -56,7 +56,7 @@ class CustomActivityLogsButton extends StatelessWidget {
                 label,
                 style: const TextStyle(
                   fontSize: AppFontSizes.small,
-                  fontFamily: 'Poppins',
+                  fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
                 ),
               ),

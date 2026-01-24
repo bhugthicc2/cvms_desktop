@@ -42,7 +42,7 @@ class CustomToggleButtons extends StatelessWidget {
                   style: TextStyle(
                     fontSize: AppFontSizes.small,
                     color: AppColors.white,
-                    fontFamily: 'Poppins',
+                    fontFamily: 'Inter',
                     fontWeight: FontWeight.bold,
                   ),
                 ),

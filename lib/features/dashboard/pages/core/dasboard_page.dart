@@ -15,7 +15,9 @@ import 'package:cvms_desktop/features/dashboard/pages/views/all_vehicles_view.da
 import 'package:cvms_desktop/features/dashboard/pages/views/global_dashboard_view.dart';
 import 'package:cvms_desktop/features/dashboard/pages/views/individual_report_view.dart';
 import 'package:cvms_desktop/features/dashboard/pages/views/pdf_preview_view.dart';
-import 'package:cvms_desktop/features/dashboard/pages/views/vehicle_by_department_view.dart';
+import 'package:cvms_desktop/features/dashboard/pages/views/students_by_violation_view.dart';
+import 'package:cvms_desktop/features/dashboard/pages/views/vehicle_by_college_view.dart';
+import 'package:cvms_desktop/features/dashboard/pages/views/vehicle_by_year_level_view.dart';
 import 'package:cvms_desktop/features/dashboard/pages/views/vehicle_logs_view.dart';
 import 'package:cvms_desktop/features/dashboard/pages/views/violation_view.dart';
 import 'package:cvms_desktop/features/dashboard/pages/views/pending_violation_view.dart';
@@ -72,13 +74,14 @@ class DashboardPage extends StatelessWidget {
         return [BreadcrumbItem(label: 'All Vehicles', isActive: true)];
       case DashboardViewMode.vehicleLogsView:
         return [BreadcrumbItem(label: 'Vehicle Logs', isActive: true)];
-      case DashboardViewMode.vehicleByDepartmentView:
+      case DashboardViewMode.vehicleByCollegeView:
+        return [BreadcrumbItem(label: 'Vehicles by College', isActive: true)];
+      case DashboardViewMode.vehiclesByYearLevel:
         return [
-          BreadcrumbItem(
-            label: 'Vehicle Distribution by Department',
-            isActive: true,
-          ),
+          BreadcrumbItem(label: 'Vehicles by Year Level', isActive: true),
         ];
+      case DashboardViewMode.violationsByStudent:
+        return [BreadcrumbItem(label: 'Students by Violation', isActive: true)];
     }
   }
 
@@ -101,13 +104,15 @@ class DashboardPage extends StatelessWidget {
           },
           // Chart tap handlers
           onVehicleDistributionTap: () {
-            context.read<GlobalDashboardCubit>().showVehicleByDepartmentView();
+            context.read<GlobalDashboardCubit>().showVehicleByCollegeView();
             //vehicle distribution by department drill down view
           },
           onYearLevelBreakdownTap: () {
+            context.read<GlobalDashboardCubit>().showVehicleByYearLevelView();
             // Handle year level breakdown chart tap
           },
           onTopViolatorsTap: () {
+            context.read<GlobalDashboardCubit>().showViolationByStudentView();
             // Handle top violators chart tap
           },
           onTopCitiesTap: () {
@@ -227,11 +232,60 @@ class DashboardPage extends StatelessWidget {
             },
           ),
         );
-      case DashboardViewMode.vehicleByDepartmentView:
-        return VehicleByDepartmentView(
-          onBackPressed: () {
-            context.read<GlobalDashboardCubit>().backToPreviousView();
-          },
+      case DashboardViewMode.vehicleByCollegeView:
+        return BlocProvider(
+          create:
+              (context) => VehicleCubit(
+                VehicleRepository(),
+                AuthRepository(),
+                UserRepository(),
+                VehicleViolationRepository(),
+                VehicleLogsRepository(),
+              ),
+          child: VehicleByCollegeView(
+            onBackPressed: () {
+              context.read<GlobalDashboardCubit>().backToPreviousView();
+            },
+          ),
+        );
+      case DashboardViewMode.vehiclesByYearLevel:
+        return BlocProvider(
+          create:
+              (context) => VehicleCubit(
+                VehicleRepository(),
+                AuthRepository(),
+                UserRepository(),
+                VehicleViolationRepository(),
+                VehicleLogsRepository(),
+              ),
+          child: VehicleByYearLevelView(
+            onBackPressed: () {
+              context.read<GlobalDashboardCubit>().backToPreviousView();
+            },
+          ),
+        );
+      case DashboardViewMode.violationsByStudent:
+        return BlocProvider(
+          create:
+              (context) => GlobalDashboardCubit(
+                null,
+                GlobalDashboardRepository(FirebaseFirestore.instance),
+                GlobalPdfExportUseCase(
+                  assembler: DashboardDependencies.globalReportAssembler,
+                  pdfService: DashboardDependencies.pdfGenerationService,
+                  brandingConfig: DashboardDependencies.pdfBrandingConfig,
+                ),
+                IndividualPdfExportUseCase(
+                  assembler: DashboardDependencies.individualReportAssembler,
+                  pdfService: DashboardDependencies.pdfGenerationService,
+                  brandingConfig: DashboardDependencies.pdfBrandingConfig,
+                ), // Realtime
+              ),
+          child: StudentsByViolationView(
+            onBackPressed: () {
+              context.read<GlobalDashboardCubit>().backToPreviousView();
+            },
+          ),
         );
     }
   }
@@ -326,7 +380,11 @@ class DashboardPage extends StatelessWidget {
                                   state.viewMode ==
                                       DashboardViewMode.vehicleLogsView ||
                                   state.viewMode ==
-                                      DashboardViewMode.vehicleByDepartmentView
+                                      DashboardViewMode.vehicleByCollegeView ||
+                                  state.viewMode ==
+                                      DashboardViewMode.vehiclesByYearLevel ||
+                                  state.viewMode ==
+                                      DashboardViewMode.violationsByStudent
                               ? // exclude pages that doesn't need the controls and to be scrolled
                               SizedBox(child: _buildMainContent(context, state))
                               : // Other views: with controls and scroll

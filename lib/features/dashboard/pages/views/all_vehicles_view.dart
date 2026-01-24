@@ -78,6 +78,7 @@ class _AllVehiclesViewState extends State<AllVehiclesView> {
                   }
 
                   return VehicleTable(
+                    hasImportBtn: false,
                     title: 'All Vehicles',
                     entries: state.filteredEntries,
                     searchController: _searchController,

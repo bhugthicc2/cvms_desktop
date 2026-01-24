@@ -227,7 +227,7 @@ class CustDropDownState<T> extends State<CustDropDown<T>>
                                             Flexible(
                                               child: DefaultTextStyle(
                                                 style: TextStyle(
-                                                  fontFamily: 'Poppins',
+                                                  fontFamily: 'Inter',
                                                   fontSize: widget.fontSize,
                                                   fontWeight: FontWeight.w500,
                                                   color: AppColors.black
@@ -308,7 +308,7 @@ class CustDropDownState<T> extends State<CustDropDown<T>>
               Text(
                 widget.labelText,
                 style: TextStyle(
-                  fontFamily: 'Poppins',
+                  fontFamily: 'Inter',
                   fontSize: widget.fontSize,
                   fontWeight: FontWeight.bold,
                   color: AppColors.black.withValues(alpha: 0.9),
@@ -398,7 +398,7 @@ class CustDropDownState<T> extends State<CustDropDown<T>>
                             ? DefaultTextStyle(
                               style: TextStyle(
                                 fontSize: widget.fontSize,
-                                fontFamily: 'Poppins',
+                                fontFamily: 'Inter',
                                 fontWeight:
                                     FontWeight
                                         .w500, // Slightly less bold like text field
@@ -410,7 +410,7 @@ class CustDropDownState<T> extends State<CustDropDown<T>>
                               widget.hintText,
                               style: TextStyle(
                                 fontSize: widget.fontSize,
-                                fontFamily: 'Poppins',
+                                fontFamily: 'Inter',
                                 color: Colors.grey.withValues(
                                   alpha: 0.6,
                                 ), // Match labelStyle
@@ -461,7 +461,7 @@ class CustDropdownMenuItem<T> extends StatelessWidget {
         style: const TextStyle(
           fontSize: AppFontSizes.small,
           fontWeight: FontWeight.w500,
-          fontFamily: 'Poppins',
+          fontFamily: 'Inter',
           color: AppColors.black,
         ),
         child: child,

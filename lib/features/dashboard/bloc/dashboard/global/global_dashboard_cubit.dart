@@ -34,6 +34,7 @@ class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
   StreamSubscription<List<ChartDataModel>>? _violationTypeSub; // step 14
   StreamSubscription<List<ChartDataModel>>? _fleetLogsSub;
   StreamSubscription<List<ChartDataModel>>? _violationTrendSub;
+  StreamSubscription<List<ChartDataModel>>? _allViolationsByStudentsSub;
 
   // Initialization tracking
   //for loafing state
@@ -65,6 +66,7 @@ class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
     _listenToVehicleLogsDistributionPerCollege(); // step 12
     _listenToViolationDistributionPerCollege(); // step 12
     _listenToViolationTypeDistribution(); // step 15
+    _listenToAllViolationByStudent();
   }
 
   // ----GLOBAL-----
@@ -176,6 +178,15 @@ class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
         .watchTopStudentsWithMostViolations(limit: 5)
         .listen((data) {
           emit(state.copyWith(topStudentsWithMostViolations: data));
+          _markReady();
+        });
+  }
+
+  void _listenToAllViolationByStudent() {
+    _allViolationsByStudentsSub = repository
+        .watchAllTopStudentsWithMostViolations()
+        .listen((data) {
+          emit(state.copyWith(allStudentsWithMostViolations: data));
           _markReady();
         });
   }
@@ -339,6 +350,7 @@ class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
     _violationTypeSub?.cancel(); // step 18
     _fleetLogsSub?.cancel();
     _violationTrendSub?.cancel();
+    _allViolationsByStudentsSub?.cancel();
     return super.close();
   }
 
@@ -447,11 +459,31 @@ class GlobalDashboardCubit extends Cubit<GlobalDashboardState> {
     );
   }
 
-  // Vehicle by Department View
-  void showVehicleByDepartmentView() {
+  // Vehicle by Department/College View
+  void showVehicleByCollegeView() {
     emit(
       state.copyWith(
-        viewMode: DashboardViewMode.vehicleByDepartmentView,
+        viewMode: DashboardViewMode.vehicleByCollegeView,
+        previousViewMode: state.viewMode,
+      ),
+    );
+  }
+
+  // Vehicle by Year Level View
+  void showVehicleByYearLevelView() {
+    emit(
+      state.copyWith(
+        viewMode: DashboardViewMode.vehiclesByYearLevel,
+        previousViewMode: state.viewMode,
+      ),
+    );
+  }
+
+  // Violation by Student View
+  void showViolationByStudentView() {
+    emit(
+      state.copyWith(
+        viewMode: DashboardViewMode.violationsByStudent,
         previousViewMode: state.viewMode,
       ),
     );

@@ -1,11 +1,13 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_checkbox.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_icon_button.dart';
 import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/actions/vehicle_actions_menu.dart';
 import 'package:cvms_desktop/core/widgets/table/cell_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../bloc/vehicle_cubit.dart';
 
@@ -142,7 +144,7 @@ class VehicleDataSource extends DataGridSource {
             maxLines: 2,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
             ),
           ),
         );
@@ -158,7 +160,37 @@ class VehicleDataSource extends DataGridSource {
             maxLines: 2,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
+            ),
+          ),
+        );
+      case 'plateNumber':
+        return Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            cell.value.toString(),
+            textAlign: TextAlign.left,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: const TextStyle(
+              fontSize: AppFontSizes.small,
+              fontFamily: 'Inter',
+            ),
+          ),
+        );
+      case 'licenseNumber':
+        return Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            cell.value.toString(),
+            textAlign: TextAlign.left,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: const TextStyle(
+              fontSize: AppFontSizes.small,
+              fontFamily: 'Inter',
             ),
           ),
         );
@@ -170,10 +202,50 @@ class VehicleDataSource extends DataGridSource {
               final rowIndex = _originalEntries.indexOf(entry);
               return Container(
                 alignment: Alignment.center,
-                child: VehicleActionsMenu(
-                  vehicleEntry: entry,
-                  rowIndex: rowIndex,
-                  context: _context,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: CustomIconButton(
+                        dx: 0,
+                        tooltip: 'Edit Vehicle',
+                        raddi: 0,
+                        hoverColor: AppColors.primary.withValues(alpha: 0.1),
+                        icon: PhosphorIconsBold.pencilSimple,
+                        iconColor: AppColors.primary,
+                        onPressed: () {
+                          VehicleActionsMenu(
+                            rowIndex: rowIndex,
+                            vehicleEntry: entry,
+                            context: context,
+                          ).editVehicle(context);
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: CustomIconButton(
+                        dx: 0,
+                        tooltip: 'View MVP Sticker',
+                        raddi: 0,
+                        hoverColor: AppColors.primary.withValues(alpha: 0.1),
+                        icon: PhosphorIconsBold.qrCode,
+                        iconColor: AppColors.primary,
+                        onPressed: () {
+                          VehicleActionsMenu(
+                            rowIndex: rowIndex,
+                            vehicleEntry: entry,
+                            context: context,
+                          ).viewQrCode(context);
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: VehicleActionsMenu(
+                        vehicleEntry: entry,
+                        rowIndex: rowIndex,
+                        context: _context,
+                      ),
+                    ),
+                  ],
                 ),
               );
             } else {
@@ -200,9 +272,9 @@ class VehicleDataSource extends DataGridSource {
 
             final Color badgeBg =
                 isInside
-                    ? AppColors.successLight
+                    ? AppColors.chartGreen.withValues(alpha: 0.1)
                     : isOutside
-                    ? AppColors.errorLight
+                    ? AppColors.error.withValues(alpha: 0.1)
                     : AppColors.grey.withValues(alpha: 0.2);
 
             final Color textColor =
@@ -232,7 +304,7 @@ class VehicleDataSource extends DataGridSource {
             maxLines: 2,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
             ),
           ),
         );

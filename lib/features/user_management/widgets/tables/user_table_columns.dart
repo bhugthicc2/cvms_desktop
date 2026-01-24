@@ -64,7 +64,7 @@ class UserTableColumns {
               fontWeight: FontWeight.w600,
               fontSize: AppFontSizes.small,
               color: AppColors.white,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
               overflow: TextOverflow.ellipsis,
             ),
           ),

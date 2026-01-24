@@ -94,6 +94,8 @@ class VehicleCubit extends Cubit<VehicleState> {
   }
 
   void listenVehicles() {
+    if (isClosed) return;
+
     emit(state.copyWith(isLoading: true));
     _vehiclesSubscription?.cancel();
     _vehiclesSubscription = repository.watchVehicles().listen(
@@ -101,18 +103,22 @@ class VehicleCubit extends Cubit<VehicleState> {
         if (!isClosed) {
           try {
             final vehiclesWithLogs = await logsRepository.getVehiclesWithLogs();
-            emit(
-              state.copyWith(
-                allEntries: entries,
-                vehiclesWithLogs: vehiclesWithLogs,
-                isLoading: false,
-              ),
-            );
-            _applyFilters();
+            if (!isClosed) {
+              emit(
+                state.copyWith(
+                  allEntries: entries,
+                  vehiclesWithLogs: vehiclesWithLogs,
+                  isLoading: false,
+                ),
+              );
+              _applyFilters();
+            }
           } catch (e) {
             // If fetching logs fails, still update vehicles but keep existing logs set
-            emit(state.copyWith(allEntries: entries, isLoading: false));
-            _applyFilters();
+            if (!isClosed) {
+              emit(state.copyWith(allEntries: entries, isLoading: false));
+              _applyFilters();
+            }
           }
         }
       },
@@ -220,6 +226,16 @@ class VehicleCubit extends Cubit<VehicleState> {
     _applyFilters();
   }
 
+  void filterByCollege(String college) {
+    emit(state.copyWith(collegeFilter: college));
+    _applyFilters();
+  }
+
+  void filterByYearLevel(String yearLevel) {
+    emit(state.copyWith(yearLevelFilter: yearLevel));
+    _applyFilters();
+  }
+
   void _applyFilters() {
     var filtered = state.allEntries;
 
@@ -252,6 +268,14 @@ class VehicleCubit extends Cubit<VehicleState> {
     if (state.typeFilter != 'All') {
       filtered =
           filtered.where((e) => e.vehicleType == state.typeFilter).toList();
+    }
+    if (state.collegeFilter != 'All') {
+      filtered =
+          filtered.where((e) => e.department == state.collegeFilter).toList();
+    }
+    if (state.yearLevelFilter != 'All') {
+      filtered =
+          filtered.where((e) => e.yearLevel == state.yearLevelFilter).toList();
     }
 
     emit(state.copyWith(filteredEntries: filtered));
@@ -484,6 +508,7 @@ class VehicleCubit extends Cubit<VehicleState> {
   @override
   Future<void> close() {
     _vehiclesSubscription?.cancel();
+    _vehiclesSubscription = null;
     return super.close();
   }
 }

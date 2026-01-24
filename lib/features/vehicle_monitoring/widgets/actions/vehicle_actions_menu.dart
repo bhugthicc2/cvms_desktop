@@ -134,11 +134,11 @@ class VehicleActionsMenu extends StatelessWidget {
               onSubmit: (violationType) async {
                 try {
                   final violation = ViolationModel(
-                    violationID: '',
+                    violationId: '',
                     dateTime: Timestamp.now(),
                     reportedBy: 'CDRRMSU Admin',
                     plateNumber: vehicleEntry.plateNumber,
-                    vehicleID: vehicleEntry.vehicleId,
+                    vehicleId: vehicleEntry.vehicleId,
                     owner: vehicleEntry.ownerName,
                     violation: violationType,
                     status: 'pending',

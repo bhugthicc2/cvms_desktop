@@ -34,7 +34,7 @@ class VehicleActionsMenu extends StatelessWidget {
       ),
       child: PopupMenuButton<String>(
         color: AppColors.white,
-        icon: const Icon(Icons.more_horiz, color: AppColors.grey, size: 20),
+        icon: const Icon(Icons.more_vert, color: AppColors.grey, size: 18),
         splashRadius: 10,
         style: IconButton.styleFrom(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
@@ -44,18 +44,6 @@ class VehicleActionsMenu extends StatelessWidget {
         },
         itemBuilder:
             (BuildContext context) => [
-              CustomPopupMenuItem(
-                iconColor: AppColors.primary,
-                itemIcon: PhosphorIconsBold.notePencil,
-                itemLabel: 'Edit Details',
-                value: 'edit',
-              ),
-              CustomPopupMenuItem(
-                iconColor: AppColors.black,
-                itemIcon: PhosphorIconsBold.qrCode,
-                itemLabel: 'View QR Code',
-                value: 'qrcode',
-              ),
               CustomPopupMenuItem(
                 iconColor: AppColors.success,
                 itemIcon: PhosphorIconsBold.arrowsClockwise,
@@ -82,9 +70,9 @@ class VehicleActionsMenu extends StatelessWidget {
   void _handleMenuAction(String action, BuildContext context) {
     switch (action) {
       case 'edit':
-        _editVehicle(context);
+        editVehicle(context);
       case 'qrcode':
-        _viewQrCode(context);
+        viewQrCode(context);
       case 'update':
         _updateVehicle(context);
         break;
@@ -97,7 +85,7 @@ class VehicleActionsMenu extends StatelessWidget {
     }
   }
 
-  void _editVehicle(BuildContext context) {
+  void editVehicle(BuildContext context) {
     showDialog(
       context: context,
       builder:
@@ -131,7 +119,7 @@ class VehicleActionsMenu extends StatelessWidget {
     );
   }
 
-  void _viewQrCode(BuildContext context) {
+  void viewQrCode(BuildContext context) {
     //todo
     showDialog(
       context: context,

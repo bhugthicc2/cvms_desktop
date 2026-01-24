@@ -10,20 +10,24 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 class StackedBarWidget extends StatelessWidget {
   final List<ChartDataModel> data;
-  final VoidCallback onViewTap;
+  final VoidCallback? onViewTap;
   final String title;
   final Function(ChartPointDetails)? onStackBarPointTapped;
   final ScreenshotController? screenshotController;
   final int? highlightHighestIndex;
+  final bool enableTooltip;
+  final bool showViewBtn;
 
   const StackedBarWidget({
     super.key,
     required this.data,
     this.title = '',
     this.onStackBarPointTapped,
-    required this.onViewTap,
+    this.onViewTap,
     this.screenshotController,
     this.highlightHighestIndex,
+    this.enableTooltip = false,
+    this.showViewBtn = true,
   });
 
   @override
@@ -50,7 +54,9 @@ class StackedBarWidget extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: CustomChartTitle(title: title, showViewBtn: false),
             ),
-            ChartEmptyState(),
+            const Spacer(),
+            Center(child: ChartEmptyState()),
+            const Spacer(),
           ],
         ),
       );
@@ -60,12 +66,31 @@ class StackedBarWidget extends StatelessWidget {
     final total = data.fold<double>(0, (sum, item) => sum + item.value);
 
     final body = SfCartesianChart(
+      trackballBehavior: TrackballBehavior(
+        enable: true,
+        activationMode: ActivationMode.singleTap,
+        tooltipSettings: const InteractiveTooltip(
+          format: 'point.x: point.y',
+          color: Colors.black87,
+        ),
+        lineType: TrackballLineType.vertical,
+        lineColor: AppColors.primary,
+        lineWidth: 2,
+
+        markerSettings: const TrackballMarkerSettings(
+          markerVisibility: TrackballVisibilityMode.visible,
+          color: AppColors.primary,
+          borderColor: Colors.white,
+          borderWidth: 2,
+        ),
+      ),
       primaryXAxis: CategoryAxis(
         labelStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
       ),
       tooltipBehavior: TooltipBehavior(enable: true),
       series: <CartesianSeries>[
         BarSeries<ChartDataModel, String>(
+          enableTooltip: enableTooltip,
           width: 0.6,
           borderRadius: BorderRadius.only(
             bottomRight: Radius.circular(3),
@@ -138,7 +163,11 @@ class StackedBarWidget extends StatelessWidget {
             if (title.isNotEmpty)
               Align(
                 alignment: Alignment.centerLeft,
-                child: CustomChartTitle(title: title, onViewTap: onViewTap),
+                child: CustomChartTitle(
+                  title: title,
+                  onViewTap: onViewTap,
+                  showViewBtn: showViewBtn,
+                ),
               ),
             Expanded(
               child:

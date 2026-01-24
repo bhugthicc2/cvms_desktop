@@ -10,6 +10,7 @@ class CustomDataPager extends StatelessWidget {
   final int totalRows;
   final int currentPage;
   final ValueChanged<int?>? onRowsPerPageChanged;
+  final List<int> availableRowsPerPage;
 
   const CustomDataPager({
     super.key,
@@ -18,6 +19,7 @@ class CustomDataPager extends StatelessWidget {
     required this.totalRows,
     required this.currentPage,
     this.onRowsPerPageChanged,
+    this.availableRowsPerPage = const [10, 25, 50, 100],
   });
 
   @override
@@ -53,6 +55,57 @@ class CustomDataPager extends StatelessWidget {
               ),
             ),
           ),
+          // Rows per page dropdown
+          if (onRowsPerPageChanged != null) ...[
+            const SizedBox(width: 16),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Rows per page:',
+                  style: const TextStyle(
+                    fontSize: AppFontSizes.xMedium,
+                    color: AppColors.grey,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  height: 32,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(4),
+                    color: Colors.white,
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<int>(
+                      value: rowsPerPage,
+                      items:
+                          availableRowsPerPage.map((int value) {
+                            return DropdownMenuItem<int>(
+                              value: value,
+                              child: Text(
+                                value.toString(),
+                                style: const TextStyle(
+                                  fontSize: AppFontSizes.xMedium,
+                                  color: AppColors.grey,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                      onChanged: onRowsPerPageChanged,
+                      isDense: true,
+                      iconSize: 20,
+                      icon: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
           const Spacer(),
           SfDataPagerTheme(
             data: SfDataPagerThemeData(

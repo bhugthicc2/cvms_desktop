@@ -184,7 +184,7 @@ class VehicleLogsDataSource extends DataGridSource {
         maxLines: 2,
         style: const TextStyle(
           fontSize: AppFontSizes.small,
-          fontFamily: 'Poppins',
+          fontFamily: 'Inter',
         ),
       ),
     );

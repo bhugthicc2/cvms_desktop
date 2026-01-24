@@ -106,7 +106,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
                                         style: TextStyle(
                                           color: widget.color ?? AppColors.grey,
                                           fontSize: widget.fontSize,
-                                          fontFamily: 'Poppins',
+                                          fontFamily: 'Inter',
                                         ),
                                       ),
                                     )
@@ -116,7 +116,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
                                       style: TextStyle(
                                         color: widget.color ?? AppColors.grey,
                                         fontSize: widget.fontSize,
-                                        fontFamily: 'Poppins',
+                                        fontFamily: 'Inter',
                                       ),
                                     ),
                           ),

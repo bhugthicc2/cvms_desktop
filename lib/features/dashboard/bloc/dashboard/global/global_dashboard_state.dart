@@ -8,7 +8,9 @@ enum DashboardViewMode {
   pendingViolationView,
   allVehiclesView,
   vehicleLogsView,
-  vehicleByDepartmentView,
+  vehicleByCollegeView,
+  vehiclesByYearLevel,
+  violationsByStudent,
 }
 
 class GlobalDashboardState extends Equatable {
@@ -27,6 +29,7 @@ class GlobalDashboardState extends Equatable {
   vehicleDistribution; //real time grouped aggregation impl step 2
   final List<ChartDataModel> yearLevelBreakdown; // realtime step 9
   final List<ChartDataModel> topStudentsWithMostViolations; // step 7
+  final List<ChartDataModel> allStudentsWithMostViolations; // step 7
   final List<ChartDataModel> cityBreakdown; // realtime step 9
   final List<ChartDataModel> vehicleLogsDistributionPerCollege; // step 7
   final List<ChartDataModel> violationDistributionPerCollege; // step 7
@@ -69,7 +72,7 @@ class GlobalDashboardState extends Equatable {
     this.currentTimeRange = '7 days',
     this.vehicleLogsTimeRange = '7 days',
     this.violationTrendTimeRange = '7 days',
-
+    this.allStudentsWithMostViolations = const [],
     //indi vehicle report
     this.currentVehicleId,
     //pdf
@@ -98,6 +101,7 @@ class GlobalDashboardState extends Equatable {
     List<ChartDataModel>? violationTypeDistribution, // step 12
     List<ChartDataModel>? fleetLogsData,
     List<ChartDataModel>? violationTrendData,
+    List<ChartDataModel>? allStudentsWithMostViolations,
     String? currentTimeRange,
     String? vehicleLogsTimeRange,
     String? violationTrendTimeRange,
@@ -130,6 +134,8 @@ class GlobalDashboardState extends Equatable {
           this.vehicleDistribution, //real time grouped aggregation impl step 5
       yearLevelBreakdown:
           yearLevelBreakdown ?? this.yearLevelBreakdown, // step 12
+      allStudentsWithMostViolations:
+          allStudentsWithMostViolations ?? this.allStudentsWithMostViolations,
       topStudentsWithMostViolations:
           topStudentsWithMostViolations ??
           this.topStudentsWithMostViolations, // step 10
@@ -176,6 +182,7 @@ class GlobalDashboardState extends Equatable {
     vehicleLogsDistributionPerCollege, // step 11
     violationDistributionPerCollege, // step 11
     violationTypeDistribution, // step 13
+    allStudentsWithMostViolations,
     fleetLogsData,
     violationTrendData,
     currentTimeRange,

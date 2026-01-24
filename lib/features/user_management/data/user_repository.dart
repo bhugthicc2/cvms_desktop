@@ -87,7 +87,7 @@ class UserRepository {
 
       // Log user deletion
       if (userData != null) {
-        await _logger.logUserDeleted(userId, userData?.email ?? '', null);
+        await _logger.logUserDeleted(userId, userData.email, null);
       }
     } catch (e) {
       throw Exception('Failed to delete user: $e');

@@ -19,7 +19,7 @@ class CustomFormTitle extends StatelessWidget {
             title ?? 'ADMIN LOGIN',
             style: TextStyle(
               fontWeight: FontWeight.w600,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
               fontSize: AppFontSizes.xxxLarge,
               color: AppColors.primary,
             ),

@@ -119,7 +119,7 @@ class TypeaheadSearchField<T> extends StatelessWidget {
             final baseStyle = TextStyle(
               color: AppColors.black,
               fontSize: 13,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
             );
 
             final query = controller.text.trim();

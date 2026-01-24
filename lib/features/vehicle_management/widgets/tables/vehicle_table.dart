@@ -6,6 +6,7 @@ import 'package:cvms_desktop/features/vehicle_management/widgets/actions/toggle_
 import 'package:cvms_desktop/features/vehicle_management/widgets/dialogs/custom_delete_dialog.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/dialogs/custom_report_dialog.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/dialogs/custom_update_status_dialog.dart';
+import 'package:cvms_desktop/features/vehicle_management/widgets/tables/top_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/widgets/table/custom_table.dart';
@@ -19,13 +20,16 @@ class VehicleTable extends StatelessWidget {
   final List<VehicleEntry> entries;
   final TextEditingController searchController;
   final VoidCallback onAddVehicle;
-
+  final bool hasImportBtn;
+  final Widget? additionalHeaderItem;
   const VehicleTable({
     super.key,
     required this.title,
     required this.entries,
     required this.searchController,
     required this.onAddVehicle,
+    this.hasImportBtn = true,
+    this.additionalHeaderItem,
   });
 
   @override
@@ -60,9 +64,29 @@ class VehicleTable extends StatelessWidget {
       builder: (context, state) {
         return Column(
           children: [
+            TopBar(
+              metrics: TopBarMetrics(
+                totalVehicles: state.allEntries.length,
+                onsiteVehicles:
+                    state.allEntries.where((v) => v.status == 'onsite').length,
+                offsiteVehicles:
+                    state.allEntries.where((v) => v.status == 'offsite').length,
+                twoWheeled:
+                    state.allEntries
+                        .where((v) => v.vehicleType == 'two-wheeled')
+                        .length,
+                fourWheeled:
+                    state.allEntries
+                        .where((v) => v.vehicleType == 'four-wheeled')
+                        .length,
+              ),
+            ), //this shows the stats or summary of the vehicles
+            Spacing.vertical(size: AppFontSizes.medium),
             TableHeader(
+              hasImportBtn: hasImportBtn,
               searchController: searchController,
               onAddVehicle: onAddVehicle,
+              additionalWidget: additionalHeaderItem,
             ),
             if (state.isBulkModeEnabled) ...[
               Spacing.vertical(size: AppFontSizes.medium),

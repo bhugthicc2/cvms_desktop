@@ -6,7 +6,6 @@ class VehicleLogModel {
   final String id;
   final String vehicleId;
   final String updatedByUserId;
-
   final Timestamp timeIn;
   final Timestamp? timeOut;
   final String status;

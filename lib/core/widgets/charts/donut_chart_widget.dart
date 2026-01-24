@@ -19,6 +19,7 @@ class DonutChartWidget extends StatelessWidget {
   final Function(ChartPointDetails)? onDonutChartPointTap;
   final ScreenshotController? screenshotController;
   final int? highlightHighestIndex;
+  final bool enableTooltip;
 
   const DonutChartWidget({
     super.key,
@@ -32,6 +33,7 @@ class DonutChartWidget extends StatelessWidget {
     this.explode = false,
     this.showPercentageInSlice = true,
     this.highlightHighestIndex,
+    this.enableTooltip = false,
   });
 
   @override
@@ -76,7 +78,9 @@ class DonutChartWidget extends StatelessWidget {
                 tooltipBehavior: TooltipBehavior(enable: true),
                 series: <CircularSeries>[
                   DoughnutSeries<ChartDataModel, String>(
+                    cornerStyle: CornerStyle.bothFlat,
                     explode: explode,
+                    enableTooltip: enableTooltip,
                     onPointTap: onDonutChartPointTap,
                     dataSource: data,
                     xValueMapper: (d, _) => d.category,

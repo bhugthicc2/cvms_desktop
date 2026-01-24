@@ -82,7 +82,7 @@ class RecentLogsDataSource extends DataGridSource {
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
             ),
           ),
         );
@@ -95,7 +95,7 @@ class RecentLogsDataSource extends DataGridSource {
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -111,7 +111,7 @@ class RecentLogsDataSource extends DataGridSource {
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
             ),
           ),
         );
@@ -125,7 +125,7 @@ class RecentLogsDataSource extends DataGridSource {
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
             ),
           ),
         );
@@ -141,7 +141,7 @@ class RecentLogsDataSource extends DataGridSource {
             maxLines: 1,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
             ),
           ),
         );
@@ -183,7 +183,7 @@ class RecentLogsDataSource extends DataGridSource {
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
+              fontFamily: 'Inter',
             ),
           ),
         );

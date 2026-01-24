@@ -18,11 +18,15 @@ import '../../../../core/widgets/app/search_field.dart';
 class TableHeader extends StatelessWidget {
   final TextEditingController? searchController;
   final VoidCallback onAddVehicle;
+  final bool hasImportBtn;
+  final Widget? additionalWidget;
 
   const TableHeader({
     super.key,
     this.searchController,
     required this.onAddVehicle,
+    this.hasImportBtn = true,
+    this.additionalWidget,
   });
 
   // Returns a responsive width for the search field based on current screen width
@@ -81,6 +85,7 @@ class TableHeader extends StatelessWidget {
                         },
                       ),
                     ),
+                    additionalWidget ?? SizedBox.shrink(),
                     Spacing.horizontal(size: AppSpacing.medium),
 
                     //TOGGLE BULK MODE BUTTON
@@ -144,47 +149,60 @@ class TableHeader extends StatelessWidget {
                         // },
                       ),
                     ),
-                    Spacing.horizontal(size: AppSpacing.medium),
-                    Expanded(
-                      child: CustomVehicleButton(
-                        icon: PhosphorIconsBold.download,
-                        label: "Import",
-                        onPressed: () async {
-                          final result = await FilePicker.platform.pickFiles(
-                            type: FileType.custom,
-                            allowedExtensions: ['csv'],
-                          );
 
-                          if (result != null &&
-                              result.files.single.path != null) {
-                            final file = File(result.files.single.path!);
-                            try {
-                              final entries = await VehicleCsvParser.parseCsv(
-                                file,
-                              );
-                              if (!context.mounted) return;
-                              context.read<VehicleCubit>().importVehicles(
-                                entries,
-                              );
+                    hasImportBtn
+                        ? Expanded(
+                          child: Row(
+                            children: [
+                              Spacing.horizontal(size: AppSpacing.medium),
+                              Expanded(
+                                child: CustomVehicleButton(
+                                  icon: PhosphorIconsBold.download,
+                                  label: "Import",
+                                  onPressed: () async {
+                                    final result = await FilePicker.platform
+                                        .pickFiles(
+                                          type: FileType.custom,
+                                          allowedExtensions: ['csv'],
+                                        );
 
-                              CustomSnackBar.show(
-                                context: context,
-                                message:
-                                    "${entries.length} vehicles imported successfully!",
-                                type: SnackBarType.success,
-                              );
-                            } catch (e) {
-                              if (!context.mounted) return;
-                              CustomSnackBar.show(
-                                context: context,
-                                message: "Import failed: $e",
-                                type: SnackBarType.error,
-                              );
-                            }
-                          }
-                        },
-                      ),
-                    ),
+                                    if (result != null &&
+                                        result.files.single.path != null) {
+                                      final file = File(
+                                        result.files.single.path!,
+                                      );
+                                      try {
+                                        final entries =
+                                            await VehicleCsvParser.parseCsv(
+                                              file,
+                                            );
+                                        if (!context.mounted) return;
+                                        context
+                                            .read<VehicleCubit>()
+                                            .importVehicles(entries);
+
+                                        CustomSnackBar.show(
+                                          context: context,
+                                          message:
+                                              "${entries.length} vehicles imported successfully!",
+                                          type: SnackBarType.success,
+                                        );
+                                      } catch (e) {
+                                        if (!context.mounted) return;
+                                        CustomSnackBar.show(
+                                          context: context,
+                                          message: "Import failed: $e",
+                                          type: SnackBarType.error,
+                                        );
+                                      }
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                        : SizedBox.shrink(),
                   ],
                 ),
               ),

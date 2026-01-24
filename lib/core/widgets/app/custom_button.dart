@@ -51,7 +51,7 @@ class CustomButton extends StatelessWidget {
                   )
                   : Text(
                     text,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: AppFontSizes.medium,
                       letterSpacing: 0.8,
 

@@ -46,6 +46,8 @@ class _ViolationManagementPageState extends State<ViolationManagementPage> {
         padding: const EdgeInsets.all(AppSpacing.medium),
         child: BlocConsumer<ViolationCubit, ViolationState>(
           listener: (context, state) {
+            debugPrint("VIOLATION DEBUG: ${state.allEntries}");
+            debugPrint("VIOLATION DEBUG: ${state.filteredEntries}");
             if (state.message != null) {
               CustomSnackBar.show(
                 context: context,

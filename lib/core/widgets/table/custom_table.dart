@@ -21,6 +21,7 @@ class CustomTable extends StatefulWidget {
   final bool allowSorting;
   final double headerTopLeftRadii;
   final double headerTopRightRadii;
+  final List<int> availableRowsPerPage;
 
   const CustomTable({
     super.key,
@@ -35,6 +36,7 @@ class CustomTable extends StatefulWidget {
     this.allowSorting = true,
     this.headerTopLeftRadii = 8,
     this.headerTopRightRadii = 8,
+    this.availableRowsPerPage = const [10, 25, 50, 100],
   });
 
   @override
@@ -178,6 +180,7 @@ class _CustomTableState extends State<CustomTable> {
               totalRows: totalRows,
               currentPage: _currentPage,
               onRowsPerPageChanged: _handleRowsPerPageChanged,
+              availableRowsPerPage: widget.availableRowsPerPage,
             ),
         ],
       ),
