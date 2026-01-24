@@ -16,7 +16,7 @@ class AppColors {
 
   // neutral proj colors
   static const Color white = Color(0xFFFFFFFF);
-  static const Color black = Color(0xFF1E1E1E);
+  static const Color black = Color(0xFF0B1215);
   // static const Color grey = Color(0XFF7E818D);
   static const Color grey = Color(0XFF8c9ec6);
   static const Color dividerColor = Color(0xFFBEC8ED);

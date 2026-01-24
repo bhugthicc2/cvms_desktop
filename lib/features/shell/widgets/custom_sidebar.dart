@@ -1,4 +1,4 @@
-import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/theme/sidebar_theme.dart';
 import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/shell/config/sidebar_active_style.dart';
@@ -42,27 +42,37 @@ class CustomSidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sidebarTheme = SidebarTheme.fromCubit(context);
+
     final double tileHeight = 42.0;
     final double indicatorOffset = 63.0; // Half of 126 for centering
     final double indicatorTop = selectedIndex * tileHeight - indicatorOffset;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      width: isExpanded ? 235 : 50,
+      width: isExpanded ? 235 : 52,
       decoration: BoxDecoration(
-        image: DecorationImage(
-          opacity: 0.7,
-          image: const AssetImage("assets/images/sidebar_bg.png"),
-          fit: BoxFit.cover,
-        ),
-
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            AppColors.darkBlue,
-            AppColors.darkBlue.withValues(alpha: 0.7),
-          ],
+          colors: [sidebarTheme.background, sidebarTheme.background],
         ),
+        image:
+            sidebarTheme == SidebarTheme.dark
+                ? DecorationImage(
+                  opacity: 0.7,
+                  image: const AssetImage("assets/images/sidebar_bg_dark.png"),
+                  fit: BoxFit.cover,
+                )
+                : null,
+        border:
+            sidebarTheme == SidebarTheme.light
+                ? Border(
+                  right: BorderSide(
+                    color: sidebarTheme.dividerColor,
+                    width: 2.0,
+                  ),
+                )
+                : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,20 +82,25 @@ class CustomSidebar extends StatelessWidget {
           Expanded(
             child:
                 activeStyle == SidebarActiveStyle.curvedIndicator
-                    ? _buildCurved(indicatorTop, tileHeight, indicatorOffset)
-                    : _buildSideBorder(),
+                    ? _buildCurved(
+                      context,
+                      indicatorTop,
+                      tileHeight,
+                      indicatorOffset,
+                    )
+                    : _buildSideBorder(context),
           ),
           //LOGOUT TILE DAWG
           CustomDivider(
             direction: Axis.horizontal,
             thickness: 0.5,
-            color: AppColors.dividerColor.withValues(alpha: 0.4),
+            color: sidebarTheme.dividerColor.withValues(alpha: 0.4),
           ),
           CustomSidebarTile(
             isLogoutTile: true,
             item: NavItem(icon: 'logout.png', label: "Logout"),
-            iconColor: AppColors.error,
-            labelColor: AppColors.error,
+            iconColor: sidebarTheme.logoutIcon,
+            labelColor: sidebarTheme.logoutIcon,
             isExpanded: isExpanded,
             isSelected: false,
             onTap: onLogout,
@@ -97,7 +112,8 @@ class CustomSidebar extends StatelessWidget {
     );
   }
 
-  Widget _buildSideBorder() {
+  Widget _buildSideBorder(BuildContext context) {
+    final sidebarTheme = SidebarTheme.of(context);
     return ListView.builder(
       itemExtent: 46,
       itemCount: items.length,
@@ -109,17 +125,19 @@ class CustomSidebar extends StatelessWidget {
           onTap: () => onItemSelected(index),
           showActiveBorder: true,
           isStencil: isStencil,
-          labelColor: AppColors.white,
+          labelColor: sidebarTheme.primaryText,
         );
       },
     );
   }
 
   Widget _buildCurved(
+    BuildContext context,
     double indicatorTop,
     double tileHeight,
     double indicatorOffset,
   ) {
+    final sidebarTheme = SidebarTheme.of(context);
     return Stack(
       children: [
         AnimatedPositioned(
@@ -138,7 +156,7 @@ class CustomSidebar extends StatelessWidget {
           itemCount: items.length,
           itemBuilder: (context, index) {
             return CustomSidebarTile(
-              labelColor: AppColors.white,
+              labelColor: sidebarTheme.primaryText,
               item: items[index],
               isExpanded: isExpanded,
               isSelected: index == selectedIndex,

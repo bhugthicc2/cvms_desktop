@@ -1,5 +1,4 @@
-import 'package:cvms_desktop/core/theme/app_colors.dart';
-import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/core/theme/sidebar_theme.dart';
 import 'package:cvms_desktop/core/widgets/animation/hover_slide.dart';
 import 'package:cvms_desktop/features/shell/models/nav_item.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +21,7 @@ class CustomSidebarTile extends StatelessWidget {
     required this.isSelected,
     required this.onTap,
     required this.showActiveBorder,
-    this.iconColor = AppColors.white,
+    this.iconColor,
     required this.labelColor,
     this.isStencil = true,
     this.isLogoutTile = false,
@@ -30,44 +29,52 @@ class CustomSidebarTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sidebarTheme = SidebarTheme.fromCubit(context);
+
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: EdgeInsets.only(left: 3, right: 3.0),
+        padding: EdgeInsets.only(left: 5, right: 5.0, top: 5),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-
+          duration: sidebarTheme.tileAnimationDuration,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(sidebarTheme.tileBorderRadius),
             color:
                 isSelected && showActiveBorder
-                    ? AppColors.white.withValues(alpha: 0.2)
+                    ? sidebarTheme.selectedTileBackground
                     : Colors.transparent,
           ),
           child: Row(
             children: [
               Container(
                 margin: EdgeInsets.symmetric(vertical: 8),
-                width: 3,
+                width: sidebarTheme.activeIndicatorWidth,
                 decoration: BoxDecoration(
                   color:
-                      isSelected ? AppColors.chartOrange : Colors.transparent,
-                  borderRadius: BorderRadius.circular(5),
+                      isSelected
+                          ? sidebarTheme.activeIndicator
+                          : Colors.transparent,
+                  borderRadius: BorderRadius.circular(
+                    sidebarTheme.tileBorderRadius,
+                  ),
                 ),
               ),
               Expanded(
                 child: HoverSlide(
                   cursor: SystemMouseCursors.click,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
+                    padding: EdgeInsets.symmetric(
                       horizontal: 50 * 0.160,
-                      vertical: 11,
+                      vertical: sidebarTheme.tileVerticalPadding,
                     ),
                     child: Row(
                       children: [
                         Flexible(
                           child: Opacity(
-                            opacity: isSelected ? 1.0 : 0.8,
+                            opacity:
+                                isSelected
+                                    ? 1.0
+                                    : sidebarTheme.unselectedIconOpacity,
                             child: Image.asset(
                               isStencil
                                   ? "assets/icons/stencil/${item.icon}"
@@ -76,42 +83,54 @@ class CustomSidebarTile extends StatelessWidget {
                               width: 20,
                               color:
                                   isSelected
-                                      ? AppColors.chartOrange
-                                      : iconColor,
+                                      ? sidebarTheme.selectedIcon
+                                      : (isLogoutTile
+                                          ? sidebarTheme.logoutIcon
+                                          : sidebarTheme.defaultIcon),
                             ),
                           ),
                         ),
                         AnimatedSize(
-                          duration: const Duration(milliseconds: 300),
+                          duration: sidebarTheme.expansionAnimationDuration,
                           child: AnimatedOpacity(
-                            duration: const Duration(milliseconds: 200),
+                            duration: sidebarTheme.opacityAnimationDuration,
                             opacity: isExpanded ? 1.0 : 0.0,
                             child:
                                 isExpanded
                                     ? Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        const SizedBox(width: 15.0),
+                                        SizedBox(
+                                          width: sidebarTheme.iconTextSpacing,
+                                        ),
                                         Flexible(
                                           child: Text(
                                             item.label,
-                                            style: TextStyle(
-                                              fontFamily: 'Inter',
-                                              fontSize: AppFontSizes.medium,
-                                              color:
-                                                  isSelected
-                                                      ? AppColors.chartOrange
-                                                          .withValues(
-                                                            alpha: 0.9,
-                                                          )
-                                                      : labelColor.withValues(
-                                                        alpha: 0.7,
-                                                      ),
-                                              fontWeight:
-                                                  isSelected || isLogoutTile
-                                                      ? FontWeight.w600
-                                                      : FontWeight.normal,
-                                            ),
+                                            style:
+                                                isLogoutTile
+                                                    ? sidebarTheme
+                                                        .logoutLabelTextStyle
+                                                    : sidebarTheme
+                                                        .labelTextStyle
+                                                        .copyWith(
+                                                          color:
+                                                              isSelected
+                                                                  ? sidebarTheme
+                                                                      .selectedText
+                                                                  : sidebarTheme
+                                                                      .primaryText
+                                                                      .withValues(
+                                                                        alpha:
+                                                                            0.7,
+                                                                      ),
+                                                          fontWeight:
+                                                              isLogoutTile ||
+                                                                      isSelected
+                                                                  ? FontWeight
+                                                                      .bold
+                                                                  : FontWeight
+                                                                      .normal,
+                                                        ),
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),

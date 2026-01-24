@@ -29,8 +29,13 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 20,
+    return Container(
+      padding: EdgeInsets.all(AppSpacing.medium),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      height: 50,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -113,18 +118,18 @@ class TopBar extends StatelessWidget {
     required IconData icon,
     required String label,
     required String value,
-    Color? valueColor,
+    Color? valueColor = AppColors.black,
   }) {
     return Row(
       children: [
-        Icon(icon, size: 16),
+        Icon(icon, size: 16, color: AppColors.grey),
         Spacing.horizontal(size: AppSpacing.xSmall),
         Text(label, style: TextStyle(fontSize: 12, color: AppColors.grey)),
         Text(
           value,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: valueColor,
+            color: AppColors.black,
             fontSize: AppFontSizes.medium,
             shadows: [
               Shadow(

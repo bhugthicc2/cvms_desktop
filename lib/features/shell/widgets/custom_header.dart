@@ -1,6 +1,10 @@
 import 'dart:convert';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:cvms_desktop/core/bloc/sidebar_theme_cubit.dart';
+import 'package:cvms_desktop/core/bloc/sidebar_theme_state.dart';
+import 'package:cvms_desktop/core/bloc/theme_cubit.dart';
+import 'package:cvms_desktop/core/bloc/theme_state.dart';
 import 'package:cvms_desktop/core/theme/app_dimensions.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
@@ -116,6 +120,39 @@ class CustomHeader extends StatelessWidget {
                     height: 1.0,
                   ),
                 ),
+                Spacing.horizontal(size: AppSpacing.medium),
+                Container(
+                  height: AppDimensions.headerHeight * 0.4,
+                  width: 1,
+                  decoration: BoxDecoration(
+                    color: AppColors.dividerColor.withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                Spacing.horizontal(size: AppSpacing.medium),
+
+                BlocBuilder<SidebarThemeCubit, SidebarThemeState>(
+                  builder: (context, state) {
+                    final isDark = state.isDark;
+
+                    return Tooltip(
+                      mouseCursor: SystemMouseCursors.click,
+                      message: 'Switch sidebar theme',
+                      child: InkWell(
+                        onTap: () => context.read<SidebarThemeCubit>().toggle(),
+                        borderRadius: BorderRadius.circular(6),
+                        child: Icon(
+                          isDark
+                              ? PhosphorIconsRegular.sun
+                              : PhosphorIconsRegular.moon,
+                          size: 20,
+                          color: isDark ? AppColors.yellow : AppColors.black,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+
                 Spacing.horizontal(size: AppSpacing.medium),
                 Container(
                   height: AppDimensions.headerHeight * 0.4,

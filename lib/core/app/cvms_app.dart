@@ -1,3 +1,5 @@
+import 'package:cvms_desktop/core/bloc/theme_cubit.dart';
+import 'package:cvms_desktop/core/bloc/theme_state.dart';
 import 'package:cvms_desktop/core/routes/app_routes.dart';
 import 'package:cvms_desktop/core/services/connectivity/connectivity_service.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
@@ -41,6 +43,7 @@ class _CVMSAppState extends State<CVMSApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => ThemeCubit()),
         BlocProvider(create: (context) => AuthBloc()),
         BlocProvider(
           create: (context) => ConnectivityCubit(ConnectivityService()),
@@ -49,6 +52,7 @@ class _CVMSAppState extends State<CVMSApp> with WidgetsBindingObserver {
       child: Builder(
         builder: (context) {
           return MaterialApp(
+            // themeMode: state.themeMode,
             debugShowCheckedModeBanner: false,
             home: BlocListener<ConnectivityCubit, InternetStatus>(
               listener: (context, status) async {
@@ -111,7 +115,9 @@ class _CVMSAppState extends State<CVMSApp> with WidgetsBindingObserver {
               },
               child: const AuthWrapper(),
             ),
+
             theme: AppTheme.lightTheme,
+            // darkTheme: AppTheme.darkTheme,
             routes: AppRoutes.getRoutes(),
           );
         },

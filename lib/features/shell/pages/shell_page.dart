@@ -1,4 +1,6 @@
+import 'package:cvms_desktop/core/bloc/sidebar_theme_cubit.dart';
 import 'package:cvms_desktop/core/services/connectivity/connectivity_service.dart';
+import 'package:cvms_desktop/core/theme/sidebar_theme.dart';
 import 'package:cvms_desktop/features/auth/bloc/current_user_cubit.dart';
 import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
 import 'package:cvms_desktop/features/auth/data/user_repository.dart';
@@ -61,6 +63,7 @@ class _ShellPageState extends State<ShellPage> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => SidebarThemeCubit()),
         BlocProvider(create: (_) => ShellCubit()),
         BlocProvider(create: (_) => ConnectivityCubit(ConnectivityService())),
         BlocProvider(

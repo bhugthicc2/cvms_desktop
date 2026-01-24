@@ -182,7 +182,7 @@ class DashboardRepository {
             'timeIn': now,
             'timeOut': null,
             'updatedByUserId': updatedByUserId,
-            'status': 'inside',
+            'status': 'onsite',
             'durationMinutes': null,
           });
         } else {
@@ -200,7 +200,7 @@ class DashboardRepository {
               now.toDate().difference(timeInTs.toDate()).inMinutes;
           batch.update(doc.reference, {
             'timeOut': now,
-            'status': 'outside',
+            'status': 'offsite',
             'durationMinutes': durationMinutes,
             'updatedByUserId': updatedByUserId,
           });

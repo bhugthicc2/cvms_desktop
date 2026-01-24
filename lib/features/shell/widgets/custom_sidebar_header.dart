@@ -1,6 +1,5 @@
-import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_dimensions.dart';
-import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/core/theme/sidebar_theme.dart';
 import 'package:flutter/material.dart';
 
 class CustomSidebarHeader extends StatelessWidget {
@@ -10,17 +9,20 @@ class CustomSidebarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sidebarTheme = SidebarTheme.fromCubit(context);
+
     return Container(
       height: AppDimensions.headerHeight,
       decoration: BoxDecoration(
+        //color: sidebarTheme.headerBackground,
         border: Border(
-          bottom: BorderSide(
-            color: AppColors.lineColor.withValues(alpha: 0.4),
-            width: 1,
-          ),
+          bottom: BorderSide(color: sidebarTheme.headerBorder, width: 1),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 50 * 0.25, vertical: 9),
+      padding: EdgeInsets.symmetric(
+        horizontal: 50 * 0.25,
+        vertical: sidebarTheme.headerPadding,
+      ),
       child: Row(
         children: [
           ClipOval(
@@ -32,38 +34,25 @@ class CustomSidebarHeader extends StatelessWidget {
             ),
           ),
           AnimatedSize(
-            duration: const Duration(milliseconds: 300),
+            duration: sidebarTheme.expansionAnimationDuration,
             child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 200),
+              duration: sidebarTheme.opacityAnimationDuration,
               opacity: isExpanded ? 1.0 : 0.0,
               child:
                   isExpanded
                       ? Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const SizedBox(width: 12),
+                          SizedBox(width: sidebarTheme.iconTextSpacing * 0.8),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
                                 "JRMSU-K",
-                                style: TextStyle(
-                                  fontFamily: 'Groote',
-                                  color: AppColors.yellow,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: AppFontSizes.medium,
-                                ),
+                                style: sidebarTheme.logoTextStyle,
                               ),
-                              Text(
-                                "CVMS",
-                                style: TextStyle(
-                                  fontFamily: 'Groote',
-                                  color: AppColors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: AppFontSizes.medium,
-                                ),
-                              ),
+                              Text("CVMS", style: sidebarTheme.headerTextStyle),
                             ],
                           ),
                         ],
