@@ -92,7 +92,7 @@ class CustomHeader extends StatelessWidget {
                           : FontWeight.normal,
                   color:
                       i == breadcrumbs.length - 1
-                          ? AppColors.primary
+                          ? AppColors.black
                           : AppColors.grey,
                 ),
               ),

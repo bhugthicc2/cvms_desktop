@@ -64,7 +64,7 @@ class StepIndicator extends StatelessWidget {
                           ),
                         ),
                       // After line (left half of next connection)
-                      if (step < 4 && halfLineWidth > 0)
+                      if (step < 5 && halfLineWidth > 0)
                         Positioned(
                           left: slotWidth / 2 + 20,
                           top: verticalLineOffset,

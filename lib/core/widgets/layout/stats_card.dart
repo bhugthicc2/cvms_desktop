@@ -19,6 +19,12 @@ class StatsCard extends StatelessWidget {
   final double height;
   final VoidCallback? onClick;
   final double hoverDy;
+  final double cardBorderRadii;
+  final double iconContainerRadii;
+  final double iconContainerSize;
+  final double iconSize;
+  final double cardPadding;
+  final double valueFontSize;
 
   const StatsCard({
     super.key,
@@ -35,6 +41,12 @@ class StatsCard extends StatelessWidget {
     this.height = 80,
     this.onClick,
     this.hoverDy = -0.08,
+    this.cardBorderRadii = 8.0,
+    this.iconContainerRadii = 8.0,
+    this.iconContainerSize = 40.0,
+    this.iconSize = 20,
+    this.cardPadding = AppSpacing.medium,
+    this.valueFontSize = AppFontSizes.xLarge,
   });
 
   @override
@@ -61,7 +73,7 @@ class StatsCard extends StatelessWidget {
                     LinearGradient(
                       colors: [color.withValues(alpha: 0.9), color],
                     ),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(cardBorderRadii),
         boxShadow: [
           BoxShadow(
             color: AppColors.grey.withValues(alpha: 0.1),
@@ -94,12 +106,12 @@ class StatsCard extends StatelessWidget {
             ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.medium),
+              padding: EdgeInsets.all(cardPadding),
               child: Row(
                 children: [
                   Container(
-                    height: 40,
-                    width: 40,
+                    height: iconContainerSize,
+                    width: iconContainerSize,
                     decoration: BoxDecoration(
                       gradient:
                           isWhiteTheme
@@ -107,7 +119,7 @@ class StatsCard extends StatelessWidget {
                               : LinearGradient(
                                 colors: [color.withValues(alpha: 0.9), color],
                               ),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(iconContainerRadii),
                       boxShadow: [
                         BoxShadow(
                           color: iconColor!.withValues(alpha: 0.5),
@@ -118,7 +130,7 @@ class StatsCard extends StatelessWidget {
                     ),
                     child: Icon(
                       icon,
-                      size: 20,
+                      size: iconSize,
                       color:
                           isWhiteTheme
                               ? AppColors.white
@@ -134,7 +146,7 @@ class StatsCard extends StatelessWidget {
                       Text(
                         "$value",
                         style: TextStyle(
-                          fontSize: AppFontSizes.xLarge,
+                          fontSize: valueFontSize,
                           fontWeight: FontWeight.bold,
                           color: isWhiteTheme ? AppColors.black : color,
                         ),
@@ -162,7 +174,7 @@ class StatsCard extends StatelessWidget {
 
   Widget _buildCard() {
     return Container(
-      padding: EdgeInsets.all(AppSpacing.medium),
+      padding: EdgeInsets.all(cardPadding),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: isWhiteTheme ? AppColors.white : null,
@@ -173,7 +185,7 @@ class StatsCard extends StatelessWidget {
                     LinearGradient(
                       colors: [color.withValues(alpha: 0.9), color],
                     ),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(cardBorderRadii),
         boxShadow: [
           BoxShadow(
             color: AppColors.grey.withValues(alpha: 0.1),
@@ -185,8 +197,8 @@ class StatsCard extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            height: 40,
-            width: 40,
+            height: iconContainerSize,
+            width: iconContainerSize,
             decoration: BoxDecoration(
               gradient:
                   isWhiteTheme
@@ -194,7 +206,7 @@ class StatsCard extends StatelessWidget {
                       : LinearGradient(
                         colors: [color.withValues(alpha: 0.9), color],
                       ),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(iconContainerRadii),
               boxShadow: [
                 BoxShadow(
                   color: iconColor!.withValues(alpha: 0.5),
@@ -205,7 +217,7 @@ class StatsCard extends StatelessWidget {
             ),
             child: Icon(
               icon,
-              size: 20,
+              size: iconSize,
               color:
                   isWhiteTheme ? AppColors.white : iconColor ?? AppColors.white,
               weight: 5,
@@ -219,7 +231,7 @@ class StatsCard extends StatelessWidget {
               Text(
                 "$value",
                 style: TextStyle(
-                  fontSize: AppFontSizes.xLarge,
+                  fontSize: valueFontSize,
                   fontWeight: FontWeight.bold,
                   color: isWhiteTheme ? AppColors.black : color,
                 ),

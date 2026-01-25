@@ -261,7 +261,7 @@ class VehicleDataSource extends DataGridSource {
         return BlocBuilder<VehicleCubit, VehicleState>(
           builder: (context, state) {
             // Hide status if vehicle has no logs (no transactions yet)
-            if (!state.vehiclesWithLogs.contains(entry.vehicleID)) {
+            if (!state.vehiclesWithLogs.contains(entry.vehicleId)) {
               return const SizedBox.shrink();
             }
 

@@ -34,7 +34,7 @@ class _ViewQrCodeDialogState extends State<ViewQrCodeDialog> {
   @override
   Widget build(BuildContext context) {
     // -----------encryption----------
-    final rawVehicleId = widget.vehicle.vehicleID;
+    final rawVehicleId = widget.vehicle.vehicleId;
     final qrData = CryptoService.withDefaultKey().encryptVehicleId(
       rawVehicleId,
     );
@@ -65,7 +65,7 @@ class _ViewQrCodeDialogState extends State<ViewQrCodeDialog> {
               () => context.read<VehicleCubit>().exportCardAsImage(
                 _cardKey,
                 widget.vehicle.ownerName,
-                widget.vehicle.vehicleID, //step 4 mvp export
+                widget.vehicle.vehicleId, //step 4 mvp export
               ),
           title: widget.title,
           height: screenHeight * 0.9,

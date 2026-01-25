@@ -1,22 +1,20 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
-import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
-import 'package:cvms_desktop/core/theme/app_spacing.dart';
-import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+import 'package:cvms_desktop/core/widgets/layout/stats_card.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class TopBarMetrics {
   final int totalVehicles;
   final int onsiteVehicles;
-  final int offsiteVehicles;
+  final int registeredVehicles;
   final int twoWheeled;
   final int fourWheeled;
 
   const TopBarMetrics({
     required this.totalVehicles,
     required this.onsiteVehicles,
-    required this.offsiteVehicles,
+    required this.registeredVehicles,
     required this.twoWheeled,
     required this.fourWheeled,
   });
@@ -29,84 +27,63 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(AppSpacing.medium),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      height: 50,
+    return SizedBox(
+      height: 80,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           // Total Vehicles
           _buildMetricItem(
+            gradient: AppColors.purpleBlue,
             icon: PhosphorIconsBold.car,
-            label: 'Total Vehicles: ',
-            value: metrics.totalVehicles.toString(),
+            label: 'Total Vehicles',
+            value: metrics.totalVehicles,
             valueColor: AppColors.primary,
           ),
 
-          Spacing.horizontal(),
-          CustomDivider(
-            direction: Axis.vertical,
-            thickness: 2,
-            color: AppColors.grey.withValues(alpha: 0.1),
-          ),
-          Spacing.horizontal(),
-
-          // On Campus Vehicles
-          _buildMetricItem(
-            icon: PhosphorIconsBold.mapPin,
-            label: 'On Campus: ',
-            value: metrics.onsiteVehicles.toString(),
-            valueColor: AppColors.primary,
-          ),
-
-          Spacing.horizontal(),
-          CustomDivider(
-            direction: Axis.vertical,
-            thickness: 2,
-            color: AppColors.grey.withValues(alpha: 0.1),
-          ),
           Spacing.horizontal(),
 
           // Off Campus Vehicles
           _buildMetricItem(
-            icon: PhosphorIconsBold.house,
-            label: 'Off Campus: ',
-            value: metrics.offsiteVehicles.toString(),
+            gradient: AppColors.greenWhite,
+            icon: PhosphorIconsBold.lightning,
+            label: 'Registered Vehicles',
+            value: metrics.registeredVehicles,
             valueColor: AppColors.primary,
           ),
 
           Spacing.horizontal(),
-          CustomDivider(
-            direction: Axis.vertical,
-            thickness: 2,
-            color: AppColors.grey.withValues(alpha: 0.1),
-          ),
-          Spacing.horizontal(),
 
-          // Vehicle Type Distribution
+          // On Campus Vehicles
           _buildMetricItem(
-            icon: PhosphorIconsBold.house,
-            label: '2 Wheeled: ',
-            value: metrics.twoWheeled.toString(),
+            gradient: AppColors.yellowWhite,
+            icon: PhosphorIconsBold.mapPin,
+            iconColor: AppColors.chartOrange,
+            label: 'On Campus',
+            value: metrics.onsiteVehicles,
             valueColor: AppColors.primary,
           ),
-          Spacing.horizontal(),
-          CustomDivider(
-            direction: Axis.vertical,
-            thickness: 2,
-            color: AppColors.grey.withValues(alpha: 0.1),
-          ),
+
           Spacing.horizontal(),
 
           // Vehicle Type Distribution
           _buildMetricItem(
-            icon: PhosphorIconsBold.house,
-            label: '4 Wheeled: ',
-            value: metrics.fourWheeled.toString(),
+            gradient: AppColors.lightBlue,
+            icon: PhosphorIconsBold.motorcycle,
+            label: '2 Wheeled',
+            value: metrics.twoWheeled,
+            valueColor: AppColors.primary,
+          ),
+
+          Spacing.horizontal(),
+
+          // Vehicle Type Distribution
+          _buildMetricItem(
+            gradient: AppColors.pinkWhite,
+            icon: PhosphorIconsBold.carProfile,
+            label: '4 Wheeled',
+            value: metrics.fourWheeled,
+            iconColor: AppColors.donutPink,
             valueColor: AppColors.primary,
           ),
         ],
@@ -117,30 +94,23 @@ class TopBar extends StatelessWidget {
   Widget _buildMetricItem({
     required IconData icon,
     required String label,
-    required String value,
+    required int value,
+    required Gradient gradient,
+    Color? iconColor = AppColors.donutBlue,
     Color? valueColor = AppColors.black,
   }) {
-    return Row(
-      children: [
-        Icon(icon, size: 16, color: AppColors.grey),
-        Spacing.horizontal(size: AppSpacing.xSmall),
-        Text(label, style: TextStyle(fontSize: 12, color: AppColors.grey)),
-        Text(
-          value,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: AppColors.black,
-            fontSize: AppFontSizes.medium,
-            shadows: [
-              Shadow(
-                color: AppColors.primary.withValues(alpha: 0.2),
-                offset: Offset(1, 1),
-                blurRadius: 2,
-              ),
-            ],
-          ),
-        ),
-      ],
+    return Expanded(
+      child: StatsCard(
+        icon: icon,
+        label: label,
+        gradient: gradient,
+        value: value,
+        addSideBorder: false,
+        color: AppColors.donutPurple,
+        iconColor: iconColor,
+        cardBorderRadii: 4,
+        iconContainerRadii: 4,
+      ),
     );
   }
 }

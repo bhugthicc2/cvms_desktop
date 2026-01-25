@@ -1,9 +1,9 @@
 part of 'vehicle_monitoring_cubit.dart';
 
 class VehicleMonitoringState {
-  final List<VehicleEntry> allEntries;
-  final List<VehicleEntry> enteredFiltered;
-  final List<VehicleEntry> exitedFiltered;
+  final List<VehicleModel> allEntries;
+  final List<VehicleModel> enteredFiltered;
+  final List<VehicleModel> exitedFiltered;
   final int totalVehicles;
   final int totalViolations;
   final int totalEntered;
@@ -33,9 +33,9 @@ class VehicleMonitoringState {
   );
 
   VehicleMonitoringState copyWith({
-    List<VehicleEntry>? allEntries,
-    List<VehicleEntry>? enteredFiltered,
-    List<VehicleEntry>? exitedFiltered,
+    List<VehicleModel>? allEntries,
+    List<VehicleModel>? enteredFiltered,
+    List<VehicleModel>? exitedFiltered,
     int? totalVehicles,
     int? totalViolations,
     int? totalEntered,

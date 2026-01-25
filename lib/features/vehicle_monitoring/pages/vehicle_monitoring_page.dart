@@ -111,7 +111,7 @@ class _VehicleMonitoringPageState extends State<VehicleMonitoringPage> {
                                     value:
                                         context.read<VehicleMonitoringCubit>(),
                                     child: CustomViewDialog(
-                                      title: "Edit Vehicle Information",
+                                      title: "Vehicle Information",
                                       vehicleId: vehId,
                                     ),
                                   ),

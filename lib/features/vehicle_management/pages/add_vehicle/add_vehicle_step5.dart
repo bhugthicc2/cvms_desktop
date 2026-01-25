@@ -52,6 +52,12 @@ class ReviewStepContent extends StatelessWidget {
                           _buildInfoRow('Block', formData.block),
                         ]),
                         const Spacing.vertical(size: AppSpacing.large),
+                        // Enrollment Information Section
+                        _buildSection('Enrollment Information', [
+                          _buildInfoRow('Academic Year', formData.academicYear),
+                          _buildInfoRow('Semester', formData.semester),
+                        ]),
+                        const Spacing.vertical(size: AppSpacing.large),
                         // Address Information Section
                         _buildSection('Address Information', [
                           _buildInfoRow('Region', formData.region),

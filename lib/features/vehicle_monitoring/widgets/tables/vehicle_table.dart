@@ -6,15 +6,15 @@ import 'package:cvms_desktop/core/widgets/table/custom_table.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../datasource/vehicle_data_source.dart';
 import 'vehicle_table_columns.dart';
-import '../../models/vehicle_entry.dart';
+import '../../models/vehicle_model.dart';
 
 class VehicleTable extends StatefulWidget {
   final String title;
-  final List<VehicleEntry> entries;
+  final List<VehicleModel> entries;
   final TextEditingController searchController;
   final bool hasSearchQuery;
   final DataGridCellTapCallback? onCellTap;
-  final Function(VehicleEntry, int)? onActionTap;
+  final Function(VehicleModel, int)? onActionTap;
 
   const VehicleTable({
     super.key,

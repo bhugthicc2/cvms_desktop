@@ -24,10 +24,12 @@ class VehicleRepository {
 
   Future<void> addVehicle(VehicleEntry entry) async {
     try {
-      await _firestore.collection(_collection).add(entry.toMap());
-      //step 2 in creating a logger, done
-      // Log vehicle creation
-      await _logger.logVehicleCreated(entry.vehicleID, entry.plateNumber, null);
+      final docRef = await _firestore
+          .collection(_collection)
+          .add(entry.toMap());
+
+      // Log vehicle creation with the actual document ID as targetId
+      await _logger.logVehicleCreated(docRef.id, entry.plateNumber, null);
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
     }

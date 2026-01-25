@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class VehicleEntry {
+class VehicleModel {
   final String docId;
   final String vehicleId;
   final DateTime timeIn;
@@ -9,7 +9,7 @@ class VehicleEntry {
   final String? _vehicleModel;
   final String? _plateNumber;
 
-  VehicleEntry({
+  VehicleModel({
     required this.docId,
     required this.vehicleId,
     required this.timeIn,
@@ -23,9 +23,9 @@ class VehicleEntry {
 
   String get status => timeOut == null ? "onsite" : "offsite";
 
-  factory VehicleEntry.fromDoc(DocumentSnapshot doc) {
+  factory VehicleModel.fromDoc(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    return VehicleEntry(
+    return VehicleModel(
       docId: doc.id,
       vehicleId: data['vehicleId'] ?? '',
       timeIn: (data['timeIn'] as Timestamp).toDate(),
@@ -40,7 +40,7 @@ class VehicleEntry {
   }
 
   // Method to fetch vehicle details from vehicles collection
-  static Future<VehicleEntry> withVehicleDetails(VehicleEntry entry) async {
+  static Future<VehicleModel> withVehicleDetails(VehicleModel entry) async {
     if (entry._ownerName != null &&
         entry._vehicleModel != null &&
         entry._plateNumber != null) {
@@ -56,7 +56,7 @@ class VehicleEntry {
 
       if (vehicleDoc.exists) {
         final vehicleData = vehicleDoc.data();
-        return VehicleEntry(
+        return VehicleModel(
           docId: entry.docId,
           vehicleId: entry.vehicleId,
           timeIn: entry.timeIn,

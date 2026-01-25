@@ -22,7 +22,7 @@ class SidebarTheme {
   Color get selectedTileBackground =>
       isDark
           ? AppColors.white.withValues(alpha: 0.15)
-          : AppColors.grey.withValues(alpha: 0.1);
+          : AppColors.primary.withValues(alpha: 0.1);
 
   Color get hoverTileBackground =>
       isDark
@@ -39,7 +39,8 @@ class SidebarTheme {
   Color get dividerColor =>
       isDark ? AppColors.grey : const Color(0xFFBEC8ED).withValues(alpha: 0.4);
 
-  Color get activeIndicator => AppColors.chartOrange;
+  Color get activeIndicator =>
+      isDark ? AppColors.chartOrange : AppColors.primary;
 
   // ================= TEXT =================
 
@@ -50,11 +51,11 @@ class SidebarTheme {
           ? AppColors.white.withValues(alpha: 0.8)
           : AppColors.white.withValues(alpha: 0.7);
 
-  Color get selectedText => AppColors.chartOrange.withValues(alpha: 0.9);
+  Color get selectedText => isDark ? AppColors.chartOrange : AppColors.primary;
 
-  Color get headerText => isDark ? AppColors.white : AppColors.darkBlue;
+  Color get headerText => isDark ? AppColors.white : AppColors.yellow;
 
-  Color get logoAccent => AppColors.yellow;
+  Color get logoAccent => isDark ? AppColors.yellow : AppColors.primary;
 
   Color get logoutText => AppColors.error;
 
@@ -62,7 +63,7 @@ class SidebarTheme {
 
   Color get defaultIcon => isDark ? AppColors.white : AppColors.black;
 
-  Color get selectedIcon => AppColors.chartOrange;
+  Color get selectedIcon => isDark ? AppColors.chartOrange : AppColors.primary;
 
   Color get logoutIcon => AppColors.error;
 

@@ -1,5 +1,5 @@
 import 'package:cvms_desktop/core/widgets/app/custom_view_title.dart';
-import 'package:cvms_desktop/core/widgets/charts/stacked_bar_widget.dart';
+import 'package:cvms_desktop/core/widgets/charts/bar_chart_widget.dart';
 import 'package:cvms_desktop/features/dashboard/bloc/dashboard/global/global_dashboard_cubit.dart';
 import 'package:cvms_desktop/features/dashboard/models/dashboard/chart_data_model.dart';
 import 'package:cvms_desktop/features/dashboard/utils/chart_data_sorter.dart';
@@ -61,7 +61,7 @@ class _StudentsByViolationViewState extends State<StudentsByViolationView> {
                     }
 
                     return Expanded(
-                      child: _buildStackedChart(
+                      child: _buildBarChart(
                         'Students by Violation Share',
                         state.allStudentsWithMostViolations,
                         () {},
@@ -77,7 +77,7 @@ class _StudentsByViolationViewState extends State<StudentsByViolationView> {
     );
   }
 
-  Widget _buildStackedChart(
+  Widget _buildBarChart(
     String title,
     List<ChartDataModel> data,
     VoidCallback? onViewTap,
@@ -85,11 +85,11 @@ class _StudentsByViolationViewState extends State<StudentsByViolationView> {
     // Sort data by value in descending order for highlighting
     final sortedData = ChartDataSorter.sortByValueDescending(data);
 
-    return StackedBarWidget(
+    return BarChartWidget(
       data: sortedData,
 
-      onStackBarPointTapped: (details) {},
       highlightHighestIndex: sortedData.isNotEmpty ? 0 : null,
+      onViewTap: () {},
     );
   }
 }

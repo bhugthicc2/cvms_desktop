@@ -29,7 +29,7 @@ class VehicleCsvParser {
       );
 
       final entry = VehicleEntry(
-        vehicleID: '', // Auto-generated
+        vehicleId: '', // Auto-generated
         ownerName: map['ownername'] ?? '',
         schoolID: map['schoolid'] ?? '',
         department: map['department'] ?? '',
@@ -48,7 +48,10 @@ class VehicleCsvParser {
         licenseNumber: map['licensenumber'] ?? '',
         orNumber: map['ornumber'] ?? '',
         crNumber: map['crnumber'] ?? '',
-        status:
+        status: '',
+        academicYear: map['academicyear'] ?? '',
+        semester:
+            map['semester'] ??
             '', // Empty - status will be set when vehicle has first log/transaction
       );
 

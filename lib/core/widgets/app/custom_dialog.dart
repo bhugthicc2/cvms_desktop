@@ -10,13 +10,14 @@ class CustomDialog extends StatelessWidget {
   final Widget child;
   final IconData icon;
   final VoidCallback? onSubmit;
-  final String btnTxt;
+  final String? btnTxt;
   final double width;
   final double height;
   final bool? isExpanded;
   final double? mainContentPadding;
   final bool? isAlert;
   final Color? headerColor;
+  final bool hasButtons;
 
   const CustomDialog({
     super.key,
@@ -24,13 +25,14 @@ class CustomDialog extends StatelessWidget {
     required this.child,
     this.width = 700,
     this.height = 800,
-    required this.onSubmit,
-    required this.btnTxt,
+    this.onSubmit,
+    this.btnTxt,
     this.icon = PhosphorIconsBold.info,
     this.isExpanded = false,
     this.mainContentPadding,
     this.headerColor,
     this.isAlert,
+    this.hasButtons = true,
   });
 
   @override
@@ -96,85 +98,87 @@ class CustomDialog extends StatelessWidget {
                   child: child,
                 ),
               ), //main content
-
-            Container(
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  // Cancel button with conditional expansion
-                  isExpanded == true
-                      ? Expanded(
-                        child: TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.grey.withValues(
-                              alpha: 0.2,
+            hasButtons
+                ? Container(
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      // Cancel button with conditional expansion
+                      isExpanded == true
+                          ? Expanded(
+                            child: TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.grey.withValues(
+                                  alpha: 0.2,
+                                ),
+                                foregroundColor: AppColors.grey,
+                                padding: EdgeInsets.all(20),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              child: const Text('Cancel'),
                             ),
-                            foregroundColor: AppColors.grey,
-                            padding: EdgeInsets.all(20),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
+                          )
+                          : TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.grey.withValues(
+                                alpha: 0.2,
+                              ),
+                              foregroundColor: AppColors.grey,
+                              padding: EdgeInsets.all(20),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            child: const Text('Cancel'),
+                          ),
+
+                      Spacing.horizontal(size: AppSpacing.medium),
+
+                      // Save button with conditional expansion
+                      isExpanded == true
+                          ? Expanded(
+                            child: ElevatedButton(
+                              onPressed: onSubmit,
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.all(20),
+                                backgroundColor:
+                                    headerColor ?? AppColors.primary,
+                                foregroundColor: AppColors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              child: Text(
+                                btnTxt!,
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          )
+                          : ElevatedButton(
+                            onPressed: onSubmit,
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.all(20),
+                              backgroundColor: headerColor ?? AppColors.primary,
+                              foregroundColor: AppColors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            child: Text(
+                              btnTxt!,
+                              style: TextStyle(fontWeight: FontWeight.w600),
                             ),
                           ),
-                          child: const Text('Cancel'),
-                        ),
-                      )
-                      : TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.grey.withValues(
-                            alpha: 0.2,
-                          ),
-                          foregroundColor: AppColors.grey,
-                          padding: EdgeInsets.all(20),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        child: const Text('Cancel'),
-                      ),
-
-                  Spacing.horizontal(size: AppSpacing.medium),
-
-                  // Save button with conditional expansion
-                  isExpanded == true
-                      ? Expanded(
-                        child: ElevatedButton(
-                          onPressed: onSubmit,
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.all(20),
-                            backgroundColor: headerColor ?? AppColors.primary,
-                            foregroundColor: AppColors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                          child: Text(
-                            btnTxt,
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      )
-                      : ElevatedButton(
-                        onPressed: onSubmit,
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.all(20),
-                          backgroundColor: headerColor ?? AppColors.primary,
-                          foregroundColor: AppColors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        child: Text(
-                          btnTxt,
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                ],
-              ),
-            ),
+                    ],
+                  ),
+                )
+                : SizedBox.shrink(),
           ],
         ),
       ),

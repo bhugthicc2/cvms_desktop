@@ -3,7 +3,7 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_monitoring_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/bloc/vehicle_report_cubit.dart';
-import 'package:cvms_desktop/features/vehicle_monitoring/models/vehicle_entry.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/models/vehicle_model.dart';
 import 'package:cvms_desktop/core/widgets/app/pop_up_menu_item.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/models/violation_model.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/dialogs/custom_delete_dialog.dart'
@@ -17,7 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class VehicleActionsMenu extends StatelessWidget {
-  final VehicleEntry vehicleEntry;
+  final VehicleModel vehicleEntry;
   final int rowIndex;
   final BuildContext context;
 

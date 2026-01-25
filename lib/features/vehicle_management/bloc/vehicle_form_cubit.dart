@@ -77,6 +77,15 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
     emit(VehicleFormUpdated(formData: updatedData));
   }
 
+  // Step 1.5 - Enrollment Information
+  void updateEnrollmentInfo({String? academicYear, String? semester}) {
+    final updatedData = formData.copyWith(
+      academicYear: academicYear,
+      semester: semester,
+    );
+    emit(VehicleFormUpdated(formData: updatedData));
+  }
+
   // Reset form data
   void resetForm() {
     emit(const VehicleFormInitial());

@@ -54,7 +54,9 @@ class BarChartWidget extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: CustomChartTitle(title: title, showViewBtn: false),
             ),
+            const Spacer(),
             Center(child: ChartEmptyState()),
+            const Spacer(),
           ],
         ),
       );

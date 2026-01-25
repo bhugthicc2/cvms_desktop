@@ -69,8 +69,10 @@ class VehicleTable extends StatelessWidget {
                 totalVehicles: state.allEntries.length,
                 onsiteVehicles:
                     state.allEntries.where((v) => v.status == 'onsite').length,
-                offsiteVehicles:
-                    state.allEntries.where((v) => v.status == 'offsite').length,
+                registeredVehicles:
+                    state.allEntries
+                        .where((v) => v.status == 'registered')
+                        .length, //todo registered status means registered vehicles
                 twoWheeled:
                     state.allEntries
                         .where((v) => v.vehicleType == 'two-wheeled')
@@ -81,6 +83,7 @@ class VehicleTable extends StatelessWidget {
                         .length,
               ),
             ), //this shows the stats or summary of the vehicles
+            //todo summary here.......................
             Spacing.vertical(size: AppFontSizes.medium),
             TableHeader(
               hasImportBtn: hasImportBtn,

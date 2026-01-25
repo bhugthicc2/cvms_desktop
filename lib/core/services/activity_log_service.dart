@@ -41,6 +41,8 @@ class ActivityLogService {
   ) async {
     await logActivity(
       type: ActivityType.vehicleCreated,
+      targetId: vehicleId,
+
       description: 'Vehicle $plateNumber created successfully',
       userId: userId,
       metadata: {'plateNumber': plateNumber, 'action': 'create'},

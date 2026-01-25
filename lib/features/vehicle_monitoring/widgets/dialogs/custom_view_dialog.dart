@@ -1,6 +1,6 @@
+import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_icon_sizes.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dialog.dart';
-import 'package:cvms_desktop/core/widgets/app/custom_text_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -121,184 +121,192 @@ class _CustomViewDialogState extends State<CustomViewDialog> {
         _initControllers(data);
 
         return CustomDialog(
-          btnTxt: 'Save',
-          onSubmit: () {
-            Navigator.of(context).pop();
-          },
+          hasButtons: false,
+
           title: widget.title,
-          height: screenHeight * 0.9,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'Fullname',
-                        height: 55,
-                        controller: _fullnameCtrl,
+          height: screenHeight * 0.7,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 20.0,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: buildInfoSection(
+                          context,
+                          'Fullname',
+                          _fullnameCtrl.text,
+                        ),
                       ),
-                    ),
-                    Spacing.horizontal(size: AppIconSizes.medium),
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'School ID',
-                        controller: _schoolIdCtrl,
+                      Spacing.horizontal(size: AppIconSizes.medium),
+                      Expanded(
+                        child: buildInfoSection(
+                          context,
+                          'School ID',
+                          _schoolIdCtrl.text,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Spacing.vertical(size: AppIconSizes.medium),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'Gender',
-                        controller: _genderCtrl,
+                    ],
+                  ),
+                  Spacing.vertical(size: AppIconSizes.medium),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: buildInfoSection(
+                          context,
+                          'Gender',
+                          _genderCtrl.text,
+                        ),
                       ),
-                    ),
-                    Spacing.horizontal(size: AppIconSizes.medium),
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'Contact Number',
-                        controller: _contactCtrl,
+                      Spacing.horizontal(size: AppIconSizes.medium),
+                      Expanded(
+                        child: buildInfoSection(
+                          context,
+                          'Contact Number',
+                          _contactCtrl.text,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Spacing.vertical(size: AppIconSizes.medium),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'Purok',
-                        controller: _purokCtrl,
+                    ],
+                  ),
+                  Spacing.vertical(size: AppIconSizes.medium),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: buildInfoSection(
+                          context,
+                          'Purok',
+                          _purokCtrl.text,
+                        ),
                       ),
-                    ),
-                    Spacing.horizontal(size: AppIconSizes.medium),
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'Barangay',
-                        controller: _barangayCtrl,
+                      Spacing.horizontal(size: AppIconSizes.medium),
+                      Expanded(
+                        child: buildInfoSection(
+                          context,
+                          'Barangay',
+                          _barangayCtrl.text,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Spacing.vertical(size: AppIconSizes.medium),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'City/Municipality',
-                        controller: _cityCtrl,
+                    ],
+                  ),
+                  Spacing.vertical(size: AppIconSizes.medium),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: buildInfoSection(
+                          context,
+                          'City/Municipality',
+                          _cityCtrl.text,
+                        ),
                       ),
-                    ),
-                    Spacing.horizontal(size: AppIconSizes.medium),
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'Province',
-                        controller: _provinceCtrl,
+                      Spacing.horizontal(size: AppIconSizes.medium),
+                      Expanded(
+                        child: buildInfoSection(
+                          context,
+                          'Province',
+                          _provinceCtrl.text,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Spacing.vertical(size: AppIconSizes.medium),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'Parent/Guardian',
-                        controller: _parentGuardianCtrl,
+                    ],
+                  ),
+                  Spacing.vertical(size: AppIconSizes.medium),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: buildInfoSection(
+                          context,
+                          'Course',
+                          _courseCtrl.text,
+                        ),
                       ),
-                    ),
-                    Spacing.horizontal(size: AppIconSizes.medium),
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'Birthdate',
-                        controller: _birthdateCtrl,
+                      Spacing.horizontal(size: AppIconSizes.medium),
+                      Expanded(
+                        child: buildInfoSection(
+                          context,
+                          'Year Level',
+                          _yearLevelCtrl.text,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Spacing.vertical(size: AppIconSizes.medium),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'Course',
-                        controller: _courseCtrl,
+                    ],
+                  ),
+                  Spacing.vertical(size: AppIconSizes.medium),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: buildInfoSection(
+                          context,
+                          'Block',
+                          _blockCtrl.text,
+                        ),
                       ),
-                    ),
-                    Spacing.horizontal(size: AppIconSizes.medium),
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'Year Level',
-                        controller: _yearLevelCtrl,
+                      Spacing.horizontal(size: AppIconSizes.medium),
+                      Expanded(
+                        child: buildInfoSection(
+                          context,
+                          'License Number',
+                          _licenseNumberCtrl.text,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Spacing.vertical(size: AppIconSizes.medium),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'Block',
-                        controller: _blockCtrl,
+                    ],
+                  ),
+                  Spacing.vertical(size: AppIconSizes.medium),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: buildInfoSection(
+                          context,
+                          'Plate Number',
+                          _plateCtrl.text,
+                        ),
                       ),
-                    ),
-                    Spacing.horizontal(size: AppIconSizes.medium),
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'Enrollment Year & Semester',
-                        controller: _enrollmentCtrl,
+                      Spacing.horizontal(size: AppIconSizes.medium),
+                      Expanded(
+                        child: buildInfoSection(
+                          context,
+                          'Vehicle Model',
+                          _vehicleModelCtrl.text,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Spacing.vertical(size: AppIconSizes.medium),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'License Number',
-                        controller: _licenseNumberCtrl,
-                      ),
-                    ),
-                    Spacing.horizontal(size: AppIconSizes.medium),
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'Issuing date & Expiry date',
-                        controller: _licenseIssueExpiryCtrl,
-                      ),
-                    ),
-                  ],
-                ),
-                Spacing.vertical(size: AppIconSizes.medium),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'Plate Number',
-                        controller: _plateCtrl,
-                      ),
-                    ),
-                    Spacing.horizontal(size: AppIconSizes.medium),
-                    Expanded(
-                      child: CustomTextField(
-                        labelText: 'Vehicle Model',
-                        controller: _vehicleModelCtrl,
-                      ),
-                    ),
-                  ],
-                ),
-                Spacing.vertical(size: AppIconSizes.medium),
-              ],
+                    ],
+                  ),
+
+                  Spacing.vertical(size: AppIconSizes.medium),
+                ],
+              ),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget buildInfoSection(BuildContext context, String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: AppColors.grey,
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: AppColors.black,
+          ),
+        ),
+      ],
     );
   }
 }

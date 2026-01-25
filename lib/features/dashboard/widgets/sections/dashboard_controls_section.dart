@@ -46,7 +46,7 @@ class DashboardControlsSection extends StatelessWidget {
             CustomIconButton(
               iconSize: 24,
               onPressed: onBackButtonPressed ?? () {},
-              icon: PhosphorIconsBold.arrowLeft,
+              icon: PhosphorIconsBold.arrowUUpLeft,
               iconColor: AppColors.primary,
             ),
             Spacing.horizontal(size: AppSpacing.small),

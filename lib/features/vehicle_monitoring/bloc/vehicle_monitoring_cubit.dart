@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:cvms_desktop/features/auth/data/auth_repository.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/data/vehicle_monitoring_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/vehicle_entry.dart';
+import '../models/vehicle_model.dart';
 
 part 'vehicle_monitoring_state.dart';
 

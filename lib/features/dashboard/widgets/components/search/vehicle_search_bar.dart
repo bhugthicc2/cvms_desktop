@@ -11,7 +11,7 @@ class VehicleSearchBar extends StatelessWidget {
 
   const VehicleSearchBar({
     super.key,
-    this.hintText = 'Search by plate no., owner, school ID or model',
+    this.hintText = 'Search by plate no., owner or school ID',
     required this.suggestionsCallback,
     required this.onSuggestionSelected,
     this.controller,

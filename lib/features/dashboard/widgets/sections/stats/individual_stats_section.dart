@@ -45,7 +45,7 @@ class IndividualStatsSection extends StatelessWidget {
         statsCard1Label: 'Days Until Expiration',
         statsCard1Icon: PhosphorIconsBold.calendarMinus,
         statsCard1Value: daysUntilExpiration,
-        statsCard2Label: 'Active Violations',
+        statsCard2Label: 'Pending Violations',
         statsCard2Icon: PhosphorIconsBold.warning,
         statsCard2Value: totalPendingViolations,
         statsCard3Label: 'Total Violations',

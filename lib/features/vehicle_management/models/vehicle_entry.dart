@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/features/vehicle_management/config/vehicle_form_config.dart';
 
 class VehicleEntry {
-  final String vehicleID;
+  final String vehicleId;
   final String ownerName;
   final String schoolID;
   final String department;
+  final String academicYear;
+  final String semester;
   final String gender;
   final String yearLevel;
   final String block;
@@ -25,10 +27,12 @@ class VehicleEntry {
   final Timestamp? createdAt;
 
   VehicleEntry({
-    required this.vehicleID,
+    required this.vehicleId,
     required this.ownerName,
     required this.schoolID,
     required this.department,
+    required this.academicYear,
+    required this.semester,
     required this.gender,
     required this.purok,
     required this.barangay,
@@ -50,10 +54,12 @@ class VehicleEntry {
 
   factory VehicleEntry.fromMap(Map<String, dynamic> map, String id) {
     return VehicleEntry(
-      vehicleID: id,
+      vehicleId: id,
       ownerName: map['ownerName'] ?? '',
       schoolID: map['schoolID'] ?? '',
       department: map['department'] ?? '',
+      academicYear: map['academicYear'] ?? '',
+      semester: map['semester'] ?? '',
       gender: map['gender'] ?? '',
       yearLevel: map['yearLevel'] ?? '',
       block: map['block'] ?? '',
@@ -79,6 +85,8 @@ class VehicleEntry {
       'ownerName': ownerName,
       'schoolID': schoolID,
       'department': department,
+      'academicYear': academicYear,
+      'semester': semester,
       'gender': gender,
       'yearLevel': yearLevel,
       'block': block,

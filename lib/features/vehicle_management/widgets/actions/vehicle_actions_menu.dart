@@ -95,7 +95,7 @@ class VehicleActionsMenu extends StatelessWidget {
             onSave: (updatedEntry) async {
               try {
                 await context.read<VehicleCubit>().updateVehicle(
-                  vehicleEntry.vehicleID,
+                  vehicleEntry.vehicleId,
                   updatedEntry.toMap(),
                 );
                 if (context.mounted) {
@@ -136,12 +136,12 @@ class VehicleActionsMenu extends StatelessWidget {
       context: context,
       builder:
           (_) => CustomUpdateStatusDialog(
-            vehicleID: vehicleEntry.vehicleID,
+            vehicleID: vehicleEntry.vehicleId,
             currentStatus: vehicleEntry.status,
             onSave: (newStatus) async {
               try {
                 await context.read<VehicleCubit>().updateVehicle(
-                  vehicleEntry.vehicleID,
+                  vehicleEntry.vehicleId,
                   {'status': newStatus},
                 );
 
@@ -191,7 +191,7 @@ class VehicleActionsMenu extends StatelessWidget {
             onDelete: () async {
               try {
                 await context.read<VehicleCubit>().deleteVehicle(
-                  vehicleEntry.vehicleID,
+                  vehicleEntry.vehicleId,
                 );
                 CustomSnackBar.show(
                   // ignore: use_build_context_synchronously

@@ -334,7 +334,7 @@ class VehicleFormDialogState<T extends VehicleFormDialog> extends State<T> {
 
   VehicleEntry _buildVehicleEntry() {
     return VehicleEntry(
-      vehicleID: widget.initialEntry?.vehicleID ?? '',
+      vehicleId: widget.initialEntry?.vehicleId ?? '',
       ownerName: _controllers["ownerName"]!.text,
       schoolID: _controllers["schoolID"]!.text,
       department: _dropdownValues["department"] ?? '',
@@ -355,6 +355,8 @@ class VehicleFormDialogState<T extends VehicleFormDialog> extends State<T> {
       city: LocationFormatter().toProperCase(_municipality?.name ?? ''),
       province: LocationFormatter().toProperCase(_province?.name ?? ''),
       createdAt: widget.initialEntry?.createdAt ?? Timestamp.now(),
+      academicYear: _dropdownValues["academicYear"] ?? '',
+      semester: _dropdownValues["semester"] ?? '',
     );
   }
 

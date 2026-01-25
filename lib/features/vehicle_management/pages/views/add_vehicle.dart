@@ -1,3 +1,5 @@
+//ISSUE HAS A LOADING STATE THAT IS NOT BEING HANDLED PROPERLY - THE PAGE SLIDES WHILE SAVING
+
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
@@ -18,6 +20,7 @@ import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_v
 import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_step3.dart';
 import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_step4.dart';
 import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_step5.dart';
+import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_step_enrollment.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/stepper/indicator/step_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,6 +51,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
   final GlobalKey step2Key = GlobalKey();
   final GlobalKey step3Key = GlobalKey();
   final GlobalKey step4Key = GlobalKey();
+  final GlobalKey stepEnrollmentKey = GlobalKey();
 
   // Service for external operations
   AddVehicleService? _addVehicleService;
@@ -63,7 +67,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
   void initState() {
     super.initState();
     _stepperController = StepperController(
-      totalSteps: 5,
+      totalSteps: 6,
       onStepChanged: () => setState(() {}),
       onCompleted: widget.onNext,
     );
@@ -98,7 +102,13 @@ class _AddVehicleViewState extends State<AddVehicleView> {
   }
 
   /// Get step keys list for validation
-  List<GlobalKey> get _stepKeys => [step1Key, step2Key, step3Key, step4Key];
+  List<GlobalKey> get _stepKeys => [
+    step1Key,
+    stepEnrollmentKey,
+    step2Key,
+    step3Key,
+    step4Key,
+  ];
 
   /// Handle back navigation through controller
   void _handleBack() {
@@ -166,6 +176,10 @@ class _AddVehicleViewState extends State<AddVehicleView> {
   List<Widget> _buildStepContent(double horizontalPadding) {
     return [
       OwnerStepContent(key: step1Key, horizontalPadding: horizontalPadding),
+      EnrollmentStepContent(
+        key: stepEnrollmentKey,
+        horizontalPadding: horizontalPadding,
+      ),
       VehicleStepContent(key: step2Key, horizontalPadding: horizontalPadding),
       LegalStepContent(key: step3Key, horizontalPadding: horizontalPadding),
       AddressStepContent(key: step4Key, horizontalPadding: horizontalPadding),
@@ -252,7 +266,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: AppSpacing.medium,
-                          vertical: AppSpacing.medium,
+                          vertical: AppSpacing.xSmall,
                         ),
                         child: Row(
                           children: [
@@ -299,31 +313,38 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                 ),
                                 StepIndicator(
                                   step: 1,
-                                  title: 'Vehicle Information',
-                                  supportText: 'Vehicle details',
+                                  title: 'Enrollment Details',
+                                  supportText: 'Academic information',
                                   currentStep: _stepperController.currentStep,
                                   onTap: () => _handleStepNavigation(1),
                                 ),
                                 StepIndicator(
                                   step: 2,
-                                  title: 'Legal Details',
-                                  supportText: 'Vehicle legal details',
+                                  title: 'Vehicle Information',
+                                  supportText: 'Vehicle details',
                                   currentStep: _stepperController.currentStep,
                                   onTap: () => _handleStepNavigation(2),
                                 ),
                                 StepIndicator(
                                   step: 3,
-                                  title: 'Address Information',
-                                  supportText: 'Owner address',
+                                  title: 'Legal Details',
+                                  supportText: 'Vehicle legal details',
                                   currentStep: _stepperController.currentStep,
                                   onTap: () => _handleStepNavigation(3),
                                 ),
                                 StepIndicator(
                                   step: 4,
+                                  title: 'Address Information',
+                                  supportText: 'Owner address',
+                                  currentStep: _stepperController.currentStep,
+                                  onTap: () => _handleStepNavigation(4),
+                                ),
+                                StepIndicator(
+                                  step: 5,
                                   title: 'Review & Confirm',
                                   supportText: 'entry review',
                                   currentStep: _stepperController.currentStep,
-                                  onTap: () => _handleStepNavigation(4),
+                                  onTap: () => _handleStepNavigation(5),
                                 ),
                               ],
                             );

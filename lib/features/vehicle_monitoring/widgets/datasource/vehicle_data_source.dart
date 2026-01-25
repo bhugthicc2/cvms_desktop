@@ -1,17 +1,17 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
-import 'package:cvms_desktop/features/vehicle_monitoring/models/vehicle_entry.dart';
+import 'package:cvms_desktop/features/vehicle_monitoring/models/vehicle_model.dart';
 import 'package:cvms_desktop/features/vehicle_monitoring/widgets/actions/vehicle_actions_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class VehicleEntryDataSource extends DataGridSource {
-  final List<VehicleEntry> _originalVehicleEntries;
-  final Function(VehicleEntry, int)? onActionTap;
+  final List<VehicleModel> _originalVehicleEntries;
+  final Function(VehicleModel, int)? onActionTap;
   final BuildContext? context;
 
   VehicleEntryDataSource({
-    required List<VehicleEntry> vehicleEntries,
+    required List<VehicleModel> vehicleEntries,
     this.onActionTap,
     this.context,
   }) : _originalVehicleEntries = vehicleEntries {

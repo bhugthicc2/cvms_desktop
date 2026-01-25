@@ -34,6 +34,7 @@ class AppColors {
   static const Color sidebarheaderSub = Color(0xFFD9D9D9);
   static const Color lineColor = Color(0xFFB5B5B5);
   static const Color tableHeaderColor = Color(0xFF0D046D);
+  // static const Color tableHeaderColor = Color(0xFF004080);
 
   //chart colors
   static const Color chartOrange = Color(0xFFFB923C);

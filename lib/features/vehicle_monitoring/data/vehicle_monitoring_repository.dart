@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/vehicle_entry.dart';
+import '../models/vehicle_model.dart';
 import '../models/violation_model.dart';
 import '../../../core/error/firebase_error_handler.dart';
 import '../../../core/services/activity_log_service.dart';
@@ -15,18 +15,18 @@ class DashboardRepository {
   final AuthRepository _authRepository = AuthRepository();
 
   //  Vehicle logs (entry/exit history)
-  Stream<List<VehicleEntry>> streamVehicleLogs() {
+  Stream<List<VehicleModel>> streamVehicleLogs() {
     return _firestore.collection('vehicle_logs').snapshots().asyncMap((
       snapshot,
     ) async {
       try {
         final entries =
-            snapshot.docs.map((doc) => VehicleEntry.fromDoc(doc)).toList();
+            snapshot.docs.map((doc) => VehicleModel.fromDoc(doc)).toList();
 
         // Fetch vehicle details for all entries
-        final entriesWithDetails = <VehicleEntry>[];
+        final entriesWithDetails = <VehicleModel>[];
         for (final entry in entries) {
-          final entryWithDetails = await VehicleEntry.withVehicleDetails(entry);
+          final entryWithDetails = await VehicleModel.withVehicleDetails(entry);
           entriesWithDetails.add(entryWithDetails);
         }
 

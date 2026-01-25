@@ -50,6 +50,13 @@ class TypeaheadSearchField<T> extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(5),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.donutBlue.withValues(alpha: 0.1),
+              blurRadius: 7,
+              offset: Offset(0, 4),
+            ),
+          ],
         ),
         child: TypeAheadField<T>(
           controller: controller,
@@ -106,7 +113,7 @@ class TypeaheadSearchField<T> extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.2),
+                    color: AppColors.primary.withValues(alpha: 0.1),
                     blurRadius: 10,
                     offset: const Offset(0, 8),
                   ),
