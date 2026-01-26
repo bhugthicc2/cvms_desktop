@@ -70,6 +70,19 @@ class CurrentUserCubit extends Cubit<CurrentUserState> {
     }
   }
 
+  Future<void> getCurrentUserId([String? uid]) async {
+    final currentUid = uid ?? _authRepository.uid;
+    if (currentUid == null) return;
+
+    emit(state.copyWith(isLoading: true));
+
+    try {
+      emit(state.copyWith(currentUserId: currentUid));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
+    }
+  }
+
   @override
   Future<void> close() async {
     await _authSub?.cancel();

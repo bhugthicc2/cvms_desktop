@@ -13,28 +13,16 @@ class ViolationRepository {
   final String _collection = 'violations';
   final ActivityLogService _logger = ActivityLogService();
 
-  Future<void> createViolationReport({
-    required String vehicleId,
-    required String reportedByUserId,
-    required String violationType,
-    String status = 'pending',
-  }) async {
+  Future<void> reportViolation(ViolationEntry violation) async {
     try {
-      final violationDoc = await _firestore.collection(_collection).add({
-        'vehicleId': vehicleId,
-        'reportedByUserId': reportedByUserId,
-        'violationType': violationType,
-        'status': status,
-        'reportedAt': FieldValue.serverTimestamp(),
-        'createdAt': FieldValue.serverTimestamp(),
-      });
+      await _firestore.collection(_collection).add(violation.toMap());
 
       // Log violation report
       await _logger.logViolationReported(
-        violationDoc.id,
-        vehicleId,
-        '$violationType violation reported',
-        reportedByUserId,
+        violation.id,
+        violation.vehicleId,
+        '${violation.violationType} violation reported',
+        null, // Will use current user from service
       );
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));

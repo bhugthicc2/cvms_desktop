@@ -3,8 +3,6 @@ import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/navigation/bread_crumb_item.dart';
 import 'package:cvms_desktop/features/shell/bloc/shell_cubit.dart';
 import 'package:cvms_desktop/features/shell/scope/breadcrumb_scope.dart';
-import 'package:cvms_desktop/core/widgets/animation/animated_switcher.dart'
-    as custom;
 import 'package:cvms_desktop/features/vehicle_management/pages/views/add_vehicle.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/skeletons/table_skeleton.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/tables/vehicle_table.dart';

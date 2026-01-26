@@ -1,18 +1,21 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_dropdown_field.dart';
+import 'package:cvms_desktop/core/widgets/app/search_field.dart';
+import 'package:cvms_desktop/core/widgets/app/typeahead_search_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
-import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
+import 'package:cvms_desktop/features/dashboard/models/dashboard/vehicle_search_suggestion.dart';
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_enums.dart';
-import 'package:cvms_desktop/features/violation_management/widgets/dialogs/custom_add_dialog.dart';
 import 'package:cvms_desktop/features/violation_management/widgets/buttons/custom_violation_button.dart';
+import 'package:cvms_desktop/features/violation_management/widgets/dialogs/custom_add_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/widgets/app/search_field.dart';
 
 class TableHeader extends StatelessWidget {
   final TextEditingController vehicleController;
+  final TextEditingController violationController;
   final List<String>? fieldLabels;
   final bool showVehicleSearch;
   final bool showStatusDropdown;
@@ -23,18 +26,23 @@ class TableHeader extends StatelessWidget {
   final String? violationTypeFieldLabelText;
   final Function(Map<String, dynamic>)? onAddViolation;
   final Function(Map<String, dynamic>)? defaultSubmitHandler;
-  final void Function(VehicleEntry) onVehicleSelected;
-  final String Function(VehicleEntry) getVehicleSuggestion;
-  final Future<List<VehicleEntry>> Function(String) searchVehicles;
+  final Future<List<VehicleSearchSuggestion>> Function(String)
+  onSearchSuggestions;
+  final void Function(VehicleSearchSuggestion) onVehicleSelected;
   final VoidCallback onSubmit;
   final void Function(ViolationStatus?) onSelectedStatusChange;
 
   final void Function(String?) onSelectedViolationTypeChange;
   final TextEditingController othersController;
+  final ViolationStatus? selectedStatus;
+  final String? selectedViolationType;
+  final List<DropdownItem<String>> violationTypeItems;
+  final List<DropdownItem<ViolationStatus>> violationStatusItems;
 
   const TableHeader({
     super.key,
     required this.vehicleController,
+    required this.violationController,
     this.fieldLabels,
     this.showVehicleSearch = true,
     this.showStatusDropdown = true,
@@ -45,13 +53,16 @@ class TableHeader extends StatelessWidget {
     this.violationTypeFieldLabelText,
     this.onAddViolation,
     this.defaultSubmitHandler,
+    required this.onSearchSuggestions,
     required this.onVehicleSelected,
-    required this.getVehicleSuggestion,
-    required this.searchVehicles,
     required this.onSubmit,
     required this.onSelectedStatusChange,
     required this.onSelectedViolationTypeChange,
     required this.othersController,
+    this.selectedStatus,
+    this.selectedViolationType,
+    this.violationTypeItems = const [],
+    this.violationStatusItems = const [],
   });
 
   @override
@@ -64,7 +75,7 @@ class TableHeader extends StatelessWidget {
             Expanded(
               child: SizedBox(
                 height: 40,
-                child: SearchField(controller: vehicleController!),
+                child: SearchField(controller: violationController),
               ),
             ),
             Spacing.horizontal(size: AppSpacing.medium),
@@ -118,14 +129,20 @@ class TableHeader extends StatelessWidget {
                                   title: 'Report Violation',
                                   onSubmit: onSubmit,
                                   vehicleController: vehicleController,
-                                  searchVehicles: searchVehicles,
-                                  getVehicleSuggestion: getVehicleSuggestion,
+                                  searchVehicles: onSearchSuggestions,
+                                  getVehicleSuggestion:
+                                      (suggestion) =>
+                                          '${suggestion.plateNumber} - ${suggestion.ownerName}',
                                   onVehicleSelected: onVehicleSelected,
                                   onSelectedStatusChange:
                                       onSelectedStatusChange,
                                   onSelectedViolationTypeChange:
                                       onSelectedViolationTypeChange,
                                   othersController: othersController,
+                                  selectedStatus: selectedStatus,
+                                  selectedViolationType: selectedViolationType,
+                                  violationTypeItems: violationTypeItems,
+                                  violationStatusItems: violationStatusItems,
                                 ),
                           );
                         },

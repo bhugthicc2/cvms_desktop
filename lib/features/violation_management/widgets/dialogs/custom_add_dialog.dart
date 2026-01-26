@@ -5,13 +5,13 @@ import 'package:cvms_desktop/core/widgets/app/custom_dropdown_field.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_text_field.dart';
 import 'package:cvms_desktop/core/widgets/app/typeahead_search_field.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
-import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
+import 'package:cvms_desktop/features/dashboard/models/dashboard/vehicle_search_suggestion.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_enums.dart';
 import 'package:cvms_desktop/features/violation_management/widgets/texts/custom_txt_field_label.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class CustomAddDialog extends StatelessWidget {
+class CustomAddDialog extends StatefulWidget {
   final String title;
   final VoidCallback onSubmit;
 
@@ -19,9 +19,9 @@ class CustomAddDialog extends StatelessWidget {
   final bool showVehicleSearch;
   final String searchFieldLabel;
   final TextEditingController vehicleController;
-  final Future<List<VehicleEntry>> Function(String) searchVehicles;
-  final String Function(VehicleEntry) getVehicleSuggestion;
-  final void Function(VehicleEntry) onVehicleSelected;
+  final Future<List<VehicleSearchSuggestion>> Function(String) searchVehicles;
+  final String Function(VehicleSearchSuggestion) getVehicleSuggestion;
+  final void Function(VehicleSearchSuggestion) onVehicleSelected;
 
   // Status
   final bool showStatusDropdown;
@@ -55,7 +55,7 @@ class CustomAddDialog extends StatelessWidget {
     this.searchFieldLabel = 'Vehicle',
 
     // status
-    this.showStatusDropdown = false,
+    this.showStatusDropdown = true,
     this.statusFieldLabel = 'Status',
     this.selectedStatus,
     this.violationStatusItems = const [],
@@ -74,11 +74,26 @@ class CustomAddDialog extends StatelessWidget {
   });
 
   @override
+  State<CustomAddDialog> createState() => _CustomAddDialogState();
+}
+
+class _CustomAddDialogState extends State<CustomAddDialog> {
+  ViolationStatus? _selectedStatus;
+  String? _selectedViolationType;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedStatus = widget.selectedStatus;
+    _selectedViolationType = widget.selectedViolationType;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return CustomDialog(
       btnTxt: 'Save',
-      onSubmit: onSubmit,
-      title: title,
+      onSubmit: widget.onSubmit,
+      title: widget.title,
       height: 500,
       width: 700,
       icon: PhosphorIconsBold.warning,
@@ -90,21 +105,27 @@ class CustomAddDialog extends StatelessWidget {
             Spacing.vertical(size: AppSpacing.large),
 
             // Vehicle Search
-            if (showVehicleSearch) ...[
+            if (widget.showVehicleSearch) ...[
               Align(
                 alignment: Alignment.centerLeft,
                 child: CustomTxtFieldLabel(
                   isRequired: true,
-                  labelText: searchFieldLabel,
+                  labelText: widget.searchFieldLabel,
                 ),
               ),
               Spacing.vertical(size: AppSpacing.small),
-              TypeaheadSearchField<VehicleEntry>(
-                controller: vehicleController,
+              TypeaheadSearchField<VehicleSearchSuggestion>(
+                controller: widget.vehicleController,
                 hintText: 'Search plate, owner, or school ID',
-                suggestionsCallback: searchVehicles,
-                getSuggestionText: getVehicleSuggestion,
-                onSuggestionSelected: onVehicleSelected,
+                suggestionsCallback: widget.searchVehicles,
+                getSuggestionText: widget.getVehicleSuggestion,
+                onSuggestionSelected: (suggestion) {
+                  // Update controller text to show selected vehicle
+                  widget.vehicleController.text = widget.getVehicleSuggestion(
+                    suggestion,
+                  );
+                  widget.onVehicleSelected(suggestion);
+                },
                 searchFieldWidth: double.infinity,
                 searchFieldHeight: 50,
                 borderOpacity: 1,
@@ -116,45 +137,55 @@ class CustomAddDialog extends StatelessWidget {
             ],
 
             // Status
-            if (showStatusDropdown) ...[
+            if (widget.showStatusDropdown) ...[
               Align(
                 alignment: Alignment.centerLeft,
                 child: CustomTxtFieldLabel(
                   isRequired: true,
-                  labelText: statusFieldLabel,
+                  labelText: widget.statusFieldLabel,
                 ),
               ),
               Spacing.vertical(size: AppIconSizes.xSmall),
               CustomDropdownField<ViolationStatus>(
-                value: selectedStatus,
+                value: _selectedStatus,
                 hintText: 'Select Status',
-                items: violationStatusItems,
-                onChanged: onSelectedStatusChange,
+                items: widget.violationStatusItems,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedStatus = value;
+                  });
+                  widget.onSelectedStatusChange(value);
+                },
               ),
               Spacing.vertical(size: AppIconSizes.medium),
             ],
 
             // Violation Type
-            if (showViolationType) ...[
+            if (widget.showViolationType) ...[
               Align(
                 alignment: Alignment.centerLeft,
                 child: CustomTxtFieldLabel(
                   isRequired: true,
-                  labelText: violationTypeFieldLabel,
+                  labelText: widget.violationTypeFieldLabel,
                 ),
               ),
               Spacing.vertical(size: AppIconSizes.xSmall),
               CustomDropdownField<String>(
-                value: selectedViolationType,
+                value: _selectedViolationType,
                 hintText: 'Select Violation',
-                items: violationTypeItems,
-                onChanged: onSelectedViolationTypeChange,
+                items: widget.violationTypeItems,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedViolationType = value;
+                  });
+                  widget.onSelectedViolationTypeChange(value);
+                },
               ),
               Spacing.vertical(size: AppIconSizes.medium),
             ],
 
             // Others
-            if (showOtherField && selectedViolationType == 'Other') ...[
+            if (_selectedViolationType == 'Other') ...[
               Align(
                 alignment: Alignment.centerLeft,
                 child: CustomTxtFieldLabel(
@@ -164,7 +195,7 @@ class CustomAddDialog extends StatelessWidget {
               ),
               Spacing.vertical(size: AppIconSizes.xSmall),
               CustomTextField(
-                controller: othersController,
+                controller: widget.othersController,
                 labelText: 'Other details',
                 height: 80,
                 maxLines: 3,
