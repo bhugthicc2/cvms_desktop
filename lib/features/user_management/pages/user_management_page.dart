@@ -1,9 +1,11 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
+import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_cubit.dart';
 import 'package:cvms_desktop/features/user_management/bloc/user_management_bloc.dart';
 import 'package:cvms_desktop/features/user_management/widgets/skeletons/table_skeleton.dart';
+import 'package:cvms_desktop/features/user_management/widgets/tables/top_bar.dart';
 import 'package:cvms_desktop/features/user_management/widgets/tables/user_table.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -84,10 +86,18 @@ class _UserManagementPageState extends State<UserManagementPage> {
                 );
               }
 
-              return UserTable(
-                title: "User Management",
-                entries: state.filteredEntries,
-                searchController: searchController,
+              return Column(
+                children: [
+                  TopBar(metrics: context.read<UserCubit>().getMetrics()),
+                  Spacing.vertical(size: AppSpacing.medium),
+                  Expanded(
+                    child: UserTable(
+                      title: "User Management",
+                      entries: state.filteredEntries,
+                      searchController: searchController,
+                    ),
+                  ),
+                ],
               );
             },
           ),

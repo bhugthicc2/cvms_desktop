@@ -5,6 +5,7 @@ import 'package:cvms_desktop/core/utils/date_time_formatter.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_checkbox.dart';
 import 'package:cvms_desktop/core/widgets/table/cell_badge.dart';
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
+import 'package:cvms_desktop/features/violation_management/models/violation_enums.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
 import 'package:cvms_desktop/features/violation_management/widgets/actions/violation_actions.dart';
 import 'package:flutter/material.dart';
@@ -17,12 +18,20 @@ class ViolationDataSource extends DataGridSource {
   final bool _showActions;
   // ignore: unused_field
   final BuildContext? _context;
+  final VoidCallback? onDelete;
+  final Function(ViolationEntry)? onEdit;
+  final Function(ViolationEntry)? onUpdate;
+  final Function(ViolationEntry)? onViewMore;
 
   ViolationDataSource({
     required List<ViolationEntry> violationEntries,
     bool showCheckbox = false,
     bool showActions = true,
     BuildContext? context,
+    this.onDelete,
+    this.onEdit,
+    this.onUpdate,
+    this.onViewMore,
   }) : _originalEntries = violationEntries,
        _showCheckbox = showCheckbox,
        _showActions = showActions,
@@ -55,7 +64,7 @@ class ViolationDataSource extends DataGridSource {
       DataGridCell<String>(columnName: 'plateNumber', value: entry.plateNumber),
       DataGridCell<String>(columnName: 'owner', value: entry.ownerName),
       DataGridCell<String>(columnName: 'violation', value: entry.violationType),
-      DataGridCell<String>(columnName: 'status', value: entry.status),
+      DataGridCell<String>(columnName: 'status', value: entry.status.name),
     ]);
     if (_showActions) {
       cells.add(DataGridCell<String>(columnName: 'actions', value: ''));
@@ -112,8 +121,12 @@ class ViolationDataSource extends DataGridSource {
                 rowIndex: rowIndex,
                 context: context,
                 plateNumber: entry.plateNumber,
-                isResolved: entry.status.toLowerCase() == 'resolved',
+                isResolved: entry.status == ViolationStatus.confirmed,
                 violationEntry: entry,
+                onDelete: () => onDelete?.call(),
+                onEdit: () => onEdit?.call(entry),
+                onUpdate: () => onUpdate?.call(entry),
+                onViewMore: () => onViewMore?.call(entry),
               ),
             );
           },
@@ -196,16 +209,16 @@ class ViolationDataSource extends DataGridSource {
       case 'status':
         final statusStr = cell.value.toString();
         final statusLower = statusStr.toLowerCase();
-        final bool isResolved = statusLower == 'resolved';
+        final bool isConfirmed = statusLower == 'confirmed';
         final bool isPending = statusLower == 'pending';
         final Color badgeBg =
-            isResolved
+            isConfirmed
                 ? AppColors.successLight
                 : isPending
                 ? AppColors.chartOrange.withValues(alpha: 0.3)
                 : AppColors.grey.withValues(alpha: 0.2);
         final Color textColor =
-            isResolved
+            isConfirmed
                 ? const Color.fromARGB(255, 31, 144, 11)
                 : isPending
                 ? AppColors.chartOrange

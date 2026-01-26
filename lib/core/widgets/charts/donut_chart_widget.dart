@@ -21,6 +21,7 @@ class DonutChartWidget extends StatelessWidget {
   final ScreenshotController? screenshotController;
   final int? highlightHighestIndex;
   final bool enableTooltip;
+  final double chartRadii;
 
   const DonutChartWidget({
     super.key,
@@ -35,6 +36,7 @@ class DonutChartWidget extends StatelessWidget {
     this.showPercentageInSlice = true,
     this.highlightHighestIndex,
     this.enableTooltip = false,
+    this.chartRadii = 8.0,
   });
 
   @override
@@ -46,7 +48,7 @@ class DonutChartWidget extends StatelessWidget {
         padding: EdgeInsets.all(AppSpacing.medium),
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(chartRadii),
           boxShadow: [
             BoxShadow(
               color: AppColors.grey.withValues(alpha: 0.1),
@@ -263,7 +265,7 @@ class DonutChartWidget extends StatelessWidget {
 
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(chartRadii),
         boxShadow: [
           BoxShadow(
             color: AppColors.grey.withValues(alpha: 0.1),

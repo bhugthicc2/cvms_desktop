@@ -2,7 +2,9 @@ import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_dropdown.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
+import 'package:cvms_desktop/features/violation_management/models/violation_enums.dart';
 import 'package:cvms_desktop/features/violation_management/widgets/dialogs/custom_add_dialog.dart';
 import 'package:cvms_desktop/features/violation_management/widgets/buttons/custom_violation_button.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +12,47 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/widgets/app/search_field.dart';
 
 class TableHeader extends StatelessWidget {
-  final TextEditingController? searchController;
+  final TextEditingController vehicleController;
+  final List<String>? fieldLabels;
+  final bool showVehicleSearch;
+  final bool showStatusDropdown;
+  final bool showViolationType;
+  final bool showOtherField;
+  final String? searchFieldLabelText;
+  final String? statusFieldLabelText;
+  final String? violationTypeFieldLabelText;
+  final Function(Map<String, dynamic>)? onAddViolation;
+  final Function(Map<String, dynamic>)? defaultSubmitHandler;
+  final void Function(VehicleEntry) onVehicleSelected;
+  final String Function(VehicleEntry) getVehicleSuggestion;
+  final Future<List<VehicleEntry>> Function(String) searchVehicles;
+  final VoidCallback onSubmit;
+  final void Function(ViolationStatus?) onSelectedStatusChange;
 
-  const TableHeader({super.key, this.searchController});
+  final void Function(String?) onSelectedViolationTypeChange;
+  final TextEditingController othersController;
+
+  const TableHeader({
+    super.key,
+    required this.vehicleController,
+    this.fieldLabels,
+    this.showVehicleSearch = true,
+    this.showStatusDropdown = true,
+    this.showViolationType = true,
+    this.showOtherField = true,
+    this.searchFieldLabelText,
+    this.statusFieldLabelText,
+    this.violationTypeFieldLabelText,
+    this.onAddViolation,
+    this.defaultSubmitHandler,
+    required this.onVehicleSelected,
+    required this.getVehicleSuggestion,
+    required this.searchVehicles,
+    required this.onSubmit,
+    required this.onSelectedStatusChange,
+    required this.onSelectedViolationTypeChange,
+    required this.othersController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +61,12 @@ class TableHeader extends StatelessWidget {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (searchController != null)
-              Expanded(
-                child: SizedBox(
-                  height: 40,
-                  child: SearchField(controller: searchController!),
-                ),
+            Expanded(
+              child: SizedBox(
+                height: 40,
+                child: SearchField(controller: vehicleController!),
               ),
+            ),
             Spacing.horizontal(size: AppSpacing.medium),
             Expanded(
               child: SizedBox(
@@ -75,8 +114,18 @@ class TableHeader extends StatelessWidget {
                           showDialog(
                             context: context,
                             builder:
-                                (_) => const CustomAddDialog(
-                                  title: "Add Violation",
+                                (_) => CustomAddDialog(
+                                  title: 'Report Violation',
+                                  onSubmit: onSubmit,
+                                  vehicleController: vehicleController,
+                                  searchVehicles: searchVehicles,
+                                  getVehicleSuggestion: getVehicleSuggestion,
+                                  onVehicleSelected: onVehicleSelected,
+                                  onSelectedStatusChange:
+                                      onSelectedStatusChange,
+                                  onSelectedViolationTypeChange:
+                                      onSelectedViolationTypeChange,
+                                  othersController: othersController,
                                 ),
                           );
                         },

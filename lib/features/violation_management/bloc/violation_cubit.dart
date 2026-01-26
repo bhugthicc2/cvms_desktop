@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
 import 'package:cvms_desktop/features/violation_management/data/violation_repository.dart';
-import 'package:flutter/material.dart';
+import 'package:cvms_desktop/features/violation_management/models/violation_enums.dart';
+import 'package:cvms_desktop/features/violation_management/models/violation_tab.dart';
+import 'package:cvms_desktop/features/violation_management/widgets/tables/top_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'violation_state.dart';
@@ -11,60 +13,54 @@ part 'violation_state.dart';
 class ViolationCubit extends Cubit<ViolationState> {
   final ViolationRepository _repository = ViolationRepository();
   StreamSubscription<List<ViolationEntry>>? _violationsSubscription;
-  StreamSubscription<List<ViolationEntry>>? _pendingViolationsSubscription;
 
   ViolationCubit() : super(ViolationState.initial());
-
-  Future<void> loadEntries(List<ViolationEntry> entries) async {
-    final enriched = await _repository.enrichViolationsWithRelatedInfo(entries);
-    if (!isClosed) {
-      emit(state.copyWith(allEntries: enriched));
-      _applyFilters();
-    }
-  }
 
   void listenViolations() {
     emit(state.copyWith(isLoading: true));
     _violationsSubscription?.cancel();
+
     _violationsSubscription = _repository.watchViolations().listen(
       (violations) {
-        if (!isClosed) {
-          emit(state.copyWith(allEntries: violations, isLoading: false));
-          _applyFilters();
+        if (isClosed) return;
+
+        // Check if data actually changed to prevent unnecessary rebuilds
+        final currentData = state.allEntries;
+        bool dataChanged = false;
+
+        if (currentData.length != violations.length) {
+          dataChanged = true;
+        } else {
+          for (int i = 0; i < violations.length; i++) {
+            if (i >= currentData.length ||
+                currentData[i].id != violations[i].id ||
+                currentData[i].status != violations[i].status) {
+              dataChanged = true;
+              break;
+            }
+          }
         }
+
+        if (!dataChanged) {
+          return;
+        }
+
+        // Only apply filters if we have violations, otherwise use all violations
+        final filtered =
+            violations.isNotEmpty ? _applyFilters(violations) : violations;
+
+        emit(
+          state.copyWith(
+            allEntries: violations,
+            filteredEntries: filtered,
+            isLoading: false,
+          ),
+        );
       },
       onError: (error) {
-        if (!isClosed) {
-          debugPrint('Error in violations stream: $error');
-          emit(state.copyWith(isLoading: false));
-        }
+        emit(state.copyWith(isLoading: false));
       },
     );
-  }
-
-  void listenPendingViolations() {
-    emit(state.copyWith(isLoading: true));
-    _pendingViolationsSubscription?.cancel();
-    _pendingViolationsSubscription = _repository
-        .watchPendingViolations()
-        .listen(
-          (pendingViolations) {
-            if (!isClosed) {
-              emit(
-                state.copyWith(
-                  pendingEntries: pendingViolations,
-                  isLoading: false,
-                ),
-              );
-            }
-          },
-          onError: (error) {
-            if (!isClosed) {
-              debugPrint('Error in pending violations stream: $error');
-              emit(state.copyWith(isLoading: false));
-            }
-          },
-        );
   }
 
   void toggleBulkMode() {
@@ -115,82 +111,156 @@ class ViolationCubit extends Cubit<ViolationState> {
     emit(state.copyWith(message: null, messageType: null));
   }
 
-  // todo: The freezing issue may be related to rapid state emissions or unoptimized filtering. Consider debouncing filters if needed.
-  Future<void> toggleViolationStatus(ViolationEntry entry) async {
-    try {
-      final newStatus =
-          entry.status.toLowerCase() == 'resolved' ? 'pending' : 'resolved';
-      await _repository.updateViolationStatus(entry.id, newStatus);
-      final updatedEntries =
-          state.allEntries.map((e) {
-            if (e == entry) {
-              return e.copyWith(status: newStatus);
-            }
-            return e;
-          }).toList();
-      emit(state.copyWith(allEntries: updatedEntries));
-      _applyFilters();
-      emit(
-        state.copyWith(
-          allEntries: updatedEntries,
-          message: 'Violation status changed to ${newStatus.toUpperCase()}',
-          messageType: SnackBarType.success,
-        ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          message: 'Failed to update violation status: ${e.toString()}',
-          messageType: SnackBarType.error,
-        ),
-      );
-    }
-  }
-
-  // todo: The freezing issue may be related to rapid state emissions or unoptimized filtering. Consider debouncing filters if needed.
   void filterEntries(String query) {
     emit(state.copyWith(searchQuery: query, isLoading: false));
-    _applyFilters();
+    final filtered = _applyFilters();
+    emit(state.copyWith(filteredEntries: filtered));
   }
 
   void filterByDate(String type) {
     emit(state.copyWith(dateFilter: type));
-    _applyFilters();
+    final filtered = _applyFilters();
+    emit(state.copyWith(filteredEntries: filtered));
   }
 
-  void _applyFilters() {
-    var filtered = state.allEntries;
+  List<ViolationEntry> _applyFilters([List<ViolationEntry>? entries]) {
+    var filtered = List<ViolationEntry>.from(entries ?? state.allEntries);
+
+    // TAB FILTER
+    switch (state.activeTab) {
+      case ViolationTab.pending:
+        filtered = filtered.where((v) => v.isPending).toList();
+        break;
+
+      case ViolationTab.confirmed:
+        filtered = filtered.where((v) => v.isConfirmed).toList();
+        break;
+
+      case ViolationTab.suspended:
+        filtered = filtered.where((v) => v.isSuspended).toList();
+        break;
+
+      case ViolationTab.revoked:
+        filtered = filtered.where((v) => v.isRevoked).toList();
+        break;
+
+      case ViolationTab.all:
+        break;
+    }
+
+    // SEARCH FILTER
     if (state.searchQuery.isNotEmpty) {
       final q = state.searchQuery.toLowerCase();
       filtered =
           filtered.where((e) {
-            return e.reportedByUserId.toLowerCase().contains(q) ||
-                e.violationType.toLowerCase().contains(q) ||
-                e.status.toLowerCase().contains(q) ||
+            return e.violationType.toLowerCase().contains(q) ||
                 e.ownerName.toLowerCase().contains(q) ||
                 e.plateNumber.toLowerCase().contains(q) ||
                 e.fullname.toLowerCase().contains(q);
           }).toList();
     }
-    if (state.dateFilter != 'All') {
-      // todo: Implement proper date filtering (e.g., compare dates parsed to 'Today', 'Yesterday', etc.)
-      // Current implementation is placeholder and may not work as expected
-      filtered =
-          filtered
-              .where(
-                (e) =>
-                    e.reportedAt.toDate().toString().toLowerCase() ==
-                    state.dateFilter.toLowerCase(),
-              )
-              .toList();
+
+    return filtered;
+  }
+
+  Future<void> updateViolationStatus({
+    required String violationId,
+    required ViolationStatus status,
+  }) async {
+    try {
+      emit(state.copyWith(isLoading: true));
+
+      await _repository.updateViolationStatus(
+        violationIds: [violationId],
+        status: status,
+      );
+
+      if (!isClosed) {
+        emit(
+          state.copyWith(
+            message: 'Violation status updated successfully',
+            messageType: SnackBarType.success,
+            isLoading: false,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!isClosed) {
+        emit(
+          state.copyWith(
+            message: 'Failed to update violation status: ${e.toString()}',
+            messageType: SnackBarType.error,
+            isLoading: false,
+          ),
+        );
+      }
     }
-    emit(state.copyWith(filteredEntries: filtered));
+  }
+
+  Future<void> updateSelectedStatus(ViolationStatus status) async {
+    if (state.selectedEntries.isEmpty) return;
+
+    try {
+      emit(state.copyWith(isLoading: true));
+
+      final ids = state.selectedEntries.map((e) => e.id).toList();
+
+      await _repository.updateViolationStatus(
+        violationIds: ids,
+        status: status,
+      );
+
+      if (!isClosed) {
+        emit(
+          state.copyWith(
+            message: 'Violation status updated successfully',
+            messageType: SnackBarType.success,
+            selectedEntries: [],
+            isBulkModeEnabled: false,
+            isLoading: false,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!isClosed) {
+        emit(
+          state.copyWith(
+            message: 'Failed to update violation status',
+            messageType: SnackBarType.error,
+            isLoading: false,
+          ),
+        );
+      }
+    }
+  }
+
+  TopBarMetrics getMetrics() {
+    final all = state.allEntries;
+
+    return TopBarMetrics(
+      pendingViolations: all.where((v) => v.isPending).length,
+      confirmedViolations: all.where((v) => v.isConfirmed).length,
+      suspendedVehicles: all.where((v) => v.isSuspended).length,
+      revokedMVPS: all.where((v) => v.isRevoked).length,
+    );
+  }
+
+  void changeTab(ViolationTab tab) {
+    emit(
+      state.copyWith(
+        activeTab: tab,
+        selectedEntries: [],
+        isBulkModeEnabled: false,
+      ),
+    );
+
+    emit(state.copyWith(filteredEntries: _applyFilters()));
   }
 
   @override
   Future<void> close() {
     _violationsSubscription?.cancel();
-    _pendingViolationsSubscription?.cancel();
+
     return super.close();
   }
 }

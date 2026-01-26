@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:cvms_desktop/features/vehicle_logs_management/data/vehicle_logs_repository.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/models/vehicle_log_model.dart';
+import 'package:cvms_desktop/features/vehicle_logs_management/widgets/tables/top_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'vehicle_logs_state.dart';
@@ -203,6 +204,43 @@ class VehicleLogsCubit extends Cubit<VehicleLogsState> {
 
   String resolveUpdatedBy(VehicleLogModel log) =>
       usersById[log.updatedByUserId]?['fullname'] ?? 'System';
+  TopBarMetrics getMetrics() {
+    final all = state.allLogs;
+
+    // Total logs count
+    final totalLogs = all.length;
+
+    // Currently on-site vehicles (logs with status 'checked-in' or 'on-site')
+    final currentlyOnSite =
+        all
+            .where(
+              (log) =>
+                  log.status.toLowerCase() == 'inside' ||
+                  log.status.toLowerCase() == 'onsite',
+            )
+            .length;
+
+    // Checked-out vehicles (logs with status 'checked-out')
+    final checkedOutVehicles =
+        all.where((log) => log.status.toLowerCase() == 'offsite').length;
+
+    // Active vehicles (unique vehicles that have recent activity - logs within last 24 hours)
+    final now = DateTime.now();
+    final twentyFourHoursAgo = now.subtract(const Duration(hours: 24));
+    final activeVehicles =
+        all
+            .where((log) => log.timeIn.toDate().isAfter(twentyFourHoursAgo))
+            .map((log) => log.vehicleId)
+            .toSet()
+            .length;
+
+    return TopBarMetrics(
+      totalLogs: totalLogs,
+      currentlyOnSite: currentlyOnSite,
+      checkedOutVehicles: checkedOutVehicles,
+      activeVehicles: activeVehicles,
+    );
+  }
 
   // -----------------------------
   // State helpers

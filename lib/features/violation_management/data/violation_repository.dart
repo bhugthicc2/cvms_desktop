@@ -2,6 +2,8 @@
 
 // VEHICLE ID REFERENCE UPDATE MARKER
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cvms_desktop/features/violation_management/models/violation_enums.dart';
+import 'package:flutter/foundation.dart';
 import '../models/violation_model.dart';
 import '../../../core/error/firebase_error_handler.dart';
 import '../../../core/services/activity_log_service.dart';
@@ -56,6 +58,34 @@ class ViolationRepository {
       return await enrichViolationsWithRelatedInfo(violations);
     } catch (e) {
       throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
+    }
+  }
+
+  Future<void> updateViolationStatus({
+    required List<String> violationIds,
+    required ViolationStatus status,
+  }) async {
+    try {
+      final batch = FirebaseFirestore.instance.batch();
+
+      for (final id in violationIds) {
+        final ref = FirebaseFirestore.instance.collection('violations').doc(id);
+
+        final updateData = {
+          'status': status.value,
+          'resolvedAt':
+              status == ViolationStatus.pending
+                  ? null
+                  : FieldValue.serverTimestamp(),
+        };
+
+        batch.update(ref, updateData);
+      }
+
+      await batch.commit();
+    } catch (e) {
+      debugPrint('Error updating violation status: $e');
+      rethrow;
     }
   }
 
@@ -172,20 +202,6 @@ class ViolationRepository {
     };
   }
 
-  Future<void> updateViolationStatus(String violationId, String status) async {
-    try {
-      await _firestore.collection(_collection).doc(violationId).update({
-        'status': status,
-        'lastUpdated': FieldValue.serverTimestamp(),
-      });
-
-      // Log violation status update
-      await _logger.logViolationUpdated(violationId, status, null);
-    } catch (e) {
-      throw Exception(FirebaseErrorHandler.handleFirestoreError(e));
-    }
-  }
-
   Stream<List<ViolationEntry>> watchViolations() {
     return _firestore
         .collection(_collection)
@@ -198,7 +214,8 @@ class ViolationRepository {
                 return ViolationEntry.fromMap(data, doc.id);
               }).toList();
 
-          return await _enrichWithRelatedInfo(violations);
+          final enriched = await _enrichWithRelatedInfo(violations);
+          return enriched;
         })
         .handleError((error) {
           throw Exception(FirebaseErrorHandler.handleFirestoreError(error));

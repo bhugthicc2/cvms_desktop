@@ -1,4 +1,7 @@
+import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/widgets/skeletons/table_skeleton.dart';
+import 'package:cvms_desktop/features/vehicle_logs_management/widgets/tables/top_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
@@ -55,9 +58,10 @@ class _VehicleLogsPageState extends State<VehicleLogsPage> {
               );
             }
 
-            return Row(
+            return Column(
               children: [
-                // Vehicles Onsite
+                TopBar(metrics: context.read<VehicleLogsCubit>().getMetrics()),
+                Spacing.vertical(size: AppSpacing.medium),
                 Expanded(
                   child: VehicleLogsTable(
                     title: "Vehicles Onsite",

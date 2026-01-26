@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:cvms_desktop/features/vehicle_management/config/location_formatter.dart';
+import 'package:cvms_desktop/features/vehicle_management/models/registration_status.dart';
 import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
 
 class VehicleCsvParser {
@@ -49,6 +50,7 @@ class VehicleCsvParser {
         orNumber: map['ornumber'] ?? '',
         crNumber: map['crnumber'] ?? '',
         status: '',
+        registrationStatus: RegistrationStatus.active,
         academicYear: map['academicyear'] ?? '',
         semester:
             map['semester'] ??

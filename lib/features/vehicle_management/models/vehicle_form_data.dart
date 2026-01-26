@@ -1,3 +1,5 @@
+import 'package:cvms_desktop/features/vehicle_management/models/registration_status.dart';
+
 import '../../vehicle_management/models/vehicle_entry.dart';
 
 class VehicleFormData {
@@ -208,8 +210,9 @@ class VehicleFormData {
       licenseNumber: licenseNumber ?? '',
       orNumber: orNumber ?? '',
       crNumber: crNumber ?? '',
-      status: 'active', // Default status for new vehicles
+      status: null, // Default status for new vehicles
       createdAt: null, // Firestore will set this
+      registrationStatus: RegistrationStatus.active,
     );
   }
 }

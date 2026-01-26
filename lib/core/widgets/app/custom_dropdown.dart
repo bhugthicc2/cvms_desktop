@@ -1,4 +1,5 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/animation/hover_slide.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ class CustomDropdown extends StatefulWidget {
     this.backgroundColor = AppColors.white,
     this.color = AppColors.black,
     this.verticalPadding = 12,
-    this.fontSize = 12,
+    this.fontSize = AppFontSizes.medium,
     this.addPadding = false,
   });
 
@@ -85,8 +86,8 @@ class _CustomDropdownState extends State<CustomDropdown> {
                 dropdownColor: widget.backgroundColor,
                 style: TextStyle(
                   color: AppColors.grey,
-
-                  fontWeight: FontWeight.w600,
+                  fontFamily: "Inter",
+                  fontWeight: FontWeight.bold,
                   fontSize: widget.fontSize,
                 ),
                 items:
@@ -104,6 +105,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
                                         overflow: TextOverflow.ellipsis,
                                         e,
                                         style: TextStyle(
+                                          fontWeight: FontWeight.bold,
                                           color: widget.color ?? AppColors.grey,
                                           fontSize: widget.fontSize,
                                           fontFamily: 'Inter',
@@ -114,6 +116,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
                                       overflow: TextOverflow.ellipsis,
                                       e,
                                       style: TextStyle(
+                                        fontWeight: FontWeight.bold,
                                         color: widget.color ?? AppColors.grey,
                                         fontSize: widget.fontSize,
                                         fontFamily: 'Inter',

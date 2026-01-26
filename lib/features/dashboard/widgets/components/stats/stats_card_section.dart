@@ -24,6 +24,9 @@ class StatsCardSection extends StatelessWidget {
   final VoidCallback? onStatsCard3Click;
   final VoidCallback? onStatsCard4Click;
   final double hoverDy;
+  final double statsCardRadii;
+  final double iconContainerRadii;
+  final bool addSideBorder;
 
   const StatsCardSection({
     super.key,
@@ -45,6 +48,9 @@ class StatsCardSection extends StatelessWidget {
     this.onStatsCard3Click,
     this.onStatsCard4Click,
     this.hoverDy = -0.01,
+    this.statsCardRadii = 8,
+    this.iconContainerRadii = 4,
+    this.addSideBorder = false,
     //
   });
 
@@ -54,10 +60,16 @@ class StatsCardSection extends StatelessWidget {
   }
 
   Widget _buildGlobalStatsCard() {
-    return Row(
+    return
+    //  Column(
+    //   children: [
+    Row(
       children: [
         Expanded(
           child: StatsCard(
+            addSideBorder: addSideBorder,
+            iconContainerRadii: iconContainerRadii,
+            cardBorderRadii: statsCardRadii,
             onClick: onStatsCard1Click,
             label: statsCard1Label,
             value: statsCard1Value,
@@ -71,6 +83,9 @@ class StatsCardSection extends StatelessWidget {
         Spacing.horizontal(size: AppSpacing.medium),
         Expanded(
           child: StatsCard(
+            addSideBorder: addSideBorder,
+            iconContainerRadii: iconContainerRadii,
+            cardBorderRadii: statsCardRadii,
             onClick: onStatsCard2Click,
             label: statsCard2Label,
             value: statsCard2Value,
@@ -84,6 +99,9 @@ class StatsCardSection extends StatelessWidget {
         Spacing.horizontal(size: AppSpacing.medium),
         Expanded(
           child: StatsCard(
+            addSideBorder: addSideBorder,
+            iconContainerRadii: iconContainerRadii,
+            cardBorderRadii: statsCardRadii,
             onClick: onStatsCard3Click,
             label: statsCard3Label,
             value: statsCard3Value,
@@ -97,6 +115,9 @@ class StatsCardSection extends StatelessWidget {
         Spacing.horizontal(size: AppSpacing.medium),
         Expanded(
           child: StatsCard(
+            addSideBorder: addSideBorder,
+            iconContainerRadii: iconContainerRadii,
+            cardBorderRadii: statsCardRadii,
             onClick: onStatsCard4Click,
             label: statsCard4Label,
             value: statsCard4Value,
@@ -108,6 +129,78 @@ class StatsCardSection extends StatelessWidget {
           ),
         ),
       ],
+      // ),
+
+      //   Spacing.vertical(size: AppSpacing.medium),
+
+      //   Row(
+      //     children: [
+      //       Expanded(
+      //         child: StatsCard(
+      //           addSideBorder: addSideBorder,
+      //           iconContainerRadii: iconContainerRadii,
+      //           cardBorderRadii: statsCardRadii,
+      //           onClick: onStatsCard1Click,
+      //           label: statsCard1Label,
+      //           value: statsCard1Value,
+      //           icon: PhosphorIconsBold.calendarMinus,
+      //           color: Colors.blue,
+      //           gradient: AppColors.blueViolet,
+      //           iconColor: AppColors.donutPink,
+      //           hoverDy: hoverDy,
+      //         ),
+      //       ),
+      //       Spacing.horizontal(size: AppSpacing.medium),
+      //       Expanded(
+      //         child: StatsCard(
+      //           addSideBorder: addSideBorder,
+      //           iconContainerRadii: iconContainerRadii,
+      //           cardBorderRadii: statsCardRadii,
+      //           onClick: onStatsCard2Click,
+      //           label: statsCard2Label,
+      //           value: statsCard2Value,
+      //           icon: PhosphorIconsBold.warning,
+      //           color: AppColors.orange,
+      //           gradient: AppColors.yellowOrange,
+      //           iconColor: AppColors.orange,
+      //           hoverDy: hoverDy,
+      //         ),
+      //       ),
+      //       Spacing.horizontal(size: AppSpacing.medium),
+      //       Expanded(
+      //         child: StatsCard(
+      //           addSideBorder: addSideBorder,
+      //           iconContainerRadii: iconContainerRadii,
+      //           cardBorderRadii: statsCardRadii,
+      //           onClick: onStatsCard3Click,
+      //           label: statsCard3Label,
+      //           value: statsCard3Value,
+      //           icon: PhosphorIconsBold.car,
+      //           color: AppColors.donutBlue,
+      //           gradient: AppColors.purpleBlue,
+      //           iconColor: AppColors.donutBlue,
+      //           hoverDy: hoverDy,
+      //         ),
+      //       ),
+      //       Spacing.horizontal(size: AppSpacing.medium),
+      //       Expanded(
+      //         child: StatsCard(
+      //           addSideBorder: addSideBorder,
+      //           iconContainerRadii: iconContainerRadii,
+      //           cardBorderRadii: statsCardRadii,
+      //           onClick: onStatsCard4Click,
+      //           label: statsCard4Label,
+      //           value: statsCard4Value,
+      //           icon: statsCard4Icon ?? Icons.trending_up,
+      //           color: AppColors.chartGreen,
+      //           gradient: AppColors.greenWhite,
+      //           iconColor: AppColors.chartGreen,
+      //           hoverDy: hoverDy,
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      //],
     );
   }
 
@@ -116,6 +209,8 @@ class StatsCardSection extends StatelessWidget {
       children: [
         Expanded(
           child: StatsCard(
+            iconContainerRadii: iconContainerRadii,
+            cardBorderRadii: statsCardRadii,
             onClick: onStatsCard1Click,
             gradient: AppColors.greenWhite,
             // addSideBorder: false,
@@ -130,6 +225,8 @@ class StatsCardSection extends StatelessWidget {
         Spacing.horizontal(size: AppSpacing.medium),
         Expanded(
           child: StatsCard(
+            iconContainerRadii: iconContainerRadii,
+            cardBorderRadii: statsCardRadii,
             onClick: onStatsCard2Click,
             // addSideBorder: false,
             gradient: AppColors.yellowOrange,
@@ -146,6 +243,8 @@ class StatsCardSection extends StatelessWidget {
 
         Expanded(
           child: StatsCard(
+            iconContainerRadii: iconContainerRadii,
+            cardBorderRadii: statsCardRadii,
             onClick: onStatsCard3Click,
             // addSideBorder: false,
             label: statsCard3Label,
@@ -160,6 +259,8 @@ class StatsCardSection extends StatelessWidget {
         Spacing.horizontal(size: AppSpacing.medium),
         Expanded(
           child: StatsCard(
+            iconContainerRadii: iconContainerRadii,
+            cardBorderRadii: statsCardRadii,
             onClick: onStatsCard4Click,
             // addSideBorder: false,
             label: statsCard4Label,

@@ -60,7 +60,7 @@ class CustomSidebar extends StatelessWidget {
             sidebarTheme == SidebarTheme.dark
                 ? DecorationImage(
                   opacity: 0.7,
-                  image: const AssetImage("assets/images/sidebar_bg_dark.png"),
+                  image: const AssetImage("assets/images/sidebar_bg.png"),
                   fit: BoxFit.cover,
                 )
                 : null,

@@ -47,7 +47,7 @@ class CustomDialog extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: headerColor ?? AppColors.tableHeaderColor,
                 borderRadius: const BorderRadius.vertical(

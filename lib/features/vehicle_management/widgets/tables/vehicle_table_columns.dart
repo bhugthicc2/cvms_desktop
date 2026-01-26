@@ -9,10 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class VehicleTableColumns {
-  static List<GridColumn> getColumns({
-    bool showCheckbox = false,
-    bool showStatus = true,
-  }) {
+  static List<GridColumn> getColumns({bool showCheckbox = false}) {
     final columns = <GridColumn>[];
 
     if (showCheckbox) {
@@ -59,14 +56,11 @@ class VehicleTableColumns {
       TableColumnFactory.build(name: 'vehicleModel', label: 'Vehicle Model'),
       TableColumnFactory.build(name: 'vehicleColor', label: 'Vehicle Color'),
       TableColumnFactory.build(name: 'licenseNumber', label: 'License Number'),
+      TableColumnFactory.build(
+        name: 'registrationStatus',
+        label: 'Registration Status',
+      ),
     ];
-
-    // Only add status column if at least one vehicle has logs
-    if (showStatus) {
-      baseColumns.add(
-        TableColumnFactory.build(name: 'status', label: 'Status'),
-      );
-    }
 
     baseColumns.add(
       // TableColumnFactory.build(name: 'createdAt', label: 'Created At'),

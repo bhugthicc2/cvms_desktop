@@ -89,13 +89,13 @@ class _CustomDropdownFieldState<T> extends State<CustomDropdownField<T>> {
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<T>(
+              padding: EdgeInsets.zero,
               value: _currentValue,
               hint:
                   widget.hintText != null
                       ? Text(
                         widget.hintText!,
                         style: const TextStyle(
-                          fontWeight: FontWeight.w600,
                           color: AppColors.grey,
                           fontSize: AppFontSizes.medium,
                           fontFamily: 'Inter',
@@ -108,12 +108,11 @@ class _CustomDropdownFieldState<T> extends State<CustomDropdownField<T>> {
               icon: const Icon(
                 PhosphorIconsFill.caretDown,
                 color: AppColors.grey,
-                size: 20,
+                size: 16,
               ),
               style:
                   widget.textStyle ??
                   const TextStyle(
-                    fontWeight: FontWeight.w600,
                     color: AppColors.black,
                     fontSize: AppFontSizes.medium,
                     fontFamily: 'Inter',
@@ -126,14 +125,13 @@ class _CustomDropdownFieldState<T> extends State<CustomDropdownField<T>> {
                       child: Row(
                         children: [
                           if (item.icon != null) ...[
-                            Icon(item.icon, color: AppColors.grey, size: 18),
+                            Icon(item.icon, color: AppColors.grey, size: 16),
                             const SizedBox(width: 8),
                           ],
                           Expanded(
                             child: Text(
                               item.label,
                               style: const TextStyle(
-                                fontWeight: FontWeight.w600,
                                 color: AppColors.black,
                                 fontSize: AppFontSizes.medium,
                                 fontFamily: 'Inter',

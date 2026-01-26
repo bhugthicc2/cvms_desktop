@@ -2,6 +2,7 @@
 
 import 'package:cvms_desktop/core/widgets/app/custom_view_title.dart';
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
+import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
 import 'package:cvms_desktop/features/violation_management/widgets/tables/violation_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +27,7 @@ class _PendingViolationViewState extends State<PendingViolationView> {
     super.initState();
     // Initialize vehicle logs when the view is created
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ViolationCubit>().listenPendingViolations();
+      context.read<ViolationCubit>().listenViolations();
     });
   }
 
@@ -60,7 +61,7 @@ class _PendingViolationViewState extends State<PendingViolationView> {
                     );
                   }
 
-                  if (state.pendingEntries.isEmpty) {
+                  if (state.allEntries.isEmpty) {
                     return const Center(
                       child: Text(
                         'No violations found',
@@ -72,7 +73,11 @@ class _PendingViolationViewState extends State<PendingViolationView> {
                   return ViolationTable(
                     title: 'Pending Violations',
                     searchController: _searchController,
-                    entries: state.pendingEntries,
+                    entries: state.allEntries,
+                    onDelete: () {},
+                    onEdit: (ViolationEntry entry) {},
+                    onUpdate: (ViolationEntry entry) {},
+                    onViewMore: (ViolationEntry entry) {},
                   );
                 },
               ),

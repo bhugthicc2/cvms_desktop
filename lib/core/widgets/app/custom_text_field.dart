@@ -1,6 +1,5 @@
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
-import 'package:cvms_desktop/core/widgets/animation/hover_grow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -180,6 +179,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   fontWeight: FontWeight.w800,
                   color: AppColors.black,
                   fontSize: AppFontSizes.medium,
+                  fontFamily: 'Inter',
                 ),
             decoration: InputDecoration(
               hintText: widget.hintText,

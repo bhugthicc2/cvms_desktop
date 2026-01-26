@@ -6,6 +6,7 @@ class CellBadge extends StatelessWidget {
   final Color textColor;
   final String statusStr;
   final double? fontSize;
+  final FontWeight fontWeight;
   final double? horizontalPadding;
   const CellBadge({
     super.key,
@@ -14,6 +15,7 @@ class CellBadge extends StatelessWidget {
     required this.statusStr,
     this.fontSize,
     this.horizontalPadding,
+    this.fontWeight = FontWeight.normal,
   });
 
   @override
@@ -38,7 +40,7 @@ class CellBadge extends StatelessWidget {
             maxLines: 1,
             style: TextStyle(
               color: textColor,
-
+              fontWeight: fontWeight,
               fontFamily: 'Inter',
               fontSize: fontSize ?? AppFontSizes.small,
             ),

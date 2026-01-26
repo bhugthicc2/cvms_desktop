@@ -7,6 +7,7 @@ class ViolationState {
   final List<ViolationEntry> filteredEntries;
   final List<ViolationEntry> selectedEntries;
   final List<ViolationEntry> pendingEntries;
+  final ViolationTab activeTab;
 
   final String dateFilter;
   final String searchQuery;
@@ -24,6 +25,7 @@ class ViolationState {
     required this.searchQuery,
     required this.isBulkModeEnabled,
     this.isLoading = false,
+    this.activeTab = ViolationTab.all,
   });
 
   factory ViolationState.initial() => ViolationState(
@@ -35,9 +37,11 @@ class ViolationState {
     searchQuery: '',
     isBulkModeEnabled: false,
     isLoading: true,
+    activeTab: ViolationTab.all,
   );
 
   ViolationState copyWith({
+    ViolationStatus? violationStatusFilter,
     String? message,
     SnackBarType? messageType,
     List<ViolationEntry>? allEntries,
@@ -48,6 +52,7 @@ class ViolationState {
     String? searchQuery,
     bool? isBulkModeEnabled,
     bool? isLoading,
+    ViolationTab? activeTab,
   }) {
     return ViolationState(
       message: message ?? this.message,
@@ -60,6 +65,7 @@ class ViolationState {
       searchQuery: searchQuery ?? this.searchQuery,
       isBulkModeEnabled: isBulkModeEnabled ?? this.isBulkModeEnabled,
       isLoading: isLoading ?? this.isLoading,
+      activeTab: activeTab ?? this.activeTab,
     );
   }
 

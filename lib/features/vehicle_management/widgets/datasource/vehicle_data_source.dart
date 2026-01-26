@@ -3,6 +3,7 @@ import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_checkbox.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_icon_button.dart';
 import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
+import 'package:cvms_desktop/features/vehicle_management/models/registration_status.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/actions/vehicle_actions_menu.dart';
 import 'package:cvms_desktop/core/widgets/table/cell_badge.dart';
 import 'package:flutter/material.dart';
@@ -14,17 +15,15 @@ import '../../bloc/vehicle_cubit.dart';
 class VehicleDataSource extends DataGridSource {
   final List<VehicleEntry> _originalEntries;
   final bool _showCheckbox;
-  final bool _showStatus;
   final BuildContext? _context;
 
   VehicleDataSource({
     required List<VehicleEntry> vehicleEntries,
     bool showCheckbox = false,
-    bool showStatus = true,
     BuildContext? context,
   }) : _originalEntries = List.of(vehicleEntries),
        _showCheckbox = showCheckbox,
-       _showStatus = showStatus,
+
        _context = context {
     _sortByCreatedAtDesc();
     _buildRows();
@@ -78,14 +77,11 @@ class VehicleDataSource extends DataGridSource {
         columnName: 'licenseNumber',
         value: entry.licenseNumber,
       ),
+      DataGridCell<String>(
+        columnName: 'registrationStatus',
+        value: entry.registrationStatus.value,
+      ),
     ]);
-
-    // Only add status cell if status column is shown
-    if (_showStatus) {
-      cells.add(
-        DataGridCell<String>(columnName: 'status', value: entry.status),
-      );
-    }
 
     cells.add(DataGridCell<String>(columnName: 'actions', value: ''));
 
@@ -257,34 +253,30 @@ class VehicleDataSource extends DataGridSource {
           },
         );
 
-      case 'status':
+      case 'registrationStatus':
         return BlocBuilder<VehicleCubit, VehicleState>(
           builder: (context, state) {
-            // Hide status if vehicle has no logs (no transactions yet)
-            if (!state.vehiclesWithLogs.contains(entry.vehicleId)) {
-              return const SizedBox.shrink();
-            }
-
             final statusStr = cell.value.toString();
             final statusLower = statusStr.toLowerCase();
-            final bool isInside = statusLower == 'onsite';
-            final bool isOutside = statusLower == 'offsite';
+            final bool isActive = statusLower == 'active';
+            final bool isSuspended = statusLower == 'suspended';
 
             final Color badgeBg =
-                isInside
+                isActive
                     ? AppColors.chartGreen.withValues(alpha: 0.1)
-                    : isOutside
+                    : isSuspended
                     ? AppColors.error.withValues(alpha: 0.1)
                     : AppColors.grey.withValues(alpha: 0.2);
 
             final Color textColor =
-                isInside
+                isActive
                     ? const Color.fromARGB(255, 31, 144, 11)
-                    : isOutside
+                    : isSuspended
                     ? AppColors.error
                     : AppColors.black;
 
             return CellBadge(
+              fontWeight: FontWeight.bold,
               badgeBg: badgeBg,
               textColor: textColor,
               statusStr: statusStr,

@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:cvms_desktop/features/activity_logs/widgets/tables/top_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/models/activity_log.dart';
 import '../../../core/models/activity_type.dart';
@@ -137,6 +138,49 @@ class ActivityLogsCubit extends Cubit<ActivityLogsState> {
 
     if (isClosed) return;
     emit(state.copyWith(filteredEntries: filtered));
+  }
+
+  TopBarMetrics getMetrics() {
+    final all = state.allLogs;
+
+    // Total activities count
+    final totalActivities = all.length;
+
+    // Today's activity (activities that occurred today)
+    final now = DateTime.now();
+    final todayStart = DateTime(now.year, now.month, now.day);
+    final todaysActivity =
+        all.where((activity) => activity.timestamp.isAfter(todayStart)).length;
+
+    // Active users today (unique users who performed activities today)
+    final activeUsersToday =
+        all
+            .where(
+              (activity) =>
+                  activity.timestamp.isAfter(todayStart) &&
+                  activity.userId != null,
+            )
+            .map((activity) => activity.userId!)
+            .toSet()
+            .length;
+
+    // Login events today (userLogin and userLogout activities today)
+    final loginsToday =
+        all
+            .where(
+              (activity) =>
+                  activity.timestamp.isAfter(todayStart) &&
+                  (activity.type == ActivityType.userLogin ||
+                      activity.type == ActivityType.userLogout),
+            )
+            .length;
+
+    return TopBarMetrics(
+      totalActivities: totalActivities,
+      todaysActivity: todaysActivity,
+      activeUsersToday: activeUsersToday,
+      loginsToday: loginsToday,
+    );
   }
 
   // Selection Management

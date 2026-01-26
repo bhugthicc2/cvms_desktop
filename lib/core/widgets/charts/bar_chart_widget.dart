@@ -3,7 +3,6 @@ import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/theme/app_spacing.dart';
 import 'package:cvms_desktop/core/widgets/charts/chart_empty_state.dart';
 import 'package:cvms_desktop/core/widgets/layout/custom_divider.dart';
-import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/core/widgets/titles/custom_chart_title.dart';
 import 'package:cvms_desktop/features/dashboard/models/dashboard/chart_data_model.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +17,7 @@ class BarChartWidget extends StatelessWidget {
   final ScreenshotController? screenshotController;
   final int? highlightHighestIndex;
   final bool enableTooltip;
+  final double chartRadii;
 
   const BarChartWidget({
     super.key,
@@ -28,6 +28,7 @@ class BarChartWidget extends StatelessWidget {
     this.screenshotController,
     this.highlightHighestIndex,
     this.enableTooltip = false,
+    this.chartRadii = 8,
   });
 
   @override
@@ -39,7 +40,7 @@ class BarChartWidget extends StatelessWidget {
         padding: EdgeInsets.all(AppSpacing.medium),
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(chartRadii),
           boxShadow: [
             BoxShadow(
               color: AppColors.grey.withValues(alpha: 0.1),
@@ -160,7 +161,7 @@ class BarChartWidget extends StatelessWidget {
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(chartRadii),
         boxShadow: [
           BoxShadow(
             color: AppColors.grey.withValues(alpha: 0.1),

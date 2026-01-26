@@ -14,6 +14,9 @@ class DashboardOverview extends StatelessWidget {
   final VoidCallback? onExitedVehiclesClick;
   final VoidCallback? onViolationsClick;
   final VoidCallback? onAllVehiclesClick;
+  final double iconContainerRadii;
+  final double cardBorderRadii;
+  final bool addSideBorder;
   const DashboardOverview({
     super.key,
     this.angle = 0.03,
@@ -22,6 +25,9 @@ class DashboardOverview extends StatelessWidget {
     this.onExitedVehiclesClick,
     this.onViolationsClick,
     this.onAllVehiclesClick,
+    this.iconContainerRadii = 4,
+    this.cardBorderRadii = 4,
+    this.addSideBorder = false,
   });
 
   @override
@@ -32,6 +38,9 @@ class DashboardOverview extends StatelessWidget {
           children: [
             Expanded(
               child: StatsCard(
+                addSideBorder: addSideBorder,
+                cardBorderRadii: cardBorderRadii,
+                iconContainerRadii: iconContainerRadii,
                 isWhiteTheme: isWhiteTheme,
                 angle: angle,
                 color: AppColors.white,
@@ -46,6 +55,9 @@ class DashboardOverview extends StatelessWidget {
             const Spacing.horizontal(size: AppSpacing.medium),
             Expanded(
               child: StatsCard(
+                addSideBorder: addSideBorder,
+                cardBorderRadii: cardBorderRadii,
+                iconContainerRadii: iconContainerRadii,
                 isWhiteTheme: isWhiteTheme,
                 angle: angle,
                 color: AppColors.white,
@@ -60,6 +72,9 @@ class DashboardOverview extends StatelessWidget {
             const Spacing.horizontal(size: AppSpacing.medium),
             Expanded(
               child: StatsCard(
+                addSideBorder: addSideBorder,
+                cardBorderRadii: cardBorderRadii,
+                iconContainerRadii: iconContainerRadii,
                 isWhiteTheme: isWhiteTheme,
                 angle: angle,
                 color: AppColors.white,
@@ -74,6 +89,9 @@ class DashboardOverview extends StatelessWidget {
             const Spacing.horizontal(size: AppSpacing.medium),
             Expanded(
               child: StatsCard(
+                addSideBorder: addSideBorder,
+                cardBorderRadii: cardBorderRadii,
+                iconContainerRadii: iconContainerRadii,
                 isWhiteTheme: isWhiteTheme,
                 angle: angle,
                 color: AppColors.white,

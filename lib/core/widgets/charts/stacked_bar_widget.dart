@@ -18,6 +18,7 @@ class StackedBarWidget extends StatelessWidget {
   final int? highlightHighestIndex;
   final bool enableTooltip;
   final bool showViewBtn;
+  final double chartRadii;
 
   const StackedBarWidget({
     super.key,
@@ -29,6 +30,7 @@ class StackedBarWidget extends StatelessWidget {
     this.highlightHighestIndex,
     this.enableTooltip = false,
     this.showViewBtn = true,
+    this.chartRadii = 8.0,
   });
 
   @override
@@ -40,7 +42,7 @@ class StackedBarWidget extends StatelessWidget {
         padding: EdgeInsets.all(AppSpacing.medium),
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(chartRadii),
           boxShadow: [
             BoxShadow(
               color: AppColors.grey.withValues(alpha: 0.1),
@@ -148,7 +150,7 @@ class StackedBarWidget extends StatelessWidget {
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(chartRadii),
         boxShadow: [
           BoxShadow(
             color: AppColors.grey.withValues(alpha: 0.1),

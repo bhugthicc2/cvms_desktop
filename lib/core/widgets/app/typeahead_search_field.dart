@@ -21,6 +21,9 @@ class TypeaheadSearchField<T> extends StatelessWidget {
   final double searchFieldWidth;
   final double hoverScale;
   final String Function(T) getSuggestionText;
+  final double borderOpacity;
+  final bool hasShadow;
+  final double borderRadii;
 
   const TypeaheadSearchField({
     super.key,
@@ -38,6 +41,9 @@ class TypeaheadSearchField<T> extends StatelessWidget {
     this.searchFieldHeight = 0,
     this.searchFieldWidth = 0,
     this.hoverScale = 1.02,
+    this.borderOpacity = 0.0,
+    this.hasShadow = true,
+    this.borderRadii = 8,
   });
 
   @override
@@ -49,13 +55,19 @@ class TypeaheadSearchField<T> extends StatelessWidget {
         height: searchFieldHeight,
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(borderRadii),
           boxShadow: [
-            BoxShadow(
-              color: AppColors.donutBlue.withValues(alpha: 0.1),
-              blurRadius: 7,
-              offset: Offset(0, 4),
-            ),
+            hasShadow
+                ? BoxShadow(
+                  color: AppColors.donutBlue.withValues(alpha: 0.1),
+                  blurRadius: 7,
+                  offset: Offset(0, 4),
+                )
+                : BoxShadow(
+                  color: Colors.transparent,
+                  blurRadius: 0,
+                  offset: Offset(0, 0),
+                ),
           ],
         ),
         child: TypeAheadField<T>(
@@ -74,17 +86,17 @@ class TypeaheadSearchField<T> extends StatelessWidget {
                 maintainHintSize: true,
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: AppColors.grey.withValues(alpha: 0.0),
+                    color: AppColors.grey.withValues(alpha: borderOpacity),
                     width: 1,
                   ),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(borderRadii),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: AppColors.primary, width: 2),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(borderRadii),
                 ),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(borderRadii),
                 ),
                 hintText: hintText,
                 hintStyle: TextStyle(
@@ -110,7 +122,7 @@ class TypeaheadSearchField<T> extends StatelessWidget {
                 border: Border.all(
                   color: AppColors.grey.withValues(alpha: 0.3),
                 ),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(borderRadii),
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.primary.withValues(alpha: 0.1),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cvms_desktop/features/user_management/widgets/tables/top_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../models/user_model.dart';
@@ -101,6 +102,34 @@ class UserCubit extends Cubit<UserState> {
         state.copyWith(errorMessage: 'Failed to bulk update user status: $e'),
       );
     }
+  }
+
+  TopBarMetrics getMetrics() {
+    final all = state.allEntries;
+
+    // Total users count
+    final totalUsers = all.length;
+
+    // Active users (status 'active')
+    final activeUsers =
+        all.where((user) => user.status.toLowerCase() == 'active').length;
+
+    // Inactive users (status 'inactive' or other non-active statuses)
+    final inActiveUsers =
+        all.where((user) => user.status.toLowerCase() != 'active').length;
+
+    // Users logged in recently (within last 7 days)
+    final now = DateTime.now();
+    final sevenDaysAgo = now.subtract(const Duration(days: 7));
+    final usersLoggedInRecently =
+        all.where((user) => user.lastLogin.isAfter(sevenDaysAgo)).length;
+
+    return TopBarMetrics(
+      totalUsers: totalUsers,
+      activeUsers: activeUsers,
+      inActiveUsers: inActiveUsers,
+      usersLoggedInRecently: usersLoggedInRecently,
+    );
   }
 
   void toggleBulkMode() {

@@ -102,12 +102,7 @@ class _VehicleManagementPageState extends State<VehicleManagementPage> {
         ),
       );
     }
-
-    // Animated view switching
-    return custom.AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
-      child: _buildView(context, state),
-    );
+    return _buildView(context, state);
   }
 
   Widget _buildView(BuildContext context, VehicleState state) {

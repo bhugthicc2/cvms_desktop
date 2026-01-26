@@ -1,5 +1,6 @@
 import 'package:cvms_desktop/core/widgets/app/custom_view_title.dart';
 import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
+import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
 import 'package:cvms_desktop/features/violation_management/widgets/tables/violation_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -68,6 +69,10 @@ class _ViolationViewState extends State<ViolationView> {
                   }
 
                   return ViolationTable(
+                    onDelete: () {},
+                    onEdit: (ViolationEntry entry) {},
+                    onUpdate: (ViolationEntry entry) {},
+                    onViewMore: (ViolationEntry entry) {},
                     title: 'Violations',
                     searchController: _searchController,
                     entries: state.allEntries,

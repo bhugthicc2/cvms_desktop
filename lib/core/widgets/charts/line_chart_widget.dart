@@ -18,6 +18,7 @@ class LineChartWidget extends StatelessWidget {
   final VoidCallback onViewTap;
   final Widget? customWidget;
   final ScreenshotController? screenshotController;
+  final double chartRadii;
 
   const LineChartWidget({
     super.key,
@@ -27,6 +28,7 @@ class LineChartWidget extends StatelessWidget {
     required this.onViewTap,
     this.customWidget,
     this.screenshotController,
+    this.chartRadii = 8.0,
   });
 
   @override
@@ -40,7 +42,7 @@ class LineChartWidget extends StatelessWidget {
         padding: EdgeInsets.all(AppSpacing.medium),
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(chartRadii),
           boxShadow: [
             BoxShadow(
               color: AppColors.grey.withValues(alpha: 0.1),
@@ -214,7 +216,7 @@ class LineChartWidget extends StatelessWidget {
 
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(chartRadii),
         boxShadow: [
           BoxShadow(
             color: AppColors.grey.withValues(alpha: 0.1),

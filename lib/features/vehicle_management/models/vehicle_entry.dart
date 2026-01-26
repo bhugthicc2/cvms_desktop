@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/features/vehicle_management/config/vehicle_form_config.dart';
+import 'package:cvms_desktop/features/vehicle_management/models/registration_status.dart';
 
 class VehicleEntry {
   final String vehicleId;
@@ -23,7 +24,11 @@ class VehicleEntry {
   final String licenseNumber;
   final String orNumber;
   final String crNumber;
+  //status for vehicle presence
   final String? status;
+  //status for registration
+  final RegistrationStatus registrationStatus;
+
   final Timestamp? createdAt;
 
   VehicleEntry({
@@ -50,6 +55,7 @@ class VehicleEntry {
     required this.crNumber,
     this.status,
     this.createdAt,
+    this.registrationStatus = RegistrationStatus.active, //  DEFAULT
   });
 
   factory VehicleEntry.fromMap(Map<String, dynamic> map, String id) {
@@ -77,6 +83,9 @@ class VehicleEntry {
       crNumber: map['crNumber'] ?? '',
       status: map['status'] ?? '',
       createdAt: map['createdAt'],
+      registrationStatus: RegistrationStatusX.fromString(
+        map['registrationStatus'],
+      ),
     );
   }
 
@@ -104,6 +113,7 @@ class VehicleEntry {
       'crNumber': crNumber,
       'status': status,
       'createdAt': FieldValue.serverTimestamp(),
+      'registrationStatus': registrationStatus.value,
     };
   }
 

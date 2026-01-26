@@ -7,6 +7,7 @@ import 'package:cvms_desktop/features/auth/data/user_repository.dart';
 import 'package:cvms_desktop/features/vehicle_management/data/vehicle_violation_repository.dart';
 import 'package:cvms_desktop/features/vehicle_management/models/vehicle_entry.dart';
 import 'package:cvms_desktop/features/vehicle_management/utils/vehicle_card_renderer.dart';
+import 'package:cvms_desktop/features/violation_management/models/violation_enums.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
 import 'package:cvms_desktop/features/vehicle_logs_management/data/vehicle_logs_repository.dart';
 import 'package:flutter/material.dart';
@@ -297,7 +298,8 @@ class VehicleCubit extends Cubit<VehicleState> {
         reportedByUserId: currentUser.uid,
         violationType:
             reason != null ? '$violationType: $reason' : violationType,
-        status: 'pending',
+        status: ViolationStatus.pending,
+        sanctionApplied: false,
         reportedAt: Timestamp.now(),
       );
 
@@ -340,7 +342,8 @@ class VehicleCubit extends Cubit<VehicleState> {
               reportedByUserId: currentUser.uid,
               violationType:
                   reason != null ? '$violationType: $reason' : violationType,
-              status: 'pending',
+              status: ViolationStatus.pending,
+              sanctionApplied: false,
               reportedAt: Timestamp.now(),
             );
           }).toList();

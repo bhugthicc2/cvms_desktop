@@ -1,6 +1,7 @@
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_snackbar.dart';
 import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
+import 'package:cvms_desktop/features/vehicle_management/models/registration_status.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/tables/table_header.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/actions/toggle_actions.dart';
 import 'package:cvms_desktop/features/vehicle_management/widgets/dialogs/custom_delete_dialog.dart';
@@ -71,7 +72,10 @@ class VehicleTable extends StatelessWidget {
                     state.allEntries.where((v) => v.status == 'onsite').length,
                 registeredVehicles:
                     state.allEntries
-                        .where((v) => v.status == 'registered')
+                        .where(
+                          (v) =>
+                              v.registrationStatus == RegistrationStatus.active,
+                        )
                         .length, //todo registered status means registered vehicles
                 twoWheeled:
                     state.allEntries
@@ -202,18 +206,15 @@ class VehicleTable extends StatelessWidget {
                 builder: (context) {
                   // Show status column if at least one vehicle in the system has logs
                   // Individual cells will show empty for vehicles without logs
-                  final showStatus = state.vehiclesWithLogs.isNotEmpty;
 
                   return CustomTable(
                     dataSource: VehicleDataSource(
                       vehicleEntries: entries,
                       showCheckbox: state.isBulkModeEnabled,
-                      showStatus: showStatus,
                       context: context,
                     ),
                     columns: VehicleTableColumns.getColumns(
                       showCheckbox: state.isBulkModeEnabled,
-                      showStatus: showStatus,
                     ),
                     onSearchCleared: () {
                       searchController.clear();

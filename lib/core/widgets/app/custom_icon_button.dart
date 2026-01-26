@@ -31,7 +31,7 @@ class CustomIconButton extends StatelessWidget {
       child: IconButton(
         tooltip: tooltip,
         splashColor: splashColor ?? iconColor.withValues(alpha: 0.2),
-        splashRadius: 10,
+        splashRadius: 1,
         style: IconButton.styleFrom(
           hoverColor: hoverColor,
           shape: RoundedRectangleBorder(

@@ -1,7 +1,10 @@
 //ACTIVITY LOG 11
 
 import 'package:cvms_desktop/core/theme/app_colors.dart';
+import 'package:cvms_desktop/core/theme/app_spacing.dart';
+import 'package:cvms_desktop/core/widgets/layout/spacing.dart';
 import 'package:cvms_desktop/features/activity_logs/widgets/skeletons/table_skeleton.dart';
+import 'package:cvms_desktop/features/activity_logs/widgets/tables/top_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/activity_logs_cubit.dart';
@@ -80,9 +83,10 @@ class _ActivityLogsPageState extends State<ActivityLogsPage> {
               );
             }
 
-            return Row(
+            return Column(
               children: [
-                // Activity Logs Table
+                TopBar(metrics: context.read<ActivityLogsCubit>().getMetrics()),
+                Spacing.vertical(size: AppSpacing.medium),
                 Expanded(
                   child: ActivityLogsTable(
                     title: "Activity Logs",
