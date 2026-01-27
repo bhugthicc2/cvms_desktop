@@ -69,7 +69,7 @@ class _ViolationViewState extends State<ViolationView> {
                   }
 
                   return ViolationTable(
-                    onDelete: () {},
+                    onReject: () {},
                     onEdit: (ViolationEntry entry) {},
                     onUpdate: (ViolationEntry entry) {},
                     onViewMore: (ViolationEntry entry) {},

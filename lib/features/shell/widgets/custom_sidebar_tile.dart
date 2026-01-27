@@ -13,6 +13,7 @@ class CustomSidebarTile extends StatelessWidget {
   final Color labelColor;
   final bool isLogoutTile;
   final bool isStencil;
+  final double dx;
 
   const CustomSidebarTile({
     super.key,
@@ -25,6 +26,7 @@ class CustomSidebarTile extends StatelessWidget {
     required this.labelColor,
     this.isStencil = true,
     this.isLogoutTile = false,
+    this.dx = 0.03,
   });
 
   @override
@@ -61,6 +63,7 @@ class CustomSidebarTile extends StatelessWidget {
               ),
               Expanded(
                 child: HoverSlide(
+                  dx: dx,
                   cursor: SystemMouseCursors.click,
                   child: Padding(
                     padding: EdgeInsets.symmetric(

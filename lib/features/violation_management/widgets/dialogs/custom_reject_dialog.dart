@@ -3,10 +3,10 @@ import 'package:cvms_desktop/core/widgets/app/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class CustomDeleteDialog extends StatelessWidget {
+class CustomRejectDialog extends StatelessWidget {
   final String title;
   final String plateNumber;
-  const CustomDeleteDialog({
+  const CustomRejectDialog({
     super.key,
     required this.title,
     required this.plateNumber,

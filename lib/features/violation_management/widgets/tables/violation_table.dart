@@ -10,7 +10,7 @@ class ViolationTable extends StatelessWidget {
   final String title;
   final List<ViolationEntry> entries;
   final TextEditingController searchController;
-  final VoidCallback onDelete;
+  final VoidCallback onReject;
   final Function(ViolationEntry) onEdit;
   final Function(ViolationEntry) onUpdate;
   final Function(ViolationEntry) onViewMore;
@@ -20,7 +20,7 @@ class ViolationTable extends StatelessWidget {
     required this.title,
     required this.entries,
     required this.searchController,
-    required this.onDelete,
+    required this.onReject,
     required this.onEdit,
     required this.onUpdate,
     required this.onViewMore,
@@ -33,7 +33,7 @@ class ViolationTable extends StatelessWidget {
         return Expanded(
           child: CustomTable(
             dataSource: ViolationDataSource(
-              onDelete: onDelete,
+              onReject: onReject,
               onEdit: onEdit,
               onUpdate: onUpdate,
               onViewMore: onViewMore,

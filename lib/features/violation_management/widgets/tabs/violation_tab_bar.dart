@@ -27,8 +27,8 @@ class _ViolationTabBarState extends State<ViolationTabBar>
           ViolationTab.all,
           ViolationTab.pending,
           ViolationTab.confirmed,
-          ViolationTab.suspended,
-          ViolationTab.revoked,
+          ViolationTab.dismissed,
+          ViolationTab.sanctioned,
         ];
         context.read<ViolationCubit>().changeTab(tabs[_tabController.index]);
       }
@@ -49,8 +49,8 @@ class _ViolationTabBarState extends State<ViolationTabBar>
         ViolationTab.all,
         ViolationTab.pending,
         ViolationTab.confirmed,
-        ViolationTab.suspended,
-        ViolationTab.revoked,
+        ViolationTab.dismissed,
+        ViolationTab.sanctioned,
       ].indexOf(state.activeTab);
 
       if (tabIndex != _tabController.index && !_tabController.indexIsChanging) {
@@ -89,8 +89,8 @@ class _ViolationTabBarState extends State<ViolationTabBar>
         Tab(text: ' All ', height: 30),
         Tab(text: 'Pending', height: 30),
         Tab(text: 'Confirmed', height: 30),
-        Tab(text: 'Suspended', height: 30),
-        Tab(text: 'Revoked MVP', height: 30),
+        Tab(text: 'Dismissed', height: 30),
+        Tab(text: 'Sanctioned', height: 30),
       ],
     );
   }

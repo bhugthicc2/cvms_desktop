@@ -12,8 +12,11 @@ class ViolationActions extends StatelessWidget {
   final ViolationEntry violationEntry;
   final VoidCallback onEdit;
   final VoidCallback onUpdate;
-  final VoidCallback onDelete;
+  final VoidCallback onReject;
   final VoidCallback onViewMore;
+  final double dx;
+  final Color hoverColor;
+  final double radii;
 
   const ViolationActions({
     super.key,
@@ -24,8 +27,11 @@ class ViolationActions extends StatelessWidget {
     required this.violationEntry,
     required this.onEdit,
     required this.onUpdate,
-    required this.onDelete,
+    required this.onReject,
     required this.onViewMore,
+    this.dx = 0,
+    this.hoverColor = AppColors.primary,
+    this.radii = 0,
   });
 
   @override
@@ -36,6 +42,9 @@ class ViolationActions extends StatelessWidget {
       children: [
         Expanded(
           child: CustomIconButton(
+            dx: dx,
+            hoverColor: hoverColor.withValues(alpha: 0.1),
+            raddi: radii,
             onPressed: onEdit,
             icon: PhosphorIconsRegular.notePencil,
             iconColor: AppColors.primary,
@@ -44,6 +53,9 @@ class ViolationActions extends StatelessWidget {
 
         Expanded(
           child: CustomIconButton(
+            dx: dx,
+            hoverColor: hoverColor.withValues(alpha: 0.1),
+            raddi: radii,
             onPressed: onUpdate,
             iconSize: 17,
             icon: PhosphorIconsFill.checkCircle,
@@ -52,14 +64,21 @@ class ViolationActions extends StatelessWidget {
         ),
         Expanded(
           child: CustomIconButton(
-            onPressed: onDelete,
-            icon: PhosphorIconsRegular.trash,
-            iconColor: AppColors.error,
+            dx: dx,
+
+            hoverColor: hoverColor.withValues(alpha: 0.1),
+            raddi: radii,
+            onPressed: onReject, //dismissed
+            icon: PhosphorIconsFill.xCircle,
+            iconColor: AppColors.error.withValues(alpha: 0.5),
           ),
         ),
 
         Expanded(
           child: CustomIconButton(
+            dx: dx,
+            hoverColor: hoverColor.withValues(alpha: 0.1),
+            raddi: radii,
             onPressed: onViewMore,
             icon: PhosphorIconsBold.dotsThreeVertical,
             iconColor: AppColors.error,

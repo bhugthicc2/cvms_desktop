@@ -1,4 +1,5 @@
 import 'package:cvms_desktop/core/widgets/app/custom_dialog.dart';
+import 'package:cvms_desktop/core/widgets/app/custom_dropdown_field.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_enums.dart';
 import 'package:flutter/material.dart';
 
@@ -63,15 +64,14 @@ class _CustomUpdateStatusDialogState extends State<CustomUpdateStatusDialog> {
         children: [
           const Text('Select new status'),
           const SizedBox(height: 12),
-          DropdownButtonFormField<ViolationStatus>(
+          CustomDropdownField<ViolationStatus>(
             value: _selected,
+            hintText: 'Select status',
             isExpanded: true,
+            enabled: !_isSubmitting,
             items:
                 ViolationStatus.values.map((status) {
-                  return DropdownMenuItem(
-                    value: status,
-                    child: Text(status.label),
-                  );
+                  return DropdownItem(value: status, label: status.label);
                 }).toList(),
             onChanged:
                 _isSubmitting

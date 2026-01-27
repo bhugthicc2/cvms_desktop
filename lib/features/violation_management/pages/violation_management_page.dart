@@ -220,7 +220,7 @@ class _ViolationManagementPageState extends State<ViolationManagementPage> {
                     title: "Violation Management",
                     entries: state.filteredEntries,
                     searchController: violationController,
-                    onDelete: () {
+                    onReject: () {
                       //todo show delete confirmation dialog
                     },
                     onEdit: (ViolationEntry entry) {
@@ -229,6 +229,7 @@ class _ViolationManagementPageState extends State<ViolationManagementPage> {
                     onUpdate: (ViolationEntry entry) {
                       try {
                         showDialog(
+                          //todo close the dialog after a successful report
                           context: context,
                           barrierDismissible: false,
                           builder: (dialogContext) {

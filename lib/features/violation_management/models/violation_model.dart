@@ -59,9 +59,7 @@ class ViolationEntry {
       case 'dismissed':
         return ViolationStatus.dismissed;
       case 'suspended':
-        return ViolationStatus.suspended;
-      case 'revoked':
-        return ViolationStatus.revoked;
+        return ViolationStatus.sanctioned;
       default:
         // Try to match by enum name as fallback
         try {
@@ -112,8 +110,8 @@ class ViolationEntry {
 
   bool get isPending => status == ViolationStatus.pending;
   bool get isConfirmed => status == ViolationStatus.confirmed;
-  bool get isSuspended => status == ViolationStatus.suspended;
-  bool get isRevoked => status == ViolationStatus.revoked;
+  bool get isDismissed => status == ViolationStatus.dismissed;
+  bool get isSanctioned => status == ViolationStatus.sanctioned;
 
   ViolationEntry copyWith({
     ViolationStatus? status,

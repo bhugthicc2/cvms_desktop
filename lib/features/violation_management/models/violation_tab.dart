@@ -1,1 +1,1 @@
-enum ViolationTab { all, pending, confirmed, suspended, revoked }
+enum ViolationTab { all, pending, confirmed, dismissed, sanctioned }

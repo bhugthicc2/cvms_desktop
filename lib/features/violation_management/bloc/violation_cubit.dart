@@ -136,12 +136,12 @@ class ViolationCubit extends Cubit<ViolationState> {
         filtered = filtered.where((v) => v.isConfirmed).toList();
         break;
 
-      case ViolationTab.suspended:
-        filtered = filtered.where((v) => v.isSuspended).toList();
+      case ViolationTab.dismissed:
+        filtered = filtered.where((v) => v.isDismissed).toList();
         break;
 
-      case ViolationTab.revoked:
-        filtered = filtered.where((v) => v.isRevoked).toList();
+      case ViolationTab.sanctioned:
+        filtered = filtered.where((v) => v.isSanctioned).toList();
         break;
 
       case ViolationTab.all:
@@ -240,8 +240,8 @@ class ViolationCubit extends Cubit<ViolationState> {
     return TopBarMetrics(
       pendingViolations: all.where((v) => v.isPending).length,
       confirmedViolations: all.where((v) => v.isConfirmed).length,
-      suspendedVehicles: all.where((v) => v.isSuspended).length,
-      revokedMVPS: all.where((v) => v.isRevoked).length,
+      dismissedViolations: all.where((v) => v.isDismissed).length,
+      sanctionedVehicles: all.where((v) => v.isSanctioned).length,
     );
   }
 

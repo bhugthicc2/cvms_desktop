@@ -7,14 +7,14 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 class TopBarMetrics {
   final int pendingViolations;
   final int confirmedViolations;
-  final int suspendedVehicles;
-  final int revokedMVPS;
+  final int dismissedViolations;
+  final int sanctionedVehicles;
 
   const TopBarMetrics({
     required this.pendingViolations,
     required this.confirmedViolations,
-    required this.suspendedVehicles,
-    required this.revokedMVPS,
+    required this.dismissedViolations,
+    required this.sanctionedVehicles,
   });
 }
 
@@ -57,8 +57,8 @@ class TopBar extends StatelessWidget {
             gradient: AppColors.yellowWhite,
             icon: PhosphorIconsBold.mapPin,
             iconColor: AppColors.chartOrange,
-            label: 'Suspended Vehicles',
-            value: metrics.suspendedVehicles,
+            label: 'Dismissed Violations',
+            value: metrics.dismissedViolations,
             valueColor: AppColors.primary,
           ),
 
@@ -68,8 +68,8 @@ class TopBar extends StatelessWidget {
           _buildMetricItem(
             gradient: AppColors.lightBlue,
             icon: PhosphorIconsBold.motorcycle,
-            label: 'Revoked MVPs',
-            value: metrics.revokedMVPS,
+            label: 'Sanctioned Vehicles',
+            value: metrics.sanctionedVehicles,
             valueColor: AppColors.primary,
           ),
         ],

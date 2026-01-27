@@ -18,7 +18,7 @@ class ViolationDataSource extends DataGridSource {
   final bool _showActions;
   // ignore: unused_field
   final BuildContext? _context;
-  final VoidCallback? onDelete;
+  final VoidCallback? onReject;
   final Function(ViolationEntry)? onEdit;
   final Function(ViolationEntry)? onUpdate;
   final Function(ViolationEntry)? onViewMore;
@@ -28,7 +28,7 @@ class ViolationDataSource extends DataGridSource {
     bool showCheckbox = false,
     bool showActions = true,
     BuildContext? context,
-    this.onDelete,
+    this.onReject,
     this.onEdit,
     this.onUpdate,
     this.onViewMore,
@@ -123,7 +123,7 @@ class ViolationDataSource extends DataGridSource {
                 plateNumber: entry.plateNumber,
                 isResolved: entry.status == ViolationStatus.confirmed,
                 violationEntry: entry,
-                onDelete: () => onDelete?.call(),
+                onReject: () => onReject?.call(),
                 onEdit: () => onEdit?.call(entry),
                 onUpdate: () => onUpdate?.call(entry),
                 onViewMore: () => onViewMore?.call(entry),

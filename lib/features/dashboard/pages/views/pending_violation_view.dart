@@ -74,7 +74,7 @@ class _PendingViolationViewState extends State<PendingViolationView> {
                     title: 'Pending Violations',
                     searchController: _searchController,
                     entries: state.allEntries,
-                    onDelete: () {},
+                    onReject: () {},
                     onEdit: (ViolationEntry entry) {},
                     onUpdate: (ViolationEntry entry) {},
                     onViewMore: (ViolationEntry entry) {},
