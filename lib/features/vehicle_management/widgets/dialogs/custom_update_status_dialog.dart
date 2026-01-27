@@ -27,7 +27,11 @@ class _CustomUpdateStatusDialogState extends State<CustomUpdateStatusDialog> {
   @override
   void initState() {
     super.initState();
-    _selectedStatus = widget.currentStatus;
+    // Only set selected status if current status is not null and matches available options
+    if (widget.currentStatus != null &&
+        ['active', 'onsite', 'offsite'].contains(widget.currentStatus)) {
+      _selectedStatus = widget.currentStatus;
+    }
   }
 
   @override
@@ -45,7 +49,8 @@ class _CustomUpdateStatusDialogState extends State<CustomUpdateStatusDialog> {
               : 'Update Vehicle Status',
       btnTxt: 'Update',
       onSubmit:
-          (isBulkOperation ? _selectedStatus != null : hasChanged)
+          (isBulkOperation ? _selectedStatus != null : hasChanged) &&
+                  _selectedStatus != null
               ? () {
                 widget.onSave(_selectedStatus!);
                 Navigator.of(context).pop();

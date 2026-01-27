@@ -1,10 +1,13 @@
 import 'dart:async';
-import 'package:cvms_desktop/features/sanction_management/bloc/sanction_state.dart';
+
 import 'package:cvms_desktop/features/sanction_management/models/saction_model.dart';
-import 'package:cvms_desktop/features/sanction_management/models/sanction_tab.dart';
-import 'package:cvms_desktop/features/sanction_management/repository/sanction_repository.dart';
-import 'package:cvms_desktop/features/sanction_management/widgets/tables/top_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../models/sanction_enums.dart';
+import '../models/sanction_tab.dart';
+import '../repository/sanction_repository.dart';
+import '../widgets/tables/top_bar.dart';
+import 'sanction_state.dart';
 
 class SanctionCubit extends Cubit<SanctionState> {
   final SanctionRepository repository;
@@ -12,12 +15,31 @@ class SanctionCubit extends Cubit<SanctionState> {
 
   SanctionCubit(this.repository) : super(SanctionState.initial());
 
+  /// 🔌 Start listening to sanctions
   void startListening() {
     emit(state.copyWith(isLoading: true));
 
     _subscription = repository.watchSanctions().listen(
-      (sanctions) {
-        emit(state.copyWith(isLoading: false, sanctions: sanctions));
+      (sanctions) async {
+        //  Evaluate active sanctions (client-side expiry)
+        for (final sanction in sanctions) {
+          if (sanction.status == SanctionStatus.active &&
+              sanction.type == SanctionType.suspension) {
+            await repository.evaluateSanctionIfNeeded(sanction);
+          }
+        }
+
+        emit(
+          state.copyWith(
+            isLoading: false,
+            sanctions: sanctions,
+            filteredEntries: _applyFilters(
+              sanctions: sanctions,
+              tab: state.activeTab,
+              searchQuery: state.searchQuery,
+            ),
+          ),
+        );
       },
       onError: (_) {
         emit(
@@ -30,59 +52,93 @@ class SanctionCubit extends Cubit<SanctionState> {
     );
   }
 
+  ///  Change active tab
   void changeTab(SanctionTab tab) {
     emit(
       state.copyWith(
         activeTab: tab,
         selectedEntries: [],
         isBulkModeEnabled: false,
+        filteredEntries: _applyFilters(
+          sanctions: state.sanctions,
+          tab: tab,
+          searchQuery: state.searchQuery,
+        ),
       ),
     );
-
-    emit(state.copyWith(filteredEntries: _applyFilters()));
   }
 
+  ///  Metrics for top bar
   TopBarMetrics getMetrics() {
-    //todo
-    final all = state.allEntries;
+    final all = state.sanctions;
 
     return TopBarMetrics(
-      //todo
-      activeSanctions: 0,
-      activeSuspensions: 0,
-      revokedMVPS: 0,
-      expiringSoon: 0,
+      activeSanctions:
+          all.where((s) => s.status == SanctionStatus.active).length,
+
+      activeSuspensions:
+          all
+              .where(
+                (s) =>
+                    s.status == SanctionStatus.active &&
+                    s.type == SanctionType.suspension,
+              )
+              .length,
+
+      revokedMVPS: all.where((s) => s.type == SanctionType.revocation).length,
+
+      expiringSoon:
+          all
+              .where(
+                (s) =>
+                    s.status == SanctionStatus.active &&
+                    s.endAt != null &&
+                    s.endAt!.isBefore(
+                      DateTime.now().add(const Duration(days: 3)),
+                    ),
+              )
+              .length,
     );
   }
 
+  /// Search filter
   void updateSearch(String query) {
-    emit(state.copyWith(searchQuery: query));
-    emit(state.copyWith(filteredEntries: _applyFilters()));
+    emit(
+      state.copyWith(
+        searchQuery: query,
+        filteredEntries: _applyFilters(
+          sanctions: state.sanctions,
+          tab: state.activeTab,
+          searchQuery: query,
+        ),
+      ),
+    );
   }
 
+  /// ☑ Select row
   void selectEntry(Sanction entry) {
-    final currentSelected = List<Sanction>.from(state.selectedEntries);
-    if (currentSelected.contains(entry)) {
-      currentSelected.remove(entry);
-    } else {
-      currentSelected.add(entry);
-    }
-    emit(state.copyWith(selectedEntries: currentSelected));
+    final selected = List<Sanction>.from(state.selectedEntries);
+
+    selected.contains(entry) ? selected.remove(entry) : selected.add(entry);
+
+    emit(state.copyWith(selectedEntries: selected));
   }
 
+  /// ☑ Select all rows
   void selectAllEntries() {
     final allFiltered = state.filteredEntries;
     final allSelected =
         allFiltered.isNotEmpty &&
-        allFiltered.every((entry) => state.selectedEntries.contains(entry));
+        allFiltered.every(state.selectedEntries.contains);
 
-    if (allSelected) {
-      emit(state.copyWith(selectedEntries: []));
-    } else {
-      emit(state.copyWith(selectedEntries: List<Sanction>.from(allFiltered)));
-    }
+    emit(
+      state.copyWith(
+        selectedEntries: allSelected ? [] : List<Sanction>.from(allFiltered),
+      ),
+    );
   }
 
+  ///  Toggle bulk mode
   void toggleBulkMode() {
     emit(
       state.copyWith(
@@ -92,35 +148,42 @@ class SanctionCubit extends Cubit<SanctionState> {
     );
   }
 
-  List<Sanction> _applyFilters() {
-    var filtered = List<Sanction>.from(state.sanctions);
+  /// Core filtering logic
+  List<Sanction> _applyFilters({
+    required List<Sanction> sanctions,
+    required SanctionTab tab,
+    required String searchQuery,
+  }) {
+    var filtered = List<Sanction>.from(sanctions);
 
-    // TAB FILTER
-    switch (state.activeTab) {
+    switch (tab) {
       case SanctionTab.all:
         break;
       case SanctionTab.active:
-        filtered = filtered.where((s) => s.status.name == 'active').toList();
+        filtered =
+            filtered.where((s) => s.status == SanctionStatus.active).toList();
         break;
       case SanctionTab.suspended:
-        filtered = filtered.where((s) => s.type.name == 'suspension').toList();
+        filtered =
+            filtered.where((s) => s.type == SanctionType.suspension).toList();
         break;
       case SanctionTab.revoked:
-        filtered = filtered.where((s) => s.type.name == 'revocation').toList();
+        filtered =
+            filtered.where((s) => s.type == SanctionType.revocation).toList();
         break;
       case SanctionTab.expired:
-        filtered = filtered.where((s) => s.status.name == 'expired').toList();
+        filtered =
+            filtered.where((s) => s.status == SanctionStatus.expired).toList();
         break;
     }
 
-    // SEARCH FILTER
-    if (state.searchQuery.isNotEmpty) {
-      final q = state.searchQuery.toLowerCase();
+    if (searchQuery.isNotEmpty) {
+      final q = searchQuery.toLowerCase();
       filtered =
           filtered.where((s) {
             return s.vehicleId.toLowerCase().contains(q) ||
                 s.offenseNumber.toString().contains(q) ||
-                s.type.toString().toLowerCase().contains(q);
+                s.type.name.contains(q);
           }).toList();
     }
 

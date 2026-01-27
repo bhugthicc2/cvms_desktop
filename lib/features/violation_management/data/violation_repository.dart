@@ -2,6 +2,7 @@
 
 // VEHICLE ID REFERENCE UPDATE MARKER
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cvms_desktop/features/sanction_management/services/sanction_service.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_enums.dart';
 import 'package:flutter/foundation.dart';
 import '../models/violation_model.dart';
@@ -52,6 +53,7 @@ class ViolationRepository {
   Future<void> updateViolationStatus({
     required List<String> violationIds,
     required ViolationStatus status,
+    required String confirmedByUserId,
   }) async {
     try {
       final batch = FirebaseFirestore.instance.batch();
@@ -61,7 +63,7 @@ class ViolationRepository {
 
         final updateData = {
           'status': status.value,
-          'resolvedAt':
+          'confirmedAt':
               status == ViolationStatus.pending
                   ? null
                   : FieldValue.serverTimestamp(),
@@ -71,6 +73,27 @@ class ViolationRepository {
       }
 
       await batch.commit();
+
+      if (status == ViolationStatus.confirmed) {
+        final sanctionService = SanctionService();
+
+        for (final violationId in violationIds) {
+          final snap =
+              await FirebaseFirestore.instance
+                  .collection('violations')
+                  .doc(violationId)
+                  .get();
+
+          if (!snap.exists) continue;
+
+          final data = snap.data()!;
+          await sanctionService.handleConfirmedViolation(
+            violationId: violationId,
+            vehicleId: data['vehicleId'],
+            confirmedByUserId: confirmedByUserId,
+          );
+        }
+      }
     } catch (e) {
       debugPrint('Error updating violation status: $e');
       rethrow;

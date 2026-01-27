@@ -11,8 +11,8 @@ class IndividualInfoSection extends StatelessWidget {
   final String department;
   final String status;
   final String vehicleModel;
-  final DateTime createdAt;
-  final DateTime expiryDate;
+  final DateTime registrationValidFrom;
+  final DateTime registrationValidUntil;
   // MVP Progress fields
   final double mvpProgress;
   final DateTime mvpRegisteredDate;
@@ -30,8 +30,8 @@ class IndividualInfoSection extends StatelessWidget {
     required this.department,
     required this.status,
     required this.vehicleModel,
-    required this.createdAt,
-    required this.expiryDate,
+    required this.registrationValidFrom,
+    required this.registrationValidUntil,
     required this.mvpProgress,
     required this.mvpRegisteredDate,
     required this.mvpExpiryDate,
@@ -57,8 +57,8 @@ class IndividualInfoSection extends StatelessWidget {
         department: department,
         status: status,
         vehicleModel: vehicleModel,
-        createdAt: createdAt,
-        expiryDate: expiryDate,
+        registrationValidFrom: registrationValidFrom,
+        registrationValidUntil: registrationValidUntil,
         mvpProgress: mvpProgress,
         mvpRegisteredDate: mvpRegisteredDate,
         mvpExpiryDate: mvpExpiryDate,

@@ -1,5 +1,4 @@
 import 'package:cvms_desktop/core/bloc/theme_cubit.dart';
-import 'package:cvms_desktop/core/bloc/theme_state.dart';
 import 'package:cvms_desktop/core/routes/app_routes.dart';
 import 'package:cvms_desktop/core/services/connectivity/connectivity_service.dart';
 import 'package:cvms_desktop/core/theme/app_colors.dart';
@@ -57,52 +56,53 @@ class _CVMSAppState extends State<CVMSApp> with WidgetsBindingObserver {
             home: BlocListener<ConnectivityCubit, InternetStatus>(
               listener: (context, status) async {
                 if (status == InternetStatus.disconnected) {
-                  await showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder:
-                        (context) => AlertDialog(
-                          backgroundColor: AppColors.white,
-                          title: const Text('No Internet Connection'),
-                          content: const Text('Please check your connection.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              style: TextButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                textStyle: const TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.grey,
-                                ),
-                              ),
-                              child: const Text('OK'),
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.donutBlue,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                textStyle: const TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                context.read<ConnectivityCubit>().refresh();
-                              },
-                              child: const Text('Retry'),
-                            ),
-                          ],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                  );
+                  // await showDialog(
+                  //   context: context,
+                  //   barrierDismissible: false,
+                  //   builder:
+                  //       (context) => AlertDialog(
+                  //         backgroundColor: AppColors.white,
+                  //         title: const Text('No Internet Connection'),
+                  //         content: const Text('Please check your connection.'),
+                  //         actions: [
+                  //           TextButton(
+                  //             onPressed: () => Navigator.of(context).pop(),
+                  //             style: TextButton.styleFrom(
+                  //               shape: RoundedRectangleBorder(
+                  //                 borderRadius: BorderRadius.circular(5),
+                  //               ),
+                  //               textStyle: const TextStyle(
+                  //                 fontFamily: 'Inter',
+                  //                 fontWeight: FontWeight.w500,
+                  //                 color: AppColors.grey,
+                  //               ),
+                  //             ),
+                  //             child: const Text('OK'),
+                  //           ),
+                  //           ElevatedButton(
+                  //             style: ElevatedButton.styleFrom(
+                  //               backgroundColor: AppColors.donutBlue,
+                  //               shape: RoundedRectangleBorder(
+                  //                 borderRadius: BorderRadius.circular(5),
+                  //               ),
+                  //               textStyle: const TextStyle(
+                  //                 fontFamily: 'Inter',
+                  //                 fontWeight: FontWeight.w500,
+                  //               ),
+                  //             ),
+                  //             onPressed: () {
+                  //               Navigator.of(context).pop();
+                  //               context.read<ConnectivityCubit>().refresh();
+                  //             },
+                  //             child: const Text('Retry'),
+                  //           ),
+                  //         ],
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius: BorderRadius.circular(5),
+                  //         ),
+                  //       ),
+                  // );
+                  CustomSnackBar.showError(context, 'No internet connection.');
                 } else if (status == InternetStatus.connected) {
                   if (Navigator.canPop(context)) {
                     Navigator.of(context).pop();

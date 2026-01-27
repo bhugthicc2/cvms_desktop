@@ -1,27 +1,17 @@
 enum SanctionType { warning, suspension, revocation }
 
-enum SanctionStatus { active, expired }
+enum SanctionStatus { active, expired, revoked }
 
 extension SanctionTypeX on SanctionType {
-  String get label {
-    switch (this) {
-      case SanctionType.warning:
-        return 'Written Warning';
-      case SanctionType.suspension:
-        return '30-Day Suspension';
-      case SanctionType.revocation:
-        return 'MVP Revocation';
-    }
-  }
+  String get value => name;
+
+  static SanctionType fromValue(String value) =>
+      SanctionType.values.byName(value);
 }
 
 extension SanctionStatusX on SanctionStatus {
-  String get label {
-    switch (this) {
-      case SanctionStatus.active:
-        return 'Active';
-      case SanctionStatus.expired:
-        return 'Expired';
-    }
-  }
+  String get value => name;
+
+  static SanctionStatus fromValue(String value) =>
+      SanctionStatus.values.byName(value);
 }

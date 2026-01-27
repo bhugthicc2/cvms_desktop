@@ -14,6 +14,7 @@ import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_form_cubit
 import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_cubit.dart';
 import 'package:cvms_desktop/features/vehicle_management/controllers/stepper_controller.dart';
 import 'package:cvms_desktop/features/vehicle_management/controllers/add_vehicle_controller.dart';
+import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_step6.dart';
 import 'package:cvms_desktop/features/vehicle_management/services/add_vehicle_service.dart';
 import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_step1.dart';
 import 'package:cvms_desktop/features/vehicle_management/pages/add_vehicle/add_vehicle_step2.dart';
@@ -51,6 +52,8 @@ class _AddVehicleViewState extends State<AddVehicleView> {
   final GlobalKey step2Key = GlobalKey();
   final GlobalKey step3Key = GlobalKey();
   final GlobalKey step4Key = GlobalKey();
+  final GlobalKey step5Key = GlobalKey();
+  final GlobalKey step6Key = GlobalKey();
   final GlobalKey stepEnrollmentKey = GlobalKey();
 
   // Service for external operations
@@ -67,7 +70,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
   void initState() {
     super.initState();
     _stepperController = StepperController(
-      totalSteps: 6,
+      totalSteps: 7,
       onStepChanged: () => setState(() {}),
       onCompleted: widget.onNext,
     );
@@ -108,6 +111,8 @@ class _AddVehicleViewState extends State<AddVehicleView> {
     step2Key,
     step3Key,
     step4Key,
+    step5Key,
+    step6Key,
   ];
 
   /// Handle back navigation through controller
@@ -183,7 +188,11 @@ class _AddVehicleViewState extends State<AddVehicleView> {
       VehicleStepContent(key: step2Key, horizontalPadding: horizontalPadding),
       LegalStepContent(key: step3Key, horizontalPadding: horizontalPadding),
       AddressStepContent(key: step4Key, horizontalPadding: horizontalPadding),
-      ReviewStepContent(horizontalPadding: horizontalPadding),
+      RegistrationStepContent(
+        key: step5Key,
+        horizontalPadding: horizontalPadding,
+      ),
+      ReviewStepContent(key: step6Key, horizontalPadding: horizontalPadding),
     ];
   }
 
@@ -341,10 +350,17 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                 ),
                                 StepIndicator(
                                   step: 5,
+                                  title: 'Registration Information',
+                                  supportText: 'Registration Period',
+                                  currentStep: _stepperController.currentStep,
+                                  onTap: () => _handleStepNavigation(5),
+                                ),
+                                StepIndicator(
+                                  step: 6,
                                   title: 'Review & Confirm',
                                   supportText: 'entry review',
                                   currentStep: _stepperController.currentStep,
-                                  onTap: () => _handleStepNavigation(5),
+                                  onTap: () => _handleStepNavigation(6),
                                 ),
                               ],
                             );

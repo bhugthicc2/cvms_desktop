@@ -61,8 +61,8 @@ class SanctionDataSource extends DataGridSource {
         columnName: 'offenseNumber',
         value: entry.offenseNumber.toString(),
       ),
-      DataGridCell<String>(columnName: 'sanctionType', value: entry.type.label),
-      DataGridCell<String>(columnName: 'status', value: entry.status.label),
+      DataGridCell<String>(columnName: 'sanctionType', value: entry.type.value),
+      DataGridCell<String>(columnName: 'status', value: entry.status.value),
       DataGridCell<String>(
         columnName: 'startDate',
         value: DateTimeFormatter.formatFull(entry.startAt),

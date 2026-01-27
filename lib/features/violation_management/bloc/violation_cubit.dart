@@ -166,6 +166,7 @@ class ViolationCubit extends Cubit<ViolationState> {
   Future<void> updateViolationStatus({
     required String violationId,
     required ViolationStatus status,
+    required String confirmedByUserId,
   }) async {
     try {
       emit(state.copyWith(isLoading: true));
@@ -173,6 +174,7 @@ class ViolationCubit extends Cubit<ViolationState> {
       await _repository.updateViolationStatus(
         violationIds: [violationId],
         status: status,
+        confirmedByUserId: confirmedByUserId,
       );
 
       if (!isClosed) {
@@ -197,7 +199,10 @@ class ViolationCubit extends Cubit<ViolationState> {
     }
   }
 
-  Future<void> updateSelectedStatus(ViolationStatus status) async {
+  Future<void> updateSelectedStatus({
+    required ViolationStatus status,
+    required String confirmedByUserId,
+  }) async {
     if (state.selectedEntries.isEmpty) return;
 
     try {
@@ -208,6 +213,7 @@ class ViolationCubit extends Cubit<ViolationState> {
       await _repository.updateViolationStatus(
         violationIds: ids,
         status: status,
+        confirmedByUserId: confirmedByUserId,
       );
 
       if (!isClosed) {

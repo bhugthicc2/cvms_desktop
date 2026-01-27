@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/features/vehicle_management/bloc/vehicle_form_state.dart';
 import 'package:cvms_desktop/features/vehicle_management/models/vehicle_form_data.dart';
+import 'package:flutter/foundation.dart';
 
 class VehicleFormCubit extends Cubit<VehicleFormState> {
   VehicleFormCubit() : super(const VehicleFormInitial());
@@ -83,6 +85,19 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
       academicYear: academicYear,
       semester: semester,
     );
+    emit(VehicleFormUpdated(formData: updatedData));
+  }
+
+  // Step 5 - Registration Information
+  void updateStep5({
+    Timestamp? registrationValidFrom,
+    Timestamp? registrationValidUntil,
+  }) {
+    final updatedData = formData.copyWith(
+      registrationValidFrom: registrationValidFrom,
+      registrationValidUntil: registrationValidUntil,
+    );
+
     emit(VehicleFormUpdated(formData: updatedData));
   }
 

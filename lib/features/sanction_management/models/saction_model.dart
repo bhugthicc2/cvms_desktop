@@ -9,8 +9,11 @@ class Sanction {
   final SanctionStatus status;
   final int offenseNumber;
 
+  final String vehicleStatusEffect;
+
   final DateTime startAt;
   final DateTime? endAt;
+  final DateTime? lastEvaluatedAt;
 
   final String createdBy;
   final DateTime createdAt;
@@ -22,8 +25,10 @@ class Sanction {
     required this.type,
     required this.status,
     required this.offenseNumber,
+    required this.vehicleStatusEffect,
     required this.startAt,
     this.endAt,
+    this.lastEvaluatedAt,
     required this.createdBy,
     required this.createdAt,
   });

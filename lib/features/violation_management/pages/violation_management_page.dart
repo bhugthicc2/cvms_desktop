@@ -236,11 +236,16 @@ class _ViolationManagementPageState extends State<ViolationManagementPage> {
                                 }
 
                                 // Update violation status to dismissed
+                                final authRepository = AuthRepository();
+                                final currentUserId =
+                                    authRepository.uid ?? 'unknown';
+
                                 await context
                                     .read<ViolationCubit>()
                                     .updateViolationStatus(
                                       violationId: entry.id,
                                       status: ViolationStatus.dismissed,
+                                      confirmedByUserId: currentUserId,
                                     );
                               } catch (e) {
                                 // Close dialog if still open
@@ -285,11 +290,16 @@ class _ViolationManagementPageState extends State<ViolationManagementPage> {
                                   }
 
                                   // Update violation status to confirmed
+                                  final authRepository = AuthRepository();
+                                  final currentUserId =
+                                      authRepository.uid ?? 'unknown';
+
                                   await context
                                       .read<ViolationCubit>()
                                       .updateViolationStatus(
                                         violationId: entry.id,
                                         status: ViolationStatus.confirmed,
+                                        confirmedByUserId: currentUserId,
                                       );
                                 } catch (e) {
                                   // Close dialog if still open

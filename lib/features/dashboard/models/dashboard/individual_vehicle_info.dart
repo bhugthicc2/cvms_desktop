@@ -10,13 +10,13 @@ class IndividualVehicleInfo {
   final String department;
   final String status;
   final String vehicleModel;
-  final DateTime? createdAt;
+  final DateTime? registrationValidUntil;
   final DateTime? expiryDate;
   final int daysUntilExpiration;
 
   // MVP Progress fields
   final double mvpProgress;
-  final DateTime? mvpRegisteredDate;
+  final DateTime? registrationValidFrom;
   final DateTime? mvpExpiryDate;
   final String mvpStatusText;
 
@@ -28,11 +28,11 @@ class IndividualVehicleInfo {
     this.department = '',
     this.status = '',
     this.vehicleModel = '',
-    this.createdAt,
+    this.registrationValidUntil,
     this.expiryDate,
     this.daysUntilExpiration = 0,
     this.mvpProgress = 0.0,
-    this.mvpRegisteredDate,
+    this.registrationValidFrom,
     this.mvpExpiryDate,
     this.mvpStatusText = 'Not Set',
   });
@@ -41,31 +41,31 @@ class IndividualVehicleInfo {
     String vehicleId,
     Map<String, dynamic> data,
   ) {
-    final createdAt =
-        data['createdAt'] != null
-            ? (data['createdAt'] as Timestamp).toDate()
+    final registrationValidFrom =
+        data['registrationValidFrom'] != null
+            ? (data['registrationValidFrom'] as Timestamp).toDate()
             : null;
     // Calculate expiry date using RegistrationExpiryUtils
     final expiryDate =
-        createdAt != null
-            ? RegistrationExpiryUtils.computeExpiryDate(createdAt)
+        data['registrationValidUntil'] != null
+            ? (data['registrationValidUntil'] as Timestamp).toDate()
             : null;
 
     // Calculate MVP progress
     double mvpProgress = 0.0;
     String mvpStatusText = 'Not Set';
 
-    if (createdAt != null && expiryDate != null) {
+    if (registrationValidFrom != null && expiryDate != null) {
       final now = DateTime.now();
-      if (now.isBefore(createdAt)) {
+      if (now.isBefore(registrationValidFrom)) {
         mvpStatusText = 'Not Started';
       } else if (now.isAfter(expiryDate) || now.isAtSameMomentAs(expiryDate)) {
         mvpStatusText = 'Expired';
         mvpProgress = 1.0;
       } else {
         mvpStatusText = 'Valid';
-        final totalDuration = expiryDate.difference(createdAt);
-        final elapsedDuration = now.difference(createdAt);
+        final totalDuration = expiryDate.difference(registrationValidFrom);
+        final elapsedDuration = now.difference(registrationValidFrom);
         mvpProgress = (elapsedDuration.inMilliseconds /
                 totalDuration.inMilliseconds)
             .clamp(0.0, 1.0);
@@ -80,12 +80,11 @@ class IndividualVehicleInfo {
       department: data['department'] ?? '',
       status: data['status'] ?? '',
       vehicleModel: data['vehicleModel'] ?? '',
-      createdAt: createdAt,
-      expiryDate: expiryDate,
+      registrationValidUntil: expiryDate,
       daysUntilExpiration:
           expiryDate != null ? expiryDate.difference(DateTime.now()).inDays : 0,
       mvpProgress: mvpProgress,
-      mvpRegisteredDate: createdAt,
+      registrationValidFrom: registrationValidFrom,
       mvpExpiryDate: expiryDate,
       mvpStatusText: mvpStatusText,
     );

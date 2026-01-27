@@ -224,10 +224,12 @@ class IndividualReportView extends StatelessWidget {
                         department: vehicleInfo.department,
                         status: vehicleInfo.status,
                         vehicleModel: vehicleInfo.vehicleModel,
-                        createdAt: vehicleInfo.createdAt!,
-                        expiryDate: vehicleInfo.expiryDate!,
+                        registrationValidFrom:
+                            vehicleInfo.registrationValidFrom!,
+                        registrationValidUntil:
+                            vehicleInfo.registrationValidUntil!,
                         mvpProgress: vehicleInfo.mvpProgress,
-                        mvpRegisteredDate: vehicleInfo.mvpRegisteredDate!,
+                        mvpRegisteredDate: vehicleInfo.registrationValidFrom!,
                         mvpExpiryDate: vehicleInfo.mvpExpiryDate!,
                         mvpStatusText: vehicleInfo.mvpStatusText,
                         hoverDy: hoverDy,

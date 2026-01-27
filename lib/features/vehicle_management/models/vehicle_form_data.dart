@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cvms_desktop/features/vehicle_management/models/registration_status.dart';
 
 import '../../vehicle_management/models/vehicle_entry.dart';
@@ -34,6 +35,10 @@ class VehicleFormData {
   final String? barangay;
   final String? purokStreet;
 
+  // Registration Information - Step 5
+  final Timestamp? registrationValidFrom;
+  final Timestamp? registrationValidUntil;
+
   const VehicleFormData({
     this.ownerName,
     this.gender,
@@ -56,6 +61,8 @@ class VehicleFormData {
     this.purokStreet,
     this.academicYear,
     this.semester,
+    this.registrationValidFrom,
+    this.registrationValidUntil,
   });
 
   VehicleFormData copyWith({
@@ -80,6 +87,8 @@ class VehicleFormData {
     String? purokStreet,
     String? academicYear,
     String? semester,
+    Timestamp? registrationValidFrom,
+    Timestamp? registrationValidUntil,
   }) {
     return VehicleFormData(
       ownerName: ownerName ?? this.ownerName,
@@ -103,6 +112,10 @@ class VehicleFormData {
       purokStreet: purokStreet ?? this.purokStreet,
       academicYear: academicYear ?? this.academicYear,
       semester: semester ?? this.semester,
+      registrationValidFrom:
+          registrationValidFrom ?? this.registrationValidFrom,
+      registrationValidUntil:
+          registrationValidUntil ?? this.registrationValidUntil,
     );
   }
 
@@ -130,7 +143,9 @@ class VehicleFormData {
         other.barangay == barangay &&
         other.purokStreet == purokStreet &&
         other.academicYear == academicYear &&
-        other.semester == semester;
+        other.semester == semester &&
+        other.registrationValidFrom == registrationValidFrom &&
+        other.registrationValidUntil == registrationValidUntil;
   }
 
   @override
@@ -182,7 +197,9 @@ class VehicleFormData {
         'barangay: $barangay, '
         'purokStreet: $purokStreet, '
         'academicYear: $academicYear, '
-        'semester: $semester'
+        'semester: $semester, '
+        'registrationValidFrom: $registrationValidFrom, '
+        'registrationValidUntil: $registrationValidUntil, '
         ')';
   }
 
@@ -211,8 +228,10 @@ class VehicleFormData {
       orNumber: orNumber ?? '',
       crNumber: crNumber ?? '',
       status: null, // Default status for new vehicles
-      createdAt: null, // Firestore will set this
+      createdAt: Timestamp.now(), // Set to current timestamp
       registrationStatus: RegistrationStatus.active,
+      registrationValidUntil: registrationValidUntil,
+      registrationValidFrom: registrationValidFrom,
     );
   }
 }

@@ -30,6 +30,8 @@ class VehicleEntry {
   final RegistrationStatus registrationStatus;
 
   final Timestamp? createdAt;
+  final Timestamp? registrationValidFrom;
+  final Timestamp? registrationValidUntil;
 
   VehicleEntry({
     required this.vehicleId,
@@ -55,6 +57,8 @@ class VehicleEntry {
     required this.crNumber,
     this.status,
     this.createdAt,
+    this.registrationValidFrom,
+    this.registrationValidUntil,
     this.registrationStatus = RegistrationStatus.active, //  DEFAULT
   });
 
@@ -83,6 +87,8 @@ class VehicleEntry {
       crNumber: map['crNumber'] ?? '',
       status: map['status'] ?? '',
       createdAt: map['createdAt'],
+      registrationValidFrom: map['registrationValidFrom'],
+      registrationValidUntil: map['registrationValidUntil'],
       registrationStatus: RegistrationStatusX.fromString(
         map['registrationStatus'],
       ),
@@ -112,7 +118,9 @@ class VehicleEntry {
       'orNumber': orNumber,
       'crNumber': crNumber,
       'status': status,
-      'createdAt': FieldValue.serverTimestamp(),
+      'createdAt': createdAt,
+      'registrationValidFrom': registrationValidFrom,
+      'registrationValidUntil': registrationValidUntil,
       'registrationStatus': registrationStatus.value,
     };
   }

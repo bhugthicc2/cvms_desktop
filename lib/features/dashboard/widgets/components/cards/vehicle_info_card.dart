@@ -16,8 +16,8 @@ class VehicleInfoCard extends StatefulWidget {
   final String department;
   final String status;
   final String vehicleModel;
-  final DateTime createdAt;
-  final DateTime expiryDate;
+  final DateTime registrationValidFrom;
+  final DateTime registrationValidUntil;
   // MVP Progress fields
   final double mvpProgress;
   final DateTime mvpRegisteredDate;
@@ -36,8 +36,8 @@ class VehicleInfoCard extends StatefulWidget {
     required this.department,
     required this.status,
     required this.vehicleModel,
-    required this.createdAt,
-    required this.expiryDate,
+    required this.registrationValidFrom,
+    required this.registrationValidUntil,
     required this.mvpProgress,
     required this.mvpRegisteredDate,
     required this.mvpExpiryDate,

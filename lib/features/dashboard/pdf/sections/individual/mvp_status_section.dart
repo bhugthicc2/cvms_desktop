@@ -31,14 +31,14 @@ class MVPStatusSection implements PdfSection<IndividualVehicleReportModel> {
           ['MVP Status', v.mvpStatusText],
           [
             'Registration Date',
-            v.createdAt != null
-                ? DateTimeFormatter.formatAbbreviated(v.createdAt!)
+            v.registrationValidFrom != null
+                ? DateTimeFormatter.formatAbbreviated(v.registrationValidFrom!)
                 : '—',
           ],
           [
             'Expiry Date',
-            v.expiryDate != null
-                ? DateTimeFormatter.formatAbbreviated(v.expiryDate!)
+            v.registrationValidUntil != null
+                ? DateTimeFormatter.formatAbbreviated(v.registrationValidUntil!)
                 : '—',
           ],
         ],
