@@ -8,10 +8,11 @@ class ViolationActions extends StatelessWidget {
   final int rowIndex;
   final BuildContext context;
   final String plateNumber;
-  final bool isResolved;
+  final bool isConfirmed;
+  final bool isDismissed;
   final ViolationEntry violationEntry;
   final VoidCallback onEdit;
-  final VoidCallback onUpdate;
+  final VoidCallback onConfirm;
   final VoidCallback onReject;
   final VoidCallback onViewMore;
   final double dx;
@@ -23,10 +24,11 @@ class ViolationActions extends StatelessWidget {
     required this.rowIndex,
     required this.context,
     required this.plateNumber,
-    required this.isResolved,
+    required this.isConfirmed,
+    required this.isDismissed,
     required this.violationEntry,
     required this.onEdit,
-    required this.onUpdate,
+    required this.onConfirm,
     required this.onReject,
     required this.onViewMore,
     this.dx = 0,
@@ -56,21 +58,23 @@ class ViolationActions extends StatelessWidget {
             dx: dx,
             hoverColor: hoverColor.withValues(alpha: 0.1),
             raddi: radii,
-            onPressed: onUpdate,
+            onPressed: isConfirmed ? () {} : onConfirm,
             iconSize: 17,
             icon: PhosphorIconsFill.checkCircle,
-            iconColor: isResolved ? AppColors.success : AppColors.grey,
+            iconColor: isConfirmed ? AppColors.success : AppColors.grey,
           ),
         ),
         Expanded(
           child: CustomIconButton(
             dx: dx,
-
             hoverColor: hoverColor.withValues(alpha: 0.1),
             raddi: radii,
-            onPressed: onReject, //dismissed
+            onPressed: isDismissed ? () {} : onReject,
             icon: PhosphorIconsFill.xCircle,
-            iconColor: AppColors.error.withValues(alpha: 0.5),
+            iconColor:
+                isDismissed
+                    ? AppColors.grey
+                    : AppColors.error.withValues(alpha: 0.5),
           ),
         ),
 
@@ -81,7 +85,7 @@ class ViolationActions extends StatelessWidget {
             raddi: radii,
             onPressed: onViewMore,
             icon: PhosphorIconsBold.dotsThreeVertical,
-            iconColor: AppColors.error,
+            iconColor: AppColors.black,
           ),
         ),
       ],

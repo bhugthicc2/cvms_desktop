@@ -1,38 +1,38 @@
-// VEHICLE ID REFERENCE UPDATE MARKER
 import 'package:cvms_desktop/core/theme/app_colors.dart';
 import 'package:cvms_desktop/core/theme/app_font_sizes.dart';
+import 'package:cvms_desktop/features/sanction_management/models/saction_model.dart';
+import 'package:cvms_desktop/features/sanction_management/models/sanction_enums.dart';
 import 'package:cvms_desktop/core/utils/date_time_formatter.dart';
 import 'package:cvms_desktop/core/widgets/app/custom_checkbox.dart';
 import 'package:cvms_desktop/core/widgets/table/cell_badge.dart';
-import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.dart';
-import 'package:cvms_desktop/features/violation_management/models/violation_enums.dart';
-import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
-import 'package:cvms_desktop/features/violation_management/widgets/actions/violation_actions.dart';
+import 'package:cvms_desktop/features/sanction_management/bloc/sanction_cubit.dart';
+import 'package:cvms_desktop/features/sanction_management/bloc/sanction_state.dart';
+import 'package:cvms_desktop/features/sanction_management/widgets/actions/sanction_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-class ViolationDataSource extends DataGridSource {
-  final List<ViolationEntry> _originalEntries;
+class SanctionDataSource extends DataGridSource {
+  final List<Sanction> _originalEntries;
   final bool _showCheckbox;
   final bool _showActions;
   // ignore: unused_field
   final BuildContext? _context;
-  final Function(ViolationEntry)? onReject;
-  final Function(ViolationEntry)? onEdit;
-  final Function(ViolationEntry)? onConfirm;
-  final Function(ViolationEntry)? onViewMore;
+  final VoidCallback? onView;
+  final Function(Sanction)? onEdit;
+  final Function(Sanction)? onUpdate;
+  final Function(Sanction)? onViewMore;
 
-  ViolationDataSource({
-    required List<ViolationEntry> violationEntries,
+  SanctionDataSource({
+    required List<Sanction> sanctionEntries,
     bool showCheckbox = false,
     bool showActions = true,
     BuildContext? context,
-    this.onReject,
+    this.onView,
     this.onEdit,
-    this.onConfirm,
+    this.onUpdate,
     this.onViewMore,
-  }) : _originalEntries = violationEntries,
+  }) : _originalEntries = sanctionEntries,
        _showCheckbox = showCheckbox,
        _showActions = showActions,
        _context = context {
@@ -40,13 +40,13 @@ class ViolationDataSource extends DataGridSource {
   }
 
   void _buildRows() {
-    _violationEntries =
+    _sanctionEntries =
         _originalEntries
             .map<DataGridRow>((e) => DataGridRow(cells: _buildCells(e)))
             .toList();
   }
 
-  List<DataGridCell> _buildCells(ViolationEntry entry) {
+  List<DataGridCell> _buildCells(Sanction entry) {
     final cells = <DataGridCell>[];
     if (_showCheckbox) {
       cells.add(DataGridCell<bool>(columnName: 'checkbox', value: false));
@@ -56,15 +56,24 @@ class ViolationDataSource extends DataGridSource {
         columnName: 'index',
         value: _originalEntries.indexOf(entry) + 1,
       ),
+      DataGridCell<String>(columnName: 'vehicleId', value: entry.vehicleId),
       DataGridCell<String>(
-        columnName: 'dateTime',
-        value: DateTimeFormatter.formatFull(entry.reportedAt.toDate()),
+        columnName: 'offenseNumber',
+        value: entry.offenseNumber.toString(),
       ),
-      DataGridCell<String>(columnName: 'reportedBy', value: entry.fullname),
-      DataGridCell<String>(columnName: 'plateNumber', value: entry.plateNumber),
-      DataGridCell<String>(columnName: 'owner', value: entry.ownerName),
-      DataGridCell<String>(columnName: 'violation', value: entry.violationType),
-      DataGridCell<String>(columnName: 'status', value: entry.status.name),
+      DataGridCell<String>(columnName: 'sanctionType', value: entry.type.label),
+      DataGridCell<String>(columnName: 'status', value: entry.status.label),
+      DataGridCell<String>(
+        columnName: 'startDate',
+        value: DateTimeFormatter.formatFull(entry.startAt),
+      ),
+      DataGridCell<String>(
+        columnName: 'endDate',
+        value:
+            entry.endAt != null
+                ? DateTimeFormatter.formatFull(entry.endAt!)
+                : 'N/A',
+      ),
     ]);
     if (_showActions) {
       cells.add(DataGridCell<String>(columnName: 'actions', value: ''));
@@ -72,16 +81,16 @@ class ViolationDataSource extends DataGridSource {
     return cells;
   }
 
-  List<DataGridRow> _violationEntries = [];
+  List<DataGridRow> _sanctionEntries = [];
 
   @override
-  List<DataGridRow> get rows => _violationEntries;
+  List<DataGridRow> get rows => _sanctionEntries;
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
-    final int rowIndex = _violationEntries.indexOf(row);
+    final int rowIndex = _sanctionEntries.indexOf(row);
     final bool isEven = rowIndex % 2 == 0;
-    final ViolationEntry entry = _originalEntries[rowIndex];
+    final Sanction entry = _originalEntries[rowIndex];
     return DataGridRowAdapter(
       color:
           isEven
@@ -94,10 +103,10 @@ class ViolationDataSource extends DataGridSource {
     );
   }
 
-  Widget _buildCellWidget(DataGridCell cell, ViolationEntry entry) {
+  Widget _buildCellWidget(DataGridCell cell, Sanction entry) {
     switch (cell.columnName) {
       case 'checkbox':
-        return BlocBuilder<ViolationCubit, ViolationState>(
+        return BlocBuilder<SanctionCubit, SanctionState>(
           builder: (context, state) {
             final isSelected = state.selectedEntries.contains(entry);
             return Container(
@@ -105,37 +114,28 @@ class ViolationDataSource extends DataGridSource {
               child: CustomCheckbox(
                 value: isSelected,
                 onChanged: (value) {
-                  context.read<ViolationCubit>().selectEntry(entry);
+                  context.read<SanctionCubit>().selectEntry(entry);
                 },
               ),
             );
           },
         );
       case 'actions':
-        return BlocBuilder<ViolationCubit, ViolationState>(
+        return BlocBuilder<SanctionCubit, SanctionState>(
           builder: (context, state) {
             final rowIndex = _originalEntries.indexOf(entry);
             return Container(
               alignment: Alignment.center,
-              child: ViolationActions(
+              child: SanctionActions(
                 rowIndex: rowIndex,
                 context: context,
-                plateNumber: entry.plateNumber,
-                isConfirmed: entry.status == ViolationStatus.confirmed,
-                isDismissed: entry.status == ViolationStatus.dismissed,
-                violationEntry: entry,
-                onReject: () => onReject?.call(entry), //reject violation
-                onEdit: () => onEdit?.call(entry), // edit violation
-                onConfirm:
-                    () => onConfirm?.call(
-                      entry,
-                    ), //confirm violation//disables when the status is already confirmed
-                onViewMore: () => onViewMore?.call(entry), //more actions
+                sanctionEntry: entry,
+                onView: () => onView?.call(),
               ),
             );
           },
         );
-      case 'dateTime':
+      case 'vehicleId':
         return Container(
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -150,7 +150,7 @@ class ViolationDataSource extends DataGridSource {
             ),
           ),
         );
-      case 'reportedBy':
+      case 'offenseNumber':
         return Container(
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -165,37 +165,7 @@ class ViolationDataSource extends DataGridSource {
             ),
           ),
         );
-      case 'violation':
-        return Container(
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(
-            cell.value.toString(),
-            textAlign: TextAlign.left,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
-            style: const TextStyle(
-              fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
-            ),
-          ),
-        );
-      case 'owner':
-        return Container(
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(
-            cell.value.toString(),
-            textAlign: TextAlign.left,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
-            style: const TextStyle(
-              fontSize: AppFontSizes.small,
-              fontFamily: 'Poppins',
-            ),
-          ),
-        );
-      case 'plateNumber':
+      case 'sanctionType':
         return Container(
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -213,18 +183,18 @@ class ViolationDataSource extends DataGridSource {
       case 'status':
         final statusStr = cell.value.toString();
         final statusLower = statusStr.toLowerCase();
-        final bool isConfirmed = statusLower == 'confirmed';
-        final bool isPending = statusLower == 'pending';
+        final bool isActive = statusLower == 'active';
+        final bool isExpired = statusLower == 'expired';
         final Color badgeBg =
-            isConfirmed
+            isActive
                 ? AppColors.successLight
-                : isPending
+                : isExpired
                 ? AppColors.chartOrange.withValues(alpha: 0.3)
                 : AppColors.grey.withValues(alpha: 0.2);
         final Color textColor =
-            isConfirmed
+            isActive
                 ? const Color.fromARGB(255, 31, 144, 11)
-                : isPending
+                : isExpired
                 ? AppColors.chartOrange
                 : AppColors.black;
         return CellBadge(
@@ -233,6 +203,36 @@ class ViolationDataSource extends DataGridSource {
           textColor: textColor,
           statusStr: statusStr,
           fontSize: AppFontSizes.small,
+        );
+      case 'startDate':
+        return Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            cell.value.toString(),
+            textAlign: TextAlign.left,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: const TextStyle(
+              fontSize: AppFontSizes.small,
+              fontFamily: 'Poppins',
+            ),
+          ),
+        );
+      case 'endDate':
+        return Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            cell.value.toString(),
+            textAlign: TextAlign.left,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: const TextStyle(
+              fontSize: AppFontSizes.small,
+              fontFamily: 'Poppins',
+            ),
+          ),
         );
       default:
         return Container(

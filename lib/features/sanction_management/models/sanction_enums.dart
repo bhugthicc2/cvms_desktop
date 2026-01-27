@@ -1,5 +1,7 @@
 enum SanctionType { warning, suspension, revocation }
 
+enum SanctionStatus { active, expired }
+
 extension SanctionTypeX on SanctionType {
   String get label {
     switch (this) {
@@ -12,8 +14,6 @@ extension SanctionTypeX on SanctionType {
     }
   }
 }
-
-enum SanctionStatus { active, expired }
 
 extension SanctionStatusX on SanctionStatus {
   String get label {

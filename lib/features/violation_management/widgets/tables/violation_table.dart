@@ -10,9 +10,9 @@ class ViolationTable extends StatelessWidget {
   final String title;
   final List<ViolationEntry> entries;
   final TextEditingController searchController;
-  final VoidCallback onReject;
+  final Function(ViolationEntry) onReject;
   final Function(ViolationEntry) onEdit;
-  final Function(ViolationEntry) onUpdate;
+  final Function(ViolationEntry) onConfirm;
   final Function(ViolationEntry) onViewMore;
 
   const ViolationTable({
@@ -22,7 +22,7 @@ class ViolationTable extends StatelessWidget {
     required this.searchController,
     required this.onReject,
     required this.onEdit,
-    required this.onUpdate,
+    required this.onConfirm,
     required this.onViewMore,
   });
 
@@ -35,7 +35,7 @@ class ViolationTable extends StatelessWidget {
             dataSource: ViolationDataSource(
               onReject: onReject,
               onEdit: onEdit,
-              onUpdate: onUpdate,
+              onConfirm: onConfirm,
               onViewMore: onViewMore,
               violationEntries: entries,
               showCheckbox: state.isBulkModeEnabled,

@@ -1,6 +1,4 @@
-enum SanctionType { warning, suspension, revocation }
-
-enum SanctionStatus { active, expired, revoked }
+import 'package:cvms_desktop/features/sanction_management/models/sanction_enums.dart';
 
 class Sanction {
   final String id;
@@ -8,12 +6,11 @@ class Sanction {
   final String violationId;
 
   final SanctionType type;
+  final SanctionStatus status;
   final int offenseNumber;
 
-  final SanctionStatus status;
-
   final DateTime startAt;
-  final DateTime? endAt; // only for suspension
+  final DateTime? endAt;
 
   final String createdBy;
   final DateTime createdAt;
@@ -23,8 +20,8 @@ class Sanction {
     required this.vehicleId,
     required this.violationId,
     required this.type,
-    required this.offenseNumber,
     required this.status,
+    required this.offenseNumber,
     required this.startAt,
     this.endAt,
     required this.createdBy,

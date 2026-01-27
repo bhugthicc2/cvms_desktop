@@ -15,7 +15,8 @@ import 'package:cvms_desktop/features/violation_management/bloc/violation_cubit.
 import 'package:cvms_desktop/features/violation_management/models/violation_enums.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_model.dart';
 import 'package:cvms_desktop/features/violation_management/widgets/actions/toggle_actions.dart';
-import 'package:cvms_desktop/features/violation_management/widgets/dialogs/custom_update_status_dialog.dart';
+import 'package:cvms_desktop/features/violation_management/widgets/dialogs/custom_confirm_dialog.dart';
+import 'package:cvms_desktop/features/violation_management/widgets/dialogs/custom_reject_dialog.dart';
 import 'package:cvms_desktop/features/violation_management/widgets/skeletons/table_skeleton.dart';
 import 'package:cvms_desktop/features/violation_management/widgets/tables/table_header.dart';
 import 'package:cvms_desktop/features/violation_management/widgets/tables/top_bar.dart';
@@ -220,34 +221,75 @@ class _ViolationManagementPageState extends State<ViolationManagementPage> {
                     title: "Violation Management",
                     entries: state.filteredEntries,
                     searchController: violationController,
-                    onReject: () {
-                      //todo show delete confirmation dialog
+                    onReject: (ViolationEntry entry) {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (dialogContext) {
+                          return CustomRejectDialog(
+                            currentStatus: entry.status,
+                            onReject: () async {
+                              try {
+                                // Close dialog first to prevent UI freezing
+                                if (dialogContext.mounted) {
+                                  Navigator.of(dialogContext).pop();
+                                }
+
+                                // Update violation status to dismissed
+                                await context
+                                    .read<ViolationCubit>()
+                                    .updateViolationStatus(
+                                      violationId: entry.id,
+                                      status: ViolationStatus.dismissed,
+                                    );
+                              } catch (e) {
+                                // Close dialog if still open
+                                if (dialogContext.mounted) {
+                                  Navigator.of(dialogContext).pop();
+                                }
+
+                                // Show error message
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Error rejecting violation: ${e.toString()}',
+                                      ),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                          );
+                        },
+                      );
                     },
                     onEdit: (ViolationEntry entry) {
                       //todo show edit dialog
                     },
-                    onUpdate: (ViolationEntry entry) {
+                    onConfirm: (ViolationEntry entry) {
                       try {
                         showDialog(
                           //todo close the dialog after a successful report
                           context: context,
                           barrierDismissible: false,
                           builder: (dialogContext) {
-                            return CustomUpdateStatusDialog(
+                            return CustomConfirmDialog(
                               currentStatus: entry.status,
-                              onConfirm: (newStatus) async {
+                              onConfirm: () async {
                                 try {
                                   // Close dialog first to prevent UI freezing
                                   if (dialogContext.mounted) {
                                     Navigator.of(dialogContext).pop();
                                   }
 
-                                  // Update violation status
+                                  // Update violation status to confirmed
                                   await context
                                       .read<ViolationCubit>()
                                       .updateViolationStatus(
                                         violationId: entry.id,
-                                        status: newStatus,
+                                        status: ViolationStatus.confirmed,
                                       );
                                 } catch (e) {
                                   // Close dialog if still open
@@ -260,7 +302,7 @@ class _ViolationManagementPageState extends State<ViolationManagementPage> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
-                                          'Error updating violation: ${e.toString()}',
+                                          'Error confirming violation: ${e.toString()}',
                                         ),
                                         backgroundColor: Colors.red,
                                       ),

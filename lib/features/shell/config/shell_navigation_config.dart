@@ -1,4 +1,7 @@
 //ACTIVITY LOG 16
+import 'package:cvms_desktop/features/sanction_management/bloc/sanction_cubit.dart';
+import 'package:cvms_desktop/features/sanction_management/pages/sanction_management_page.dart';
+import 'package:cvms_desktop/features/sanction_management/repository/firestore_sanction_repository.dart';
 import 'package:cvms_desktop/features/settings/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -89,8 +92,13 @@ class ShellNavigationConfig {
           create: (_) => ViolationCubit(),
           child: ViolationManagementPage(),
         );
-
       case 6:
+        return BlocProvider(
+          create: (context) => SanctionCubit(FirestoreSanctionRepository()),
+          child: SanctionManagementPage(),
+        );
+
+      case 7:
         return BlocProvider(
           create:
               (_) => ActivityLogsCubit(
@@ -99,7 +107,7 @@ class ShellNavigationConfig {
           child: ActivityLogsPage(),
         );
 
-      case 7:
+      case 8:
         return BlocProvider(
           create:
               (_) => ProfileCubit(
@@ -109,7 +117,7 @@ class ShellNavigationConfig {
           child: const ProfilePage(),
         );
 
-      case 8:
+      case 9:
         return const SettingsPage();
 
       default:
@@ -128,6 +136,7 @@ class ShellNavigationConfig {
     "Vehicle Management",
     "User Management",
     "Violation Management",
+    "Sanction Management",
     "Activity Logs",
     "Profile",
     "Settings",
