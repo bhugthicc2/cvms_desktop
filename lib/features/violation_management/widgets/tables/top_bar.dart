@@ -32,11 +32,11 @@ class TopBar extends StatelessWidget {
         children: [
           // Total Vehicles
           _buildMetricItem(
-            gradient: AppColors.purpleBlue,
-            icon: PhosphorIconsBold.car,
+            gradient: AppColors.pinkWhite,
+            icon: PhosphorIconsBold.warningDiamond,
             label: 'Pending Violations',
             value: metrics.pendingViolations,
-            valueColor: AppColors.primary,
+            iconColor: AppColors.donutPurple,
           ),
 
           Spacing.horizontal(),
@@ -44,7 +44,7 @@ class TopBar extends StatelessWidget {
           // Off Campus Vehicles
           _buildMetricItem(
             gradient: AppColors.greenWhite,
-            icon: PhosphorIconsBold.lightning,
+            icon: PhosphorIconsBold.checkSquare,
             label: 'Confirmed Violations',
             value: metrics.confirmedViolations,
             valueColor: AppColors.primary,
@@ -55,7 +55,7 @@ class TopBar extends StatelessWidget {
           // On Campus Vehicles
           _buildMetricItem(
             gradient: AppColors.yellowWhite,
-            icon: PhosphorIconsBold.mapPin,
+            icon: PhosphorIconsBold.xSquare,
             iconColor: AppColors.chartOrange,
             label: 'Dismissed Violations',
             value: metrics.dismissedViolations,
