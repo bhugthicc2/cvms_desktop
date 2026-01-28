@@ -1,100 +1,53 @@
 require("dotenv").config();
 
 const app = require("./src/app");
-const { admin, db } = require("./src/firebase/admin");
+const sanctionsRoutes = require("./src/routes/sanctions.routes");
 
-app.post("/sanctions/from-violation", async (req, res) => {
-  try {
-    const { violationId, vehicleId, confirmedBy } = req.body;
+// Mount sanctions routes
+app.use("/api/sanctions", sanctionsRoutes);
 
-    if (!violationId || !vehicleId) {
-      return res.status(400).json({ error: "Missing data" });
-    }
+// Graceful shutdown handling
+const gracefulShutdown = (signal) => {
+  console.log(`\n[${new Date().toISOString()}] Received ${signal}. Starting graceful shutdown...`);
+  
+  // Close server and cleanup
+  server.close(() => {
+    console.log(`[${new Date().toISOString()}] HTTP server closed.`);
+    process.exit(0);
+  });
 
-    // 1️ Count confirmed violations for this vehicle
-    const violationsSnap = await db
-      .collection("violations")
-      .where("vehicleId", "==", vehicleId)
-      .where("status", "==", "confirmed")
-      .get();
+  // Force close after 30 seconds
+  setTimeout(() => {
+    console.error(`[${new Date().toISOString()}] Could not close connections in time, forcefully shutting down`);
+    process.exit(1);
+  }, 30000);
+};
 
-    const offenseNumber = violationsSnap.size;
+// Start server
+const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
 
-    // 2️ Decide sanction
-    let sanctionType = "warning";
-    let vehicleStatus = "active";
-    let endAt = null;
-
-    if (offenseNumber === 2) {
-      sanctionType = "suspension";
-      vehicleStatus = "suspended";
-
-      // 30 working days (simple version = 42 calendar days)
-      endAt = admin.firestore.Timestamp.fromDate(
-        new Date(Date.now() + 42 * 24 * 60 * 60 * 1000)
-      );
-    }
-
-    if (offenseNumber >= 3) {
-      sanctionType = "revocation";
-      vehicleStatus = "revoked";
-    }
-
-    // 3️ Create sanction record
-    const sanctionRef = await db.collection("sanctions").add({
-      violationId,
-      vehicleId,
-      offenseNumber,
-      type: sanctionType,
-      status: sanctionType === "warning" ? "completed" : "active",
-      startAt: admin.firestore.FieldValue.serverTimestamp(),
-      endAt,
-      createdBy: confirmedBy,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
-
-    // 4️ Update vehicle status if needed
-    if (vehicleStatus !== "active") {
-      await db.collection("vehicles").doc(vehicleId).update({
-        registrationStatus: vehicleStatus,
-      });
-    }
-
-    // 5️ Mark violation as sanctioned
-    const violationRef = db.collection("violations").doc(violationId);
-    const violationDoc = await violationRef.get();
-    
-    if (violationDoc.exists) {
-      await violationRef.update({
-        sanctionApplied: true,
-        sanctionId: sanctionRef.id,
-      });
-    } else {
-      console.warn(`Violation document ${violationId} not found, skipping update`);
-    }
-
-    res.json({
-      success: true,
-      sanctionType,
-      offenseNumber,
-    });
-  } catch (err) {
-    console.error("SANCTION ERROR:", err);
-    console.error("ERROR DETAILS:", {
-      message: err.message,
-      stack: err.stack,
-      name: err.name
-    });
-    res.status(500).json({
-      error: "Sanction processing failed",
-      details: err.message,
-      stack: err.stack,
-    });
-  }
+const server = app.listen(PORT, HOST, () => {
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] 🚀 CVMS Sanction API Server started successfully`);
+  console.log(`[${timestamp}] 📍 Server running on http://${HOST}:${PORT}`);
+  console.log(`[${timestamp}] 🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`[${timestamp}] 📊 Health check: http://${HOST}:${PORT}/health`);
+  console.log(`[${timestamp}] 🔧 Sanctions API: http://${HOST}:${PORT}/api/sanctions/health`);
 });
 
-const PORT = process.env.PORT || 3000;
+// Handle process signals
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
-app.listen(PORT, () => {
-  console.log(`Backend running on port ${PORT}`);
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+  console.error(`[${new Date().toISOString()}] Uncaught Exception:`, error);
+  process.exit(1);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error(`[${new Date().toISOString()}] Unhandled Rejection at:`, promise, 'reason:', reason);
+  process.exit(1);
 });

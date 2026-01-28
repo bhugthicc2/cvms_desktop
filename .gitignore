@@ -92,6 +92,13 @@ firebase.json
 #backend confidential files
 backend/src/firebase/service-account.json
 backend/.env
+backend/.env.local
+backend/.env.production
+backend/.env.development
+backend/node_modules/
+backend/npm-debug.log*
+backend/yarn-debug.log*
+backend/yarn-error.log*
 
 #structure related
 backup/

@@ -1,18 +1,39 @@
 {
-  "name": "backend",
+  "name": "cvms-sanction-api",
   "version": "1.0.0",
+  "description": "CVMS Sanction Management API - Production-ready backend for vehicle monitoring system",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   },
-  "keywords": [],
-  "author": "",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "NODE_ENV=development node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "echo \"No linter configured\"",
+    "health": "curl -f http://localhost:3000/health || exit 1"
+  },
+  "keywords": [
+    "cvms",
+    "sanction",
+    "vehicle",
+    "monitoring",
+    "api",
+    "firebase",
+    "express"
+  ],
+  "author": "CVMS Development Team",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "firebase-admin": "^13.6.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bhugthicc2/cvms_desktop.git"
   }
 }
