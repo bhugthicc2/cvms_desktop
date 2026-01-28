@@ -31,7 +31,7 @@ class FirestoreSanctionRepository implements SanctionRepository {
         .map((snapshot) => snapshot.docs.map(_fromFirestore).toList());
   }
 
-  //  Client-side sanction expiry logic (Spark-safe)
+  //  Client-side sanction expiry logic
   @override
   Future<void> evaluateSanctionIfNeeded(Sanction sanction) async {
     if (sanction.endAt == null) return;

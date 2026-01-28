@@ -2,11 +2,12 @@
 
 // VEHICLE ID REFERENCE UPDATE MARKER
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cvms_desktop/core/error/firebase_error_handler.dart';
+import 'package:cvms_desktop/features/sanction_management/repository/node_repository.dart';
 import 'package:cvms_desktop/features/sanction_management/services/sanction_service.dart';
 import 'package:cvms_desktop/features/violation_management/models/violation_enums.dart';
 import 'package:flutter/foundation.dart';
 import '../models/violation_model.dart';
-import '../../../core/error/firebase_error_handler.dart';
 import '../../../core/services/activity_log_service.dart';
 
 class ViolationRepository {
@@ -75,28 +76,37 @@ class ViolationRepository {
       await batch.commit();
 
       if (status == ViolationStatus.confirmed) {
-        final sanctionService = SanctionService();
-
-        for (final violationId in violationIds) {
-          final snap =
-              await FirebaseFirestore.instance
-                  .collection('violations')
-                  .doc(violationId)
-                  .get();
-
-          if (!snap.exists) continue;
-
-          final data = snap.data()!;
-          await sanctionService.handleConfirmedViolation(
-            violationId: violationId,
-            vehicleId: data['vehicleId'],
-            confirmedByUserId: confirmedByUserId,
-          );
-        }
+        await _processConfirmedViolations(violationIds, confirmedByUserId);
       }
     } catch (e) {
       debugPrint('Error updating violation status: $e');
       rethrow;
+    }
+  }
+
+  Future<void> _processConfirmedViolations(
+    List<String> violationIds,
+    String confirmedByUserId,
+  ) async {
+    final firestore = FirebaseFirestore.instance;
+
+    for (final violationId in violationIds) {
+      final snap =
+          await firestore.collection('violations').doc(violationId).get();
+
+      if (!snap.exists) continue;
+
+      final data = snap.data()!;
+      if (data['sanctionApplied'] == true) continue;
+
+      final vehicleId = data['vehicleId'] as String;
+
+      //  Call Node.js backend
+      await triggerSanction(
+        violationId: violationId,
+        vehicleId: vehicleId,
+        adminUserId: confirmedByUserId,
+      );
     }
   }
 

@@ -68,10 +68,10 @@ class SanctionService {
       'type': SanctionType.suspension.value,
       'status': SanctionStatus.active.value,
       'offenseNumber': 2,
-      'startAt': Timestamp.fromDate(startAt.toUtc()),
+      'startAt': Timestamp.fromDate(startAt),
       'endAt': Timestamp.fromDate(endAt),
       'createdBy': adminUserId,
-      'createdAt': Timestamp.fromDate(DateTime.now().toUtc()),
+      'createdAt': FieldValue.serverTimestamp(),
     });
 
     batch.update(vehicleRef, {'registrationStatus': 'suspended'});
@@ -96,10 +96,10 @@ class SanctionService {
       'type': SanctionType.revocation.value,
       'status': SanctionStatus.active.value,
       'offenseNumber': 3,
-      'startAt': Timestamp.fromDate(startAt.toUtc()),
+      'startAt': Timestamp.fromDate(startAt),
       'endAt': null,
       'createdBy': adminUserId,
-      'createdAt': Timestamp.fromDate(DateTime.now().toUtc()),
+      'createdAt': FieldValue.serverTimestamp(),
     });
 
     batch.update(vehicleRef, {'registrationStatus': 'revoked'});

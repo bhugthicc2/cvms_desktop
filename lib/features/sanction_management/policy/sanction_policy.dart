@@ -1,18 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cvms_desktop/features/sanction_management/models/sanction_enums.dart';
-import 'package:cvms_desktop/features/vehicle_management/models/vehicle_status.dart';
-
-class SanctionDecision {
-  final SanctionType type;
-  final VehicleStatus vehicleStatus;
-  final Timestamp? endsAt;
-
-  const SanctionDecision({
-    required this.type,
-    required this.vehicleStatus,
-    this.endsAt,
-  });
-}
+import '../models/sanction_decision.dart';
+import '../models/sanction_enums.dart';
+import '../../vehicle_management/models/vehicle_status.dart';
 
 class SanctionPolicy {
   static SanctionDecision decide(int offenseNumber) {
@@ -20,7 +9,7 @@ class SanctionPolicy {
 
     switch (offenseNumber) {
       case 1:
-        return SanctionDecision(
+        return const SanctionDecision(
           type: SanctionType.warning,
           vehicleStatus: VehicleStatus.active,
           endsAt: null,
@@ -34,7 +23,7 @@ class SanctionPolicy {
         );
 
       default:
-        return SanctionDecision(
+        return const SanctionDecision(
           type: SanctionType.revocation,
           vehicleStatus: VehicleStatus.revoked,
           endsAt: null,
@@ -48,11 +37,7 @@ class SanctionPolicy {
 
     while (added < days) {
       date = date.add(const Duration(days: 1));
-
-      if (date.weekday != DateTime.saturday &&
-          date.weekday != DateTime.sunday) {
-        added++;
-      }
+      if (date.weekday < DateTime.saturday) added++;
     }
 
     return Timestamp.fromDate(date);
